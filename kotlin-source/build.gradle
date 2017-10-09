@@ -126,7 +126,7 @@ task generateFlowDiagram(type: JavaExec) {
 
 task runExampleClientRPCKotlin(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.example.client.ExampleClientRPCKt'
+    main = 'com.tradeix.concord.client.ExampleClientRPCKt'
     args 'localhost:10006'
 }
 

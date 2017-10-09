@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Example RPC Client - Kotlin" type="JetRunConfigurationType" factoryName="Kotlin" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="com.example.client.ExampleClientRPCKt" />
+    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.client.ConcordClientRPCKt" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="localhost:10006" />
     <option name="WORKING_DIRECTORY" value="" />
