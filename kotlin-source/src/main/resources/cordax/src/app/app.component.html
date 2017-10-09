@@ -1,0 +1,48 @@
+<div fxFill fxLayout="column">
+  <md-toolbar color="primary">
+    {{nodeName?.organizationName}}
+  </md-toolbar>
+  <div fxFlex fxLayout="row" fxLayoutAlign="start stretch">
+    <div fxFlex="25">
+      <div class="container">
+        <h3>Create a Purchase Order</h3>
+        <hr />
+        <md-select #supplier placeholder="Supplier" [style.width.%]="100">
+          <md-option *ngFor="let supplier of suppliers" [value]="supplier.name">{{supplier.organizationName}}</md-option>
+        </md-select>
+        <br />
+        <br />
+        <md-form-field [style.width.%]="100">
+          <input #po mdInput placeholder="Value" value="0.00">
+        </md-form-field>
+        <br />
+        <br />
+        <button [style.width.%]="100" md-raised-button color="primary" (click)="create(supplier.value, po.value)">Sign &amp; Send</button>
+      </div>
+    </div>
+    <div fxFlex="75">
+      <div class="container">
+        <h3>Purchase Order History</h3>
+        <hr />
+        <table>
+          <thead>
+            <tr>
+              <th>Buyer</th>
+              <th>Supplier</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of dataSource">
+              <tr>
+                <td>{{getName(item.state.data.buyer)}}</td>
+                <td>{{getName(item.state.data.supplier)}}</td>
+                <td>{{item.state.data.purchaseOrder.value}}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
