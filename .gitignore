@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 # docs related
 docs/virtualenv/
+
+# node_modules
+/kotlin-source/src/main/resources/cordax/node_modules
