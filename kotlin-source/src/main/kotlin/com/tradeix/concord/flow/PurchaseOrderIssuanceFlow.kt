@@ -21,7 +21,9 @@ object PurchaseOrderIssuanceFlow {
     class Initiator(
             private val linearId: UniqueIdentifier,
             private val amount: Amount<Currency>,
-            private val supplier: Party) : FlowLogic<SignedTransaction>() {
+            private val buyer: Party,
+            private val supplier: Party,
+            private val conductor: Party) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object GENERATING_TRANSACTION : Step("Generating transaction based on new Purchase Order.")
@@ -51,15 +53,6 @@ object PurchaseOrderIssuanceFlow {
             val notary = serviceHub
                     .networkMapCache
                     .notaryIdentities[0]
-
-            val buyer = serviceHub
-                    .myInfo
-                    .legalIdentities[0]
-
-            val conductor = serviceHub
-                    .networkMapCache
-                    .getNodeByLegalName(CordaX500Name("TradeIX", "London", "GB"))!!
-                    .legalIdentities[0]
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION

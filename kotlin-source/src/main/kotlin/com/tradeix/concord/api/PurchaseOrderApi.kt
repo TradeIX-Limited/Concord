@@ -7,6 +7,7 @@ import com.tradeix.concord.messages.IssuePurchaseOrderResponseMessage
 import com.tradeix.concord.state.PurchaseOrderState
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.messaging.vaultQueryBy
@@ -66,10 +67,18 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
         }
 
         val linearId = UniqueIdentifier()
+        val buyer = services.nodeInfo().legalIdentities[0]
+
         val supplier = services.wellKnownPartyFromX500Name(message.supplier) ?:
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity(ErrorResponseMessage("Failed to issue purchase order. Could not find supplier."))
+                        .build()
+
+        val conductor = services.wellKnownPartyFromX500Name(CordaX500Name("TradeIX", "London", "GB")) ?:
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorResponseMessage("Failed to issue purchase order. Could not find conductor."))
                         .build()
 
         try {
@@ -78,7 +87,9 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
                     PurchaseOrderIssuanceFlow::Initiator,
                     linearId,
                     amount,
-                    supplier)
+                    buyer,
+                    supplier,
+                    conductor)
 
             flowHandle.progress.subscribe { println(">> $it") }
 

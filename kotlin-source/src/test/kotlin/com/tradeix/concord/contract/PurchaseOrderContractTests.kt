@@ -24,7 +24,7 @@ class PurchaseOrderContractTests {
     }
 
     @Test
-    fun `transaction must include Create command`() {
+    fun `transaction must include Issue command`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val purchaseOrder = PurchaseOrder(1.POUNDS)
         ledger {
@@ -70,7 +70,7 @@ class PurchaseOrderContractTests {
                             conductor = BIG_CORP)
                 }
                 command(MEGA_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
-                `fails with`("No inputs should be consumed when issuing an IOU.")
+                `fails with`("No inputs should be consumed when issuing a purchase order.")
             }
         }
     }
@@ -148,7 +148,7 @@ class PurchaseOrderContractTests {
     }
 
     @Test
-    fun `lender is not borrower`() {
+    fun `buyer and supplier are not the same entity`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val purchaseOrder = PurchaseOrder(1.POUNDS)
         ledger {
@@ -163,28 +163,7 @@ class PurchaseOrderContractTests {
                             conductor = BIG_CORP)
                 }
                 command(MEGA_CORP_PUBKEY, MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
-                `fails with`("The lender and the borrower cannot be the same entity.")
-            }
-        }
-    }
-
-    @Test
-    fun `cannot create negative-value IOUs`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val purchaseOrder = PurchaseOrder(1.POUNDS)
-        ledger {
-            transaction {
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = linearId,
-                            purchaseOrder = purchaseOrder,
-                            owner = MINI_CORP,
-                            buyer = MEGA_CORP,
-                            supplier = MINI_CORP,
-                            conductor = BIG_CORP)
-                }
-                command(MEGA_CORP_PUBKEY, MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
-                `fails with`("The IOU's value must be non-negative.")
+                `fails with`("The buyer and the supplier cannot be the same entity.")
             }
         }
     }
