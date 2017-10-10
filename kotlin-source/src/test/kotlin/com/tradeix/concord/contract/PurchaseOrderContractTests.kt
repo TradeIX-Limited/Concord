@@ -39,7 +39,7 @@ class PurchaseOrderContractTests {
                             conductor = BIG_CORP)
                 }
                 fails()
-                command(MEGA_CORP_PUBKEY, MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
+                command(MEGA_CORP_PUBKEY, MINI_CORP_PUBKEY, BIG_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
                 verifies()
             }
         }
@@ -106,28 +106,7 @@ class PurchaseOrderContractTests {
     }
 
     @Test
-    fun `lender must sign transaction`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val purchaseOrder = PurchaseOrder(1.POUNDS)
-        ledger {
-            transaction {
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = linearId,
-                            purchaseOrder = purchaseOrder,
-                            owner = MINI_CORP,
-                            buyer = MEGA_CORP,
-                            supplier = MINI_CORP,
-                            conductor = BIG_CORP)
-                }
-                command(MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
-                `fails with`("All of the participants must be signers.")
-            }
-        }
-    }
-
-    @Test
-    fun `borrower must sign transaction`() {
+    fun `buyer must sign transaction`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val purchaseOrder = PurchaseOrder(1.POUNDS)
         ledger {
@@ -148,7 +127,7 @@ class PurchaseOrderContractTests {
     }
 
     @Test
-    fun `buyer and supplier are not the same entity`() {
+    fun `supplier must sign transaction`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val purchaseOrder = PurchaseOrder(1.POUNDS)
         ledger {
@@ -162,7 +141,49 @@ class PurchaseOrderContractTests {
                             supplier = MINI_CORP,
                             conductor = BIG_CORP)
                 }
-                command(MEGA_CORP_PUBKEY, MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
+                command(MINI_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
+                `fails with`("All of the participants must be signers.")
+            }
+        }
+    }
+
+    @Test
+    fun `conductor must sign transaction`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val purchaseOrder = PurchaseOrder(1.POUNDS)
+        ledger {
+            transaction {
+                output(PURCHASE_ORDER_CONTRACT_ID) {
+                    PurchaseOrderState(
+                            linearId = linearId,
+                            purchaseOrder = purchaseOrder,
+                            owner = MINI_CORP,
+                            buyer = MEGA_CORP,
+                            supplier = MINI_CORP,
+                            conductor = BIG_CORP)
+                }
+                command(BIG_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
+                `fails with`("All of the participants must be signers.")
+            }
+        }
+    }
+
+    @Test
+    fun `buyer and supplier are not the same entity`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val purchaseOrder = PurchaseOrder(1.POUNDS)
+        ledger {
+            transaction {
+                output(PURCHASE_ORDER_CONTRACT_ID) {
+                    PurchaseOrderState(
+                            linearId = linearId,
+                            purchaseOrder = purchaseOrder,
+                            owner = MEGA_CORP,
+                            buyer = MEGA_CORP,
+                            supplier = MEGA_CORP,
+                            conductor = BIG_CORP)
+                }
+                command(MEGA_CORP_PUBKEY, BIG_CORP_PUBKEY) { PurchaseOrderContract.Commands.Issue() }
                 `fails with`("The buyer and the supplier cannot be the same entity.")
             }
         }
