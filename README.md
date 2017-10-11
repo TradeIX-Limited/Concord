@@ -1,4 +1,4 @@
-![Concord](https://ibb.co/mfgUfb)
+![Concord](https://github.com/TXCTeam/Concord/blob/release-V1/Concord.png)
 
 # Concord
 
