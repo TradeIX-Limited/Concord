@@ -1,39 +1,34 @@
-package com.tradeix.concord.flow
+package com.tradeix.concord.flows
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.contract.PurchaseOrderContract
-import com.tradeix.concord.contract.PurchaseOrderContract.Companion.PURCHASE_ORDER_CONTRACT_ID
-import com.tradeix.concord.model.PurchaseOrder
-import com.tradeix.concord.state.PurchaseOrderState
-import net.corda.core.contracts.*
+import com.tradeix.concord.contracts.PurchaseOrderIssuanceContract
+import com.tradeix.concord.contracts.PurchaseOrderIssuanceContract.Companion.PURCHASE_ORDER_CONTRACT_ID
+import com.tradeix.concord.states.PurchaseOrderState
+import net.corda.core.contracts.Command
+import net.corda.core.contracts.StateAndRef
+import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
-import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
-import net.corda.core.utilities.ProgressTracker.Step
-import java.util.*
 
-object PurchaseOrderIssuanceFlow {
+object PurchaseOrderOwnership {
     @InitiatingFlow
     @StartableByRPC
-    class Initiator(
-            private val linearId: UniqueIdentifier,
-            private val amount: Amount<Currency>,
-            private val buyer: Party,
-            private val supplier: Party,
-            private val conductor: Party) : FlowLogic<SignedTransaction>() {
+    class BuyerFlow(
+            private val inputState: StateAndRef<PurchaseOrderState>,
+            private val newOwner: Party) : FlowLogic<SignedTransaction>() {
 
         companion object {
-            object GENERATING_TRANSACTION : Step("Generating transaction based on new Purchase Order.")
-            object VERIFYING_TRANSACTION : Step("Verifying contract constraints.")
-            object SIGNING_TRANSACTION : Step("Signing transaction with our private key.")
-            object GATHERING_SIGNATURES : Step("Gathering the counterparty's signature.") {
+            object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new Purchase Order.")
+            object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
+            object SIGNING_TRANSACTION : ProgressTracker.Step("Signing transaction with our private key.")
+            object GATHERING_SIGNATURES : ProgressTracker.Step("Gathering the counterparty's signature.") {
                 override fun childProgressTracker() = CollectSignaturesFlow.tracker()
             }
 
-            object FINALISING_TRANSACTION : Step("Obtaining notary signature and recording transaction.") {
+            object FINALISING_TRANSACTION : ProgressTracker.Step("Obtaining notary signature and recording transaction.") {
                 override fun childProgressTracker() = FinalityFlow.tracker()
             }
 
@@ -56,20 +51,20 @@ object PurchaseOrderIssuanceFlow {
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
-            val state = PurchaseOrderState(
-                    linearId = linearId,
-                    purchaseOrder = PurchaseOrder(amount),
-                    owner = supplier,
-                    buyer = buyer,
-                    supplier = supplier,
-                    conductor = conductor)
+
+            val outputState = this.inputState
+                    .state
+                    .data
+                    .copy(owner = newOwner)
 
             val command = Command(
-                    value = PurchaseOrderContract.Commands.Issue(),
-                    signers = state.participants.map { it.owningKey })
+                    value = PurchaseOrderIssuanceContract.Commands.ChangeOwner(),
+                    signers = outputState.participants.map { it.owningKey })
 
             val transactionBuilder = TransactionBuilder(notary)
-                    .withItems(StateAndContract(state, PURCHASE_ORDER_CONTRACT_ID), command)
+                    .addInputState(inputState)
+                    .addOutputState(outputState, PURCHASE_ORDER_CONTRACT_ID)
+                    .addCommand(command)
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
@@ -79,13 +74,22 @@ object PurchaseOrderIssuanceFlow {
             progressTracker.currentStep = SIGNING_TRANSACTION
             val partiallySignedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
 
+            // Stage X - Conductor sub flow
+            //subFlow(ConductorFlow(initiateFlow(conductor)))
+            // TODO : ???
+
+            // Stage X - Conductor sub flow
+            //subFlow(SupplierFlow(initiateFlow(supplier)))
+            // TODO : ???
+
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val supplierFlow = initiateFlow(supplier)
-            val conductorFlow = initiateFlow(conductor)
+            val ownerFlow = initiateFlow(outputState.owner)
+            val buyerFlow = initiateFlow(outputState.buyer)
+            val conductorFlow = initiateFlow(outputState.conductor)
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
-                    setOf(supplierFlow, conductorFlow),
+                    setOf(ownerFlow, buyerFlow, conductorFlow),
                     GATHERING_SIGNATURES.childProgressTracker()))
 
             // Stage 5 - Finalize transaction
@@ -96,14 +100,14 @@ object PurchaseOrderIssuanceFlow {
         }
     }
 
-    @InitiatedBy(Initiator::class)
+    @InitiatedBy(PurchaseOrderOwnership.BuyerFlow::class)
     class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
                     val output = stx.tx.outputs.single().data
-                    "This must be an IOU transaction." using (output is PurchaseOrderState)
+                    "This must be a Purchase Order transaction." using (output is PurchaseOrderState)
                 }
             }
 

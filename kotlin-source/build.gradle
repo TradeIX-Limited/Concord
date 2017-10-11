@@ -103,7 +103,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
 }
 
-// TODO: Make into gradle plugin without any references to Jython
+// TODO: Make into gradle plugins without any references to Jython
 task installJythonDeps(dependsOn: ['build']) {
     project.copy {
         from project.configurations.runtime
@@ -126,7 +126,7 @@ task generateFlowDiagram(type: JavaExec) {
 
 task runExampleClientRPCKotlin(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.tradeix.concord.client.ExampleClientRPCKt'
+    main = 'com.tradeix.concord.clients.ExampleClientRPCKt'
     args 'localhost:10006'
 }
 

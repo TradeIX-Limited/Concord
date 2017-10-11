@@ -1,10 +1,11 @@
-package com.tradeix.concord.state
+package com.tradeix.concord.states
 
-import com.tradeix.concord.model.PurchaseOrder
-import com.tradeix.concord.schema.PurchaseOrderSchemaV1
+import com.tradeix.concord.models.PurchaseOrder
+import com.tradeix.concord.schemas.PurchaseOrderSchemaV1
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
+import net.corda.core.identity.Party
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import net.corda.core.schemas.QueryableState
@@ -12,10 +13,10 @@ import net.corda.core.schemas.QueryableState
 data class PurchaseOrderState(
         override val linearId: UniqueIdentifier,
         val purchaseOrder: PurchaseOrder,
-        val owner: AbstractParty,
-        val buyer: AbstractParty,
-        val supplier: AbstractParty,
-        val conductor: AbstractParty): LinearState, QueryableState {
+        val owner: Party,
+        val buyer: Party,
+        val supplier: Party,
+        val conductor: Party): LinearState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, conductor)
 
@@ -24,12 +25,12 @@ data class PurchaseOrderState(
             is PurchaseOrderSchemaV1 -> PurchaseOrderSchemaV1.PersistentPurchaseOrder(
                     linearId = linearId.id,
                     value = purchaseOrder.amount.toDecimal(),
-                    owner = owner.nameOrNull()!!.toString(),
-                    buyer = buyer.nameOrNull()!!.toString(),
-                    supplier = supplier.nameOrNull()!!.toString(),
-                    conductor = conductor.nameOrNull()!!.toString()
+                    owner = owner.name.toString(),
+                    buyer = buyer.name.toString(),
+                    supplier = supplier.name.toString(),
+                    conductor = conductor.name.toString()
             )
-            else -> throw IllegalArgumentException("Unrecognised schema $schema")
+            else -> throw IllegalArgumentException("Unrecognised schemas $schema")
         }
     }
 

@@ -1,6 +1,6 @@
-package com.tradeix.concord.flow
+package com.tradeix.concord.flows
 
-import com.tradeix.concord.state.PurchaseOrderState
+import com.tradeix.concord.states.PurchaseOrderState
 import groovy.util.GroovyTestCase.assertEquals
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
@@ -14,7 +14,7 @@ import net.corda.testing.*
 import net.corda.core.identity.Party
 import net.corda.core.utilities.getOrThrow
 
-class PurchaseOrderIssuanceFlowTests {
+class PurchaseOrderIssuanceTests {
     lateinit var net: MockNetwork
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
@@ -26,7 +26,7 @@ class PurchaseOrderIssuanceFlowTests {
 
     @Before
     fun setup() {
-        setCordappPackages("com.tradeix.concord.contract")
+        setCordappPackages("com.tradeix.concord.contracts")
         net = MockNetwork()
         val nodes = net.createSomeNodes(3)
         mockBuyerNode = nodes.partyNodes[0]
@@ -37,7 +37,7 @@ class PurchaseOrderIssuanceFlowTests {
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
 
-        nodes.partyNodes.forEach { it.registerInitiatedFlow(PurchaseOrderIssuanceFlow.Acceptor::class.java) }
+        nodes.partyNodes.forEach { it.registerInitiatedFlow(PurchaseOrderIssuance.Acceptor::class.java) }
 
         net.runNetwork()
     }
@@ -51,7 +51,7 @@ class PurchaseOrderIssuanceFlowTests {
     @Test
     fun `SignedTransaction returned by the flow is signed by the initiator`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val flow = PurchaseOrderIssuanceFlow.Initiator(
+        val flow = PurchaseOrderIssuance.BuyerFlow(
                 linearId = linearId,
                 amount = 1.POUNDS,
                 buyer = mockBuyer,
@@ -67,7 +67,7 @@ class PurchaseOrderIssuanceFlowTests {
     @Test
     fun `SignedTransaction returned by the flow is signed by the acceptor`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val flow = PurchaseOrderIssuanceFlow.Initiator(
+        val flow = PurchaseOrderIssuance.BuyerFlow(
                 linearId = linearId,
                 amount = 1.POUNDS,
                 buyer = mockBuyer,
@@ -83,7 +83,7 @@ class PurchaseOrderIssuanceFlowTests {
     @Test
     fun `flow records a transaction in both parties' vaults`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val flow = PurchaseOrderIssuanceFlow.Initiator(
+        val flow = PurchaseOrderIssuance.BuyerFlow(
                 linearId = linearId,
                 amount = 1.POUNDS,
                 buyer = mockBuyer,
@@ -102,7 +102,7 @@ class PurchaseOrderIssuanceFlowTests {
     @Test
     fun `recorded transaction has no inputs and a single output`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val flow = PurchaseOrderIssuanceFlow.Initiator(
+        val flow = PurchaseOrderIssuance.BuyerFlow(
                 linearId = linearId,
                 amount = 1.POUNDS,
                 buyer = mockBuyer,

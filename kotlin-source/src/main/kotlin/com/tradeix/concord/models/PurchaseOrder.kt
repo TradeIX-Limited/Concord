@@ -1,4 +1,4 @@
-package com.tradeix.concord.model
+package com.tradeix.concord.models
 
 import net.corda.core.contracts.Amount
 import net.corda.core.serialization.CordaSerializable

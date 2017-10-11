@@ -33,15 +33,15 @@ fun main(args: Array<String>) {
                         rpcUsers = listOf(user)
                 ).getOrThrow()
         )
-//
-//        // Buyer 2
-//        startWebserver(
-//                startNode(
-//                        providedName = CordaX500Name("Boeing", "Chicago, Illinois", "US"),
-//                        rpcUsers = listOf(user)
-//                ).getOrThrow()
-//        )
-//
+
+        // Buyer 2
+        startWebserver(
+                startNode(
+                        providedName = CordaX500Name("Boeing", "Chicago, Illinois", "US"),
+                        rpcUsers = listOf(user)
+                ).getOrThrow()
+        )
+
         // Supplier 1
         startWebserver(
                 startNode(
@@ -49,30 +49,30 @@ fun main(args: Array<String>) {
                         rpcUsers = listOf(user)
                 ).getOrThrow()
         )
-//
-//        // Supplier 2
-//        startWebserver(
-//                startNode(
-//                        providedName = CordaX500Name("General Electric", "Boston, Massachusetts", "US"),
-//                        rpcUsers = listOf(user)
-//                ).getOrThrow()
-//        )
-//
-//        // Funder 1
-//        startWebserver(
-//                startNode(
-//                        providedName = CordaX500Name("BNY Mellon", "New York", "US"),
-//                        rpcUsers = listOf(user)
-//                ).getOrThrow()
-//        )
-//
-//        // Funder 2
-//        startWebserver(
-//                startNode(
-//                        providedName = CordaX500Name("JP Morgan Chase", "New York", "US"),
-//                        rpcUsers = listOf(user)
-//                ).getOrThrow()
-//        )
+
+        // Supplier 2
+        startWebserver(
+                startNode(
+                        providedName = CordaX500Name("General Electric", "Boston, Massachusetts", "US"),
+                        rpcUsers = listOf(user)
+                ).getOrThrow()
+        )
+
+        // Funder 1
+        startWebserver(
+                startNode(
+                        providedName = CordaX500Name("BNY Mellon", "New York", "US"),
+                        rpcUsers = listOf(user)
+                ).getOrThrow()
+        )
+
+        // Funder 2
+        startWebserver(
+                startNode(
+                        providedName = CordaX500Name("JP Morgan Chase", "New York", "US"),
+                        rpcUsers = listOf(user)
+                ).getOrThrow()
+        )
 
         waitForAllNodesToFinish()
     }

@@ -1,16 +1,15 @@
-package com.tradeix.concord.contract
+package com.tradeix.concord.contracts
 
-import com.tradeix.concord.state.PurchaseOrderState
+import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.contracts.*
 import net.corda.core.transactions.LedgerTransaction
-import net.corda.finance.POUNDS
 import java.security.PublicKey
 
-open class PurchaseOrderContract : Contract {
+open class PurchaseOrderIssuanceContract : Contract {
 
     companion object {
         @JvmStatic
-        val PURCHASE_ORDER_CONTRACT_ID = "com.tradeix.concord.contract.PurchaseOrderContract"
+        val PURCHASE_ORDER_CONTRACT_ID = "com.tradeix.concord.contracts.PurchaseOrderIssuanceContract"
     }
 
     override fun verify(tx: LedgerTransaction) {
@@ -28,7 +27,7 @@ open class PurchaseOrderContract : Contract {
                 "No inputs should be consumed when issuing a purchase order." using
                         (tx.inputs.isEmpty())
 
-                "Only one output state should be created." using
+                "Only one output states should be created." using
                         (tx.outputs.size == 1)
 
                 val out = tx.outputsOfType<PurchaseOrderState>().single()

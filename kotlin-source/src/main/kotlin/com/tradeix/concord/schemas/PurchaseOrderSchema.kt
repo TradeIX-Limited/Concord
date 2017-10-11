@@ -1,6 +1,5 @@
-package com.tradeix.concord.schema
+package com.tradeix.concord.schemas
 
-import net.corda.core.contracts.Amount
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal

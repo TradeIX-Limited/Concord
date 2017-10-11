@@ -1,6 +1,6 @@
-package com.tradeix.concord.client
+package com.tradeix.concord.clients
 
-import com.tradeix.concord.state.PurchaseOrderState
+import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.utilities.NetworkHostAndPort

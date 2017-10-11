@@ -1,7 +1,7 @@
-package com.tradeix.concord.plugin
+package com.tradeix.concord.plugins
 
-import com.tradeix.concord.api.NodeInfoApi
-import com.tradeix.concord.api.PurchaseOrderApi
+import com.tradeix.concord.apis.NodeInfoApi
+import com.tradeix.concord.apis.PurchaseOrderApi
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.webserver.services.WebServerPluginRegistry
 import java.util.function.Function
