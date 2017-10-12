@@ -5,11 +5,11 @@ import net.corda.core.contracts.*
 import net.corda.core.transactions.LedgerTransaction
 import java.security.PublicKey
 
-open class PurchaseOrderIssuanceContract : Contract {
+open class PurchaseOrderContract : Contract {
 
     companion object {
         @JvmStatic
-        val PURCHASE_ORDER_CONTRACT_ID = "com.tradeix.concord.contracts.PurchaseOrderIssuanceContract"
+        val PURCHASE_ORDER_CONTRACT_ID = "com.tradeix.concord.contracts.PurchaseOrderContract"
     }
 
     override fun verify(tx: LedgerTransaction) {
@@ -27,7 +27,7 @@ open class PurchaseOrderIssuanceContract : Contract {
                 "No inputs should be consumed when issuing a purchase order." using
                         (tx.inputs.isEmpty())
 
-                "Only one output states should be created." using
+                "Only one output state should be created." using
                         (tx.outputs.size == 1)
 
                 val out = tx.outputsOfType<PurchaseOrderState>().single()
@@ -43,6 +43,20 @@ open class PurchaseOrderIssuanceContract : Contract {
 
         class ChangeOwner : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
+
+                "Only one input should be consumed when changing owner on a purchase order." using
+                        (tx.inputs.size == 1)
+
+                "Only one output state should be created." using
+                        (tx.outputs.size == 1)
+
+                val out = tx.outputsOfType<PurchaseOrderState>().single()
+
+                "All of the participants must be signers." using
+                        (signers.containsAll(out.participants.map { it.owningKey }))
+
+                "The supplier and the new owner cannot be the same entity." using
+                        (out.owner != out.supplier)
             }
         }
 

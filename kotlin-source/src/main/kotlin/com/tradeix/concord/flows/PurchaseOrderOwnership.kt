@@ -1,8 +1,8 @@
 package com.tradeix.concord.flows
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.contracts.PurchaseOrderIssuanceContract
-import com.tradeix.concord.contracts.PurchaseOrderIssuanceContract.Companion.PURCHASE_ORDER_CONTRACT_ID
+import com.tradeix.concord.contracts.PurchaseOrderContract
+import com.tradeix.concord.contracts.PurchaseOrderContract.Companion.PURCHASE_ORDER_CONTRACT_ID
 import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.StateAndRef
@@ -58,7 +58,7 @@ object PurchaseOrderOwnership {
                     .copy(owner = newOwner)
 
             val command = Command(
-                    value = PurchaseOrderIssuanceContract.Commands.ChangeOwner(),
+                    value = PurchaseOrderContract.Commands.ChangeOwner(),
                     signers = outputState.participants.map { it.owningKey })
 
             val transactionBuilder = TransactionBuilder(notary)
