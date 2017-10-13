@@ -1,4 +1,4 @@
-<h2>New Purchase Order</h2>
+<h2>New Trade Asset</h2>
 <div [ngSwitch]="view">
   <div *ngSwitchDefault>
     <div fxLayout="column">
@@ -14,6 +14,11 @@
           <mat-select placeholder="Supplier">
             <mat-option *ngFor="let item of items" [value]="item">{{item}}</mat-option>
           </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field fxFlex="100">
+          <input matInput type="text" placeholder="Asset ID" />
         </mat-form-field>
       </div>
       <div fxLayout="row">
