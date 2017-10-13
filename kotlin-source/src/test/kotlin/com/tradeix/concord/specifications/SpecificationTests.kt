@@ -1,8 +1,8 @@
 package com.tradeix.concord.specifications
 
-import com.tradeix.concord.flows.PurchaseOrderIssuance
-import com.tradeix.concord.models.PurchaseOrder
-import com.tradeix.concord.states.PurchaseOrderState
+import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.models.TradeAsset
+import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
@@ -29,12 +29,10 @@ class SpecificationTests {
     lateinit var mockSupplier: Party
     lateinit var mockConductor: Party
 
-    lateinit var purchaseOrderState: PurchaseOrderState
+    lateinit var tradeAssetState: TradeAssetState
 
     @Before
     fun setup() {
-        // setCordappPackages("com.tradeix.concord.contracts")
-
         net = MockNetwork()
 
         val nodes = net.createSomeNodes(3)
@@ -47,11 +45,11 @@ class SpecificationTests {
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
 
-        nodes.partyNodes.forEach { it.registerInitiatedFlow(PurchaseOrderIssuance.Acceptor::class.java) }
+        nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java) }
 
-        purchaseOrderState = PurchaseOrderState(
+        tradeAssetState = TradeAssetState(
                 linearId = UniqueIdentifier(),
-                purchaseOrder = PurchaseOrder(100.POUNDS),
+                tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.STATE_ISSUED, 100.POUNDS),
                 owner = mockSupplier,
                 buyer = mockBuyer,
                 supplier = mockSupplier,
@@ -62,29 +60,28 @@ class SpecificationTests {
 
     @After
     fun tearDown() {
-        // unsetCordappPackages()
         net.stopNodes()
     }
 
     @Test
     fun `Spec should match by value`() {
         val spec = PurchaseOrderStateByValueSpecification(100.POUNDS)
-        val result = spec.isSatisfiedBy(purchaseOrderState)
+        val result = spec.isSatisfiedBy(tradeAssetState)
         assertTrue(result)
     }
 
     @Test
     fun `Spec should not match by value`() {
         val spec = PurchaseOrderStateByValueSpecification(101.POUNDS)
-        val result = spec.isSatisfiedBy(purchaseOrderState)
+        val result = spec.isSatisfiedBy(tradeAssetState)
         assertFalse(result)
     }
 
     private class PurchaseOrderStateByValueSpecification(
-            private val value: Amount<Currency>) : Specification<PurchaseOrderState>() {
+            private val value: Amount<Currency>) : Specification<TradeAssetState>() {
 
-        override fun toPredicate(): Predicate<PurchaseOrderState> = Predicate {
-            it.purchaseOrder.amount == value
+        override fun toPredicate(): Predicate<TradeAssetState> = Predicate {
+            it.tradeAsset.amount == value
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.tradeix.concord.clients
 
-import com.tradeix.concord.states.PurchaseOrderState
+import com.tradeix.concord.states.TradeAssetState
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.utilities.NetworkHostAndPort
@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
 private class ConcordClientRPC {
     companion object {
         val logger: Logger = loggerFor<ConcordClientRPC>()
-        private fun logState(state: StateAndRef<PurchaseOrderState>) = logger.info("{}", state.state.data)
+        private fun logState(state: StateAndRef<TradeAssetState>) = logger.info("{}", state.state.data)
     }
 
     fun main(args: Array<String>) {
@@ -31,7 +31,7 @@ private class ConcordClientRPC {
         val proxy = client.start("user1", "test").proxy
 
         // Grab all signed transactions and all future signed transactions.
-        val (snapshot, updates) = proxy.vaultTrack(PurchaseOrderState::class.java)
+        val (snapshot, updates) = proxy.vaultTrack(TradeAssetState::class.java)
 
         // Log the 'placed' IOU states and listen for new ones.
         snapshot.states.forEach { logState(it) }
