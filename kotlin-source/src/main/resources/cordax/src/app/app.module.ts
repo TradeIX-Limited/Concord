@@ -26,17 +26,28 @@ import {
 import { RootComponent } from './root/root.component';
 
 import 'hammerjs';
+import { ConductorDashboardComponent } from './conductor-dashboard/conductor-dashboard.component';
 import { BuyerDashboardComponent } from './buyer-dashboard/buyer-dashboard.component';
-import { NewPurchaseOrderDialogComponent } from './buyer-dashboard/new-purchase-order-dialog/new-purchase-order-dialog.component';
+
+import {
+  NewPurchaseOrderDialogComponent as BuyerNewPurchaseOrderDialogComponent
+} from './buyer-dashboard/new-purchase-order-dialog/new-purchase-order-dialog.component';
+
+import {
+  NewPurchaseOrderDialogComponent as ConductorNewPurchaseOrderDialogComponent
+} from './conductor-dashboard/new-purchase-order-dialog/new-purchase-order-dialog.component';
+
 import { SupplierDashboardComponent } from './supplier-dashboard/supplier-dashboard.component';
 import { FunderDashboardComponent } from './funder-dashboard/funder-dashboard.component';
 import { MainComponent } from './main/main.component';
 
 import { NodeService } from '../api/domain/services/node.service';
 import { TradeAssetService } from '../api/domain/services/trade-asset.service';
+import { ChangeOwnerDialogComponent } from './supplier-dashboard/change-owner-dialog/change-owner-dialog.component';
+
 
 const routes = [
-  { path: '', component: MainComponent },
+  { path: 'conductor', component: ConductorDashboardComponent },
   { path: 'buyer', component: BuyerDashboardComponent },
   { path: 'supplier', component: SupplierDashboardComponent },
   { path: 'funder', component: FunderDashboardComponent }
@@ -46,10 +57,13 @@ const routes = [
   declarations: [
     RootComponent,
     BuyerDashboardComponent,
-    NewPurchaseOrderDialogComponent,
+    BuyerNewPurchaseOrderDialogComponent,
+    ConductorNewPurchaseOrderDialogComponent,
     SupplierDashboardComponent,
     FunderDashboardComponent,
-    MainComponent
+    MainComponent,
+    ConductorDashboardComponent,
+    ChangeOwnerDialogComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -75,6 +89,6 @@ const routes = [
   ],
   providers: [NodeService, TradeAssetService],
   bootstrap: [RootComponent],
-  entryComponents: [NewPurchaseOrderDialogComponent]
+  entryComponents: [BuyerNewPurchaseOrderDialogComponent, ConductorNewPurchaseOrderDialogComponent, ChangeOwnerDialogComponent]
 })
 export class AppModule { }

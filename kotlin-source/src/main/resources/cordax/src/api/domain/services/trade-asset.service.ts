@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Observable } from 'rxjs/Observable';
 import { TradeAssetState, IssueTradeAssetViewModel } from '../models/trade-asset';
-import { LinearTransactionResponseMessage } from '../messages';
+import { ChangeOwnerViewModel } from '../models/change-owner';
+import { TransactionResponseMessage, LinearTransactionResponseMessage } from '../messages';
 import { StateAndRef } from '../corda';
 import 'rxjs/add/operator/map';
 
@@ -18,5 +19,11 @@ export class TradeAssetService extends BaseService {
     return this.http
       .post(this.getUrl('tradeassets/issue'), tradeAssetViewModel.toRequestObject())
       .map(response => new LinearTransactionResponseMessage(response.json().linearId, response.json().transactionId));
+  }
+
+  public changeOwner(changeOwnerViewModel: ChangeOwnerViewModel): Observable<TransactionResponseMessage> {
+    return this.http
+      .put(this.getUrl('tradeassets/changeowner'), changeOwnerViewModel.toRequestObject())
+      .map(response => new TransactionResponseMessage(response.json().transactionId));
   }
 }

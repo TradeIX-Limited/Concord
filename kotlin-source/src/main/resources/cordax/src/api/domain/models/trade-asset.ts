@@ -34,12 +34,17 @@ export class IssueTradeAssetViewModel {
     }
 
     public toRequestObject(): object {
-        return {
-            buyer: this.buyer.toString(),
+        const result = {
             supplier: this.supplier.toString(),
             assetId: this.assetId,
             amount: this.amount,
             currency: this.currency.toString()
         }
+
+        if (this.buyer) {
+            result['buyer'] = this.buyer.toString();
+        }
+
+        return result;
     }
 }

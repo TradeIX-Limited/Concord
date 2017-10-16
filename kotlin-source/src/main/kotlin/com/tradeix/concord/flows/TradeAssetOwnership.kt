@@ -84,12 +84,18 @@ object TradeAssetOwnership {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val ownerFlow = initiateFlow(outputState.owner)
-            val buyerFlow = initiateFlow(outputState.buyer)
-            val conductorFlow = initiateFlow(outputState.conductor)
+            val requiredSignatureFlowSessions = listOf(
+                    outputState.owner,
+                    outputState.buyer,
+                    outputState.supplier,
+                    outputState.conductor)
+                    .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
+                    .distinct()
+                    .map { initiateFlow(it) }
+
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
-                    setOf(ownerFlow, buyerFlow, conductorFlow),
+                    requiredSignatureFlowSessions,
                     GATHERING_SIGNATURES.childProgressTracker()))
 
             // Stage 5 - Finalize transaction

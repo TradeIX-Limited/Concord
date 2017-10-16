@@ -1,10 +1,12 @@
 <div fxFill fxLayout="column">
   <mat-toolbar>
     <button mat-icon-button (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
+      <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+      <mat-icon *ngIf="sidenav.opened">close</mat-icon>
     </button>
+    <img class="logo" src="../../assets/images/MarcoPolo.svg" height="20" />
     <div fxFlex></div>
-    <button mat-button [matMenuTriggerFor]="menu">{{localNode?.organizationName}}</button>
+    <button mat-button [matMenuTriggerFor]="menu">Hello, {{localNode?.organizationName}}</button>
     <mat-menu #menu="matMenu">
       <mat-list>
         <mat-list-item>
@@ -26,7 +28,9 @@
     </mat-menu>
   </mat-toolbar>
   <mat-drawer-container fxFlex>
-    <mat-drawer fxLayout="column" mode="side" #sidenav>
+    <mat-drawer fxLayout="column" mode="over" #sidenav>
+      <a mat-button routerLink="./conductor">
+        <mat-icon>dashboard</mat-icon> Conductor Dashboard</a>
       <a mat-button routerLink="./buyer">
         <mat-icon>dashboard</mat-icon> Buyer Dashboard</a>
       <a mat-button routerLink="./supplier">

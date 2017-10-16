@@ -3,6 +3,13 @@
   <div fxLayout="column">
     <div fxLayout="row">
       <mat-form-field fxFlex="100">
+        <mat-select [(ngModel)]="model.buyer" placeholder="Buyer">
+          <mat-option *ngFor="let node of nodes" [value]="node">{{node.organizationName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field fxFlex="100">
         <mat-select [(ngModel)]="model.supplier" placeholder="Supplier">
           <mat-option *ngFor="let node of nodes" [value]="node">{{node.organizationName}}</mat-option>
         </mat-select>

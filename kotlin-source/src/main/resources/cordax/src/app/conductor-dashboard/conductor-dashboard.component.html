@@ -2,7 +2,10 @@
   <div class="app-padding" fxFlex>
     <div class="fxFlex" fxLayout="row">
       <div fxFlex>
-        <h1>Supplier Dashboard</h1>
+        <h1>Conductor Dashboard</h1>
+      </div>
+      <div>
+        <button mat-raised-button color="accent" (click)="openDialog()">New Trade Asset</button>
       </div>
     </div>
   </div>
@@ -18,7 +21,6 @@
           <th>Owner</th>
           <th>Status</th>
           <th class="align-right">Value</th>
-          <th class="align-right"></th>
         </tr>
       </thead>
       <tbody *ngIf="states.length > 0">
@@ -36,9 +38,6 @@
               </mat-chip-list>
             </td>
             <td class="align-right">{{state.state.data.tradeAsset.amount}}</td>
-            <td class="align-right">
-              <button mat-raised-button color="accent" (click)="openDialog(state.state.data.linearId.id)">Change Owner</button>
-            </td>
           </tr>
         </ng-container>
       </tbody>

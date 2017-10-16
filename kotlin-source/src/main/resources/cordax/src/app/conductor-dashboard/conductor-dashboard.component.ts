@@ -7,11 +7,11 @@ import { StateAndRef } from '../../api/domain/corda';
 import { X500Name } from '../../api/domain/x-500-name';
 
 @Component({
-  selector: 'app-buyer-dashboard',
-  templateUrl: './buyer-dashboard.component.html',
-  styleUrls: ['./buyer-dashboard.component.scss']
+  selector: 'app-conductor-dashboard',
+  templateUrl: './conductor-dashboard.component.html',
+  styleUrls: ['./conductor-dashboard.component.scss']
 })
-export class BuyerDashboardComponent implements OnInit {
+export class ConductorDashboardComponent implements OnInit {
   private states: StateAndRef<TradeAssetState>[] = [];
 
   constructor(

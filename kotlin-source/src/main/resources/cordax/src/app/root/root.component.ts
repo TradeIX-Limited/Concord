@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NodeService } from '../../api/domain/services/node.service';
 import { X500Name } from '../../api/domain/x-500-name';
 
@@ -10,7 +11,9 @@ import { X500Name } from '../../api/domain/x-500-name';
 export class RootComponent implements OnInit {
   private localNode: X500Name;
 
-  constructor(private readonly nodeService: NodeService) {
+  constructor(
+    private readonly nodeService: NodeService,
+    private readonly router: Router) {
   }
 
   ngOnInit() {
