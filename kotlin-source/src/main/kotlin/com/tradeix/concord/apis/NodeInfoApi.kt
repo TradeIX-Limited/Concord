@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response
 @Path("nodes")
 class NodeInfoApi(val services: CordaRPCOps) {
 
-    private val NOTARY_NAME = "Controller"
+    private val NOTARY_NAME = "R3Net"
     private val NETWORK_MAP_NAME = "Network Map Service"
 
     private val myLegalName: CordaX500Name = services.nodeInfo().legalIdentities.first().name

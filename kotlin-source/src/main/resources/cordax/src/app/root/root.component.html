@@ -4,20 +4,20 @@
       <mat-icon>menu</mat-icon>
     </button>
     <div fxFlex></div>
-    <button mat-button [matMenuTriggerFor]="menu">Marco Polo</button>
+    <button mat-button [matMenuTriggerFor]="menu">{{localNode?.organizationName}}</button>
     <mat-menu #menu="matMenu">
       <mat-list>
         <mat-list-item>
           <mat-icon class="space-right">face</mat-icon>
-          <span>Marco Polo</span>
+          <span>{{localNode?.organizationName}}</span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon class="space-right">location_on</mat-icon>
-          <span>Bridgewater</span>
+          <span>{{localNode?.localityName}}</span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon class="space-right">language</mat-icon>
-          <span>US</span>
+          <span>{{localNode?.country}}</span>
         </mat-list-item>
         <mat-list-item>
           <button fxFlex mat-raised-button color="accent">Sign Out</button>
@@ -26,14 +26,14 @@
     </mat-menu>
   </mat-toolbar>
   <mat-drawer-container fxFlex>
-    <mat-drawer fxLayout="column" #sidenav>
-      <a mat-button routerLink=".">
+    <mat-drawer fxLayout="column" mode="side" #sidenav>
+      <a mat-button routerLink="./buyer">
         <mat-icon>dashboard</mat-icon> Buyer Dashboard</a>
-      <a mat-button routerLink=".">
+      <a mat-button routerLink="./supplier">
         <mat-icon>dashboard</mat-icon> Supplier Dashboard</a>
-      <a mat-button routerLink=".">
+      <a mat-button routerLink="./funder">
         <mat-icon>dashboard</mat-icon> Funder Dashboard</a>
     </mat-drawer>
-    <app-buyer-dashboard></app-buyer-dashboard>
+    <router-outlet></router-outlet>
   </mat-drawer-container>
 </div>

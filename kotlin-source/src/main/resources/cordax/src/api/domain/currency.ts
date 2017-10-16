@@ -6,6 +6,14 @@ export class Currency {
     public static readonly JPY = new Currency('JPY', '¥', 100, 'Sen', 'Japanese Yen');
     public static readonly CNY = new Currency('CNY', '¥', 100, 'Fen', 'Chinese Yaun');
 
+    public static parse(value: string): Currency {
+        const result = Currency[value];
+        if (result === null || result === undefined) {
+            throw new Error(`Currency '${value}' not found.`);
+        }
+        return result;
+    }
+
     public static getKnownCurrencies(): Currency[] {
         return [
             Currency.GBP,
@@ -23,5 +31,9 @@ export class Currency {
         public readonly fractionalUnits: number,
         public readonly fractionalUnitName: string,
         public readonly name) {
+    }
+
+    public toString() {
+        return this.code;
     }
 }

@@ -15,45 +15,31 @@
         <tr>
           <th>Linear ID</th>
           <th>Transaction ID</th>
+          <th>Asset ID</th>
           <th>Buyer</th>
           <th>Supplier</th>
           <th>Owner</th>
-          <th>Value</th>
+          <th>Status</th>
+          <th class="align-right">Value</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>e267a4b9-76e3-488b-bc79-b52ee93caae7</td>
-          <td>C3AB8FF13720E8AD9047DD39466B3C8974E592C2FA383D4A3960714CAEF0C4F2</td>
-          <td>Alice In Wonderland</td>
-          <td>Bob The Builder</td>
-          <td>Charlie And The Chocolate Factory</td>
-          <td>12,000 GBP</td>
-        </tr>
-        <tr>
-          <td>e267a4b9-76e3-488b-bc79-b52ee93caae7</td>
-          <td>C3AB8FF13720E8AD9047DD39466B3C8974E592C2FA383D4A3960714CAEF0C4F2</td>
-          <td>Alice In Wonderland</td>
-          <td>Bob The Builder</td>
-          <td>Charlie And The Chocolate Factory</td>
-          <td>12,000 GBP</td>
-        </tr>
-        <tr>
-          <td>e267a4b9-76e3-488b-bc79-b52ee93caae7</td>
-          <td>C3AB8FF13720E8AD9047DD39466B3C8974E592C2FA383D4A3960714CAEF0C4F2</td>
-          <td>Alice In Wonderland</td>
-          <td>Bob The Builder</td>
-          <td>Charlie And The Chocolate Factory</td>
-          <td>12,000 GBP</td>
-        </tr>
-        <tr>
-          <td>e267a4b9-76e3-488b-bc79-b52ee93caae7</td>
-          <td>C3AB8FF13720E8AD9047DD39466B3C8974E592C2FA383D4A3960714CAEF0C4F2</td>
-          <td>Alice In Wonderland</td>
-          <td>Bob The Builder</td>
-          <td>Charlie And The Chocolate Factory</td>
-          <td>12,000 GBP</td>
-        </tr>
+      <tbody *ngIf="states.length > 0">
+        <ng-container *ngFor="let state of states">
+          <tr>
+            <td>{{state.state.data.linearId.id}}</td>
+            <td>{{state.ref.txhash}}</td>
+            <td>{{state.state.data.tradeAsset.assetId}}</td>
+            <td>{{getName(state.state.data.buyer)}}</td>
+            <td>{{getName(state.state.data.supplier)}}</td>
+            <td>{{getName(state.state.data.owner)}}</td>
+            <td>
+              <mat-chip-list>
+                <mat-chip selected="true" color="accent">{{state.state.data.tradeAsset.status}}</mat-chip>
+              </mat-chip-list>
+            </td>
+            <td class="align-right">{{state.state.data.tradeAsset.amount}}</td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

@@ -18,7 +18,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-@Path("purchaseorders")
+@Path("tradeassets")
 class TradeAssetApi(val services: CordaRPCOps) {
 
     @GET

@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
         // Buyer 1
         startWebserver(
                 startNode(
-                        providedName = CordaX500Name("Exxon Mobil", "Irving, Texas", "US"),
+                        providedName = CordaX500Name("Exxon Mobil", "Irving Texas", "US"),
                         rpcUsers = listOf(user)
                 ).getOrThrow()
         )
@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
         // Buyer 2
         startWebserver(
                 startNode(
-                        providedName = CordaX500Name("Boeing", "Chicago, Illinois", "US"),
+                        providedName = CordaX500Name("Boeing", "Chicago Illinois", "US"),
                         rpcUsers = listOf(user)
                 ).getOrThrow()
         )
@@ -53,7 +53,7 @@ fun main(args: Array<String>) {
         // Supplier 2
         startWebserver(
                 startNode(
-                        providedName = CordaX500Name("General Electric", "Boston, Massachusetts", "US"),
+                        providedName = CordaX500Name("General Electric", "Boston Massachusetts", "US"),
                         rpcUsers = listOf(user)
                 ).getOrThrow()
         )
