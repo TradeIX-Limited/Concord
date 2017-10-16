@@ -15,7 +15,7 @@ import net.corda.core.identity.Party
 import net.corda.core.utilities.getOrThrow
 import kotlin.test.fail
 
-class TradeAssetStateIssuanceTests {
+class TradeAssetIssuanceFlowTests {
     lateinit var net: MockNetwork
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
@@ -64,7 +64,7 @@ class TradeAssetStateIssuanceTests {
         net.runNetwork()
 
         val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(mockConductor.owningKey)
+        signedTx.verifySignaturesExcept(mockConductor.owningKey, mockSupplier.owningKey)
     }
 
     @Test
@@ -86,7 +86,7 @@ class TradeAssetStateIssuanceTests {
     }
 
     @Test
-    fun `flow records a transaction in both parties' vaults`() {
+    fun `flow records a transaction in all counter-party vaults`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val assetId = "MOCK_ASSET"
         val flow = TradeAssetIssuance.BuyerFlow(
