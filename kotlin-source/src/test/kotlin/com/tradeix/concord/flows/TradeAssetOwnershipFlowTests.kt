@@ -49,8 +49,8 @@ class TradeAssetOwnershipFlowTests {
         mockConductor = mockConductorNode.info.chooseIdentity()
         mockNewOwner = mockNewOwnerNode.info.chooseIdentity()
         nodes.partyNodes.forEach {
-            it.registerInitiatedFlow(TradeAssetOwnership.Acceptor::class.java)
             it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java)
+            it.registerInitiatedFlow(TradeAssetOwnership.Acceptor::class.java)
         }
     }
 
@@ -78,7 +78,7 @@ class TradeAssetOwnershipFlowTests {
        val future = mockConductorNode.services.startFlow(flow).resultFuture
        val signedTx = future.getOrThrow()
 
-     for (node in listOf(mockConductorNode)) {
+     for (node in listOf(mockNewOwnerNode)) {
            val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
            assert(recordedTx.inputs.size == 1)
            assert(recordedTx.tx.outputs.size == 1)
