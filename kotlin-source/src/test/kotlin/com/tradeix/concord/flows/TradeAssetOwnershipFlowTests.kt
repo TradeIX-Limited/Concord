@@ -21,6 +21,7 @@ import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class TradeAssetOwnershipFlowTests {
@@ -75,7 +76,7 @@ class TradeAssetOwnershipFlowTests {
                amount = 1.POUNDS)
        val stateAndRef = issueTradeAsset(tradeAsset)
        val flow = TradeAssetOwnership.BuyerFlow(stateAndRef!!, mockNewOwner)
-       val future = mockBuyerNode.services.startFlow(flow).resultFuture
+       val future = mockConductorNode.services.startFlow(flow).resultFuture
        val signedTx = future.getOrThrow()
 
 /*       for (node in listOf(mockNewOwnerNode, mockSupplierNode)) {
@@ -103,13 +104,36 @@ class TradeAssetOwnershipFlowTests {
                 amount = tradeAssetIssuanceState.tradeAsset.amount,
                 assetId =  tradeAssetIssuanceState.tradeAsset.assetId
         )
-        val issuanceFlowFuture = mockBuyerNode.services.startFlow(issuanceFlow).resultFuture
+        val issuanceFlowFuture = mockConductorNode.services.startFlow(issuanceFlow).resultFuture
         network.runNetwork()
         val stx = issuanceFlowFuture.getOrThrow()
         // Check issuance transaction is stored in the storage service.
-        val bTx = mockSupplierNode.services.validatedTransactions.getTransaction(stx.id)
+        val bTx = mockConductorNode.services.validatedTransactions.getTransaction(stx.id)
         assertEquals(bTx, stx)
-        // Check tradeasset state is stored in the vault.
+        // Check tradeasset state is stored in the correct vaults.
+        mockNewOwnerNode.database.transaction {
+            // Using a custom criteria directly referencing schema entity attribute.
+            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
+            val vault = mockNewOwnerNode.services.vaultService.queryBy<TradeAssetState>(criteria)
+            val inputStateAndRefList = vault.states
+            assertTrue { inputStateAndRefList.isEmpty() }
+        }
+        mockConductorNode.database.transaction {
+            // Using a custom criteria directly referencing schema entity attribute.
+            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
+            val vault = mockConductorNode.services.vaultService.queryBy<TradeAssetState>(criteria)
+            val inputStateAndRef = vault.states.single()
+            val bTradeAssetStateThruQuery = inputStateAndRef.state.data
+            assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
+        }
+        mockBuyerNode.database.transaction {
+            // Using a custom criteria directly referencing schema entity attribute.
+            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
+            val vault = mockBuyerNode.services.vaultService.queryBy<TradeAssetState>(criteria)
+            val inputStateAndRef = vault.states.single()
+            val bTradeAssetStateThruQuery = inputStateAndRef.state.data
+            assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
+        }
         mockSupplierNode.database.transaction {
             // Using a custom criteria directly referencing schema entity attribute.
             val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
