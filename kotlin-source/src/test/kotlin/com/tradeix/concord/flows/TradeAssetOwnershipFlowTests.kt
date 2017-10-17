@@ -86,7 +86,7 @@ class TradeAssetOwnershipFlowTests {
     }
 
     private fun issueTradeAsset(tradeAsset: TradeAsset) : StateAndRef<TradeAssetState>? {
-        var inputStateAndRef1: StateAndRef<TradeAssetState>? = null //TODO rename the variable as a result
+        var inputStateAndResult: StateAndRef<TradeAssetState>? = null
         val linearId = UniqueIdentifier(id = UUID.randomUUID())
         val tradeAssetIssuanceState = TradeAssetState(linearId = linearId,
                 owner = mockSupplier,
@@ -111,18 +111,14 @@ class TradeAssetOwnershipFlowTests {
         assertEquals(bTx, stx)
         // Check tradeasset state is stored in the vault.
         mockSupplierNode.database.transaction {
-            // Simple query.
-            val bTradeAssetState = mockSupplierNode.services.vaultService.queryBy<TradeAssetState>().states.single().state.data
-            assertEquals(bTradeAssetState.toString(), tradeAssetIssuanceState.toString())
-            print("$bTradeAssetState == $tradeAssetIssuanceState\n")
             // Using a custom criteria directly referencing schema entity attribute.
             val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
             val vault = mockSupplierNode.services.vaultService.queryBy<TradeAssetState>(criteria)
             val inputStateAndRef = vault.states.single()
             val bTradeAssetStateThruQuery = inputStateAndRef.state.data
             assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
-            inputStateAndRef1 = inputStateAndRef
+            inputStateAndResult = inputStateAndRef
         }
-        return inputStateAndRef1
+        return inputStateAndResult
     }
 }
