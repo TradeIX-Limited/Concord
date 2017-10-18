@@ -65,5 +65,11 @@ open class TradeAssetContract : Contract {
             }
         }
 
+        class Cancel : Commands {
+            override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
+                "One Input should be present to cancel." using
+                        (tx.inputs.size == 1)
+            }
+        }
     }
 }
