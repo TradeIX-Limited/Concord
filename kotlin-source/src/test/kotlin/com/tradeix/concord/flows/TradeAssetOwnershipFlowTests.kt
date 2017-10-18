@@ -87,7 +87,7 @@ class TradeAssetOwnershipFlowTests {
         val signedTx = getOwnershipSignedTransaction()
 
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
-            GroovyTestCase.assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
+            assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
         }
     }
 
@@ -125,7 +125,7 @@ class TradeAssetOwnershipFlowTests {
                 inputState = inputStateAndRef,
                 newOwner = mockFunder)
 
-        val ownershipFuture = mockSupplierNode.services.startFlow(flow).resultFuture
+        val ownershipFuture = mockConductorNode.services.startFlow(flow).resultFuture
 
         network.runNetwork()
 
