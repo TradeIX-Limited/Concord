@@ -19,6 +19,6 @@ class ConcordPlugin : WebServerPluginRegistry {
      */
     override val staticServeDirs: Map<String, String> = mapOf(
             // This will serve the exampleWeb directory in resources to /web/example
-            // "tix" to javaClass.classLoader.getResource("cordax/dist").toExternalForm()
+            "tix" to javaClass.classLoader.getResource("cordax/dist").toExternalForm()
     )
 }
