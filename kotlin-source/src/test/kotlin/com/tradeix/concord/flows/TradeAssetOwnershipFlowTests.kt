@@ -2,11 +2,14 @@ package com.tradeix.concord.flows
 
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
+import groovy.util.GroovyTestCase
+import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
 import net.corda.core.node.services.queryBy
 import net.corda.core.node.services.vault.QueryCriteria
+import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.finance.POUNDS
 import net.corda.node.internal.StartedNode
@@ -29,25 +32,30 @@ class TradeAssetOwnershipFlowTests {
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockConductorNode: StartedNode<MockNetwork.MockNode>
-    lateinit var mockNewOwnerNode: StartedNode<MockNetwork.MockNode>
+    lateinit var mockFunderNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockBuyer: Party
     lateinit var mockSupplier: Party
     lateinit var mockConductor: Party
-    lateinit var mockNewOwner: Party
+    lateinit var mockFunder: Party
 
     @Before
     fun setup() {
         setCordappPackages("com.tradeix.concord.contracts")
+
         network = MockNetwork()
+
         val nodes = network.createSomeNodes(4)
+
         mockBuyerNode = nodes.partyNodes[0]
         mockSupplierNode = nodes.partyNodes[1]
         mockConductorNode = nodes.partyNodes[2]
-        mockNewOwnerNode = nodes.partyNodes[3]
+        mockFunderNode = nodes.partyNodes[3]
+
         mockBuyer = mockBuyerNode.info.chooseIdentity()
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
-        mockNewOwner = mockNewOwnerNode.info.chooseIdentity()
+        mockFunder = mockFunderNode.info.chooseIdentity()
+
         nodes.partyNodes.forEach {
             it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java)
             it.registerInitiatedFlow(TradeAssetOwnership.Acceptor::class.java)
@@ -61,83 +69,66 @@ class TradeAssetOwnershipFlowTests {
     }
 
     @Test
-    fun `issuance flow should work correctly`() {
-        val tradeAsset = TradeAsset(assetId = "MockAsset",
-                status = TradeAsset.STATE_ISSUED,
-                amount = 1.POUNDS)
-        assertNotNull(issueTradeAsset(tradeAsset))
+    fun `SignedTransaction returned by the flow is signed by the initiator`() {
+        val signedTx = getOwnershipSignedTransaction()
+
+        signedTx.verifySignaturesExcept(mockBuyer.owningKey, mockConductor.owningKey, mockFunder.owningKey)
     }
 
-   @Ignore
-    fun `transfer of ownership flow has a single input and a single output - the trade asset`() {
-       val tradeAsset = TradeAsset(assetId = "MockAsset",
-               status = TradeAsset.STATE_ISSUED,
-               amount = 1.POUNDS)
-       val stateAndRef = issueTradeAsset(tradeAsset)
-       val flow = TradeAssetOwnership.BuyerFlow(stateAndRef!!, mockNewOwner)
-       val future = mockConductorNode.services.startFlow(flow).resultFuture
-       val signedTx = future.getOrThrow()
+    @Test
+    fun `SignedTransaction returned by the flow is signed by the acceptor`() {
+        val signedTx = getOwnershipSignedTransaction()
 
-     for (node in listOf(mockNewOwnerNode)) {
-           val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
-           assert(recordedTx.inputs.size == 1)
-           assert(recordedTx.tx.outputs.size == 1)
-     }
+        signedTx.verifySignaturesExcept(mockSupplier.owningKey)
     }
 
-    private fun issueTradeAsset(tradeAsset: TradeAsset) : StateAndRef<TradeAssetState>? {
-        var inputStateAndResult: StateAndRef<TradeAssetState>? = null
-        val linearId = UniqueIdentifier(id = UUID.randomUUID())
-        val tradeAssetIssuanceState = TradeAssetState(linearId = linearId,
-                owner = mockSupplier,
-                buyer = mockBuyer,
-                conductor = mockConductor,
-                supplier = mockSupplier,
-                tradeAsset = tradeAsset)
+    @Test
+    fun `flow records a transaction in all counter-party vaults`() {
+        val signedTx = getOwnershipSignedTransaction()
 
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
+            GroovyTestCase.assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
+        }
+    }
+
+    @Test
+    fun `recorded transaction has a single input and a single output`() {
+        val signedTx = getOwnershipSignedTransaction()
+
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
+            assert(recordedTx.inputs.size == 1)
+            assert(recordedTx.tx.outputs.size == 1)
+        }
+    }
+
+    private fun getOwnershipSignedTransaction(): SignedTransaction {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val assetId = "MOCK_ASSET"
         val issuanceFlow = TradeAssetIssuance.BuyerFlow(
-                linearId = tradeAssetIssuanceState.linearId,
-                supplier = tradeAssetIssuanceState.supplier,
-                conductor = tradeAssetIssuanceState.conductor,
-                buyer = tradeAssetIssuanceState.buyer,
-                amount = tradeAssetIssuanceState.tradeAsset.amount,
-                assetId =  tradeAssetIssuanceState.tradeAsset.assetId
-        )
-        val issuanceFlowFuture = mockConductorNode.services.startFlow(issuanceFlow).resultFuture
+                linearId = linearId,
+                assetId = assetId,
+                buyer = mockBuyer,
+                supplier = mockSupplier,
+                conductor = mockConductor,
+                amount = 1.POUNDS)
+
+        val issuanceFuture = mockConductorNode.services.startFlow(issuanceFlow).resultFuture
+
         network.runNetwork()
-        val stx = issuanceFlowFuture.getOrThrow()
-        // Check issuance transaction is stored in the storage service.
-        val bTx = mockConductorNode.services.validatedTransactions.getTransaction(stx.id)
-        assertEquals(bTx, stx)
-        // Check tradeasset state is stored in the correct vaults.
-        mockNewOwnerNode.database.transaction {
-            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
-            val vault = mockNewOwnerNode.services.vaultService.queryBy<TradeAssetState>(criteria)
-            val inputStateAndRefList = vault.states
-            assertTrue { inputStateAndRefList.isEmpty() }
-        }
-        mockConductorNode.database.transaction {
-            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
-            val vault = mockConductorNode.services.vaultService.queryBy<TradeAssetState>(criteria)
-            val inputStateAndRef = vault.states.single()
-            val bTradeAssetStateThruQuery = inputStateAndRef.state.data
-            assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
-        }
-        mockBuyerNode.database.transaction {
-            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
-            val vault = mockBuyerNode.services.vaultService.queryBy<TradeAssetState>(criteria)
-            val inputStateAndRef = vault.states.single()
-            val bTradeAssetStateThruQuery = inputStateAndRef.state.data
-            assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
-        }
-        mockSupplierNode.database.transaction {
-            val criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(tradeAssetIssuanceState.linearId))
-            val vault = mockSupplierNode.services.vaultService.queryBy<TradeAssetState>(criteria)
-            val inputStateAndRef = vault.states.single()
-            val bTradeAssetStateThruQuery = inputStateAndRef.state.data
-            assertEquals(bTradeAssetStateThruQuery.linearId, tradeAssetIssuanceState.linearId)
-            inputStateAndResult = inputStateAndRef
-        }
-        return inputStateAndResult
+
+        val stx = issuanceFuture.getOrThrow()
+
+        val inputStateAndRef: StateAndRef<TradeAssetState> = stx.tx.outRef(stx.tx.outputStates.single())
+
+        val flow = TradeAssetOwnership.BuyerFlow(
+                inputState = inputStateAndRef,
+                newOwner = mockFunder)
+
+        val ownershipFuture = mockSupplierNode.services.startFlow(flow).resultFuture
+
+        network.runNetwork()
+
+        return ownershipFuture.getOrThrow()
     }
 }

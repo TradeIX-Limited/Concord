@@ -1,6 +1,5 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.states.TradeAssetState
 import groovy.util.GroovyTestCase.assertEquals
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
@@ -16,7 +15,7 @@ import net.corda.core.utilities.getOrThrow
 import kotlin.test.fail
 
 class TradeAssetIssuanceFlowTests {
-    lateinit var net: MockNetwork
+    lateinit var network: MockNetwork
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockConductorNode: StartedNode<MockNetwork.MockNode>
@@ -28,8 +27,8 @@ class TradeAssetIssuanceFlowTests {
     @Before
     fun setup() {
         setCordappPackages("com.tradeix.concord.contracts")
-        net = MockNetwork()
-        val nodes = net.createSomeNodes(3)
+        network = MockNetwork()
+        val nodes = network.createSomeNodes(3)
         mockBuyerNode = nodes.partyNodes[0]
         mockSupplierNode = nodes.partyNodes[1]
         mockConductorNode = nodes.partyNodes[2]
@@ -40,13 +39,13 @@ class TradeAssetIssuanceFlowTests {
 
         nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java) }
 
-        net.runNetwork()
+        network.runNetwork()
     }
 
     @After
     fun tearDown() {
         unsetCordappPackages()
-        net.stopNodes()
+        network.stopNodes()
     }
 
     @Test
@@ -61,7 +60,7 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier,
                 conductor = mockConductor)
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
-        net.runNetwork()
+        network.runNetwork()
 
         val signedTx = future.getOrThrow()
         signedTx.verifySignaturesExcept(mockConductor.owningKey, mockSupplier.owningKey)
@@ -79,7 +78,7 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier,
                 conductor = mockConductor)
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
-        net.runNetwork()
+        network.runNetwork()
 
         val signedTx = future.getOrThrow()
         signedTx.verifySignaturesExcept(mockBuyer.owningKey)
@@ -97,7 +96,7 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier,
                 conductor = mockConductor)
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
-        net.runNetwork()
+        network.runNetwork()
         val signedTx = future.getOrThrow()
 
         // We check the recorded transaction in both vaults.
@@ -118,7 +117,7 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier,
                 conductor = mockConductor)
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
-        net.runNetwork()
+        network.runNetwork()
         val signedTx = future.getOrThrow()
 
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
