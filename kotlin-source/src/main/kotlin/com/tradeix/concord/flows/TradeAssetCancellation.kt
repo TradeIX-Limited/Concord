@@ -13,6 +13,8 @@ import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
 object TradeAssetCancellation {
+    enum class AssetType(val desc: String) { PO("Purchase Order"), INVOICE("Invoice") }
+
     @InitiatingFlow
     @StartableByRPC
     class InitiatorFlow(private val inputState: StateAndRef<TradeAssetState>) : FlowLogic<SignedTransaction>() {
@@ -40,6 +42,8 @@ object TradeAssetCancellation {
 
         override val progressTracker = tracker()
 
+
+
         @Suspendable
         override fun call(): SignedTransaction {
             val notary = serviceHub
@@ -61,6 +65,7 @@ object TradeAssetCancellation {
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
             transactionBuilder.verify(serviceHub)
+            verifyCancellationRules()
 
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
@@ -85,7 +90,34 @@ object TradeAssetCancellation {
                     fullySignedTransaction,
                     FINALISING_TRANSACTION.childProgressTracker()))
         }
+
+        fun verifyCancellationRules() : Unit {
+            val tradeAssetState = inputState.state.data
+            val assetStatus = tradeAssetState.tradeAsset.status
+            val resultForInitiatorsRule = permissibleInitiatorsRule(tradeAssetState, assetStatus)
+            if (resultForInitiatorsRule.isNotEmpty())
+                throw FlowException(resultForInitiatorsRule)
+        }
+
+        private fun permissibleInitiatorsRule(input: TradeAssetState, assetStatus: String) : String   =
+            if (ourIdentity == input.buyer)
+                if ( assetStatus != AssetType.PO.desc) ValidationMessages.BUYER_CANT_PO else ValidationMessages.PASSED
+            else if (ourIdentity == input.supplier)
+                if ( assetStatus != AssetType.INVOICE.desc) ValidationMessages.SUPPLIER_CANT_INV else ValidationMessages.PASSED
+            else if (ourIdentity == input.conductor)
+                if ( (!listOf(AssetType.PO.desc, AssetType.INVOICE.desc).contains(assetStatus)))
+                    ValidationMessages.CONDUCTOR_ONLY_PO_IV else ValidationMessages.PASSED
+            else
+                ValidationMessages.PASSED
+
+        object ValidationMessages {
+            val BUYER_CANT_PO = "Buyer cannot cancel when it's a purchase order"
+            val SUPPLIER_CANT_INV = "Supplier cannot cancel when it's an invoice"
+            val CONDUCTOR_ONLY_PO_IV = "Only a Conductor can cancel PO or Invoice on behalf of buyer or supplier"
+            val PASSED = ""
+        }
     }
+
 
     @InitiatedBy(TradeAssetCancellation.InitiatorFlow::class)
     class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {

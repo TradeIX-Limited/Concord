@@ -11,5 +11,7 @@ data class TradeAsset(
         val amount: Amount<Currency>) {
     companion object {
         val STATE_ISSUED = "ISSUED"
+        val PO = "Purchase Order"
+        val INVOICE = "Invoice"
     }
 }

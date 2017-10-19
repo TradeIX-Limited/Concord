@@ -43,7 +43,6 @@ open class TradeAssetContract : Contract {
 
         class ChangeOwner : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
-
                 "Only one input should be consumed when changing owner on a purchase order." using
                         (tx.inputs.size == 1)
 
@@ -69,6 +68,11 @@ open class TradeAssetContract : Contract {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
                 "One Input should be present to cancel." using
                         (tx.inputs.size == 1)
+                "There should not be any Output for cancellation." using
+                        (tx.outputs.isEmpty())
+                val tradeAssetState = tx.inputs.single().state.data as TradeAssetState
+                "Funder cannot cancel the contract" using
+                        (tradeAssetState.owner != tradeAssetState.supplier) //TODO: Check with Matt if the owner in issuance can be initiator
             }
         }
     }

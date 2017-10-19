@@ -60,7 +60,7 @@ object TradeAssetIssuance {
                     linearId = linearId,
                     tradeAsset = TradeAsset(
                             assetId = assetId,
-                            status = TradeAsset.STATE_ISSUED,
+                            status = TradeAsset.STATE_ISSUED, // TODO: Check with Matt that this is hard coded - TradeAsset.PO,
                             amount = amount),
                     owner = supplier,
                     buyer = buyer,
