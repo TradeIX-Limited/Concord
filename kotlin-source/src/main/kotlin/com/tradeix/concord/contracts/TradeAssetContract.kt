@@ -77,5 +77,17 @@ open class TradeAssetContract : Contract {
                         (signers.containsAll(inputState.participants.map { it.owningKey }))
             }
         }
+
+        class Amend : Commands {
+            override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
+                "Only one input state should be consumed when amending a trade asset" using
+                        (tx.inputs.size == 1)
+
+                "Only one output should be created when amending a trade asset" using
+                        (tx.outputs.size == 1)
+
+
+            }
+        }
     }
 }
