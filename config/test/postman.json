@@ -1,0 +1,676 @@
+{
+	"info": {
+		"name": "Corda",
+		"_postman_id": "e85c19a2-ff98-8437-abe9-be377c85fd6a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Conductor (Trade IX)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10007/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10007/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10007/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"buyer\": \"C=US,L=Chicago Illinois,O=Boeing\",\r\n\t\"supplier\": \"C=US,L=Boston Massachusetts,O=General Electric\",\r\n\t\"assetId\": \"TEST-ASSET-0001\",\r\n\t\"amount\": \"1000000\",\r\n\t\"currency\": \"GBP\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/tradeassets/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"tradeassets",
+								"issue"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Buyer (Exxon Mobil)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10010/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10010/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10010/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"supplier\": \"C=NL,L=The Hague,O=Royal Dutch Shell\",\r\n\t\"assetId\": \"EXO-RDS-001\",\r\n\t\"amount\": \"1000000\",\r\n\t\"currency\": \"USD\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/tradeassets/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"tradeassets",
+								"issue"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Buyer (Boeing)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10013/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10013/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10013/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"supplier\": \"C=US,L=Boston Massachusetts,O=General Electric\",\r\n\t\"assetId\": \"BOE-GEL-123\",\r\n\t\"amount\": \"1000000\",\r\n\t\"currency\": \"EUR\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/tradeassets/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"tradeassets",
+								"issue"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Supplier (Royal Dutch Shell)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10016/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10016/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10016/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"\",\r\n\t\"newOwner\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/tradeassets/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"tradeassets",
+								"changeowner"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Supplier (General Electric)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10019/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10019/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10019/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"\",\r\n\t\"newOwner\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/tradeassets/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"tradeassets",
+								"changeowner"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Funder (BNY Mellon)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10022/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10022/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10022/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Funder (JP Morgan Chase)",
+			"description": "",
+			"item": [
+				{
+					"name": "nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10025/api/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"nodes"
+							]
+						},
+						"description": "Gets all available nodes in your network"
+					},
+					"response": []
+				},
+				{
+					"name": "nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10025/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "tradeassets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:10025/api/tradeassets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"tradeassets"
+							]
+						},
+						"description": "Gets all trade assets stored in this node's vault."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
