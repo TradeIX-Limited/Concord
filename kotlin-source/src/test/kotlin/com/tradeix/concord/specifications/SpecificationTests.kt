@@ -49,7 +49,7 @@ class SpecificationTests {
 
         tradeAssetState = TradeAssetState(
                 linearId = UniqueIdentifier(),
-                tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.STATE_ISSUED, 100.POUNDS),
+                tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 100.POUNDS),
                 owner = mockSupplier,
                 buyer = mockBuyer,
                 supplier = mockSupplier,

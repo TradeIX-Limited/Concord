@@ -7,11 +7,12 @@ import java.util.*
 @CordaSerializable
 data class TradeAsset(
         val assetId: String,
-        val status: String,
+        val status: TradeAssetStatus,
         val amount: Amount<Currency>) {
-    companion object {
-        val STATE_ISSUED = "ISSUED"
-        val PO = "Purchase Order"
-        val INVOICE = "Invoice"
+
+    @CordaSerializable
+    enum class TradeAssetStatus(val description: String) {
+        INVOICE("Invoice"),
+        PURCHASE_ORDER("Purchase Order")
     }
 }

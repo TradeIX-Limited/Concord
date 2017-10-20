@@ -3,27 +3,20 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
+import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.*
 import net.corda.core.flows.*
-import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 import net.corda.core.utilities.ProgressTracker.Step
-import java.util.*
 
 object TradeAssetIssuance {
     @InitiatingFlow
     @StartableByRPC
-    class BuyerFlow(
-            private val linearId: UniqueIdentifier,
-            private val assetId: String,
-            private val amount: Amount<Currency>,
-            private val buyer: Party,
-            private val supplier: Party,
-            private val conductor: Party) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val message: TradeAssetIssuanceRequestMessage) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object GENERATING_TRANSACTION : Step("Generating transaction based on new trade asset.")
@@ -50,18 +43,19 @@ object TradeAssetIssuance {
 
         @Suspendable
         override fun call(): SignedTransaction {
-            val notary = serviceHub
-                    .networkMapCache
-                    .notaryIdentities[0]
+            val notary = FlowHelper.getNotary(serviceHub)
+            val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
+            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
+            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
             val outputState = TradeAssetState(
-                    linearId = linearId,
+                    linearId = message.linearId,
                     tradeAsset = TradeAsset(
-                            assetId = assetId,
-                            status = TradeAsset.STATE_ISSUED, // TODO: Check with Matt that this is hard coded - TradeAsset.PO,
-                            amount = amount),
+                            assetId = message.assetId!!,
+                            status = TradeAsset.TradeAssetStatus.INVOICE,
+                            amount = message.amount),
                     owner = supplier,
                     buyer = buyer,
                     supplier = supplier,
@@ -82,14 +76,6 @@ object TradeAssetIssuance {
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
             val partiallySignedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
-
-            // Stage X - Conductor sub flow
-            //subFlow(ConductorFlow(initiateFlow(conductor)))
-            // TODO : ???
-
-            // Stage X - Conductor sub flow
-            //subFlow(SupplierFlow(initiateFlow(supplier)))
-            // TODO : ???
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
@@ -115,41 +101,7 @@ object TradeAssetIssuance {
         }
     }
 
-//    @InitiatedBy(BuyerFlow::class)
-//    class ConductorFlow(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
-//        @Suspendable
-//        override fun call(): SignedTransaction {
-//            val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
-//                override fun checkTransaction(stx: SignedTransaction) = requireThat {
-//                    // TODO : Verification?
-//                    // TODO : External validation?
-//                    // TODO : Sign?
-//                    System.out.println(">>>>>>>>>>>> CONDUCTOR VERIFY ${serviceHub.myInfo.legalIdentities[0].name}")
-//                }
-//            }
-//
-//            return subFlow(signTransactionFlow)
-//        }
-//    }
-//
-//    @InitiatedBy(ConductorFlow::class)
-//    class SupplierFlow(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
-//        @Suspendable
-//        override fun call(): SignedTransaction {
-//            val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
-//                override fun checkTransaction(stx: SignedTransaction) = requireThat {
-//                    // TODO : Verification?
-//                    // TODO : External validation?
-//                    // TODO : Sign?
-//                    System.out.println(">>>>>>>>>>>> SUPPLIER VERIFY ${serviceHub.myInfo.legalIdentities[0].name}")
-//                }
-//            }
-//
-//            return subFlow(signTransactionFlow)
-//        }
-//    }
-
-    @InitiatedBy(BuyerFlow::class)
+    @InitiatedBy(InitiatorFlow::class)
     class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {

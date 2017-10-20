@@ -26,7 +26,7 @@ data class TradeAssetState(
             is TradeAssetSchemaV1 -> TradeAssetSchemaV1.PersistentTradeAssetSchemaV1(
                     linearId = linearId.id,
                     assetId = tradeAsset.assetId,
-                    status = tradeAsset.status,
+                    status = tradeAsset.status.description,
                     value = tradeAsset.amount.toDecimal(),
                     owner = owner.name.toString(),
                     buyer = buyer.name.toString(),

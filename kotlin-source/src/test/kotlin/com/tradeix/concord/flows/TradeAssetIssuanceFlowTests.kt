@@ -1,5 +1,6 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import groovy.util.GroovyTestCase.assertEquals
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
@@ -12,6 +13,7 @@ import net.corda.finance.POUNDS
 import net.corda.testing.*
 import net.corda.core.identity.Party
 import net.corda.core.utilities.getOrThrow
+import java.math.BigDecimal
 import kotlin.test.fail
 
 class TradeAssetIssuanceFlowTests {
@@ -50,15 +52,15 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `SignedTransaction returned by the flow is signed by the initiator`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val assetId = "MOCK_ASSET"
-        val flow = TradeAssetIssuance.BuyerFlow(
-                linearId = linearId,
-                assetId = assetId,
-                amount = 1.POUNDS,
-                buyer = mockBuyer,
-                supplier = mockSupplier,
-                conductor = mockConductor)
+        val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
+                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        ))
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
         network.runNetwork()
 
@@ -68,15 +70,15 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `SignedTransaction returned by the flow is signed by the acceptor`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val assetId = "MOCK_ASSET"
-        val flow = TradeAssetIssuance.BuyerFlow(
-                linearId = linearId,
-                assetId = assetId,
-                amount = 1.POUNDS,
-                buyer = mockBuyer,
-                supplier = mockSupplier,
-                conductor = mockConductor)
+        val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
+                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        ))
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
         network.runNetwork()
 
@@ -86,15 +88,15 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `flow records a transaction in all counter-party vaults`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val assetId = "MOCK_ASSET"
-        val flow = TradeAssetIssuance.BuyerFlow(
-                linearId = linearId,
-                assetId = assetId,
-                amount = 1.POUNDS,
-                buyer = mockBuyer,
-                supplier = mockSupplier,
-                conductor = mockConductor)
+        val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
+                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        ))
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
         network.runNetwork()
         val signedTx = future.getOrThrow()
@@ -107,15 +109,15 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `recorded transaction has no inputs and a single output`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val assetId = "MOCK_ASSET"
-        val flow = TradeAssetIssuance.BuyerFlow(
-                linearId = linearId,
-                assetId = assetId,
-                amount = 1.POUNDS,
-                buyer = mockBuyer,
-                supplier = mockSupplier,
-                conductor = mockConductor)
+        val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
+                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        ))
         val future = mockBuyerNode.services.startFlow(flow).resultFuture
         network.runNetwork()
         val signedTx = future.getOrThrow()
