@@ -72,7 +72,7 @@ open class TradeAssetContract : Contract {
                         (tx.outputs.isEmpty())
                 val tradeAssetState = tx.inputs.single().state.data as TradeAssetState
                 "Funder cannot cancel the contract" using
-                        (tradeAssetState.owner != tradeAssetState.supplier) //TODO: Check with Matt if the owner in issuance can be initiator
+                        (tradeAssetState.owner != tradeAssetState.supplier) //TBD
             }
         }
     }
