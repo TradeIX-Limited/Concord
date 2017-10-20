@@ -1,6 +1,9 @@
 package com.tradeix.concord.messages
 
-abstract class RequestMessage() {
+import net.corda.core.serialization.CordaSerializable
+
+@CordaSerializable
+abstract class RequestMessage {
     val isValid: Boolean get() = getValidationErrors().isEmpty()
     abstract fun getValidationErrors(): ArrayList<String>
 }

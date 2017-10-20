@@ -1,13 +1,14 @@
 package com.tradeix.concord.messages
 
 import net.corda.core.contracts.Amount
-import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.CordaX500Name
+import net.corda.core.serialization.CordaSerializable
 import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 
+@CordaSerializable
 data class TradeAssetIssuanceRequestMessage(
         val linearId: UUID = UUID.randomUUID(),
         val buyer: CordaX500Name?,
@@ -52,7 +53,7 @@ data class TradeAssetIssuanceRequestMessage(
             result.add(EX_VALUE_NEG_MSG)
         }
 
-        if (currency != null) {
+        if (currency == null) {
             result.add(EX_CURRENCY_MSG)
         }
 

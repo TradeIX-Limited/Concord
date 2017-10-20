@@ -21,6 +21,6 @@ object FlowHelper {
 
     fun getPeerByLegalNameOrMe(serviceHub: ServiceHub, cordaX500Name: CordaX500Name?): Party = serviceHub
             .networkMapCache
-            .getPeerByLegalName(cordaX500Name!!)
-            ?: serviceHub.myInfo.legalIdentities[0]
+            .getPeerByLegalName(cordaX500Name ?: serviceHub.myInfo.legalIdentities[0].name)
+            ?: throw FlowException("$EX_FAILED_TO_GET_IDENTITY '$cordaX500Name'")
 }
