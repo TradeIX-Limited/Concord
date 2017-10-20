@@ -1,21 +1,23 @@
 {
 	"info": {
 		"name": "Corda",
-		"_postman_id": "e85c19a2-ff98-8437-abe9-be377c85fd6a",
+		"_postman_id": "ec23d274-1a95-fc41-7201-72da6bdb2628",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Conductor (Trade IX)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10007/api/nodes",
 							"protocol": "http",
@@ -37,7 +39,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10007/api/nodes/local",
 							"protocol": "http",
@@ -50,8 +55,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -60,7 +64,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets",
 							"protocol": "http",
@@ -107,19 +114,52 @@
 						"description": "Issues a trade asset from this node."
 					},
 					"response": []
+				},
+				{
+					"name": "tradeassets/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"5f560716-9a66-445a-863d-7cc85359cdac\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/tradeassets/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"tradeassets",
+								"cancel"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Buyer (Exxon Mobil)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10010/api/nodes",
 							"protocol": "http",
@@ -141,7 +181,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10010/api/nodes/local",
 							"protocol": "http",
@@ -154,8 +197,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -164,7 +206,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets",
 							"protocol": "http",
@@ -211,19 +256,52 @@
 						"description": "Issues a trade asset from this node."
 					},
 					"response": []
+				},
+				{
+					"name": "tradeassets/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"5f560716-9a66-445a-863d-7cc85359cdac\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/tradeassets/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"tradeassets",
+								"cancel"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Buyer (Boeing)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10013/api/nodes",
 							"protocol": "http",
@@ -245,7 +323,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10013/api/nodes/local",
 							"protocol": "http",
@@ -258,8 +339,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -268,7 +348,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets",
 							"protocol": "http",
@@ -315,19 +398,52 @@
 						"description": "Issues a trade asset from this node."
 					},
 					"response": []
+				},
+				{
+					"name": "tradeassets/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"5f560716-9a66-445a-863d-7cc85359cdac\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/tradeassets/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"tradeassets",
+								"cancel"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Supplier (Royal Dutch Shell)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10016/api/nodes",
 							"protocol": "http",
@@ -349,7 +465,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10016/api/nodes/local",
 							"protocol": "http",
@@ -362,8 +481,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -372,7 +490,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets",
 							"protocol": "http",
@@ -419,19 +540,52 @@
 						"description": "Issues a trade asset from this node."
 					},
 					"response": []
+				},
+				{
+					"name": "tradeassets/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/tradeassets/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"tradeassets",
+								"cancel"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Supplier (General Electric)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10019/api/nodes",
 							"protocol": "http",
@@ -453,7 +607,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10019/api/nodes/local",
 							"protocol": "http",
@@ -466,8 +623,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -476,7 +632,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets",
 							"protocol": "http",
@@ -523,19 +682,52 @@
 						"description": "Issues a trade asset from this node."
 					},
 					"response": []
+				},
+				{
+					"name": "tradeassets/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"linearId\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/tradeassets/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"tradeassets",
+								"cancel"
+							]
+						},
+						"description": "Issues a trade asset from this node."
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Funder (BNY Mellon)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10022/api/nodes",
 							"protocol": "http",
@@ -557,7 +749,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10022/api/nodes/local",
 							"protocol": "http",
@@ -570,8 +765,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -580,7 +774,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets",
 							"protocol": "http",
@@ -601,14 +798,16 @@
 		},
 		{
 			"name": "Funder (JP Morgan Chase)",
-			"description": "",
 			"item": [
 				{
 					"name": "nodes",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10025/api/nodes",
 							"protocol": "http",
@@ -630,7 +829,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10025/api/nodes/local",
 							"protocol": "http",
@@ -643,8 +845,7 @@
 								"nodes",
 								"local"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -653,7 +854,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets",
 							"protocol": "http",

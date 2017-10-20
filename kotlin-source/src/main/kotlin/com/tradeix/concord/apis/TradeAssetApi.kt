@@ -1,5 +1,6 @@
 package com.tradeix.concord.apis
 
+import com.tradeix.concord.flows.TradeAssetCancellation
 import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
@@ -159,6 +160,49 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     TradeAssetOwnership::BuyerFlow,
                     inputStateAndRef,
                     newOwner)
+
+            flowHandle.progress.subscribe { println(">> $it") }
+
+            val result = flowHandle
+                    .returnValue
+                    .getOrThrow()
+
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(TransactionResponseMessage(result.id.toString()))
+                    .build()
+
+        } catch (ex: Throwable) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ErrorResponseMessage(ex.message!!))
+                    .build()
+        }
+    }
+
+    @PUT
+    @Path("cancel")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun cancelTradeAsset(message: TradeAssetCancelRequestMessage): Response {
+
+        if (message.linearId == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(ErrorResponseMessage("No linearId given for trade asset."))
+                    .build()
+        }
+
+        val linearId = UniqueIdentifier(id = message.linearId)
+
+        val inputStateAndRef = services.vaultQueryByCriteria(
+                QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId)),
+                TradeAssetState::class.java).states.single()
+
+        try {
+            val flowHandle = services.startTrackedFlow(
+                    TradeAssetCancellation::InitiatorFlow,
+                    inputStateAndRef)
 
             flowHandle.progress.subscribe { println(">> $it") }
 
