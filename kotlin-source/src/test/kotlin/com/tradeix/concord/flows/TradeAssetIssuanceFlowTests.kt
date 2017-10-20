@@ -53,7 +53,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `SignedTransaction returned by the flow is signed by the initiator`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -71,7 +71,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `SignedTransaction returned by the flow is signed by the acceptor`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -89,7 +89,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `flow records a transaction in all counter-party vaults`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -110,7 +110,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `recorded transaction has no inputs and a single output`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,

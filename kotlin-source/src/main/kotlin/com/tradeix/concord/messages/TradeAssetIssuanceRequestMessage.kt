@@ -9,20 +9,22 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class TradeAssetIssuanceRequestMessage(
-        val linearId: UniqueIdentifier = UniqueIdentifier(),
+        val linearId: UUID = UUID.randomUUID(),
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
-        val conductor: CordaX500Name = CordaX500Name("TradeIX", "London", "GB"),
+        val conductor: CordaX500Name = CONDUCTOR_X500_NAME,
         val assetId: String?,
         val value: BigDecimal?,
-        val currency: String?) {
+        val currency: String?) : RequestMessage() {
 
     companion object {
-        private val EX_SUPPLIER_MSG = "Supplier must be provided for an issuance transaction"
-        private val EX_ASSET_ID_MSG = "Asset ID must be provided for an issuance transaction"
-        private val EX_CURRENCY_MSG = "Currency must be provided for an issuance transaction"
+        private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")
+
+        private val EX_SUPPLIER_MSG = "Supplier is required for an issuance transaction"
+        private val EX_ASSET_ID_MSG = "Asset ID is required for an issuance transaction"
+        private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction"
         private val EX_VALUE_NEG_MSG = "Value cannot be negative for an issuance transaction"
-        private val EX_VALUE_MSG = "Value must be provided for an issuance transaction"
+        private val EX_VALUE_MSG = "Value is required for an issuance transaction"
     }
 
     val amount: Amount<Currency>
@@ -31,10 +33,7 @@ data class TradeAssetIssuanceRequestMessage(
                 token = Currency.getInstance(currency ?: throw IllegalArgumentException(EX_CURRENCY_MSG))
         )
 
-    val isValid: Boolean
-        get() = getValidationErrors().isEmpty()
-
-    fun getValidationErrors(): ArrayList<String> {
+    override fun getValidationErrors(): ArrayList<String> {
         val result = ArrayList<String>()
 
         if (supplier == null) {

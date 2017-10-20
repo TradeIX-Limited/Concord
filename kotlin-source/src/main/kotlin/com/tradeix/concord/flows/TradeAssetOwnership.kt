@@ -3,12 +3,13 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
+import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.Command
-import net.corda.core.contracts.StateAndRef
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
-import net.corda.core.identity.Party
+import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
@@ -16,9 +17,7 @@ import net.corda.core.utilities.ProgressTracker
 object TradeAssetOwnership {
     @InitiatingFlow
     @StartableByRPC
-    class BuyerFlow(
-            private val inputState: StateAndRef<TradeAssetState>,
-            private val newOwner: Party) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val message: TradeAssetOwnershipRequestMessage) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new trade asset.")
@@ -45,17 +44,24 @@ object TradeAssetOwnership {
 
         @Suspendable
         override fun call(): SignedTransaction {
-            val notary = serviceHub
-                    .networkMapCache
-                    .notaryIdentities[0]
+            val notary = FlowHelper.getNotary(serviceHub)
+
+            val inputState = serviceHub
+                    .vaultService
+                    .queryBy(
+                            criteria = QueryCriteria.LinearStateQueryCriteria(
+                                    linearId = listOf(UniqueIdentifier(id = message.linearId!!))),
+                            contractStateType = TradeAssetState::class.java)
+                    .states
+                    .single()
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
 
-            val outputState = this.inputState
+            val outputState = inputState
                     .state
                     .data
-                    .copy(owner = newOwner)
+                    .copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.newOwner))
 
             val command = Command(
                     value = TradeAssetContract.Commands.ChangeOwner(),
@@ -73,14 +79,6 @@ object TradeAssetOwnership {
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
             val partiallySignedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
-
-            // Stage X - Conductor sub flow
-            //subFlow(ConductorFlow(initiateFlow(conductor)))
-            // TODO : ???
-
-            // Stage X - Conductor sub flow
-            //subFlow(SupplierFlow(initiateFlow(supplier)))
-            // TODO : ???
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
@@ -106,7 +104,7 @@ object TradeAssetOwnership {
         }
     }
 
-    @InitiatedBy(TradeAssetOwnership.BuyerFlow::class)
+    @InitiatedBy(TradeAssetOwnership.InitiatorFlow::class)
     class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {

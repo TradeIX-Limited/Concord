@@ -5,11 +5,9 @@ import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
 import com.tradeix.concord.states.TradeAssetState
-import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.messaging.vaultQueryBy
-import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -52,7 +50,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
             return Response
                     .status(Response.Status.CREATED)
                     .entity(LinearTransactionResponseMessage(
-                            linearId = message.linearId.id.toString(),
+                            linearId = message.linearId.toString(),
                             transactionId = result.id.toString()))
                     .build()
 
@@ -68,39 +66,17 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Path("changeowner")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    fun changePurchaseOrderOwner(message: TradeAssetOwnershipRequestMessage): Response {
+    fun changeTradeAssetOwner(message: TradeAssetOwnershipRequestMessage): Response {
 
-        if (message.linearId == null) {
+        if (!message.isValid) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorResponseMessage("No linearId given for purchase order ownership change."))
+                    .entity(ErrorsResponseMessage(message.getValidationErrors()))
                     .build()
         }
-
-        if (message.newOwner == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorResponseMessage("No newOwner given for purchase order ownership change."))
-                    .build()
-        }
-
-        val newOwner = services.wellKnownPartyFromX500Name(message.newOwner) ?:
-                return Response
-                        .status(Response.Status.BAD_REQUEST)
-                        .entity(ErrorResponseMessage("Failed to find new owner party for ownership change."))
-                        .build()
-
-        val linearId = UniqueIdentifier(id = message.linearId)
-
-        val inputStateAndRef = services.vaultQueryByCriteria(
-                QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId)),
-                TradeAssetState::class.java).states.single()
 
         try {
-            val flowHandle = services.startTrackedFlow(
-                    TradeAssetOwnership::BuyerFlow,
-                    inputStateAndRef,
-                    newOwner)
+            val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, message)
 
             flowHandle.progress.subscribe { println(">> $it") }
 

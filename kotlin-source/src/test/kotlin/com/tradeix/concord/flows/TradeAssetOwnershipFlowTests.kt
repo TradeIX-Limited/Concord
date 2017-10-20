@@ -1,13 +1,13 @@
 package com.tradeix.concord.flows
 
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
-import net.corda.finance.POUNDS
 import net.corda.node.internal.StartedNode
 import net.corda.testing.chooseIdentity
 import net.corda.testing.node.MockNetwork
@@ -97,31 +97,35 @@ class TradeAssetOwnershipFlowTests {
     }
 
     private fun getOwnershipSignedTransaction(): SignedTransaction {
+        val issuanceMessage = TradeAssetIssuanceRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        )
+
         val issuanceFuture = mockConductorNode
                 .services
-                .startFlow(TradeAssetIssuance.InitiatorFlow(
-                        TradeAssetIssuanceRequestMessage(
-                                linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000")),
-                                buyer = mockBuyer.name,
-                                supplier = mockSupplier.name,
-                                conductor = mockConductor.name,
-                                assetId = "MOCK_ASSET",
-                                value = BigDecimal.ONE,
-                                currency = "GBP"
-                        ))).resultFuture
+                .startFlow(TradeAssetIssuance.InitiatorFlow(issuanceMessage))
+                .resultFuture
 
         network.runNetwork()
-        val stx = issuanceFuture.getOrThrow()
-        val inputStateAndRef: StateAndRef<TradeAssetState> = stx.tx.outRef(stx.tx.outputStates.single())
+        issuanceFuture.getOrThrow()
+
+        val ownershipMessage = TradeAssetOwnershipRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                newOwner = mockFunder.name
+        )
 
         val ownershipFuture = mockConductorNode
                 .services
-                .startFlow(TradeAssetOwnership.BuyerFlow(
-                        inputState = inputStateAndRef,
-                        newOwner = mockFunder)).resultFuture
+                .startFlow(TradeAssetOwnership.InitiatorFlow(ownershipMessage))
+                .resultFuture
 
         network.runNetwork()
-
         return ownershipFuture.getOrThrow()
     }
 }

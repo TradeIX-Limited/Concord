@@ -51,7 +51,7 @@ object TradeAssetIssuance {
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
             val outputState = TradeAssetState(
-                    linearId = message.linearId,
+                    linearId = UniqueIdentifier(id = message.linearId),
                     tradeAsset = TradeAsset(
                             assetId = message.assetId!!,
                             status = TradeAsset.TradeAssetStatus.INVOICE,
