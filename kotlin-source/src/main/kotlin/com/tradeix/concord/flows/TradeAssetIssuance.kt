@@ -3,6 +3,7 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
+import com.tradeix.concord.exceptions.RequestValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
@@ -43,6 +44,11 @@ object TradeAssetIssuance {
 
         @Suspendable
         override fun call(): SignedTransaction {
+
+            if(!message.isValid) {
+                throw RequestValidationException(validationErrors = message.getValidationErrors())
+            }
+
             val notary = FlowHelper.getNotary(serviceHub)
             val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)

@@ -1,6 +1,7 @@
 package com.tradeix.concord.apis
 
 import com.tradeix.concord.flows.TradeAssetCancellation
+import com.tradeix.concord.exceptions.RequestValidationException
 import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
@@ -29,36 +30,28 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun issueTradeAsset(message: TradeAssetIssuanceRequestMessage): Response {
-
-        if (!message.isValid) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorsResponseMessage(message.getValidationErrors()))
-                    .build()
-        }
-
         try {
 
             val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, message)
-
             flowHandle.progress.subscribe { println(">> $it") }
-
-            val result = flowHandle
-                    .returnValue
-                    .getOrThrow()
+            val result = flowHandle.returnValue.getOrThrow()
 
             return Response
                     .status(Response.Status.CREATED)
-                    .entity(LinearTransactionResponseMessage(
-                            linearId = message.linearId.toString(),
-                            transactionId = result.id.toString()))
+                    .entity(LinearTransactionResponseMessage(message.linearId.toString(), result.id.toString()))
                     .build()
 
         } catch (ex: Throwable) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ErrorResponseMessage(ex.message!!))
-                    .build()
+            return when (ex) {
+                is RequestValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(ErrorResponseMessage(ex.message!!))
+                        .build()
+            }
         }
     }
 
@@ -67,22 +60,11 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun changeTradeAssetOwner(message: TradeAssetOwnershipRequestMessage): Response {
-
-        if (!message.isValid) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorsResponseMessage(message.getValidationErrors()))
-                    .build()
-        }
-
         try {
+
             val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, message)
-
             flowHandle.progress.subscribe { println(">> $it") }
-
-            val result = flowHandle
-                    .returnValue
-                    .getOrThrow()
+            val result = flowHandle.returnValue.getOrThrow()
 
             return Response
                     .status(Response.Status.CREATED)
@@ -90,10 +72,16 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     .build()
 
         } catch (ex: Throwable) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ErrorResponseMessage(ex.message!!))
-                    .build()
+            return when (ex) {
+                is RequestValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(ErrorResponseMessage(ex.message!!))
+                        .build()
+            }
         }
     }
 
