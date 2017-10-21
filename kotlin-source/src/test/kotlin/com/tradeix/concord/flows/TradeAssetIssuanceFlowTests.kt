@@ -1,5 +1,6 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.exceptions.RequestValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import groovy.util.GroovyTestCase.assertEquals
 import net.corda.node.internal.StartedNode
@@ -8,12 +9,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.*
-import net.corda.core.contracts.UniqueIdentifier
-import net.corda.finance.POUNDS
 import net.corda.testing.*
 import net.corda.core.identity.Party
 import net.corda.core.utilities.getOrThrow
 import java.math.BigDecimal
+import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class TradeAssetIssuanceFlowTests {
@@ -48,6 +48,126 @@ class TradeAssetIssuanceFlowTests {
     fun tearDown() {
         unsetCordappPackages()
         network.stopNodes()
+    }
+
+    @Test
+    fun `Absence of supplier in message should result in error`() {
+        val message = TradeAssetIssuanceRequestMessage(
+                buyer = mockBuyer.name,
+                supplier = null,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        )
+
+        assertFailsWith<RequestValidationException>("Request validation failed") {
+            val flow = TradeAssetIssuance.InitiatorFlow(message)
+
+            val future = mockBuyerNode.services.startFlow(flow).resultFuture
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Supplier is required for an issuance transaction"))
+    }
+
+    @Test
+    fun `Absence of asset ID in message should result in error`() {
+        val message = TradeAssetIssuanceRequestMessage(
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                assetId = null,
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        )
+
+        assertFailsWith<RequestValidationException>("Request validation failed") {
+            val flow = TradeAssetIssuance.InitiatorFlow(message)
+
+            val future = mockBuyerNode.services.startFlow(flow).resultFuture
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Asset ID is required for an issuance transaction"))
+    }
+
+    @Test
+    fun `Absence of currency in message should result in error`() {
+        val message = TradeAssetIssuanceRequestMessage(
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = null
+        )
+
+        assertFailsWith<RequestValidationException>("Request validation failed") {
+            val flow = TradeAssetIssuance.InitiatorFlow(message)
+
+            val future = mockBuyerNode.services.startFlow(flow).resultFuture
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Currency is required for an issuance transaction"))
+    }
+
+    @Test
+    fun `Absence of value in message should result in error`() {
+        val message = TradeAssetIssuanceRequestMessage(
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                assetId = "MOCK_ASSET",
+                value = null,
+                currency = "GBP"
+        )
+
+        assertFailsWith<RequestValidationException>("Request validation failed") {
+            val flow = TradeAssetIssuance.InitiatorFlow(message)
+
+            val future = mockBuyerNode.services.startFlow(flow).resultFuture
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Value is required for an issuance transaction"))
+    }
+
+    @Test
+    fun `Negative value in message should result in error`() {
+        val message = TradeAssetIssuanceRequestMessage(
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE.negate(),
+                currency = "GBP"
+        )
+
+        assertFailsWith<RequestValidationException>("Request validation failed") {
+            val flow = TradeAssetIssuance.InitiatorFlow(message)
+
+            val future = mockBuyerNode.services.startFlow(flow).resultFuture
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Value cannot be negative for an issuance transaction"))
     }
 
     @Test
