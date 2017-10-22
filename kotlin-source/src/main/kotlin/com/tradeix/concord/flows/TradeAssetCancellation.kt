@@ -27,7 +27,7 @@ object TradeAssetCancellation {
             private val EX_BUYER_CANNOT_CANCEL_MSG =
                     "Trade asset can only be cancelled by the buyer when the status of the trade asset is Purchase Order."
 
-            private val EX_SUPPLIER_CANNOT_CANCEL =
+            private val EX_SUPPLIER_CANNOT_CANCEL_MSG =
                     "Trade asset can only be cancelled by the supplier when the status of the trade asset is Invoice."
 
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on the given trade asset.")
@@ -81,7 +81,7 @@ object TradeAssetCancellation {
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
-            verifyCancellationRules(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), inputState)
+            verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), inputState)
             transactionBuilder.verify(serviceHub)
 
 
@@ -112,7 +112,7 @@ object TradeAssetCancellation {
                     FINALISING_TRANSACTION.childProgressTracker()))
         }
 
-        private fun verifyCancellationRules(initiator: Party, state: TradeAssetState) {
+        private fun verify(initiator: Party, state: TradeAssetState) {
             val errors = ArrayList<String>()
 
             if(initiator == state.buyer && state.tradeAsset.status != TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
@@ -120,7 +120,7 @@ object TradeAssetCancellation {
             }
 
             if(initiator == state.supplier && state.tradeAsset.status != TradeAsset.TradeAssetStatus.INVOICE) {
-                errors.add(EX_SUPPLIER_CANNOT_CANCEL)
+                errors.add(EX_SUPPLIER_CANNOT_CANCEL_MSG)
             }
 
             if(!errors.isEmpty()) {

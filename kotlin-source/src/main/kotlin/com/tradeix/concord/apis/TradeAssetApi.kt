@@ -115,56 +115,13 @@ class TradeAssetApi(val services: CordaRPCOps) {
         }
     }
 
-    // TODO : Should be PATCH but this web-api sucks!
     @PUT
     @Path("amend")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    fun AmendTradeAsset(message: TradeAssetAmendmentRequestMessage): Response {
-
-        if (message.linearId == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorResponseMessage("No linearId given for purchase order ownership change."))
-                    .build()
-        }
-
-        if(message.amount == null && message.assetId == null && message.currency == null) {
-            return Response
-                    .status(Response.Status.NOT_MODIFIED)
-                    .entity(ErrorResponseMessage("Nothing to update"))
-                    .build()
-        }
-
-        val linearId = UniqueIdentifier(id = message.linearId)
-
-        val inputStateAndRef = services.vaultQueryByCriteria(
-                criteria = QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId)),
-                contractStateType = TradeAssetState::class.java).states.single()
-
-        val originalTradeAsset = inputStateAndRef.state.data.tradeAsset
-
-        val currency = if(message.currency != null) {
-            Currency.getInstance(message.currency)
-        } else {
-            originalTradeAsset.amount.token
-        }
-
-        val amount = if(message.amount != null) {
-            Amount.fromDecimal(message.amount, currency)
-        } else {
-            originalTradeAsset.amount
-        }
-
-        val amendedTradeAsset = originalTradeAsset.copy(
-                assetId = message.assetId ?: originalTradeAsset.assetId,
-                amount = amount)
-
+    fun amendTradeAsset(message: TradeAssetAmendmentRequestMessage): Response {
         try {
-            val flowHandle = services.startTrackedFlow(
-                    TradeAssetAmendment::InitiatorFlow,
-                    inputStateAndRef,
-                    amendedTradeAsset)
+            val flowHandle = services.startTrackedFlow(TradeAssetAmendment::InitiatorFlow, message)
 
             flowHandle.progress.subscribe { println(">> $it") }
 
@@ -173,15 +130,21 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     .getOrThrow()
 
             return Response
-                    .status(Response.Status.ACCEPTED)
+                    .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(result.id.toString()))
                     .build()
 
         } catch (ex: Throwable) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ErrorResponseMessage(ex.message!!))
-                    .build()
+            return when (ex) {
+                is ValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(ErrorResponseMessage(ex.message!!))
+                        .build()
+            }
         }
     }
 }

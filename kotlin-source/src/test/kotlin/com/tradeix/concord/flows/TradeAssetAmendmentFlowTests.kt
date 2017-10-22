@@ -1,14 +1,16 @@
 package com.tradeix.concord.flows
 
 import com.tradeix.concord.exceptions.ValidationException
-import com.tradeix.concord.messages.TradeAssetCancellationRequestMessage
+import com.tradeix.concord.messages.TradeAssetAmendmentRequestMessage
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.node.internal.StartedNode
-import net.corda.testing.*
+import net.corda.testing.chooseIdentity
 import net.corda.testing.node.MockNetwork
+import net.corda.testing.setCordappPackages
+import net.corda.testing.unsetCordappPackages
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +20,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
-class TradeAssetCancellationFlowTests {
+class TradeAssetAmendmentFlowTests {
     lateinit var network: MockNetwork
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
@@ -49,7 +51,7 @@ class TradeAssetCancellationFlowTests {
 
         nodes.partyNodes.forEach {
             it.registerInitiatedFlow(TradeAssetIssuance.AcceptorFlow::class.java)
-            it.registerInitiatedFlow(TradeAssetCancellation.AcceptorFlow::class.java)
+            it.registerInitiatedFlow(TradeAssetAmendment.AcceptorFlow::class.java)
         }
     }
 
@@ -61,14 +63,17 @@ class TradeAssetCancellationFlowTests {
 
     @Test
     fun `Absence of Linear ID in message should result in error`() {
-        val message = TradeAssetCancellationRequestMessage(
-                linearId = null
+        val message = TradeAssetAmendmentRequestMessage(
+                linearId = null,
+                assetId = null,
+                value = null,
+                currency = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
             val future = mockSupplierNode
                     .services
-                    .startFlow(TradeAssetCancellation.InitiatorFlow(message))
+                    .startFlow(TradeAssetAmendment.InitiatorFlow(message))
                     .resultFuture
 
             network.runNetwork()
@@ -78,24 +83,24 @@ class TradeAssetCancellationFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Linear ID is required for a cancellation transaction."))
+        assert(message.getValidationErrors().contains("Linear ID is required for an amendment transaction."))
     }
 
     @Test
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the initiator`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockConductorNode)
+                amendmentInitiator = mockConductorNode)
                 .verifySignaturesExcept(
                         mockBuyer.owningKey,
                         mockSupplier.owningKey)
     }
 
-    @Test // TODO : This flow requires amendment to ensure that the status changes before buyer cancellation.
+    @Test // TODO : Buyer cannot amend because it's an INVOICE.
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the initiator`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockBuyerNode)
+                amendmentInitiator = mockBuyerNode)
                 .verifySignaturesExcept(
                         mockConductor.owningKey,
                         mockSupplier.owningKey)
@@ -103,9 +108,9 @@ class TradeAssetCancellationFlowTests {
 
     @Test
     fun `Supplier initiated SignedTransaction returned by the flow is signed by the initiator`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockSupplierNode)
+                amendmentInitiator = mockSupplierNode)
                 .verifySignaturesExcept(
                         mockBuyer.owningKey,
                         mockConductor.owningKey)
@@ -113,58 +118,58 @@ class TradeAssetCancellationFlowTests {
 
     @Test
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the acceptor`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockConductorNode)
+                amendmentInitiator = mockConductorNode)
                 .verifySignaturesExcept(
                         mockConductor.owningKey)
     }
 
-    @Test // TODO : This flow requires amendment to ensure that the status changes before buyer cancellation.
+    @Test // TODO : Buyer cannot amend because it's an INVOICE.
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the acceptor`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockBuyerNode)
+                amendmentInitiator = mockBuyerNode)
                 .verifySignaturesExcept(
                         mockBuyer.owningKey)
     }
 
     @Test
     fun `Supplier initiated SignedTransaction returned by the flow is signed by the acceptor`() {
-        generateCancellationSignedTransaction(
+        generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockSupplierNode)
+                amendmentInitiator = mockSupplierNode)
                 .verifySignaturesExcept(
                         mockSupplier.owningKey)
     }
 
-    @Test // TODO : Check with R3 whether exit transactions are recorded.
+    @Test // TODO : Getting "No transaction in context" error.
     fun `Flow records a transaction in all counter-party vaults`() {
-        val signedTransaction = generateCancellationSignedTransaction(
+        val signedTransaction = generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockConductorNode)
+                amendmentInitiator = mockConductorNode)
 
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
             assertEquals(signedTransaction, node.services.validatedTransactions.getTransaction(signedTransaction.id))
         }
     }
 
-    @Test // TODO : Check with R3 whether exit transactions are recorded.
-    fun `Recorded transaction has a single input and a zero outputs`() {
-        val signedTransaction = generateCancellationSignedTransaction(
+    @Test // TODO : Getting "No transaction in context" error.
+    fun `Recorded transaction has a single input and a single output`() {
+        val signedTransaction = generateAmendmentSignedTransaction(
                 issuanceInitiator = mockConductorNode,
-                cancellationInitiator = mockConductorNode)
+                amendmentInitiator = mockConductorNode)
 
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
             val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
             assert(recordedTx.inputs.size == 1)
-            assert(recordedTx.tx.outputs.isEmpty())
+            assert(recordedTx.tx.outputs.size == 1)
         }
     }
 
-    private fun generateCancellationSignedTransaction(
+    private fun generateAmendmentSignedTransaction(
             issuanceInitiator: StartedNode<MockNetwork.MockNode>,
-            cancellationInitiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
+            amendmentInitiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val issuanceMessage = TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = mockBuyer.name,
@@ -184,17 +189,20 @@ class TradeAssetCancellationFlowTests {
 
         issuanceFuture.getOrThrow()
 
-        val cancellationMessage = TradeAssetCancellationRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000")
+        val amendmentMessage = TradeAssetAmendmentRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.TEN,
+                currency = "USD"
         )
 
-        val cancellationFuture = cancellationInitiator
+        val amendmentFuture = amendmentInitiator
                 .services
-                .startFlow(TradeAssetCancellation.InitiatorFlow(cancellationMessage))
+                .startFlow(TradeAssetAmendment.InitiatorFlow(amendmentMessage))
                 .resultFuture
 
         network.runNetwork()
 
-        return cancellationFuture.getOrThrow()
+        return amendmentFuture.getOrThrow()
     }
 }

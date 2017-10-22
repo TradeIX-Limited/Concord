@@ -80,13 +80,20 @@ open class TradeAssetContract : Contract {
 
         class Amend : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
-                "Only one input state should be consumed when amending a trade asset" using
+
+                "Only one input should be consumed when amending a trade asset." using
                         (tx.inputs.size == 1)
 
-                "Only one output should be created when amending a trade asset" using
+                "Only one output state should be created when amending a trade asset." using
                         (tx.outputs.size == 1)
 
+                val outputState = tx.outputsOfType<TradeAssetState>().single()
 
+                "The supplier must be the owner when amending a trade asset." using
+                        (outputState.supplier == outputState.owner)
+
+                "All participants must sign the transaction." using
+                        (signers.containsAll(outputState.participants.map { it.owningKey }))
             }
         }
     }
