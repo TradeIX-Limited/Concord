@@ -21,11 +21,11 @@ data class TradeAssetIssuanceRequestMessage(
     companion object {
         private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")
 
-        private val EX_SUPPLIER_MSG = "Supplier is required for an issuance transaction"
-        private val EX_ASSET_ID_MSG = "Asset ID is required for an issuance transaction"
-        private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction"
-        private val EX_VALUE_NEG_MSG = "Value cannot be negative for an issuance transaction"
-        private val EX_VALUE_MSG = "Value is required for an issuance transaction"
+        private val EX_SUPPLIER_MSG = "Supplier is required for an issuance transaction."
+        private val EX_ASSET_ID_MSG = "Asset ID is required for an issuance transaction."
+        private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction."
+        private val EX_VALUE_NEG_MSG = "Value cannot be negative for an issuance transaction."
+        private val EX_VALUE_MSG = "Value is required for an issuance transaction."
     }
 
     val amount: Amount<Currency>

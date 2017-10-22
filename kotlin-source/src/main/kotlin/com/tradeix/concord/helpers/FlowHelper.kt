@@ -1,12 +1,13 @@
-package com.tradeix.concord.flows
+package com.tradeix.concord.helpers
 
 import net.corda.core.flows.FlowException
+import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.node.ServiceHub
+import java.security.PublicKey
 
 object FlowHelper {
-
     private val EX_NULL_CORDA_X500_NAME = "Cannot get a peer from a null legal name"
     private val EX_FAILED_TO_GET_IDENTITY = "Failed to get peer from legal name"
 
@@ -23,4 +24,6 @@ object FlowHelper {
             .networkMapCache
             .getPeerByLegalName(cordaX500Name ?: serviceHub.myInfo.legalIdentities[0].name)
             ?: throw FlowException("$EX_FAILED_TO_GET_IDENTITY '$cordaX500Name'")
+
+    fun getPublicKeysFromParticipants(participants: List<AbstractParty>): List<PublicKey> = participants.map { it.owningKey }
 }

@@ -1,6 +1,6 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.exceptions.RequestValidationException
+import com.tradeix.concord.exceptions.ValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import groovy.util.GroovyTestCase.assertEquals
 import net.corda.node.internal.StartedNode
@@ -39,7 +39,7 @@ class TradeAssetIssuanceFlowTests {
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
 
-        nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java) }
+        nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.AcceptorFlow::class.java) }
 
         network.runNetwork()
     }
@@ -60,10 +60,12 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         )
 
-        assertFailsWith<RequestValidationException>("Request validation failed") {
-            val flow = TradeAssetIssuance.InitiatorFlow(message)
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockBuyerNode
+                    .services
+                    .startFlow(TradeAssetIssuance.InitiatorFlow(message))
+                    .resultFuture
 
-            val future = mockBuyerNode.services.startFlow(flow).resultFuture
             network.runNetwork()
 
             future.getOrThrow()
@@ -71,7 +73,7 @@ class TradeAssetIssuanceFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Supplier is required for an issuance transaction"))
+        assert(message.getValidationErrors().contains("Supplier is required for an issuance transaction."))
     }
 
     @Test
@@ -84,10 +86,12 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         )
 
-        assertFailsWith<RequestValidationException>("Request validation failed") {
-            val flow = TradeAssetIssuance.InitiatorFlow(message)
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockBuyerNode
+                    .services
+                    .startFlow(TradeAssetIssuance.InitiatorFlow(message))
+                    .resultFuture
 
-            val future = mockBuyerNode.services.startFlow(flow).resultFuture
             network.runNetwork()
 
             future.getOrThrow()
@@ -95,7 +99,7 @@ class TradeAssetIssuanceFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Asset ID is required for an issuance transaction"))
+        assert(message.getValidationErrors().contains("Asset ID is required for an issuance transaction."))
     }
 
     @Test
@@ -108,10 +112,12 @@ class TradeAssetIssuanceFlowTests {
                 currency = null
         )
 
-        assertFailsWith<RequestValidationException>("Request validation failed") {
-            val flow = TradeAssetIssuance.InitiatorFlow(message)
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockBuyerNode
+                    .services
+                    .startFlow(TradeAssetIssuance.InitiatorFlow(message))
+                    .resultFuture
 
-            val future = mockBuyerNode.services.startFlow(flow).resultFuture
             network.runNetwork()
 
             future.getOrThrow()
@@ -119,7 +125,7 @@ class TradeAssetIssuanceFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Currency is required for an issuance transaction"))
+        assert(message.getValidationErrors().contains("Currency is required for an issuance transaction."))
     }
 
     @Test
@@ -132,10 +138,12 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         )
 
-        assertFailsWith<RequestValidationException>("Request validation failed") {
-            val flow = TradeAssetIssuance.InitiatorFlow(message)
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockBuyerNode
+                    .services
+                    .startFlow(TradeAssetIssuance.InitiatorFlow(message))
+                    .resultFuture
 
-            val future = mockBuyerNode.services.startFlow(flow).resultFuture
             network.runNetwork()
 
             future.getOrThrow()
@@ -143,7 +151,7 @@ class TradeAssetIssuanceFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Value is required for an issuance transaction"))
+        assert(message.getValidationErrors().contains("Value is required for an issuance transaction."))
     }
 
     @Test
@@ -156,10 +164,12 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         )
 
-        assertFailsWith<RequestValidationException>("Request validation failed") {
-            val flow = TradeAssetIssuance.InitiatorFlow(message)
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockBuyerNode
+                    .services
+                    .startFlow(TradeAssetIssuance.InitiatorFlow(message))
+                    .resultFuture
 
-            val future = mockBuyerNode.services.startFlow(flow).resultFuture
             network.runNetwork()
 
             future.getOrThrow()
@@ -167,7 +177,7 @@ class TradeAssetIssuanceFlowTests {
 
         assert(!message.isValid)
         assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Value cannot be negative for an issuance transaction"))
+        assert(message.getValidationErrors().contains("Value cannot be negative for an issuance transaction."))
     }
 
     @Test
@@ -182,11 +192,16 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         ))
 
-        val future = mockBuyerNode.services.startFlow(flow).resultFuture
+        val future = mockBuyerNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
         network.runNetwork()
 
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(mockConductor.owningKey, mockSupplier.owningKey)
+        future.getOrThrow().verifySignaturesExcept(
+                mockConductor.owningKey,
+                mockSupplier.owningKey)
     }
 
     @Test
@@ -201,11 +216,17 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         ))
 
-        val future = mockBuyerNode.services.startFlow(flow).resultFuture
+        val future = mockBuyerNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
         network.runNetwork()
 
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(mockBuyer.owningKey)
+        val signedTransaction = future.getOrThrow()
+
+        signedTransaction.verifySignaturesExcept(
+                mockBuyer.owningKey)
     }
 
     @Test
@@ -220,11 +241,18 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         ))
 
-        val future = mockConductorNode.services.startFlow(flow).resultFuture
+        val future = mockConductorNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
         network.runNetwork()
 
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(mockConductor.owningKey, mockSupplier.owningKey)
+        val signedTransaction = future.getOrThrow()
+
+        signedTransaction.verifySignaturesExcept(
+                mockBuyer.owningKey,
+                mockSupplier.owningKey)
     }
 
     @Test
@@ -239,11 +267,17 @@ class TradeAssetIssuanceFlowTests {
                 currency = "GBP"
         ))
 
-        val future = mockConductorNode.services.startFlow(flow).resultFuture
+        val future = mockConductorNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
         network.runNetwork()
 
-        val signedTx = future.getOrThrow()
-        signedTx.verifySignaturesExcept(mockBuyer.owningKey)
+        val signedTransaction = future.getOrThrow()
+
+        signedTransaction.verifySignaturesExcept(
+                mockConductor.owningKey)
     }
 
     @Test
@@ -257,13 +291,18 @@ class TradeAssetIssuanceFlowTests {
                 value = BigDecimal.ONE,
                 currency = "GBP"
         ))
-        val future = mockBuyerNode.services.startFlow(flow).resultFuture
-        network.runNetwork()
-        val signedTx = future.getOrThrow()
 
-        // We check the recorded transaction in both vaults.
+        val future = mockBuyerNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
+        network.runNetwork()
+
+        val signedTransaction = future.getOrThrow()
+
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
+            assertEquals(signedTransaction, node.services.validatedTransactions.getTransaction(signedTransaction.id))
         }
     }
 
@@ -278,12 +317,18 @@ class TradeAssetIssuanceFlowTests {
                 value = BigDecimal.ONE,
                 currency = "GBP"
         ))
-        val future = mockBuyerNode.services.startFlow(flow).resultFuture
+
+        val future = mockBuyerNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
         network.runNetwork()
-        val signedTx = future.getOrThrow()
+
+        val signedTransaction = future.getOrThrow()
 
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
             assert(recordedTx.inputs.isEmpty())
             assert(recordedTx.tx.outputs.size == 1)
         }

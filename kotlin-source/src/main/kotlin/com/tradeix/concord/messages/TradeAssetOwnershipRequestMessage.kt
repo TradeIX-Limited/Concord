@@ -10,8 +10,8 @@ data class TradeAssetOwnershipRequestMessage(
         val newOwner: CordaX500Name?) : RequestMessage() {
 
     companion object {
-        private val EX_LINEAR_ID_MSG = "Linear ID is required for an a change of ownership transaction"
-        private val EX_NEW_OWNER_MSG = "New owner is required for an a change of ownership transaction"
+        private val EX_LINEAR_ID_MSG = "Linear ID is required for an a change of ownership transaction."
+        private val EX_NEW_OWNER_MSG = "New owner is required for an a change of ownership transaction."
     }
 
     override fun getValidationErrors(): ArrayList<String> {

@@ -1,7 +1,7 @@
 package com.tradeix.concord.apis
 
 import com.tradeix.concord.flows.TradeAssetCancellation
-import com.tradeix.concord.exceptions.RequestValidationException
+import com.tradeix.concord.exceptions.ValidationException
 import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
@@ -43,7 +43,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is RequestValidationException -> Response
+                is ValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity(ErrorsResponseMessage(ex.validationErrors))
                         .build()
@@ -67,13 +67,13 @@ class TradeAssetApi(val services: CordaRPCOps) {
             val result = flowHandle.returnValue.getOrThrow()
 
             return Response
-                    .status(Response.Status.CREATED)
+                    .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(result.id.toString()))
                     .build()
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is RequestValidationException -> Response
+                is ValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity(ErrorsResponseMessage(ex.validationErrors))
                         .build()
@@ -89,42 +89,28 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Path("cancel")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    fun cancelTradeAsset(message: TradeAssetCancelRequestMessage): Response {
-
-        if (message.linearId == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity(ErrorResponseMessage("No linearId given for trade asset."))
-                    .build()
-        }
-
-        val linearId = UniqueIdentifier(id = message.linearId)
-
-        val inputStateAndRef = services.vaultQueryByCriteria(
-                QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId)),
-                TradeAssetState::class.java).states.single()
-
+    fun cancelTradeAsset(message: TradeAssetCancellationRequestMessage): Response {
         try {
-            val flowHandle = services.startTrackedFlow(
-                    TradeAssetCancellation::InitiatorFlow,
-                    inputStateAndRef)
-
+            val flowHandle = services.startTrackedFlow(TradeAssetCancellation::InitiatorFlow, message)
             flowHandle.progress.subscribe { println(">> $it") }
-
-            val result = flowHandle
-                    .returnValue
-                    .getOrThrow()
+            val result = flowHandle.returnValue.getOrThrow()
 
             return Response
-                    .status(Response.Status.CREATED)
+                    .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(result.id.toString()))
                     .build()
 
         } catch (ex: Throwable) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ErrorResponseMessage(ex.message!!))
-                    .build()
+            return when (ex) {
+                is ValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(ErrorResponseMessage(ex.message!!))
+                        .build()
+            }
         }
     }
 }

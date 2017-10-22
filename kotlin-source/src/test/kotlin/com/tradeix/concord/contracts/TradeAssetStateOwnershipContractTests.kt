@@ -23,7 +23,40 @@ class TradeAssetStateOwnershipContractTests {
     }
 
     @Test
-    fun `Trade Asset Change Owner transaction must have one input`() {
+    fun `Transaction must include ChangeOwner command`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                output(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                fails()
+                command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
+                    TradeAssetContract.Commands.ChangeOwner()
+                }
+                verifies()
+            }
+        }
+    }
+
+    @Test
+    fun `Only one input should be consumed when changing ownership of a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
@@ -40,13 +73,13 @@ class TradeAssetStateOwnershipContractTests {
                 command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
                     TradeAssetContract.Commands.ChangeOwner()
                 }
-                `fails with`("Only one input should be consumed when changing owner on a purchase order.")
+                `fails with`("Only one input should be consumed when changing ownership of a trade asset.")
             }
         }
     }
 
     @Test
-    fun `Trade Asset Change Owner transaction must have one output`() {
+    fun `Only one output state should be created when changing ownership of a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
@@ -63,135 +96,13 @@ class TradeAssetStateOwnershipContractTests {
                 command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
                     TradeAssetContract.Commands.ChangeOwner()
                 }
-                `fails with`("Only one output state should be created.")
+                `fails with`("Only one output state should be created when changing ownership of a trade asset.")
             }
         }
     }
 
     @Test
-    fun `Trade Asset Change Owner transaction owner must sign`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        ledger {
-            transaction {
-                input(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = ALICE,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = MEGA_CORP,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                command(MEGA_CORP_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
-                `fails with`("All of the participants must be signers.")
-            }
-        }
-    }
-
-    @Test
-    fun `Trade Asset Change Owner transaction buyer must sign`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        ledger {
-            transaction {
-                input(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = ALICE,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = MEGA_CORP,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                command(BOB_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
-                `fails with`("All of the participants must be signers.")
-            }
-        }
-    }
-
-    @Test
-    fun `Trade Asset Change Owner transaction supplier must sign`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        ledger {
-            transaction {
-                input(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = ALICE,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = MEGA_CORP,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                command(ALICE_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
-                `fails with`("All of the participants must be signers.")
-            }
-        }
-    }
-
-    @Test
-    fun `Trade Asset Change Owner transaction conductor must sign`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        ledger {
-            transaction {
-                input(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = ALICE,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = MEGA_CORP,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                command(BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.ChangeOwner()
-                }
-                `fails with`("All of the participants must be signers.")
-            }
-        }
-    }
-
-    @Test
-    fun `Trade Asset Change Owner transaction supplier and owner cannot be the same entity`() {
+    fun `The supplier and the new owner cannot be the same entity`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
@@ -218,6 +129,128 @@ class TradeAssetStateOwnershipContractTests {
                     TradeAssetContract.Commands.ChangeOwner()
                 }
                 `fails with`("The supplier and the new owner cannot be the same entity.")
+            }
+        }
+    }
+
+    @Test
+    fun `All participants must sign the transaction (owner must sign)`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                output(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                command(MEGA_CORP_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
+                `fails with`("All participants must sign the transaction.")
+            }
+        }
+    }
+
+    @Test
+    fun `All participants must sign the transaction (buyer must sign)`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                output(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                command(BOB_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
+                `fails with`("All participants must sign the transaction.")
+            }
+        }
+    }
+
+    @Test
+    fun `All participants must sign the transaction (supplier must sign)`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                output(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                command(ALICE_PUBKEY) { TradeAssetContract.Commands.ChangeOwner() }
+                `fails with`("All participants must sign the transaction.")
+            }
+        }
+    }
+
+    @Test
+    fun `All participants must sign the transaction (conductor must sign)`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                output(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                command(BIG_CORP_PUBKEY) {
+                    TradeAssetContract.Commands.ChangeOwner()
+                }
+                `fails with`("All participants must sign the transaction.")
             }
         }
     }

@@ -45,7 +45,7 @@ class SpecificationTests {
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
 
-        nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java) }
+        nodes.partyNodes.forEach { it.registerInitiatedFlow(TradeAssetIssuance.AcceptorFlow::class.java) }
 
         tradeAssetState = TradeAssetState(
                 linearId = UniqueIdentifier(),

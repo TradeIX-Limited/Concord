@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.*
 
-class TradeAssetStateIssuanceContractTests {
+class TradeAssetStateCancellationContractTests {
     @Before
     fun setup() {
         setCordappPackages("com.tradeix.concord.contracts")
@@ -23,7 +23,31 @@ class TradeAssetStateIssuanceContractTests {
     }
 
     @Test
-    fun `Transaction must include Issue command`() {
+    fun `Transaction must include Cancel command`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = ALICE,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                fails()
+                command(ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
+                    TradeAssetContract.Commands.Cancel()
+                }
+                verifies()
+            }
+        }
+    }
+
+    @Test
+    fun `Only one input should be consumed when cancelling a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
@@ -37,17 +61,16 @@ class TradeAssetStateIssuanceContractTests {
                             supplier = ALICE,
                             conductor = BIG_CORP)
                 }
-                fails()
                 command(ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
+                    TradeAssetContract.Commands.Cancel()
                 }
-                verifies()
+                `fails with`("Only one input should be consumed when cancelling a trade asset.")
             }
         }
     }
 
     @Test
-    fun `Zero input states should be consumed when issuing a trade asset`() {
+    fun `Zero output states should be created when cancelling a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
@@ -71,20 +94,43 @@ class TradeAssetStateIssuanceContractTests {
                             conductor = BIG_CORP)
                 }
                 command(ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
+                    TradeAssetContract.Commands.Cancel()
                 }
-                `fails with`("Zero input states should be consumed when issuing a trade asset.")
+                `fails with`("Zero output states should be created when cancelling a trade asset.")
             }
         }
     }
 
     @Test
-    fun `Only one output state should be created when issuing a trade asset`() {
+    fun `Nobody can cancel unless the owner is the supplier`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
-                output(TRADE_ASSET_CONTRACT_ID) {
+                input(TRADE_ASSET_CONTRACT_ID) {
+                    TradeAssetState(
+                            linearId = linearId,
+                            tradeAsset = tradeAsset,
+                            owner = MEGA_CORP,
+                            buyer = BOB,
+                            supplier = ALICE,
+                            conductor = BIG_CORP)
+                }
+                command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
+                    TradeAssetContract.Commands.Cancel()
+                }
+                `fails with`("Nobody can cancel unless the owner is the supplier.")
+            }
+        }
+    }
+
+    @Test
+    fun `All participants must sign the transaction (owner must sign)`() {
+        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
+        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        ledger {
+            transaction {
+                input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = linearId,
                             tradeAsset = tradeAsset,
@@ -93,42 +139,8 @@ class TradeAssetStateIssuanceContractTests {
                             supplier = ALICE,
                             conductor = BIG_CORP)
                 }
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = ALICE,
-                            buyer = BOB,
-                            supplier = ALICE,
-                            conductor = BIG_CORP)
-                }
-                command(ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
-                }
-                `fails with`("Only one output state should be created when issuing a trade asset.")
-            }
-        }
-    }
-
-    @Test
-    fun `The buyer and the supplier cannot be the same entity`() {
-        val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        ledger {
-            transaction {
-                output(TRADE_ASSET_CONTRACT_ID) {
-                    TradeAssetState(
-                            linearId = linearId,
-                            tradeAsset = tradeAsset,
-                            owner = BOB,
-                            buyer = BOB,
-                            supplier = BOB,
-                            conductor = BIG_CORP)
-                }
-                command(ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
-                }
-                `fails with`("The buyer and the supplier cannot be the same entity.")
+                command(ALICE_PUBKEY) { TradeAssetContract.Commands.Cancel() }
+                `fails with`("All participants must sign the transaction.")
             }
         }
     }
@@ -139,7 +151,7 @@ class TradeAssetStateIssuanceContractTests {
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
-                output(TRADE_ASSET_CONTRACT_ID) {
+                input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = linearId,
                             tradeAsset = tradeAsset,
@@ -148,9 +160,7 @@ class TradeAssetStateIssuanceContractTests {
                             supplier = ALICE,
                             conductor = BIG_CORP)
                 }
-                command(BOB_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
-                }
+                command(BOB_PUBKEY) { TradeAssetContract.Commands.Cancel() }
                 `fails with`("All participants must sign the transaction.")
             }
         }
@@ -162,7 +172,7 @@ class TradeAssetStateIssuanceContractTests {
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
-                output(TRADE_ASSET_CONTRACT_ID) {
+                input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = linearId,
                             tradeAsset = tradeAsset,
@@ -171,9 +181,7 @@ class TradeAssetStateIssuanceContractTests {
                             supplier = ALICE,
                             conductor = BIG_CORP)
                 }
-                command(ALICE_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
-                }
+                command(ALICE_PUBKEY) { TradeAssetContract.Commands.Cancel() }
                 `fails with`("All participants must sign the transaction.")
             }
         }
@@ -185,7 +193,7 @@ class TradeAssetStateIssuanceContractTests {
         val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
-                output(TRADE_ASSET_CONTRACT_ID) {
+                input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = linearId,
                             tradeAsset = tradeAsset,
@@ -194,9 +202,7 @@ class TradeAssetStateIssuanceContractTests {
                             supplier = ALICE,
                             conductor = BIG_CORP)
                 }
-                command(BIG_CORP_PUBKEY) {
-                    TradeAssetContract.Commands.Issue()
-                }
+                command(BIG_CORP_PUBKEY) { TradeAssetContract.Commands.Cancel() }
                 `fails with`("All participants must sign the transaction.")
             }
         }

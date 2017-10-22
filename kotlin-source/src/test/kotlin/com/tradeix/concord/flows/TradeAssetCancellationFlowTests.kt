@@ -1,24 +1,29 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
+import com.tradeix.concord.contracts.TradeAssetContract
+import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.messages.TradeAssetCancellationRequestMessage
+import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
+import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
-import net.corda.core.flows.FlowException
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.finance.POUNDS
 import net.corda.node.internal.StartedNode
-import net.corda.testing.chooseIdentity
+import net.corda.testing.*
 import net.corda.testing.node.MockNetwork
-import net.corda.testing.setCordappPackages
-import net.corda.testing.unsetCordappPackages
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
+import org.junit.Test
+import java.math.BigDecimal
 import java.util.*
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class TradeAssetCancellationFlowTests {
@@ -44,15 +49,15 @@ class TradeAssetCancellationFlowTests {
         mockSupplierNode = nodes.partyNodes[1]
         mockConductorNode = nodes.partyNodes[2]
         mockFunderNode = nodes.partyNodes[3]
+
         mockBuyer = mockBuyerNode.info.chooseIdentity()
         mockSupplier = mockSupplierNode.info.chooseIdentity()
         mockConductor = mockConductorNode.info.chooseIdentity()
         mockFunder = mockConductorNode.info.chooseIdentity()
 
         nodes.partyNodes.forEach {
-            it.registerInitiatedFlow(TradeAssetIssuance.Acceptor::class.java)
-            it.registerInitiatedFlow(TradeAssetOwnership.Acceptor::class.java)
-            it.registerInitiatedFlow(TradeAssetCancellation.Acceptor::class.java)
+            it.registerInitiatedFlow(TradeAssetIssuance.AcceptorFlow::class.java)
+            it.registerInitiatedFlow(TradeAssetCancellation.AcceptorFlow::class.java)
         }
     }
 
@@ -62,138 +67,142 @@ class TradeAssetCancellationFlowTests {
         network.stopNodes()
     }
 
-    @Ignore//TBD : Matt and Brendan
-    fun `Funder cannot cancel the contract`() {
-        try {
-            getCancellationSignedTransactionWithoutChangeOwnerThroughConductor()
-        } catch (e: FlowException) {
-            assertTrue(e.message!!.contains("Funder cannot cancel the contract", true))
+    @Test
+    fun `Absence of Linear ID in message should result in error`() {
+        val message = TradeAssetCancellationRequestMessage(
+                linearId = null
+        )
+
+        assertFailsWith<ValidationException>("Request validation failed") {
+            val future = mockSupplierNode
+                    .services
+                    .startFlow(TradeAssetCancellation.InitiatorFlow(message))
+                    .resultFuture
+
+            network.runNetwork()
+
+            future.getOrThrow()
+        }
+
+        assert(!message.isValid)
+        assert(message.getValidationErrors().size == 1)
+        assert(message.getValidationErrors().contains("Linear ID is required for a cancellation transaction."))
+    }
+
+    @Test
+    fun `Conductor initiated SignedTransaction returned by the flow is signed by the initiator`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockConductorNode)
+                .verifySignaturesExcept(
+                        mockBuyer.owningKey,
+                        mockSupplier.owningKey)
+    }
+
+    @Ignore // TODO : This flow requires amendment to ensure that the status changes before buyer cancellation.
+    fun `Buyer initiated SignedTransaction returned by the flow is signed by the initiator`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockBuyerNode)
+                .verifySignaturesExcept(
+                        mockConductor.owningKey,
+                        mockSupplier.owningKey)
+    }
+
+    @Test
+    fun `Supplier initiated SignedTransaction returned by the flow is signed by the initiator`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockSupplierNode)
+                .verifySignaturesExcept(
+                        mockBuyer.owningKey,
+                        mockConductor.owningKey)
+    }
+
+    @Test
+    fun `Conductor initiated SignedTransaction returned by the flow is signed by the acceptor`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockConductorNode)
+                .verifySignaturesExcept(
+                        mockConductor.owningKey)
+    }
+
+    @Ignore // TODO : This flow requires amendment to ensure that the status changes before buyer cancellation.
+    fun `Buyer initiated SignedTransaction returned by the flow is signed by the acceptor`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockBuyerNode)
+                .verifySignaturesExcept(
+                        mockBuyer.owningKey)
+    }
+
+    @Test
+    fun `Supplier initiated SignedTransaction returned by the flow is signed by the acceptor`() {
+        generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockSupplierNode)
+                .verifySignaturesExcept(
+                        mockSupplier.owningKey)
+    }
+
+    @Ignore // TODO : Check with R3 whether exit transactions are recorded.
+    fun `Flow records a transaction in all counter-party vaults`() {
+        val signedTransaction = generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockConductorNode)
+
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
+            assertEquals(signedTransaction, node.services.validatedTransactions.getTransaction(signedTransaction.id))
         }
     }
 
-    @Ignore
-    fun `SignedTransaction returned by the flow is signed by the initiator`() {
-        val signedTx = getCancellationSignedTransactionThroughConductor()
-        signedTx.checkSignaturesAreValid()
-        mockConductor.owningKey !in signedTx.getMissingSigners()
-    }
+    @Ignore // TODO : Check with R3 whether exit transactions are recorded.
+    fun `Recorded transaction has a single input and a zero outputs`() {
+        val signedTransaction = generateCancellationSignedTransaction(
+                issuanceInitiator = mockConductorNode,
+                cancellationInitiator = mockConductorNode)
 
-    @Ignore
-    fun `SignedTransaction returned by the flow is signed by the acceptors`() {
-        val signedTx = getCancellationSignedTransactionThroughConductor()
-        signedTx.verifySignaturesExcept(mockConductor.owningKey)
-    }
-
-    @Ignore
-    fun `flow records a transaction in all counter-party vaults`() {
-        val signedTx = getCancellationSignedTransactionThroughConductor()
-        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            assertEquals(signedTx, node.services.validatedTransactions.getTransaction(signedTx.id))
-        }
-    }
-
-    @Ignore
-    fun `buyer can cancel when it's a purchase order`() {
-        val signedTx = getCancellationSignedTransactionThroughBuyer()
-        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode, mockFunderNode)) {
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
             assert(recordedTx.inputs.size == 1)
-            assert(recordedTx.tx.outputs.size == 0)
+            assert(recordedTx.tx.outputs.isEmpty())
         }
     }
 
-    @Ignore//(expected = FlowException::class)
-    fun `supplier cannot cancel when it's a purchase order`() {
-        val signedTx = getCancellationSignedTransactionThroughSupplier()
-    }
+    private fun generateCancellationSignedTransaction(
+            issuanceInitiator: StartedNode<MockNetwork.MockNode>,
+            cancellationInitiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
+        val issuanceMessage = TradeAssetIssuanceRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                buyer = mockBuyer.name,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        )
 
-    @Ignore //TODO after amendment flow
-    fun `buyer cannot cancel when its an Invoice`() {
-    }
+        val issuanceFuture = issuanceInitiator
+                .services
+                .startFlow(TradeAssetIssuance.InitiatorFlow(issuanceMessage))
+                .resultFuture
 
-    @Ignore //TODO after amendment flow
-    fun `conductor can cancel when its an Invoice`() {
-    }
-
-    @Ignore //TODO after amendment flow
-    fun `conductor cannot cancel when its NOT an Invoice or a PO`() {
-    }
-
-    @Ignore
-    fun `recorded transaction has a single input and zero output`() {
-        val signedTx = getCancellationSignedTransactionThroughConductor()
-        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            val recordedTx = node.services.validatedTransactions.getTransaction(signedTx.id) ?: fail()
-            assert(recordedTx.inputs.size == 1)
-            assert(recordedTx.tx.outputs.size == 0)
-        }
-    }
-
-    private fun getCancellationSignedTransactionWithoutChangeOwnerThroughConductor(): SignedTransaction {
-        val changeOwnerStateAndRef: StateAndRef<TradeAssetState> = getStateAndRefAfterIssuance()
-        val cancellationFlow = TradeAssetCancellation.InitiatorFlow(
-                inputState = changeOwnerStateAndRef)
-        val cancellationFuture = mockConductorNode.services.startFlow(cancellationFlow).resultFuture
         network.runNetwork()
-        return cancellationFuture.getOrThrow()
-    }
 
-    private fun getCancellationSignedTransactionThroughConductor(): SignedTransaction {
-        val changeOwnerStateAndRef: StateAndRef<TradeAssetState> = getStateAndRefAfterIssuanceAndChangeOwner()
-        val cancellationFlow = TradeAssetCancellation.InitiatorFlow(
-                inputState = changeOwnerStateAndRef)
-        val cancellationFuture = mockConductorNode.services.startFlow(cancellationFlow).resultFuture
+        issuanceFuture.getOrThrow()
+
+        val cancellationMessage = TradeAssetCancellationRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000")
+        )
+
+        val ownershipFuture = cancellationInitiator
+                .services
+                .startFlow(TradeAssetCancellation.InitiatorFlow(cancellationMessage))
+                .resultFuture
+
         network.runNetwork()
-        return cancellationFuture.getOrThrow()
+
+        return ownershipFuture.getOrThrow()
     }
-
-    private fun getCancellationSignedTransactionThroughBuyer(): SignedTransaction {
-        val inputStateAndRef: StateAndRef<TradeAssetState> = getStateAndRefAfterIssuanceAndChangeOwner()
-        val flow = TradeAssetCancellation.InitiatorFlow(
-                inputState = inputStateAndRef)
-        val cancellationFuture = mockBuyerNode.services.startFlow(flow).resultFuture
-        network.runNetwork()
-        return cancellationFuture.getOrThrow()
-    }
-
-    private fun getCancellationSignedTransactionThroughSupplier(): SignedTransaction {
-        val inputStateAndRef: StateAndRef<TradeAssetState> = getStateAndRefAfterIssuanceAndChangeOwner()
-        val flow = TradeAssetCancellation.InitiatorFlow(
-                inputState = inputStateAndRef)
-        val cancellationFuture = mockSupplierNode.services.startFlow(flow).resultFuture
-        network.runNetwork()
-        return cancellationFuture.getOrThrow()
-    }
-
-    private fun getStateAndRefAfterIssuanceAndChangeOwner(): StateAndRef<TradeAssetState> {
-        val issuanceStateAndRef: StateAndRef<TradeAssetState> = getStateAndRefAfterIssuance()
-        val changeOwnershipFlow = TradeAssetOwnership.BuyerFlow(
-                inputState = issuanceStateAndRef,
-                newOwner = mockFunder)
-        val ownershipFuture = mockConductorNode.services.startFlow(changeOwnershipFlow).resultFuture
-        network.runNetwork()
-        val stxChangeOwner = ownershipFuture.getOrThrow()
-        val changeOwnerStateAndRef: StateAndRef<TradeAssetState> = stxChangeOwner.tx.outRef(stxChangeOwner.tx.outputStates.single())
-
-        return changeOwnerStateAndRef
-    }
-
-    private fun getStateAndRefAfterIssuance(): StateAndRef<TradeAssetState> {
-        val linearId = UniqueIdentifier(id = UUID.randomUUID())
-        val assetId = "MOCK_ASSET"
-        val issuanceFlow = TradeAssetIssuance.BuyerFlow(
-                linearId = linearId,
-                assetId = assetId,
-                buyer = mockBuyer,
-                supplier = mockSupplier,
-                conductor = mockConductor,
-                amount = 1.POUNDS)
-        val issuanceFuture = mockConductorNode.services.startFlow(issuanceFlow).resultFuture
-        network.runNetwork()
-        val stxIssuance = issuanceFuture.getOrThrow()
-        val issuanceStateAndRef: StateAndRef<TradeAssetState> = stxIssuance.tx.outRef(stxIssuance.tx.outputStates.single())
-        return issuanceStateAndRef
-    }
-
-
 }

@@ -2,9 +2,14 @@ package com.tradeix.concord.flows
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
+import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.helpers.FlowHelper
+import com.tradeix.concord.helpers.VaultHelper
+import com.tradeix.concord.messages.TradeAssetCancellationRequestMessage
+import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.Command
-import net.corda.core.contracts.StateAndRef
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
 import net.corda.core.identity.Party
@@ -13,13 +18,18 @@ import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
 object TradeAssetCancellation {
-    enum class AssetType(val desc: String) { PO("Purchase Order"), INVOICE("Invoice") }
-
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val inputState: StateAndRef<TradeAssetState>) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val message: TradeAssetCancellationRequestMessage) : FlowLogic<SignedTransaction>() {
 
         companion object {
+
+            private val EX_BUYER_CANNOT_CANCEL_MSG =
+                    "Trade asset can only be cancelled by the buyer when the status of the trade asset is Purchase Order."
+
+            private val EX_SUPPLIER_CANNOT_CANCEL =
+                    "Trade asset can only be cancelled by the supplier when the status of the trade asset is Invoice."
+
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on the given trade asset.")
             object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
             object SIGNING_TRANSACTION : ProgressTracker.Step("Signing transaction with our private key.")
@@ -42,30 +52,38 @@ object TradeAssetCancellation {
 
         override val progressTracker = tracker()
 
-
-
         @Suspendable
         override fun call(): SignedTransaction {
-            val notary = serviceHub
-                    .networkMapCache
-                    .notaryIdentities[0]
+
+            if(!message.isValid) {
+                throw ValidationException(validationErrors = message.getValidationErrors())
+            }
+
+            val notary = FlowHelper.getNotary(serviceHub)
+
+            val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
+                    serviceHub = serviceHub,
+                    linearId = UniqueIdentifier(id = message.linearId!!),
+                    contractStateType = TradeAssetState::class.java)
+
+            val inputState = inputStateAndRef.state.data
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
 
-
             val command = Command(
                     value = TradeAssetContract.Commands.Cancel(),
-                    signers = inputState.state.data.participants.map { it.owningKey })
+                    signers = FlowHelper.getPublicKeysFromParticipants(inputState.participants))
 
             val transactionBuilder = TransactionBuilder(notary)
-                    .addInputState(inputState)
+                    .addInputState(inputStateAndRef)
                     .addCommand(command)
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
+            verifyCancellationRules(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), inputState)
             transactionBuilder.verify(serviceHub)
-            verifyCancellationRules()
+
 
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
@@ -73,11 +91,14 @@ object TradeAssetCancellation {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val requiredSignatureFlowSessions =
-                    inputState.state.data.participants
-                            .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
-                            .distinct()
-                            .map { initiateFlow(it as Party) }
+            val requiredSignatureFlowSessions = listOf(
+                    inputState.owner,
+                    inputState.buyer,
+                    inputState.supplier,
+                    inputState.conductor)
+                    .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
+                    .distinct()
+                    .map { initiateFlow(it) }
 
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
@@ -91,45 +112,34 @@ object TradeAssetCancellation {
                     FINALISING_TRANSACTION.childProgressTracker()))
         }
 
-        fun verifyCancellationRules() : Unit {
-            val tradeAssetState = inputState.state.data
-            val assetStatus = tradeAssetState.tradeAsset.status
-            val resultForInitiatorsRule = permissibleInitiatorsRule(tradeAssetState, assetStatus)
-            if (resultForInitiatorsRule.isNotEmpty())
-                throw FlowException(resultForInitiatorsRule)
-        }
+        private fun verifyCancellationRules(initiator: Party, state: TradeAssetState) {
+            val errors = ArrayList<String>()
 
-        private fun permissibleInitiatorsRule(input: TradeAssetState, assetStatus: String) : String   =
-            if (ourIdentity == input.buyer)
-                if ( assetStatus != AssetType.PO.desc) ValidationMessages.BUYER_CANT_PO else ValidationMessages.PASSED
-            else if (ourIdentity == input.supplier)
-                if ( assetStatus != AssetType.INVOICE.desc) ValidationMessages.SUPPLIER_CANT_INV else ValidationMessages.PASSED
-            else if (ourIdentity == input.conductor)
-                if ( (!listOf(AssetType.PO.desc, AssetType.INVOICE.desc).contains(assetStatus)))
-                    ValidationMessages.CONDUCTOR_ONLY_PO_IV else ValidationMessages.PASSED
-            else
-                ValidationMessages.PASSED
+            if(initiator == state.buyer && state.tradeAsset.status != TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
+                errors.add(EX_BUYER_CANNOT_CANCEL_MSG)
+            }
 
-        object ValidationMessages {
-            val BUYER_CANT_PO = "Buyer cannot cancel when it's a purchase order"
-            val SUPPLIER_CANT_INV = "Supplier cannot cancel when it's an invoice"
-            val CONDUCTOR_ONLY_PO_IV = "Only a Conductor can cancel PO or Invoice on behalf of buyer or supplier"
-            val PASSED = ""
+            if(initiator == state.supplier && state.tradeAsset.status != TradeAsset.TradeAssetStatus.INVOICE) {
+                errors.add(EX_SUPPLIER_CANNOT_CANCEL)
+            }
+
+            if(!errors.isEmpty()) {
+                throw ValidationException(validationErrors = errors)
+            }
         }
     }
 
-
-    @InitiatedBy(TradeAssetCancellation.InitiatorFlow::class)
-    class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
+    @InitiatedBy(InitiatorFlow::class)
+    class AcceptorFlow(val flowSession: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
-            val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
+            val signTransactionFlow = object : SignTransactionFlow(flowSession) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
-                    val ledgerTx = stx.toLedgerTransaction(serviceHub, false)
-                    val input = ledgerTx.inputsOfType<TradeAssetState>().single()
-                    "This must be a trade asset transaction." using (input is TradeAssetState)
+//                    val output = stx.tx.outputs.single().data
+//                    "This must be a trade asset transaction." using (output is TradeAssetState)
                 }
             }
+
             return subFlow(signTransactionFlow)
         }
     }

@@ -3,7 +3,8 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
-import com.tradeix.concord.exceptions.RequestValidationException
+import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
@@ -46,7 +47,7 @@ object TradeAssetIssuance {
         override fun call(): SignedTransaction {
 
             if(!message.isValid) {
-                throw RequestValidationException(validationErrors = message.getValidationErrors())
+                throw ValidationException(validationErrors = message.getValidationErrors())
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
@@ -108,7 +109,7 @@ object TradeAssetIssuance {
     }
 
     @InitiatedBy(InitiatorFlow::class)
-    class Acceptor(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
+    class AcceptorFlow(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {

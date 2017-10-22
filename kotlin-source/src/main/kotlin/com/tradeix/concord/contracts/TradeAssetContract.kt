@@ -24,55 +24,57 @@ open class TradeAssetContract : Contract {
         class Issue : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
 
-                "No inputs should be consumed when issuing a purchase order." using
+                "Zero input states should be consumed when issuing a trade asset." using
                         (tx.inputs.isEmpty())
 
-                "Only one output state should be created." using
+                "Only one output state should be created when issuing a trade asset." using
                         (tx.outputs.size == 1)
 
-                val out = tx.outputsOfType<TradeAssetState>().single()
-
-                "All of the participants must be signers." using
-                        (signers.containsAll(out.participants.map { it.owningKey }))
+                val outputState = tx.outputsOfType<TradeAssetState>().single()
 
                 "The buyer and the supplier cannot be the same entity." using
-                        (out.buyer != out.supplier)
+                        (outputState.buyer != outputState.supplier)
 
+                "All participants must sign the transaction." using
+                        (signers.containsAll(outputState.participants.map { it.owningKey }))
             }
         }
 
         class ChangeOwner : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
-                "Only one input should be consumed when changing owner on a purchase order." using
+
+                "Only one input should be consumed when changing ownership of a trade asset." using
                         (tx.inputs.size == 1)
 
-                "Only one output state should be created." using
+                "Only one output state should be created when changing ownership of a trade asset." using
                         (tx.outputs.size == 1)
 
-                val out = tx.outputsOfType<TradeAssetState>().single()
-
-                "All of the participants must be signers." using
-                        (signers.containsAll(out.participants.map { it.owningKey }))
+                val outputState = tx.outputsOfType<TradeAssetState>().single()
 
                 "The supplier and the new owner cannot be the same entity." using
-                        (out.owner != out.supplier)
-            }
-        }
+                        (outputState.owner != outputState.supplier)
 
-        class Settle : Commands {
-            override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
+                "All participants must sign the transaction." using
+                        (signers.containsAll(outputState.participants.map { it.owningKey }))
             }
         }
 
         class Cancel : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
-                "One Input should be present to cancel." using
+
+                "Only one input should be consumed when cancelling a trade asset." using
                         (tx.inputs.size == 1)
-                "There should not be any Output for cancellation." using
+
+                "Zero output states should be created when cancelling a trade asset." using
                         (tx.outputs.isEmpty())
-                val tradeAssetState = tx.inputs.single().state.data as TradeAssetState
-                "Funder cannot cancel the contract" using
-                        (tradeAssetState.owner != tradeAssetState.supplier) //TBD
+
+                val inputState = tx.inputsOfType<TradeAssetState>().single()
+
+                "Nobody can cancel unless the owner is the supplier." using
+                        (inputState.owner == inputState.supplier)
+
+                "All participants must sign the transaction." using
+                        (signers.containsAll(inputState.participants.map { it.owningKey }))
             }
         }
     }
