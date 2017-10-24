@@ -1,6 +1,7 @@
 package com.tradeix.concord.messages
 
 import net.corda.core.contracts.Amount
+import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.serialization.CordaSerializable
 import java.lang.IllegalArgumentException
@@ -16,7 +17,8 @@ data class TradeAssetIssuanceRequestMessage(
         val conductor: CordaX500Name = CONDUCTOR_X500_NAME,
         val assetId: String?,
         val value: BigDecimal?,
-        val currency: String?) : RequestMessage() {
+        val currency: String?,
+        val supportingDocumentHash: String? = null) : RequestMessage() {
 
     companion object {
         private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")
@@ -26,6 +28,7 @@ data class TradeAssetIssuanceRequestMessage(
         private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction."
         private val EX_VALUE_NEG_MSG = "Value cannot be negative for an issuance transaction."
         private val EX_VALUE_MSG = "Value is required for an issuance transaction."
+        private val EX_INVALID_SUPPORTING_DOC_MSG = "Invalid Secure hash for Supporting Document."
     }
 
     val amount: Amount<Currency>
@@ -55,6 +58,14 @@ data class TradeAssetIssuanceRequestMessage(
 
         if (currency == null) {
             result.add(EX_CURRENCY_MSG)
+        }
+
+        if (supportingDocumentHash != null) {
+            try {
+                SecureHash.parse(supportingDocumentHash)
+            } catch (e: IllegalArgumentException) {
+                result.add(EX_INVALID_SUPPORTING_DOC_MSG)
+            }
         }
 
         return result

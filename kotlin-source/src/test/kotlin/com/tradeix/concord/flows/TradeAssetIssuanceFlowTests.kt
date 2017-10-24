@@ -3,6 +3,8 @@ package com.tradeix.concord.flows
 import com.tradeix.concord.exceptions.ValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import groovy.util.GroovyTestCase.assertEquals
+import net.corda.core.concurrent.CordaFuture
+import net.corda.core.crypto.SecureHash
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
 import org.junit.After
@@ -11,12 +13,17 @@ import org.junit.Test
 import java.util.*
 import net.corda.testing.*
 import net.corda.core.identity.Party
+import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
+import java.io.File
 import java.math.BigDecimal
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.fail
 
 class TradeAssetIssuanceFlowTests {
+    val VALID_ATTACHMENT_PATH = "src/test/resources/good.jar"
+
     lateinit var network: MockNetwork
     lateinit var mockBuyerNode: StartedNode<MockNetwork.MockNode>
     lateinit var mockSupplierNode: StartedNode<MockNetwork.MockNode>
@@ -308,6 +315,69 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `Recorded transaction has no inputs and a single output`() {
+        val future = getFutureForIssuanceFlow(null,mockBuyerNode )
+        val signedTransaction = future.getOrThrow()
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
+            assert(recordedTx.inputs.isEmpty())
+            assert(recordedTx.tx.outputs.size == 1)
+        }
+    }
+
+    @Test
+    fun `An Invalid value for document Hash would return an exception`() {
+        val future = getFutureForIssuanceFlow("abcd",mockBuyerNode )
+        assertFailsWith<ValidationException>("Request validation failed") {
+            future.getOrThrow()
+        }
+    }
+
+    @Test
+    fun `A valid document should be accepted`() {
+        val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
+        val validAttachment: SecureHash = mockBuyerNode.database.transaction {
+           mockBuyerNode.attachments.importAttachment(attachmentInputStream)
+        }
+        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
+        val signedTransaction = future.getOrThrow()
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
+            assert(recordedTx.inputs.isEmpty())
+            assert(recordedTx.tx.outputs.size == 1)
+        }
+    }
+
+    @Test
+    fun `records the correct transaction in both parties' transaction storages`() {
+        val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
+        val validAttachment: SecureHash = mockBuyerNode.database.transaction {
+            mockBuyerNode.attachments.importAttachment(attachmentInputStream)
+        }
+        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
+        listOf(mockBuyerNode, mockSupplierNode).forEach { node ->
+            val recordedTx = node.services.validatedTransactions.getTransaction(future.get().id)
+            recordedTx!!.verifyRequiredSignatures()
+            // Checks on the attachments.
+            val attachments = recordedTx.tx.attachments
+            assertEquals(1, attachments.size)
+            assertEquals(validAttachment, attachments.single())
+        }
+    }
+    @Test
+    fun `supplier is able to open attachment that the buyer has sent`() {
+        val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
+        val validAttachment: SecureHash = mockBuyerNode.database.transaction {
+            mockBuyerNode.attachments.importAttachment(attachmentInputStream)
+        }
+        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
+        future.getOrThrow()
+        mockSupplierNode.database.transaction {
+            val receivedAttachment = mockSupplierNode.services.attachments.openAttachment(validAttachment)
+            assertNotNull(receivedAttachment)
+        }
+    }
+
+    private fun getFutureForIssuanceFlow(validAttachment: String?, initiatorNode : StartedNode<MockNetwork.MockNode>): CordaFuture<SignedTransaction> {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 buyer = null,
@@ -315,22 +385,15 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = validAttachment
         ))
-
-        val future = mockBuyerNode
+        val future = initiatorNode
                 .services
                 .startFlow(flow)
                 .resultFuture
-
         network.runNetwork()
-
-        val signedTransaction = future.getOrThrow()
-
-        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
-            assert(recordedTx.inputs.isEmpty())
-            assert(recordedTx.tx.outputs.size == 1)
-        }
+        return future
     }
+
 }

@@ -1,5 +1,6 @@
 package com.tradeix.concord.helpers
 
+import net.corda.core.crypto.SecureHash
 import net.corda.core.flows.FlowException
 import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.CordaX500Name
@@ -26,4 +27,12 @@ object FlowHelper {
             ?: throw FlowException("$EX_FAILED_TO_GET_IDENTITY '$cordaX500Name'")
 
     fun getPublicKeysFromParticipants(participants: List<AbstractParty>): List<PublicKey> = participants.map { it.owningKey }
+
+    fun isAttachmentInVault(serviceHub: ServiceHub, supportingDocumentHash: String): Boolean =
+            try {
+                val attachment = serviceHub.attachments.openAttachment(SecureHash.parse(supportingDocumentHash))
+                if (attachment == null) false else true
+            } catch (e: IllegalAccessException) {
+                false
+            }
 }

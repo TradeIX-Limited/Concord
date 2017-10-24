@@ -9,6 +9,7 @@ import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.*
+import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
@@ -39,6 +40,8 @@ object TradeAssetIssuance {
                     GATHERING_SIGNATURES,
                     FINALISING_TRANSACTION
             )
+            val EX_NULL_CORDA_X500_NAME = "Invalid SecureHash for the Supporting Document"
+
         }
 
         override val progressTracker = tracker()
@@ -54,6 +57,9 @@ object TradeAssetIssuance {
             val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
             val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
+            if (message.supportingDocumentHash!=null && !FlowHelper.isAttachmentInVault(serviceHub,message.supportingDocumentHash )) {
+                throw ValidationException(validationErrors = arrayListOf(EX_NULL_CORDA_X500_NAME))
+            }
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
@@ -75,6 +81,11 @@ object TradeAssetIssuance {
             val transactionBuilder = TransactionBuilder(notary)
                     .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
                     .addCommand(command)
+
+            if (message.supportingDocumentHash!=null)
+            {
+               transactionBuilder.addAttachment(parse(message.supportingDocumentHash))
+            }
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
@@ -106,6 +117,10 @@ object TradeAssetIssuance {
                     transaction = fullySignedTransaction,
                     progressTracker = FINALISING_TRANSACTION.childProgressTracker()))
         }
+
+
+
+
     }
 
     @InitiatedBy(InitiatorFlow::class)
