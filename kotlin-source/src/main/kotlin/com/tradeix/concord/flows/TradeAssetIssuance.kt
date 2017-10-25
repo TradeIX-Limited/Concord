@@ -68,7 +68,7 @@ object TradeAssetIssuance {
                     linearId = UniqueIdentifier(id = message.linearId),
                     tradeAsset = TradeAsset(
                             assetId = message.assetId!!,
-                            status = TradeAsset.TradeAssetStatus.INVOICE,
+                            status = TradeAsset.TradeAssetStatus.valueOf(message.status!!),
                             amount = message.amount),
                     owner = supplier,
                     buyer = buyer,
