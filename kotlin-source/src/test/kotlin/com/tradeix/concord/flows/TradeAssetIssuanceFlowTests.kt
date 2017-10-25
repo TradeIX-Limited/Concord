@@ -64,7 +64,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = null,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -90,7 +91,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 assetId = null,
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -116,7 +118,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = null
+                currency = null,
+                supportingDocumentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -142,7 +145,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
                 value = null,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -168,7 +172,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE.negate(),
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -196,7 +201,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         ))
 
         val future = mockBuyerNode
@@ -220,7 +226,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         ))
 
         val future = mockBuyerNode
@@ -245,7 +252,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         ))
 
         val future = mockConductorNode
@@ -271,7 +279,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         ))
 
         val future = mockConductorNode
@@ -296,7 +305,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         ))
 
         val future = mockBuyerNode

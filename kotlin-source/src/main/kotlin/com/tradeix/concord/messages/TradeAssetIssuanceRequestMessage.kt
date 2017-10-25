@@ -18,7 +18,7 @@ data class TradeAssetIssuanceRequestMessage(
         val assetId: String?,
         val value: BigDecimal?,
         val currency: String?,
-        val supportingDocumentHash: String? = null) : RequestMessage() {
+        val supportingDocumentHash: String?) : RequestMessage() {
 
     companion object {
         private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")

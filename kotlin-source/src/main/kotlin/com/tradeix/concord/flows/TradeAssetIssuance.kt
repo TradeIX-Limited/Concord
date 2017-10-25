@@ -5,6 +5,7 @@ import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.ValidationException
 import com.tradeix.concord.helpers.FlowHelper
+import com.tradeix.concord.helpers.VaultHelper
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
@@ -40,7 +41,7 @@ object TradeAssetIssuance {
                     GATHERING_SIGNATURES,
                     FINALISING_TRANSACTION
             )
-            val EX_NULL_CORDA_X500_NAME = "Invalid SecureHash for the Supporting Document"
+            val EX_INVALID_HASH_FOR_ATTACHMENT = "Invalid SecureHash for the Supporting Document"
 
         }
 
@@ -57,8 +58,8 @@ object TradeAssetIssuance {
             val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
             val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
-            if (message.supportingDocumentHash!=null && !FlowHelper.isAttachmentInVault(serviceHub,message.supportingDocumentHash )) {
-                throw ValidationException(validationErrors = arrayListOf(EX_NULL_CORDA_X500_NAME))
+            if (message.supportingDocumentHash!=null && !VaultHelper.isAttachmentInVault(serviceHub,message.supportingDocumentHash )) {
+                throw ValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
             }
 
             // Stage 1 - Create unsigned transaction

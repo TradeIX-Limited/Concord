@@ -28,10 +28,4 @@ object FlowHelper {
 
     fun getPublicKeysFromParticipants(participants: List<AbstractParty>): List<PublicKey> = participants.map { it.owningKey }
 
-    fun isAttachmentInVault(serviceHub: ServiceHub, supportingDocumentHash: String): Boolean =
-            try {
-                (serviceHub.attachments.openAttachment(SecureHash.parse(supportingDocumentHash)) != null)
-            } catch (e: IllegalAccessException) {
-                false
-            }
 }

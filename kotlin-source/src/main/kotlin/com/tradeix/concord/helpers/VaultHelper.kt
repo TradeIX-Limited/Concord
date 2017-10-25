@@ -3,6 +3,7 @@ package com.tradeix.concord.helpers
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.crypto.SecureHash
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.vault.QueryCriteria
 
@@ -17,4 +18,11 @@ object VaultHelper {
                 .states
                 .single()
     }
+
+    fun isAttachmentInVault(serviceHub: ServiceHub, supportingDocumentHash: String): Boolean =
+            try {
+                (serviceHub.attachments.openAttachment(SecureHash.parse(supportingDocumentHash)) != null)
+            } catch (e: IllegalAccessException) {
+                false
+            }
 }

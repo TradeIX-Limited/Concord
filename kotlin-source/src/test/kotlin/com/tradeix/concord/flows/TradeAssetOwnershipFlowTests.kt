@@ -167,7 +167,8 @@ class TradeAssetOwnershipFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                supportingDocumentHash = null
         )
 
         val issuanceFuture = initiator
