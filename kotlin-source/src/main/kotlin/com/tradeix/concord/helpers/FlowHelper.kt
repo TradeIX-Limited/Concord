@@ -30,8 +30,7 @@ object FlowHelper {
 
     fun isAttachmentInVault(serviceHub: ServiceHub, supportingDocumentHash: String): Boolean =
             try {
-                val attachment = serviceHub.attachments.openAttachment(SecureHash.parse(supportingDocumentHash))
-                if (attachment == null) false else true
+                (serviceHub.attachments.openAttachment(SecureHash.parse(supportingDocumentHash)) != null)
             } catch (e: IllegalAccessException) {
                 false
             }

@@ -347,36 +347,6 @@ class TradeAssetIssuanceFlowTests {
         }
     }
 
-    @Test
-    fun `records the correct transaction in both parties' transaction storages`() {
-        val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
-        val validAttachment: SecureHash = mockBuyerNode.database.transaction {
-            mockBuyerNode.attachments.importAttachment(attachmentInputStream)
-        }
-        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
-        listOf(mockBuyerNode, mockSupplierNode).forEach { node ->
-            val recordedTx = node.services.validatedTransactions.getTransaction(future.get().id)
-            recordedTx!!.verifyRequiredSignatures()
-            // Checks on the attachments.
-            val attachments = recordedTx.tx.attachments
-            assertEquals(1, attachments.size)
-            assertEquals(validAttachment, attachments.single())
-        }
-    }
-    @Test
-    fun `supplier is able to open attachment that the buyer has sent`() {
-        val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
-        val validAttachment: SecureHash = mockBuyerNode.database.transaction {
-            mockBuyerNode.attachments.importAttachment(attachmentInputStream)
-        }
-        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
-        future.getOrThrow()
-        mockSupplierNode.database.transaction {
-            val receivedAttachment = mockSupplierNode.services.attachments.openAttachment(validAttachment)
-            assertNotNull(receivedAttachment)
-        }
-    }
-
     private fun getFutureForIssuanceFlow(validAttachment: String?, initiatorNode : StartedNode<MockNetwork.MockNode>): CordaFuture<SignedTransaction> {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
