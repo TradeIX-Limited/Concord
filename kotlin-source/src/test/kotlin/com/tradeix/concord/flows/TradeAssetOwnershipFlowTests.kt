@@ -162,7 +162,7 @@ class TradeAssetOwnershipFlowTests {
     private fun getOwnershipSignedTransaction(initiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val issuanceMessage = TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
-                status = "Invoice",
+                status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
