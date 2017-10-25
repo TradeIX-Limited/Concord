@@ -60,6 +60,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of supplier in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = null,
                 assetId = "MOCK_ASSET",
@@ -87,6 +88,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of asset ID in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 assetId = null,
@@ -114,6 +116,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of currency in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
@@ -141,6 +144,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of value in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
@@ -168,6 +172,7 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Negative value in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
@@ -196,6 +201,7 @@ class TradeAssetIssuanceFlowTests {
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the initiator`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -221,6 +227,7 @@ class TradeAssetIssuanceFlowTests {
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the acceptor`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -247,6 +254,7 @@ class TradeAssetIssuanceFlowTests {
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the initiator`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -274,6 +282,7 @@ class TradeAssetIssuanceFlowTests {
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the acceptor`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -300,6 +309,7 @@ class TradeAssetIssuanceFlowTests {
     fun `Flow records a transaction in all counter-party vaults`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -360,6 +370,7 @@ class TradeAssetIssuanceFlowTests {
     private fun getFutureForIssuanceFlow(validAttachment: String?, initiatorNode : StartedNode<MockNetwork.MockNode>): CordaFuture<SignedTransaction> {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Invoice",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
@@ -376,4 +387,38 @@ class TradeAssetIssuanceFlowTests {
         return future
     }
 
+        val signedTransaction = future.getOrThrow()
+
+        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
+            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
+            assert(recordedTx.inputs.isEmpty())
+            assert(recordedTx.tx.outputs.size == 1)
+        }
+    }
+
+    @Test
+    fun `an invalid status message should return an error`() {
+        val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
+                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Blah Blah",
+                buyer = null,
+                supplier = mockSupplier.name,
+                conductor = mockConductor.name,
+                assetId = "MOCK_ASSET",
+                value = BigDecimal.ONE,
+                currency = "GBP"
+        ))
+
+        val future = mockBuyerNode
+                .services
+                .startFlow(flow)
+                .resultFuture
+
+        network.runNetwork()
+
+        assertFailsWith<ValidationException>("Request validation failed") {
+            future.getOrThrow()
+        }
+
+    }
 }

@@ -4,6 +4,7 @@ import net.corda.core.contracts.Amount
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.serialization.CordaSerializable
+import com.tradeix.concord.models.TradeAsset.TradeAssetStatus.Companion.isValid
 import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 import java.util.*
@@ -12,6 +13,7 @@ import kotlin.collections.ArrayList
 @CordaSerializable
 data class TradeAssetIssuanceRequestMessage(
         val linearId: UUID = UUID.randomUUID(),
+        val status: String,
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
         val conductor: CordaX500Name = CONDUCTOR_X500_NAME,
@@ -22,7 +24,7 @@ data class TradeAssetIssuanceRequestMessage(
 
     companion object {
         private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")
-
+        private val EX_STATUS_MSG = "A valid Status is required for an issuance transaction."
         private val EX_SUPPLIER_MSG = "Supplier is required for an issuance transaction."
         private val EX_ASSET_ID_MSG = "Asset ID is required for an issuance transaction."
         private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction."
@@ -39,6 +41,10 @@ data class TradeAssetIssuanceRequestMessage(
 
     override fun getValidationErrors(): ArrayList<String> {
         val result = ArrayList<String>()
+
+        if (!isValid(status)) {
+            result.add(EX_STATUS_MSG)
+        }
 
         if (supplier == null) {
             result.add(EX_SUPPLIER_MSG)

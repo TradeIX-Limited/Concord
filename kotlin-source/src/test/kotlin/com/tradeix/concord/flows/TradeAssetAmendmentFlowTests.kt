@@ -172,6 +172,7 @@ class TradeAssetAmendmentFlowTests {
             amendmentInitiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val issuanceMessage = TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                status = "Purchase Order",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
