@@ -16,15 +16,15 @@ data class TradeAssetIssuanceRequestMessage(
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
         val conductor: CordaX500Name = CONDUCTOR_X500_NAME,
+        val status: String?,
         val assetId: String?,
         val value: BigDecimal?,
         val currency: String?,
-        val supportingDocumentHash: String?) : RequestMessage() {
-        val currency: String?,
-        val status: String?) : RequestMessage() {
+        val attachmentHash: String?) : RequestMessage() {
 
     companion object {
         private val CONDUCTOR_X500_NAME = CordaX500Name("TradeIX", "London", "GB")
+
         private val EX_STATUS_MSG = "Status is required for an issuance transaction."
         private val EX_INVALID_STATUS_MSG = "Status is required for an issuance transaction."
         private val EX_SUPPLIER_MSG = "Supplier is required for an issuance transaction."
@@ -32,7 +32,7 @@ data class TradeAssetIssuanceRequestMessage(
         private val EX_CURRENCY_MSG = "Currency is required for an issuance transaction."
         private val EX_VALUE_NEG_MSG = "Value cannot be negative for an issuance transaction."
         private val EX_VALUE_MSG = "Value is required for an issuance transaction."
-        private val EX_INVALID_SUPPORTING_DOC_MSG = "Invalid Secure hash for Supporting Document."
+        private val EX_ATTACHMENT_HASH_MSG = "Invalid Secure hash for Supporting Document."
     }
 
     val amount: Amount<Currency>
@@ -44,9 +44,13 @@ data class TradeAssetIssuanceRequestMessage(
     override fun getValidationErrors(): ArrayList<String> {
         val result = ArrayList<String>()
 
-        if (status == null) {
-            result.add(EX_STATUS_MSG)
-        } else {
+        supplier ?: result.add(EX_SUPPLIER_MSG)
+        status ?: result.add(EX_STATUS_MSG)
+        assetId ?: result.add(EX_ASSET_ID_MSG)
+        value ?: result.add(EX_VALUE_MSG)
+        currency ?: result.add(EX_CURRENCY_MSG)
+
+        if(status != null) {
             try {
                 TradeAsset.TradeAssetStatus.valueOf(status)
             } catch (ex: Throwable) {
@@ -54,31 +58,15 @@ data class TradeAssetIssuanceRequestMessage(
             }
         }
 
-        if (supplier == null) {
-            result.add(EX_SUPPLIER_MSG)
-        }
-
-        if (assetId == null) {
-            result.add(EX_ASSET_ID_MSG)
-        }
-
-        if (value == null) {
-            result.add(EX_VALUE_MSG)
-        }
-
         if (value != null && value < BigDecimal.ZERO) {
             result.add(EX_VALUE_NEG_MSG)
         }
 
-        if (currency == null) {
-            result.add(EX_CURRENCY_MSG)
-        }
-
-        if (supportingDocumentHash != null) {
+        if (attachmentHash != null) {
             try {
-                SecureHash.parse(supportingDocumentHash)
+                SecureHash.parse(attachmentHash)
             } catch (e: IllegalArgumentException) {
-                result.add(EX_INVALID_SUPPORTING_DOC_MSG)
+                result.add(EX_ATTACHMENT_HASH_MSG)
             }
         }
 

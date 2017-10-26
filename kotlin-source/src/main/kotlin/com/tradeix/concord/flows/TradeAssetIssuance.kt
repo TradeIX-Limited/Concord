@@ -58,7 +58,7 @@ object TradeAssetIssuance {
             val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
             val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
-            if (message.supportingDocumentHash!=null && !VaultHelper.isAttachmentInVault(serviceHub,message.supportingDocumentHash )) {
+            if (message.attachmentHash !=null && !VaultHelper.isAttachmentInVault(serviceHub,message.attachmentHash)) {
                 throw ValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
             }
 
@@ -83,9 +83,9 @@ object TradeAssetIssuance {
                     .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
                     .addCommand(command)
 
-            if (message.supportingDocumentHash!=null)
+            if (message.attachmentHash !=null)
             {
-               transactionBuilder.addAttachment(parse(message.supportingDocumentHash))
+               transactionBuilder.addAttachment(parse(message.attachmentHash))
             }
 
             // Stage 2 - Verify transaction

@@ -174,7 +174,7 @@ class TradeAssetCancellationFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         val issuanceFuture = issuanceInitiator

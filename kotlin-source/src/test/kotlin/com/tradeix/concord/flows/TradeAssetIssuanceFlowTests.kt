@@ -18,7 +18,6 @@ import net.corda.core.utilities.getOrThrow
 import java.io.File
 import java.math.BigDecimal
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
 import kotlin.test.fail
 
 class TradeAssetIssuanceFlowTests {
@@ -66,7 +65,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -94,7 +93,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = null,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -121,7 +120,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -150,7 +150,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
-                currency = "GBP"
+                currency = "GBP",
+                attachmentHash = null
         ))
 
         val future = mockBuyerNode
@@ -175,7 +176,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = null,
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -203,7 +204,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = null,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -231,7 +232,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE.negate(),
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         )
 
         assertFailsWith<ValidationException>("Request validation failed") {
@@ -261,7 +262,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         ))
 
         val future = mockBuyerNode
@@ -287,7 +288,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         ))
 
         val future = mockBuyerNode
@@ -314,7 +315,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         ))
 
         val future = mockConductorNode
@@ -342,7 +343,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         ))
 
         val future = mockConductorNode
@@ -369,7 +370,7 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = null
+                attachmentHash = null
         ))
 
         val future = mockBuyerNode
@@ -388,8 +389,7 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `Recorded transaction has no inputs and a single output`() {
-        val future = getFutureForIssuanceFlow(null,mockBuyerNode )
-        val signedTransaction = future.getOrThrow()
+        val signedTransaction = getFutureForIssuanceFlow(null, mockBuyerNode)
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
             val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
             assert(recordedTx.inputs.isEmpty())
@@ -399,20 +399,21 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `An Invalid value for document Hash would return an exception`() {
-        val future = getFutureForIssuanceFlow("abcd",mockBuyerNode )
         assertFailsWith<ValidationException>("Request validation failed") {
-            future.getOrThrow()
+            getFutureForIssuanceFlow("abcd", mockBuyerNode)
         }
     }
 
     @Test
     fun `A valid document should be accepted`() {
         val attachmentInputStream = File(VALID_ATTACHMENT_PATH).inputStream()
+
         val validAttachment: SecureHash = mockBuyerNode.database.transaction {
-           mockBuyerNode.attachments.importAttachment(attachmentInputStream)
+            mockBuyerNode.attachments.importAttachment(attachmentInputStream)
         }
-        val future = getFutureForIssuanceFlow(validAttachment.toString(),mockBuyerNode )
-        val signedTransaction = future.getOrThrow()
+
+        val signedTransaction = getFutureForIssuanceFlow(validAttachment.toString(), mockBuyerNode)
+
         for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
             val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
             assert(recordedTx.inputs.isEmpty())
@@ -420,7 +421,9 @@ class TradeAssetIssuanceFlowTests {
         }
     }
 
-    private fun getFutureForIssuanceFlow(validAttachment: String?, initiatorNode : StartedNode<MockNetwork.MockNode>): CordaFuture<SignedTransaction> {
+    private fun getFutureForIssuanceFlow(
+            validAttachment: String?,
+            initiatorNode: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
                 linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
                 status = "INVOICE",
@@ -430,22 +433,13 @@ class TradeAssetIssuanceFlowTests {
                 assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                supportingDocumentHash = validAttachment
+                attachmentHash = validAttachment
         ))
         val future = initiatorNode
                 .services
                 .startFlow(flow)
                 .resultFuture
         network.runNetwork()
-        return future
-    }
-
-        val signedTransaction = future.getOrThrow()
-
-        for (node in listOf(mockBuyerNode, mockSupplierNode, mockConductorNode)) {
-            val recordedTx = node.services.validatedTransactions.getTransaction(signedTransaction.id) ?: fail()
-            assert(recordedTx.inputs.isEmpty())
-            assert(recordedTx.tx.outputs.size == 1)
-        }
+        return future.getOrThrow()
     }
 }
