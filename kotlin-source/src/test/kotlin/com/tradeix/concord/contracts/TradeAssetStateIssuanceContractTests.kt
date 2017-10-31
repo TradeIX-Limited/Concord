@@ -25,7 +25,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `Transaction must include Issue command`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -49,7 +49,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `Zero input states should be consumed when issuing a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -81,7 +81,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `Only one output state should be created when issuing a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -113,7 +113,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `The buyer and the supplier cannot be the same entity`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -136,7 +136,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `All participants must sign the transaction (buyer must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -159,7 +159,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `All participants must sign the transaction (supplier must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -182,7 +182,7 @@ class TradeAssetStateIssuanceContractTests {
     @Test
     fun `All participants must sign the transaction (conductor must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {

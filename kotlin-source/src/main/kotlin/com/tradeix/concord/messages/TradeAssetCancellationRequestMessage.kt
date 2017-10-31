@@ -1,19 +1,10 @@
 package com.tradeix.concord.messages
 
-import java.util.UUID
+import net.corda.core.contracts.UniqueIdentifier
 
 data class TradeAssetCancellationRequestMessage(
-        val linearId: UUID?) : RequestMessage() {
-
-    companion object {
-        private val EX_LINEAR_ID_MSG = "Linear ID is required for a cancellation transaction."
-    }
-
-    override fun getValidationErrors(): ArrayList<String> {
-        val result = ArrayList<String>()
-
-        linearId ?: result.add(EX_LINEAR_ID_MSG)
-
-        return result
-    }
+        override val correlationId: String?,
+        val externalId: String?
+) : Message(correlationId) {
+    val linearId: UniqueIdentifier get() = UniqueIdentifier(externalId!!)
 }

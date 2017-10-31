@@ -3,10 +3,12 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.helpers.FlowHelper
+import com.tradeix.concord.helpers.VaultHelper
 import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.states.TradeAssetState
+import com.tradeix.concord.validators.TradeAssetOwnershipRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
@@ -47,20 +49,18 @@ object TradeAssetOwnership {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            if(!message.isValid) {
-                throw ValidationException(validationErrors = message.getValidationErrors())
+            val validator = TradeAssetOwnershipRequestMessageValidator(message)
+
+            if(!validator.isValid) {
+                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
-            val inputState = serviceHub
-                    .vaultService
-                    .queryBy(
-                            criteria = QueryCriteria.LinearStateQueryCriteria(
-                                    linearId = listOf(UniqueIdentifier(id = message.linearId!!))),
-                            contractStateType = TradeAssetState::class.java)
-                    .states
-                    .single()
+            val inputState = VaultHelper.getStateAndRefByLinearId(
+                    serviceHub,
+                    message.linearId,
+                    TradeAssetState::class.java)
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION

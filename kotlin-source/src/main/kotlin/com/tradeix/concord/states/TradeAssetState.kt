@@ -24,8 +24,8 @@ data class TradeAssetState(
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         return when (schema) {
             is TradeAssetSchemaV1 -> TradeAssetSchemaV1.PersistentTradeAssetSchemaV1(
+                    externalId = linearId.externalId.toString(),
                     linearId = linearId.id,
-                    assetId = tradeAsset.assetId,
                     status = tradeAsset.status.description,
                     value = tradeAsset.amount.toDecimal(),
                     owner = owner.name.toString(),

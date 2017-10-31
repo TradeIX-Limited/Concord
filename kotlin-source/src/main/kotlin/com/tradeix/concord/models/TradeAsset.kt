@@ -6,7 +6,6 @@ import java.util.*
 
 @CordaSerializable
 data class TradeAsset(
-        val assetId: String,
         val status: TradeAssetStatus,
         val amount: Amount<Currency>) {
 

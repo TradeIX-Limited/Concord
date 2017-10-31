@@ -25,7 +25,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `Transaction must include ChangeOwner command`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -58,7 +58,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `Only one input should be consumed when changing ownership of a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -81,7 +81,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `Only one output state should be created when changing ownership of a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -104,7 +104,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `The supplier and the new owner cannot be the same entity`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -136,7 +136,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `All participants must sign the transaction (owner must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -166,7 +166,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `All participants must sign the transaction (buyer must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -196,7 +196,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `All participants must sign the transaction (supplier must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -226,7 +226,7 @@ class TradeAssetStateOwnershipContractTests {
     @Test
     fun `All participants must sign the transaction (conductor must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {

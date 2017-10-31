@@ -1,6 +1,6 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.messages.TradeAssetAmendmentRequestMessage
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import net.corda.core.identity.Party
@@ -62,15 +62,15 @@ class TradeAssetAmendmentFlowTests {
     }
 
     @Test
-    fun `Absence of Linear ID in message should result in error`() {
+    fun `Absence of Correlation ID in message should result in error`() {
         val message = TradeAssetAmendmentRequestMessage(
-                linearId = null,
-                assetId = null,
+                correlationId = null,
+                externalId = "TEST_EXTERNAL_ID",
                 value = null,
                 currency = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockSupplierNode
                     .services
                     .startFlow(TradeAssetAmendment.InitiatorFlow(message))
@@ -81,9 +81,8 @@ class TradeAssetAmendmentFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Linear ID is required for an amendment transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Correlation ID is required for an amendment transaction."))
     }
 
     @Test
@@ -171,15 +170,15 @@ class TradeAssetAmendmentFlowTests {
             issuanceInitiator: StartedNode<MockNetwork.MockNode>,
             amendmentInitiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val issuanceMessage = TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "PURCHASE_ORDER",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
         val issuanceFuture = issuanceInitiator
@@ -192,8 +191,8 @@ class TradeAssetAmendmentFlowTests {
         issuanceFuture.getOrThrow()
 
         val amendmentMessage = TradeAssetAmendmentRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
-                assetId = "MOCK_ASSET",
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 value = BigDecimal.TEN,
                 currency = "USD"
         )

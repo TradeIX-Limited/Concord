@@ -1,5 +1,6 @@
 package com.tradeix.concord.schemas
 
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal
@@ -17,14 +18,14 @@ object TradeAssetSchemaV1 : MappedSchema(
     @Entity
     @Table(name = "trade_asset_states")
     class PersistentTradeAssetSchemaV1(
+            @Column(name = "external_id")
+            var externalId: String,
+
             @Column(name = "linear_id")
             var linearId: UUID,
 
             @Column(name = "value")
             var value: BigDecimal,
-
-            @Column(name = "asset_id")
-            var assetId: String,
 
             @Column(name = "status")
             var status: String,

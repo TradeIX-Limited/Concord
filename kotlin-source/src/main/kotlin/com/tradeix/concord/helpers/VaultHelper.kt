@@ -12,9 +12,16 @@ object VaultHelper {
             serviceHub: ServiceHub,
             linearId: UniqueIdentifier,
             contractStateType: Class<T>): StateAndRef<T> {
+
+        val criteria = if (linearId.externalId != null) {
+            QueryCriteria.LinearStateQueryCriteria(externalId = listOf(linearId.externalId!!))
+        } else {
+            QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId))
+        }
+
         return serviceHub
                 .vaultService
-                .queryBy(contractStateType, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(linearId)))
+                .queryBy(contractStateType, criteria)
                 .states
                 .single()
     }

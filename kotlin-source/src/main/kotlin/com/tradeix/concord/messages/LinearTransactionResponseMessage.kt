@@ -1,6 +1,9 @@
 package com.tradeix.concord.messages
 
+import net.corda.core.contracts.UniqueIdentifier
+
 data class LinearTransactionResponseMessage(
-        val linearId: String,
-        val transactionId: String
-)
+        override val correlationId: String,
+        override val transactionId: String,
+        val linearId: UniqueIdentifier
+) : TransactionResponseMessage(correlationId, transactionId)

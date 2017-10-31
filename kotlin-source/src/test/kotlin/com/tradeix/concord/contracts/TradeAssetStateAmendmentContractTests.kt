@@ -26,8 +26,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `Transaction must include Amend command`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -60,7 +60,7 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `Only one input should be consumed when amending a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 output(TRADE_ASSET_CONTRACT_ID) {
@@ -83,7 +83,7 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `Only one output state should be created when amending a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val tradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val tradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -106,8 +106,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `The supplier must be the owner when amending a trade asset`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -139,8 +139,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `All participants must sign the transaction (owner must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -172,8 +172,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `All participants must sign the transaction (buyer must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -205,8 +205,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `All participants must sign the transaction (supplier must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {
@@ -238,8 +238,8 @@ class TradeAssetStateAmendmentContractTests {
     @Test
     fun `All participants must sign the transaction (conductor must sign)`() {
         val linearId = UniqueIdentifier(id = UUID.fromString("00000000-0000-4000-0000-000000000000"))
-        val originalTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
-        val amendedTradeAsset = TradeAsset("MOCK_ASSET", TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
+        val originalTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 1.POUNDS)
+        val amendedTradeAsset = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, 2.DOLLARS)
         ledger {
             transaction {
                 input(TRADE_ASSET_CONTRACT_ID) {

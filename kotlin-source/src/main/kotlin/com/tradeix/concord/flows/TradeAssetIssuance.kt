@@ -3,12 +3,13 @@ package com.tradeix.concord.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
+import com.tradeix.concord.validators.TradeAssetIssuanceRequestMessageValidator
 import net.corda.core.contracts.*
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
@@ -50,24 +51,25 @@ object TradeAssetIssuance {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            if(!message.isValid) {
-                throw ValidationException(validationErrors = message.getValidationErrors())
+            val validator = TradeAssetIssuanceRequestMessageValidator(message)
+
+            if(!validator.isValid) {
+                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
             val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
             val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
-            if (message.attachmentHash !=null && !VaultHelper.isAttachmentInVault(serviceHub,message.attachmentHash)) {
-                throw ValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
+            if (message.attachmentId !=null && !VaultHelper.isAttachmentInVault(serviceHub,message.attachmentId)) {
+                throw FlowValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
             }
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
             val outputState = TradeAssetState(
-                    linearId = UniqueIdentifier(id = message.linearId),
+                    linearId = message.linearId,
                     tradeAsset = TradeAsset(
-                            assetId = message.assetId!!,
                             status = TradeAsset.TradeAssetStatus.valueOf(message.status!!),
                             amount = message.amount),
                     owner = supplier,
@@ -83,9 +85,9 @@ object TradeAssetIssuance {
                     .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
                     .addCommand(command)
 
-            if (message.attachmentHash !=null)
+            if (message.attachmentId !=null)
             {
-               transactionBuilder.addAttachment(parse(message.attachmentHash))
+               transactionBuilder.addAttachment(parse(message.attachmentId))
             }
 
             // Stage 2 - Verify transaction
@@ -107,6 +109,8 @@ object TradeAssetIssuance {
                     .distinct()
                     .map { initiateFlow(it) }
 
+            // TODO : Move this into FlowHelper ^
+
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
                     requiredSignatureFlowSessions,
@@ -118,10 +122,6 @@ object TradeAssetIssuance {
                     transaction = fullySignedTransaction,
                     progressTracker = FINALISING_TRANSACTION.childProgressTracker()))
         }
-
-
-
-
     }
 
     @InitiatedBy(InitiatorFlow::class)

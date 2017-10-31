@@ -1,9 +1,8 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import groovy.util.GroovyTestCase.assertEquals
-import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
@@ -59,16 +58,17 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of supplier in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = null,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -79,24 +79,24 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Supplier is required for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Supplier is required for an issuance transaction."))
     }
 
     @Test
-    fun `Absence of asset ID in message should result in error`() {
+    fun `Absence of Correlation ID in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = null,
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
-                assetId = null,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -107,24 +107,24 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Asset ID is required for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Correlation ID is required for an issuance transaction."))
     }
 
     @Test
     fun `Absence of status in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = null,
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -135,23 +135,22 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Status is required for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Status is required for an issuance transaction."))
     }
 
     @Test
     fun `Invalid status message should result in error`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "THIS_IS_NOT_A_VALID_STATUS",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockBuyerNode
@@ -161,7 +160,7 @@ class TradeAssetIssuanceFlowTests {
 
         network.runNetwork()
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        assertFailsWith<FlowValidationException>("Request validation failed") {
             future.getOrThrow()
         }
 
@@ -170,16 +169,17 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Absence of currency in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = null,
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -190,24 +190,24 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Currency is required for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Currency is required for an issuance transaction."))
     }
 
     @Test
     fun `Absence of value in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
-                assetId = "MOCK_ASSET",
                 value = null,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -218,24 +218,24 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Value is required for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Value is required for an issuance transaction."))
     }
 
     @Test
     fun `Negative value in message should result in error`() {
         val message = TradeAssetIssuanceRequestMessage(
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE.negate(),
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockBuyerNode
                     .services
                     .startFlow(TradeAssetIssuance.InitiatorFlow(message))
@@ -246,23 +246,22 @@ class TradeAssetIssuanceFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Value cannot be negative for an issuance transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("Value cannot be negative for an issuance transaction."))
     }
 
     @Test
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the initiator`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockBuyerNode
@@ -280,15 +279,15 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Buyer initiated SignedTransaction returned by the flow is signed by the acceptor`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockBuyerNode
@@ -307,15 +306,15 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the initiator`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
-                buyer = mockBuyer.name,
+                buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockConductorNode
@@ -335,15 +334,15 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Conductor initiated SignedTransaction returned by the flow is signed by the acceptor`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
-                buyer = mockBuyer.name,
+                buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockConductorNode
@@ -362,15 +361,15 @@ class TradeAssetIssuanceFlowTests {
     @Test
     fun `Flow records a transaction in all counter-party vaults`() {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         ))
 
         val future = mockBuyerNode
@@ -399,7 +398,7 @@ class TradeAssetIssuanceFlowTests {
 
     @Test
     fun `An Invalid value for document Hash would return an exception`() {
-        assertFailsWith<ValidationException>("Request validation failed") {
+        assertFailsWith<FlowValidationException>("Request validation failed") {
             getFutureForIssuanceFlow("abcd", mockBuyerNode)
         }
     }
@@ -425,15 +424,15 @@ class TradeAssetIssuanceFlowTests {
             validAttachment: String?,
             initiatorNode: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val flow = TradeAssetIssuance.InitiatorFlow(TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = null,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = validAttachment
+                attachmentId = validAttachment
         ))
         val future = initiatorNode
                 .services

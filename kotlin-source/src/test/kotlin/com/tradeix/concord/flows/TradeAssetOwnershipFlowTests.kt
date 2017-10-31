@@ -1,6 +1,6 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
 import net.corda.core.identity.Party
@@ -62,13 +62,14 @@ class TradeAssetOwnershipFlowTests {
     }
 
     @Test
-    fun `Absence of Linear ID in message should result in error`() {
+    fun `Absence of External ID in message should result in error`() {
         val message = TradeAssetOwnershipRequestMessage(
-                linearId = null,
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = null,
                 newOwner = mockFunder.name
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockSupplierNode
                     .services
                     .startFlow(TradeAssetOwnership.InitiatorFlow(message))
@@ -79,19 +80,19 @@ class TradeAssetOwnershipFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("Linear ID is required for an a change of ownership transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("External ID is required for an ownership transaction."))
     }
 
     @Test
     fun `Absence of new owner in message should result in error`() {
         val message = TradeAssetOwnershipRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 newOwner = null
         )
 
-        assertFailsWith<ValidationException>("Request validation failed") {
+        val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
             val future = mockSupplierNode
                     .services
                     .startFlow(TradeAssetOwnership.InitiatorFlow(message))
@@ -102,9 +103,8 @@ class TradeAssetOwnershipFlowTests {
             future.getOrThrow()
         }
 
-        assert(!message.isValid)
-        assert(message.getValidationErrors().size == 1)
-        assert(message.getValidationErrors().contains("New owner is required for an a change of ownership transaction."))
+        assert(exception.validationErrors.size == 1)
+        assert(exception.validationErrors.contains("New owner is required for an ownership transaction."))
     }
 
     @Test
@@ -161,15 +161,15 @@ class TradeAssetOwnershipFlowTests {
 
     private fun getOwnershipSignedTransaction(initiator: StartedNode<MockNetwork.MockNode>): SignedTransaction {
         val issuanceMessage = TradeAssetIssuanceRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 status = "INVOICE",
                 buyer = mockBuyer.name,
                 supplier = mockSupplier.name,
                 conductor = mockConductor.name,
-                assetId = "MOCK_ASSET",
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentHash = null
+                attachmentId = null
         )
 
         val issuanceFuture = initiator
@@ -182,7 +182,8 @@ class TradeAssetOwnershipFlowTests {
         issuanceFuture.getOrThrow()
 
         val ownershipMessage = TradeAssetOwnershipRequestMessage(
-                linearId = UUID.fromString("00000000-0000-4000-0000-000000000000"),
+                correlationId = "TEST_CORRELATION_ID",
+                externalId = "TEST_EXTERNAL_ID",
                 newOwner = mockFunder.name
         )
 

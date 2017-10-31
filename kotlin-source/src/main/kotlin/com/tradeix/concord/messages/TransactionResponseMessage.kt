@@ -1,3 +1,6 @@
 package com.tradeix.concord.messages
 
-data class TransactionResponseMessage(val transactionId: String)
+open class TransactionResponseMessage(
+        override val correlationId: String,
+        open val transactionId: String
+) : Message(correlationId)

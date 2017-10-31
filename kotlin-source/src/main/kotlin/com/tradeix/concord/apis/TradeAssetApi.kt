@@ -2,7 +2,7 @@ package com.tradeix.concord.apis
 
 import com.tradeix.concord.flows.TradeAssetAmendment
 import com.tradeix.concord.flows.TradeAssetCancellation
-import com.tradeix.concord.exceptions.ValidationException
+import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
@@ -39,18 +39,27 @@ class TradeAssetApi(val services: CordaRPCOps) {
 
             return Response
                     .status(Response.Status.CREATED)
-                    .entity(LinearTransactionResponseMessage(message.linearId.toString(), result.id.toString()))
+                    .entity(LinearTransactionResponseMessage(
+                            correlationId = message.correlationId!!,
+                            transactionId = result.id.toString(),
+                            linearId = message.linearId
+                    ))
                     .build()
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is ValidationException -> Response
+                is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .entity(ValidationErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message,
+                                validationErrors = ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(ex.message!!))
+                        .entity(ErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message!!))
                         .build()
             }
         }
@@ -69,18 +78,26 @@ class TradeAssetApi(val services: CordaRPCOps) {
 
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(result.id.toString()))
+                    .entity(TransactionResponseMessage(
+                            correlationId = message.correlationId!!,
+                            transactionId = result.id.toString()
+                    ))
                     .build()
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is ValidationException -> Response
+                is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .entity(ValidationErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message,
+                                validationErrors = ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(ex.message!!))
+                        .entity(ErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message!!))
                         .build()
             }
         }
@@ -98,18 +115,26 @@ class TradeAssetApi(val services: CordaRPCOps) {
 
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(result.id.toString()))
+                    .entity(TransactionResponseMessage(
+                            correlationId = message.correlationId!!,
+                            transactionId = result.id.toString()
+                    ))
                     .build()
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is ValidationException -> Response
+                is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .entity(ValidationErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message,
+                                validationErrors = ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(ex.message!!))
+                        .entity(ErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message!!))
                         .build()
             }
         }
@@ -131,18 +156,26 @@ class TradeAssetApi(val services: CordaRPCOps) {
 
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(result.id.toString()))
+                    .entity(TransactionResponseMessage(
+                            correlationId = message.correlationId!!,
+                            transactionId = result.id.toString()
+                    ))
                     .build()
 
         } catch (ex: Throwable) {
             return when (ex) {
-                is ValidationException -> Response
+                is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ErrorsResponseMessage(ex.validationErrors))
+                        .entity(ValidationErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message,
+                                validationErrors = ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(ex.message!!))
+                        .entity(ErrorResponseMessage(
+                                correlationId = message.correlationId!!,
+                                errorMessage = ex.message!!))
                         .build()
             }
         }
