@@ -28,6 +28,7 @@ sourceSets {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.rabbitmq:amqp-client:5.0.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
 

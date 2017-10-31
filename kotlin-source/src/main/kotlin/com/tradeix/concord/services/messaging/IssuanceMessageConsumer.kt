@@ -2,7 +2,7 @@ package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.*
 
-class IssuanceMessageConsumer(channel: Channel):Consumer{
+class IssuanceMessageConsumer(val channel: Channel) : Consumer {
     override fun handleRecoverOk(consumerTag: String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -20,7 +20,13 @@ class IssuanceMessageConsumer(channel: Channel):Consumer{
     }
 
     override fun handleDelivery(consumerTag: String?, envelope: Envelope?, properties: AMQP.BasicProperties?, body: ByteArray?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val deliveryTag = envelope?.deliveryTag
+
+        // Handler logic here
+
+
+        channel.basicAck(deliveryTag!!, false)
+
     }
 
     override fun handleCancelOk(consumerTag: String?) {

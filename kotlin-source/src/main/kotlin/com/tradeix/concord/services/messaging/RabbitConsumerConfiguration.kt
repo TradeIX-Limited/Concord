@@ -2,7 +2,12 @@ package com.tradeix.concord.services.messaging
 
 import com.sun.org.apache.xpath.internal.operations.Bool
 
-data class RabbitConfiguration(
+data class RabbitConsumerConfiguration(
+        val userName: String,
+        val password: String,
+        val hostName: String,
+        val virtualHost: String,
+        val portNumber: Int,
         val exchangeName: String,
         val exchangeType: String,
         val exchangeRoutingKey: String,

@@ -1,57 +1,55 @@
 package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.ConnectionFactory
+import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.Message
-import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 
-class RabbitMqConsumer<T : Message>(private val rabbitConfiguration: RabbitConfiguration, private val messageClass: Class<T>) {
+class RabbitMqConsumer(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<Message>) : IQueueConsumer {
     init {
-        //rabbitConfiguration = RabbitConfiguration("cordatix_exchange", "topic", ex)
+        //rabbitConsumerConfiguration = RabbitConsumerConfiguration("cordatix_exchange", "topic", ex)
     }
 
-    fun subscribe(){
-        val connection = ConnectionFactory().newConnection()
+    override fun subscribe() {
+        val connectionFactory = ConnectionFactory()
+        connectionFactory.username = rabbitConsumerConfiguration.userName
+        connectionFactory.password = rabbitConsumerConfiguration.password
+        connectionFactory.host = rabbitConsumerConfiguration.hostName
+        connectionFactory.virtualHost = rabbitConsumerConfiguration.virtualHost
+        connectionFactory.port = rabbitConsumerConfiguration.portNumber
+        val connection = connectionFactory.newConnection()
         val channel = connection?.createChannel()
 
-        if(channel != null) {
-            channel.exchangeDeclare(
-                    rabbitConfiguration.exchangeName,
-                    rabbitConfiguration.exchangeType,
-                    rabbitConfiguration.durableExchange,
-                    rabbitConfiguration.autoDeleteExchange,
-                    rabbitConfiguration.exchangeArguments)
 
-            val queueDeclare = channel.queueDeclare(
-                    rabbitConfiguration.queueName,
-                    rabbitConfiguration.durableQueue,
-                    rabbitConfiguration.exclusiveQueue,
-                    rabbitConfiguration.autoDeleteQueue,
-                    rabbitConfiguration.queueArguments)
+        channel?.exchangeDeclare(
+                rabbitConsumerConfiguration.exchangeName,
+                rabbitConsumerConfiguration.exchangeType,
+                rabbitConsumerConfiguration.durableExchange,
+                rabbitConsumerConfiguration.autoDeleteExchange,
+                rabbitConsumerConfiguration.exchangeArguments)
 
-            if(queueDeclare != null) {
-                val assignedQueueName = queueDeclare.queue
+        val queueDeclare = channel?.queueDeclare(
+                rabbitConsumerConfiguration.queueName,
+                rabbitConsumerConfiguration.durableQueue,
+                rabbitConsumerConfiguration.exclusiveQueue,
+                rabbitConsumerConfiguration.autoDeleteQueue,
+                rabbitConsumerConfiguration.queueArguments)
 
-                channel.queueBind(
-                        assignedQueueName,
-                        rabbitConfiguration.exchangeName,
-                        rabbitConfiguration.exchangeRoutingKey)
 
-                val consumer = MessageConsumerFactory.getMessageConsumer(channel!!, messageClass)
+        val assignedQueueName = queueDeclare?.queue
 
-                channel.basicConsume(assignedQueueName, true, consumer)
+        channel?.queueBind(
+                assignedQueueName,
+                rabbitConsumerConfiguration.exchangeName,
+                rabbitConsumerConfiguration.exchangeRoutingKey)
 
-                // TODO : Continue where we left off...
-            } else {
-                // TODO : What if there's no queueDeclare?
-            }
-        } else {
-            // TODO : What if there's no channel?
-        }
+        val consumer = MessageConsumerFactory.getMessageConsumer(channel!!, messageClass)
+
+        channel.basicConsume(assignedQueueName, false, consumer)
     }
 
     // Usage example...
-    fun foo() {
-        val rc = RabbitConfiguration()
-        RabbitMqConsumer(rc, TradeAssetIssuanceRequestMessage::class.java)
-    }
+//    fun foo() {
+//        val rc = RabbitConsumerConfiguration()
+//        RabbitMqConsumer(rc, TradeAssetIssuanceRequestMessage::class.java)
+//    }
 }
