@@ -44,8 +44,6 @@ class RabbitMqConsumer<T : Message>(private val rabbitConfiguration: RabbitConfi
             } else {
                 // TODO : What if there's no queueDeclare?
             }
-
-
         } else {
             // TODO : What if there's no channel?
         }
