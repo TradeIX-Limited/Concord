@@ -18,7 +18,7 @@ class RabbitMqProducer<T:Message>(private val rabbitProducerConfiguration: Rabbi
     }
 
     fun Publish(message:T){
-        val channel = connection?.createChannel()
+        val channel = connection.createChannel()
         channel?.exchangeDeclare(
                 rabbitProducerConfiguration.exchangeName,
                 rabbitProducerConfiguration.exchangeType,

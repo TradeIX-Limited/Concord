@@ -1,6 +1,8 @@
 package com.tradeix.concord.services.messaging
 
+import com.google.gson.Gson
 import com.rabbitmq.client.*
+import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import java.nio.charset.Charset
 
 class IssuanceMessageConsumer(val channel: Channel) : Consumer {
@@ -26,6 +28,8 @@ class IssuanceMessageConsumer(val channel: Channel) : Consumer {
         // Handler logic here
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
+        val serializer = Gson()
+        val requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
 
 
         channel.basicAck(deliveryTag!!, false)

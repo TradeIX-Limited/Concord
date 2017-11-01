@@ -7,6 +7,6 @@ data class TradeAssetOwnershipRequestMessage(
         override val correlationId: String?,
         val externalIds: Array<String>?,
         val newOwner: CordaX500Name?
-) : Message(correlationId) {
-    val linearIds: List<UniqueIdentifier>? get() = externalIds?.map { UniqueIdentifier(it!!) }
+) : Message() {
+        val linearIds: List<UniqueIdentifier>? get() = externalIds?.map { UniqueIdentifier(it) }
 }

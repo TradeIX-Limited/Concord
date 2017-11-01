@@ -16,7 +16,7 @@ data class TradeAssetIssuanceRequestMessage(
         val value: BigDecimal?,
         val currency: String?,
         val attachmentId: String?
-) : Message(correlationId) {
+) : Message() {
     val linearId: UniqueIdentifier get() = UniqueIdentifier(externalId!!)
     val amount: Amount<Currency> get() = Amount.fromDecimal(value!!, Currency.getInstance(currency!!))
 }

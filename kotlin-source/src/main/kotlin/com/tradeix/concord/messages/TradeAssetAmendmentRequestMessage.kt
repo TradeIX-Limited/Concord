@@ -8,6 +8,6 @@ data class TradeAssetAmendmentRequestMessage(
         val externalId: String?,
         val value: BigDecimal?,
         val currency: String?
-) : Message(correlationId) {
+) : Message() {
     val linearId: UniqueIdentifier get() = UniqueIdentifier(externalId!!)
 }
