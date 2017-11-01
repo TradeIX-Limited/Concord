@@ -1,6 +1,7 @@
 package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.*
+import java.nio.charset.Charset
 
 class IssuanceMessageConsumer(val channel: Channel) : Consumer {
     override fun handleRecoverOk(consumerTag: String?) {
@@ -8,11 +9,11 @@ class IssuanceMessageConsumer(val channel: Channel) : Consumer {
     }
 
     override fun handleConsumeOk(consumerTag: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("IssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
     }
 
     override fun handleShutdownSignal(consumerTag: String?, sig: ShutdownSignalException?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("IssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
     }
 
     override fun handleCancel(consumerTag: String?) {
@@ -23,6 +24,8 @@ class IssuanceMessageConsumer(val channel: Channel) : Consumer {
         val deliveryTag = envelope?.deliveryTag
 
         // Handler logic here
+        val messageBody = body?.toString(Charset.defaultCharset())
+        println("Received message $messageBody")
 
 
         channel.basicAck(deliveryTag!!, false)
