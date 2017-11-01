@@ -4,7 +4,7 @@ import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.Message
 
-class RabbitMqConsumer(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<Message>) : IQueueConsumer {
+class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<T>) : IQueueConsumer {
     init {
         //rabbitConsumerConfiguration = RabbitConsumerConfiguration("cordatix_exchange", "topic", ex)
     }
