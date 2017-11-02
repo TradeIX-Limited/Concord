@@ -1,7 +1,7 @@
 {
 	"info": {
-		"name": "Corda",
-		"_postman_id": "80fb0943-5c84-ad83-e9d5-d6cda2e3ee1f",
+		"name": "Concord",
+		"_postman_id": "8538458c-9b2c-57d1-96a0-0b8f5ce464d4",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -102,7 +102,6 @@
 								{
 									"key": "attachment",
 									"value": "",
-									"description": "",
 									"type": "file"
 								}
 							]
@@ -336,7 +335,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -345,7 +344,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10007/api/tradeassets",
+							"raw": "http://localhost:10007/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -353,7 +352,8 @@
 							"port": "10007",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -376,7 +376,6 @@
 								{
 									"key": "attachment",
 									"value": "",
-									"description": "",
 									"type": "text"
 								}
 							]
@@ -409,7 +408,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets/issue",
@@ -440,7 +439,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets/changeowner",
@@ -471,7 +470,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets/amend",
@@ -502,7 +501,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets/cancel",
@@ -579,7 +578,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -588,7 +587,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10010/api/tradeassets",
+							"raw": "http://localhost:10010/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -596,7 +595,8 @@
 							"port": "10010",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -619,7 +619,6 @@
 								{
 									"key": "attachment",
 									"value": "",
-									"description": "",
 									"type": "file"
 								}
 							]
@@ -652,7 +651,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets/issue",
@@ -683,7 +682,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets/changeowner",
@@ -714,7 +713,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets/amend",
@@ -745,7 +744,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets/cancel",
@@ -822,7 +821,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -831,7 +830,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10013/api/tradeassets",
+							"raw": "http://localhost:10013/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -839,7 +838,8 @@
 							"port": "10013",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -862,7 +862,6 @@
 								{
 									"key": "attachment",
 									"value": "",
-									"description": "",
 									"type": "file"
 								}
 							]
@@ -895,7 +894,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets/issue",
@@ -926,7 +925,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets/changeowner",
@@ -957,7 +956,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets/amend",
@@ -988,7 +987,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets/cancel",
@@ -1065,7 +1064,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1074,7 +1073,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10016/api/tradeassets",
+							"raw": "http://localhost:10016/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1082,7 +1081,8 @@
 							"port": "10016",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -1101,7 +1101,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets/issue",
@@ -1132,7 +1132,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets/changeowner",
@@ -1163,7 +1163,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets/amend",
@@ -1194,7 +1194,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets/cancel",
@@ -1271,7 +1271,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1280,7 +1280,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10019/api/tradeassets",
+							"raw": "http://localhost:10019/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1288,7 +1288,8 @@
 							"port": "10019",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -1307,7 +1308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets/issue",
@@ -1338,7 +1339,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets/changeowner",
@@ -1369,7 +1370,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets/amend",
@@ -1400,7 +1401,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets/cancel",
@@ -1477,7 +1478,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1486,7 +1487,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10022/api/tradeassets",
+							"raw": "http://localhost:10022/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1494,7 +1495,8 @@
 							"port": "10022",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -1513,7 +1515,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets/issue",
@@ -1544,7 +1546,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets/changeowner",
@@ -1575,7 +1577,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets/amend",
@@ -1606,7 +1608,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets/cancel",
@@ -1683,7 +1685,7 @@
 					"response": []
 				},
 				{
-					"name": "api/tradeassets",
+					"name": "api/tradeassets/all",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1692,7 +1694,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:10025/api/tradeassets",
+							"raw": "http://localhost:10025/api/tradeassets/all",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1700,7 +1702,8 @@
 							"port": "10025",
 							"path": [
 								"api",
-								"tradeassets"
+								"tradeassets",
+								"all"
 							]
 						},
 						"description": "Get all trade assets from the local vault."
@@ -1719,7 +1722,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"status\": \"PURCHASE_ORDER\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets/issue",
@@ -1750,7 +1753,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets/changeowner",
@@ -1781,7 +1784,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets/amend",
@@ -1812,7 +1815,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets/cancel",
