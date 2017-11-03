@@ -43,19 +43,19 @@ open class TradeAssetContract : Contract {
         class ChangeOwner : Commands {
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) = requireThat {
 
-                "Only one input should be consumed when changing ownership of a trade asset." using
-                        (tx.inputs.size == 1)
+                "At least one input should be consumed when changing ownership of a trade asset." using
+                        (tx.inputs.isNotEmpty())
 
-                "Only one output state should be created when changing ownership of a trade asset." using
-                        (tx.outputs.size == 1)
+                "The number of output and input states should be equal when changing ownership of a trade asset." using
+                        (tx.outputs.size == tx.inputs.size)
 
-                val outputState = tx.outputsOfType<TradeAssetState>().single()
+                tx.outputsOfType<TradeAssetState>().forEach {
+                    "The supplier and the new owner cannot be the same entity." using
+                            (it.owner != it.supplier)
 
-                "The supplier and the new owner cannot be the same entity." using
-                        (outputState.owner != outputState.supplier)
-
-                "All participants must sign the transaction." using
-                        (signers.containsAll(outputState.participants.map { it.owningKey }))
+                    "All participants must sign the transaction." using
+                            (signers.containsAll(it.participants.map { it.owningKey }))
+                }
             }
         }
 

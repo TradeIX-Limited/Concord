@@ -7,279 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Template",
-			"description": "A template of all REST endpoints for a Corda node.",
-			"item": [
-				{
-					"name": "api/nodes",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/nodes",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"nodes"
-							]
-						},
-						"description": "Get all available nodes in the Corda network."
-					},
-					"response": []
-				},
-				{
-					"name": "api/nodes/local",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/nodes/local",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"nodes",
-								"local"
-							]
-						},
-						"description": "Get the current node from the Corda network."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets"
-							]
-						},
-						"description": "Get all trade assets from the local vault."
-					},
-					"response": []
-				},
-				{
-					"name": "upload/attachment",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "attachment",
-									"value": "",
-									"type": "file"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:_____/upload/attachment",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"upload",
-								"attachment"
-							]
-						},
-						"description": "Issue a new trade asset."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets/issue",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets/issue",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets",
-								"issue"
-							]
-						},
-						"description": "Issue a new trade asset."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets/issue attachment",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"buyer\": \"\",\n\t\"supplier\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\",\n\t\"supportingDocumentHash\" : \"\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets/issue",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets",
-								"issue"
-							]
-						},
-						"description": "Issue a new trade asset."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets/changeowner",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"newOwner\": \"\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets/changeowner",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets",
-								"changeowner"
-							]
-						},
-						"description": "Changes ownership of a trade asset."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets/amend",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\",\n\t\"assetId\": \"\",\n\t\"value\": \"\",\n\t\"currency\": \"\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets/amend",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets",
-								"amend"
-							]
-						},
-						"description": "Amends a trade asset."
-					},
-					"response": []
-				},
-				{
-					"name": "api/tradeassets/cancel",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"linearId\": \"\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:_____/api/tradeassets/cancel",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "_____",
-							"path": [
-								"api",
-								"tradeassets",
-								"cancel"
-							]
-						},
-						"description": "Cancels a trade asset."
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Conductor (Trade IX)",
 			"description": "A template of all REST endpoints for a Corda node.",
 			"item": [
@@ -439,7 +166,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10007/api/tradeassets/changeowner",
@@ -682,7 +409,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10010/api/tradeassets/changeowner",
@@ -925,7 +652,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10013/api/tradeassets/changeowner",
@@ -1132,7 +859,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10016/api/tradeassets/changeowner",
@@ -1339,7 +1066,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10019/api/tradeassets/changeowner",
@@ -1546,7 +1273,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10022/api/tradeassets/changeowner",
@@ -1753,7 +1480,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalId\": \"\",\n\t\"newOwner\": \"\"\n}"
+							"raw": "{\n\t\"correlationId\": \"\",\n\t\"externalIds\": [\"\", \"\"],\n\t\"newOwner\": \"\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:10025/api/tradeassets/changeowner",

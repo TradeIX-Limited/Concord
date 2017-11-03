@@ -51,33 +51,42 @@ object TradeAssetOwnership {
 
             val validator = TradeAssetOwnershipRequestMessageValidator(message)
 
-            if(!validator.isValid) {
+            if (!validator.isValid) {
                 throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
-            val inputState = VaultHelper.getStateAndRefByLinearId(
-                    serviceHub,
-                    message.linearId,
-                    TradeAssetState::class.java)
+            val inputStates = message.linearIds?.map {
+                VaultHelper.getStateAndRefByLinearId(
+                        serviceHub,
+                        it,
+                        TradeAssetState::class.java)
+            }
+
+            val outputStates = if (inputStates == null || inputStates.isEmpty()) {
+                throw FlowException("No states found for ownership change.")
+            } else {
+                inputStates.map {
+                    it.state.data.copy(owner = FlowHelper
+                            .getPeerByLegalNameOrThrow(serviceHub, message.newOwner))
+                }
+            }
+
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
 
-            val outputState = inputState
-                    .state
-                    .data
-                    .copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.newOwner))
-
             val command = Command(
                     value = TradeAssetContract.Commands.ChangeOwner(),
-                    signers = outputState.participants.map { it.owningKey })
+                    signers = outputStates.first().participants.map { it.owningKey })
 
             val transactionBuilder = TransactionBuilder(notary)
-                    .addInputState(inputState)
-                    .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
-                    .addCommand(command)
+
+            inputStates.map { transactionBuilder.addInputState(it) }
+            outputStates.map { transactionBuilder.addOutputState(it, TRADE_ASSET_CONTRACT_ID) }
+
+            transactionBuilder.addCommand(command)
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
@@ -90,10 +99,10 @@ object TradeAssetOwnership {
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
             val requiredSignatureFlowSessions = listOf(
-                    outputState.owner,
-                    outputState.buyer,
-                    outputState.supplier,
-                    outputState.conductor)
+                    outputStates.first().owner,
+                    outputStates.first().buyer,
+                    outputStates.first().supplier,
+                    outputStates.first().conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
                     .map { initiateFlow(it) }
@@ -117,8 +126,11 @@ object TradeAssetOwnership {
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
-                    val output = stx.tx.outputs.single().data
-                    "This must be a trade asset transaction." using (output is TradeAssetState)
+                    stx.tx.outputs.forEach {
+                        "This must be a trade asset transaction." using
+                                (it.data is TradeAssetState)
+                    }
+
                 }
             }
 

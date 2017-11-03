@@ -73,7 +73,7 @@ class TradeAssetStateOwnershipContractTests {
                 command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
                     TradeAssetContract.Commands.ChangeOwner()
                 }
-                `fails with`("Only one input should be consumed when changing ownership of a trade asset.")
+                `fails with`("At least one input should be consumed when changing ownership of a trade asset.")
             }
         }
     }
@@ -96,7 +96,7 @@ class TradeAssetStateOwnershipContractTests {
                 command(MEGA_CORP_PUBKEY, ALICE_PUBKEY, BOB_PUBKEY, BIG_CORP_PUBKEY) {
                     TradeAssetContract.Commands.ChangeOwner()
                 }
-                `fails with`("Only one output state should be created when changing ownership of a trade asset.")
+                `fails with`("The number of output and input states should be equal when changing ownership of a trade asset.")
             }
         }
     }
