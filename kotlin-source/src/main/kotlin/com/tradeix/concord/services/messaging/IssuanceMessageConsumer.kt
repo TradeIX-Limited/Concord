@@ -32,6 +32,7 @@ class IssuanceMessageConsumer(val channel: Channel, val deadLetterProducer: IQue
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
         val serializer = Gson()
+
         var requestMessage = TradeAssetIssuanceRequestMessage(null, 1, null, null, null, CordaX500Name("TradeIX", "London", "GB"), null, null, null, null)
 
 
