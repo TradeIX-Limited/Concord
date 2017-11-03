@@ -53,13 +53,13 @@ class TradeAssetApi(val services: CordaRPCOps) {
                         .entity(ValidationErrorResponseMessage(
                                 correlationId = message.correlationId!!,
                                 errorMessage = ex.message,
-                                validationErrors = ex.validationErrors))
+                                validationErrors = ex.validationErrors, tryCount = message.tryCount))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(ErrorResponseMessage(
                                 correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!))
+                                errorMessage = ex.message!!, tryCount = message.tryCount))
                         .build()
             }
         }
@@ -80,7 +80,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(
                             correlationId = message.correlationId!!,
-                            transactionId = result.id.toString()
+                            transactionId = result.id.toString(), tryCount = message.tryCount
                     ))
                     .build()
 
@@ -91,13 +91,13 @@ class TradeAssetApi(val services: CordaRPCOps) {
                         .entity(ValidationErrorResponseMessage(
                                 correlationId = message.correlationId!!,
                                 errorMessage = ex.message,
-                                validationErrors = ex.validationErrors))
+                                validationErrors = ex.validationErrors, tryCount = message.tryCount))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(ErrorResponseMessage(
                                 correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!))
+                                errorMessage = ex.message!!, tryCount = message.tryCount))
                         .build()
             }
         }
@@ -117,7 +117,8 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(
                             correlationId = message.correlationId!!,
-                            transactionId = result.id.toString()
+                            transactionId = result.id.toString(),
+                            tryCount = message.tryCount
                     ))
                     .build()
 
@@ -128,13 +129,15 @@ class TradeAssetApi(val services: CordaRPCOps) {
                         .entity(ValidationErrorResponseMessage(
                                 correlationId = message.correlationId!!,
                                 errorMessage = ex.message,
-                                validationErrors = ex.validationErrors))
+                                validationErrors = ex.validationErrors,
+                                tryCount = message.tryCount))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(ErrorResponseMessage(
                                 correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!))
+                                errorMessage = ex.message!!,
+                                tryCount = message.tryCount))
                         .build()
             }
         }
@@ -158,7 +161,8 @@ class TradeAssetApi(val services: CordaRPCOps) {
                     .status(Response.Status.OK)
                     .entity(TransactionResponseMessage(
                             correlationId = message.correlationId!!,
-                            transactionId = result.id.toString()
+                            transactionId = result.id.toString(),
+                            tryCount = message.tryCount
                     ))
                     .build()
 
@@ -169,13 +173,15 @@ class TradeAssetApi(val services: CordaRPCOps) {
                         .entity(ValidationErrorResponseMessage(
                                 correlationId = message.correlationId!!,
                                 errorMessage = ex.message,
-                                validationErrors = ex.validationErrors))
+                                validationErrors = ex.validationErrors,
+                                tryCount = message.tryCount))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(ErrorResponseMessage(
                                 correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!))
+                                errorMessage = ex.message!!,
+                                tryCount = message.tryCount))
                         .build()
             }
         }

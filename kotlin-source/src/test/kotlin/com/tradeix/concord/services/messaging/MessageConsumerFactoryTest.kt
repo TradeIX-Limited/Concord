@@ -9,7 +9,7 @@ class MessageConsumerFactoryTest{
     @Test
     fun `Retrieve IssuanceMessageConsumer`() {
         val channel: Channel = ConnectionFactory().newConnection().createChannel()
-        val consumer = MessageConsumerFactory.getMessageConsumer(channel, TradeAssetIssuanceRequestMessage::class.java)
+        val consumer = MessageConsumerFactory.getMessageConsumer(channel, TradeAssetIssuanceRequestMessage::class.java, RabbitMqProducer(null,null), 1)
         assert(consumer is IssuanceMessageConsumer)
     }
 }

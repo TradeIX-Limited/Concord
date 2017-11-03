@@ -5,6 +5,7 @@ import java.math.BigDecimal
 
 data class TradeAssetAmendmentRequestMessage(
         override val correlationId: String?,
+        override val tryCount: Int,
         val externalId: String?,
         val value: BigDecimal?,
         val currency: String?

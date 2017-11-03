@@ -18,5 +18,6 @@ data class RabbitConsumerConfiguration(
         val durableQueue: Boolean,
         val exclusiveQueue: Boolean,
         val autoDeleteQueue: Boolean,
-        val queueArguments: Map<String, Any>
+        val queueArguments: Map<String, Any>,
+        val maxRetries: Int
 )

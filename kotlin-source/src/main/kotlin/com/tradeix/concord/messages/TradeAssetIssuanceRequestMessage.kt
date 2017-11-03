@@ -8,6 +8,7 @@ import java.util.*
 
 data class TradeAssetIssuanceRequestMessage(
         override val correlationId: String?,
+        override val tryCount: Int,
         val externalId: String?,
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,

@@ -1,6 +1,7 @@
 package com.tradeix.concord.services.messaging
 
 import com.tradeix.concord.interfaces.IQueueConsumer
+import com.tradeix.concord.messages.Message
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 
 object TixMessageSubscriptionStartup {
@@ -12,18 +13,38 @@ object TixMessageSubscriptionStartup {
                 , 5672
                 , "tixcorda_messaging"
                 , "topic"
-                , "issue_asset.#"
+                , "issue_asset"
                 , true
                 , false
-                //, mapOf("x-dead-letter-exchange" to "tixcorda_dlt")
+                //, mapOf("x-dead-letter-exchange" to "tixcorda_messaging")
                 , emptyMap()
                 , "issue_asset_request_queue"
                 , true
                 , false
                 , false
-                , emptyMap())
+                , emptyMap(), 2)
 
-        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java)
+        val deadLetterConfiguration = RabbitConsumerConfiguration("guest"
+                , "guest"
+                , "localhost"
+                , "/"
+                , 5672
+                , "tixcorda_messaging_dlt"
+                , "topic"
+                , "issue_asset"
+                , true
+                , false
+                , emptyMap()
+                , "issue_asset_request_dlt_queue"
+                , true
+                , false
+                , false
+                , mapOf("x-dead-letter-exchange" to "tixcorda_messaging", "x-message-ttl" to 10000)
+                , 2)
+
+        val deadLetterProducer = RabbitMqProducer<Message>(null, deadLetterConfiguration)
+
+        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer)
         tradeIssuanceConsumer.subscribe()
 
         val consumers = mutableMapOf<String, IQueueConsumer>()

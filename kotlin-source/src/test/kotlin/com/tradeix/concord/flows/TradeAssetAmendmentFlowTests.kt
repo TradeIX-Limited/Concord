@@ -67,7 +67,8 @@ class TradeAssetAmendmentFlowTests {
                 correlationId = null,
                 externalId = "TEST_EXTERNAL_ID",
                 value = null,
-                currency = null
+                currency = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -178,7 +179,8 @@ class TradeAssetAmendmentFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val issuanceFuture = issuanceInitiator
@@ -194,7 +196,8 @@ class TradeAssetAmendmentFlowTests {
                 correlationId = "TEST_CORRELATION_ID",
                 externalId = "TEST_EXTERNAL_ID",
                 value = BigDecimal.TEN,
-                currency = "USD"
+                currency = "USD",
+                tryCount = 0
         )
 
         val amendmentFuture = amendmentInitiator

@@ -5,6 +5,7 @@ import net.corda.core.identity.CordaX500Name
 
 data class TradeAssetOwnershipRequestMessage(
         override val correlationId: String?,
+        override val tryCount: Int,
         val externalIds: Array<String>?,
         val newOwner: CordaX500Name?
 ) : Message() {

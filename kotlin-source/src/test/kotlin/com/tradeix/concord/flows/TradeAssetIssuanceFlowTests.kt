@@ -65,7 +65,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = null,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -93,7 +94,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -121,7 +123,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -150,7 +153,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockBuyerNode
@@ -176,7 +180,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 value = BigDecimal.ONE,
                 currency = null,
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -204,7 +209,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 value = null,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -232,7 +238,8 @@ class TradeAssetIssuanceFlowTests {
                 supplier = mockSupplier.name,
                 value = BigDecimal.ONE.negate(),
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -261,7 +268,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockBuyerNode
@@ -287,7 +295,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockBuyerNode
@@ -314,7 +323,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockConductorNode
@@ -342,7 +352,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockConductorNode
@@ -369,7 +380,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         ))
 
         val future = mockBuyerNode
@@ -432,7 +444,8 @@ class TradeAssetIssuanceFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = validAttachment
+                attachmentId = validAttachment,
+                tryCount = 0
         ))
         val future = initiatorNode
                 .services

@@ -2,9 +2,10 @@ package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
+import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.Message
 
-class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<T>) : IQueueConsumer {
+class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<T>, private val deadLetterProducer: IQueueProducer<Message>) : IQueueConsumer {
     init {
         //rabbitConsumerConfiguration = RabbitConsumerConfiguration("cordatix_exchange", "topic", ex)
     }
@@ -42,14 +43,7 @@ class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: Rab
                 rabbitConsumerConfiguration.exchangeName,
                 rabbitConsumerConfiguration.exchangeRoutingKey)
 
-        val consumer = MessageConsumerFactory.getMessageConsumer(channel!!, messageClass)
-
+        val consumer = MessageConsumerFactory.getMessageConsumer(channel!!, messageClass, deadLetterProducer, rabbitConsumerConfiguration.maxRetries)
         channel.basicConsume(assignedQueueName, false, consumer)
     }
-
-    // Usage example...
-//    fun foo() {
-//        val rc = RabbitConsumerConfiguration()
-//        RabbitMqConsumer(rc, TradeAssetIssuanceRequestMessage::class.java)
-//    }
 }

@@ -63,6 +63,7 @@ class TradeAssetCancellationFlowTests {
     fun `Absence of Correlation ID in message should result in error`() {
         val message = TradeAssetCancellationRequestMessage(
                 correlationId = null,
+                tryCount = 0,
                 externalId = "TEST_EXTERNAL_ID"
         )
 
@@ -174,7 +175,8 @@ class TradeAssetCancellationFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val issuanceFuture = issuanceInitiator
@@ -188,7 +190,8 @@ class TradeAssetCancellationFlowTests {
 
         val cancellationMessage = TradeAssetCancellationRequestMessage(
                 correlationId = "TEST_CORRELATION_ID",
-                externalId = "TEST_EXTERNAL_ID"
+                externalId = "TEST_EXTERNAL_ID",
+                tryCount = 0
         )
 
         val cancellationFuture = cancellationInitiator

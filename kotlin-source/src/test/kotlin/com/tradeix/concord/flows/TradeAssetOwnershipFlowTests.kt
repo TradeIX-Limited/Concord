@@ -66,7 +66,8 @@ class TradeAssetOwnershipFlowTests {
         val message = TradeAssetOwnershipRequestMessage(
                 correlationId = "TEST_CORRELATION_ID",
                 externalIds = null,
-                newOwner = mockFunder.name
+                newOwner = mockFunder.name,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -88,8 +89,9 @@ class TradeAssetOwnershipFlowTests {
     fun `Absence of new owner in message should result in error`() {
         val message = TradeAssetOwnershipRequestMessage(
                 correlationId = "TEST_CORRELATION_ID",
-                externalIds = arrayOf("TEST_EXTERNAL_ID"),
-                newOwner = null
+        externalIds = arrayOf("TEST_EXTERNAL_ID"),
+                newOwner = null,
+                tryCount = 0
         )
 
         val exception = assertFailsWith<FlowValidationException>("Request validation failed") {
@@ -168,7 +170,8 @@ class TradeAssetOwnershipFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val issuanceMessage2 = TradeAssetIssuanceRequestMessage(
@@ -180,7 +183,8 @@ class TradeAssetOwnershipFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         val issuanceMessage3 = TradeAssetIssuanceRequestMessage(
@@ -192,7 +196,8 @@ class TradeAssetOwnershipFlowTests {
                 conductor = mockConductor.name,
                 value = BigDecimal.ONE,
                 currency = "GBP",
-                attachmentId = null
+                attachmentId = null,
+                tryCount = 0
         )
 
         arrayListOf(issuanceMessage1, issuanceMessage2, issuanceMessage3).map {
@@ -213,7 +218,8 @@ class TradeAssetOwnershipFlowTests {
                         "TEST_EXTERNAL_ID_123",
                         "TEST_EXTERNAL_ID_456",
                         "TEST_EXTERNAL_ID_789"),
-                newOwner = mockFunder.name
+                newOwner = mockFunder.name,
+        tryCount = 0
         )
 
         val ownershipFuture = initiator

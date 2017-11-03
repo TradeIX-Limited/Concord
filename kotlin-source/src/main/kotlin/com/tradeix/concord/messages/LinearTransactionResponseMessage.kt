@@ -6,4 +6,4 @@ data class LinearTransactionResponseMessage(
         override val correlationId: String,
         override val transactionId: String,
         val linearId: UniqueIdentifier
-) : TransactionResponseMessage(correlationId, transactionId)
+) : TransactionResponseMessage(correlationId, 0, transactionId)
