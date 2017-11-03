@@ -2,24 +2,14 @@ package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
+import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.Message
 
-class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<T>, private val deadLetterProducer: IQueueProducer<Message>) : IQueueConsumer {
-    init {
-        //rabbitConsumerConfiguration = RabbitConsumerConfiguration("cordatix_exchange", "topic", ex)
-    }
-
+class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration, private val messageClass: Class<T>, private val deadLetterProducer: IQueueDeadLetterProducer<Message>, private val rabbitConnectionProvider: RabbitMqConnectionProvider) : IQueueConsumer {
     override fun subscribe() {
-        val connectionFactory = ConnectionFactory()
-        connectionFactory.username = rabbitConsumerConfiguration.userName
-        connectionFactory.password = rabbitConsumerConfiguration.password
-        connectionFactory.host = rabbitConsumerConfiguration.hostName
-        connectionFactory.virtualHost = rabbitConsumerConfiguration.virtualHost
-        connectionFactory.port = rabbitConsumerConfiguration.portNumber
-        val connection = connectionFactory.newConnection()
-        val channel = connection?.createChannel()
-
+        val connection = rabbitConnectionProvider.GetConnection()
+        val channel = connection.createChannel()
 
         channel?.exchangeDeclare(
                 rabbitConsumerConfiguration.exchangeName,

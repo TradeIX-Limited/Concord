@@ -1,6 +1,6 @@
 package com.tradeix.concord.services.messaging
 
-data class RabbitConsumerConfiguration(
+data class RabbitDeadLetterConfiguration(
         val exchangeName: String,
         val exchangeType: String,
         val exchangeRoutingKey: String,
@@ -12,5 +12,6 @@ data class RabbitConsumerConfiguration(
         val exclusiveQueue: Boolean,
         val autoDeleteQueue: Boolean,
         val queueArguments: Map<String, Any>,
-        val maxRetries: Int
+        val poisonQueueName: String,
+        val poisonQueueRoutingKey: String
 )

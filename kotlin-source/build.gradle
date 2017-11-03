@@ -31,6 +31,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
+    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
 
     // Corda integration dependencies
     cordaCompile "net.corda:corda-core:$corda_release_version"

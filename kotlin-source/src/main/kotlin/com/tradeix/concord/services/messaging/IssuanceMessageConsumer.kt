@@ -2,13 +2,14 @@ package com.tradeix.concord.services.messaging
 
 import com.google.gson.Gson
 import com.rabbitmq.client.*
+import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.Message
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import net.corda.core.identity.CordaX500Name
 import java.nio.charset.Charset
 
-class IssuanceMessageConsumer(val channel: Channel, val deadLetterProducer: IQueueProducer<Message>, val maxRetryCount: Int) : Consumer {
+class IssuanceMessageConsumer(val channel: Channel, val deadLetterProducer: IQueueDeadLetterProducer<Message>, val maxRetryCount: Int) : Consumer {
     override fun handleRecoverOk(consumerTag: String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -46,7 +47,7 @@ class IssuanceMessageConsumer(val channel: Channel, val deadLetterProducer: IQue
             if(requestMessage.tryCount < maxRetryCount){
                 deadLetterProducer.Publish(requestMessage)
             } else {
-
+                deadLetterProducer.Publish(requestMessage, isFatal = true)
             }
         }
     }

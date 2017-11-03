@@ -6,17 +6,11 @@ import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 
 object TixMessageSubscriptionStartup {
     fun exec(): MutableMap<String, IQueueConsumer> {
-        val issueConsumeConfiguration = RabbitConsumerConfiguration("guest"
-                , "guest"
-                , "localhost"
-                , "/"
-                , 5672
-                , "tixcorda_messaging"
+        val issueConsumeConfiguration = RabbitConsumerConfiguration("tixcorda_messaging"
                 , "topic"
                 , "issue_asset"
                 , true
                 , false
-                //, mapOf("x-dead-letter-exchange" to "tixcorda_messaging")
                 , emptyMap()
                 , "issue_asset_request_queue"
                 , true
@@ -24,12 +18,7 @@ object TixMessageSubscriptionStartup {
                 , false
                 , emptyMap(), 2)
 
-        val deadLetterConfiguration = RabbitConsumerConfiguration("guest"
-                , "guest"
-                , "localhost"
-                , "/"
-                , 5672
-                , "tixcorda_messaging_dlt"
+        val deadLetterConfig = RabbitDeadLetterConfiguration("tixcorda_messaging_dlt"
                 , "topic"
                 , "issue_asset"
                 , true
@@ -40,11 +29,20 @@ object TixMessageSubscriptionStartup {
                 , false
                 , false
                 , mapOf("x-dead-letter-exchange" to "tixcorda_messaging", "x-message-ttl" to 10000)
-                , 2)
+                , "corda_poison_message_queue"
+                , "corda_poison")
 
-        val deadLetterProducer = RabbitMqProducer<Message>(null, deadLetterConfiguration)
+        val connectionConfig = RabbitMqConnectionConfiguration("guest"
+        , "guest"
+        , "localhost"
+        , "/"
+        , 5672)
 
-        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer)
+        val connectionProvider = RabbitMqConnectionProvider(connectionConfig)
+
+        val deadLetterProducer = RabbitDeadLetterProducer<Message>(deadLetterConfig, connectionProvider)// RabbitMqProducer<Message>(null, deadLetterConfiguration)
+
+        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer, connectionProvider)
         tradeIssuanceConsumer.subscribe()
 
         val consumers = mutableMapOf<String, IQueueConsumer>()
