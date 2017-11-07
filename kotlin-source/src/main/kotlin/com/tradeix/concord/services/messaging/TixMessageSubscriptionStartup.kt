@@ -3,9 +3,16 @@ package com.tradeix.concord.services.messaging
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.Message
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
+import net.corda.client.rpc.CordaRPCClient
+import net.corda.core.messaging.CordaRPCOps
+import net.corda.core.node.ServiceHub
+import net.corda.core.node.services.CordaService
+import net.corda.core.utilities.NetworkHostAndPort
 
-object TixMessageSubscriptionStartup {
-    fun exec(): MutableMap<String, IQueueConsumer> {
+@CordaService
+class TixMessageSubscriptionStartup(val services: ServiceHub) {
+
+    init {
         val issueConsumeConfiguration = RabbitConsumerConfiguration("tixcorda_messaging"
                 , "topic"
                 , "issue_asset"
@@ -33,20 +40,36 @@ object TixMessageSubscriptionStartup {
                 , "corda_poison")
 
         val connectionConfig = RabbitMqConnectionConfiguration("guest"
-        , "guest"
-        , "localhost"
-        , "/"
-        , 5672)
+                , "guest"
+                , "localhost"
+                , "/"
+                , 5672)
 
-        val connectionProvider = RabbitMqConnectionProvider(connectionConfig)
+       /* val connectionProvider = RabbitMqConnectionProvider(connectionConfig)
 
         val deadLetterProducer = RabbitDeadLetterProducer<Message>(deadLetterConfig, connectionProvider)// RabbitMqProducer<Message>(null, deadLetterConfiguration)
-
-        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer, connectionProvider)
+        //val rpcClient = CordaRPCClient()
+        val svs: CordaRPCOps = getCordaRPCOps()
+        val messageConsumerFactory = MessageConsumerFactory(svs)
+        val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer, connectionProvider, messageConsumerFactory)
         tradeIssuanceConsumer.subscribe()
 
         val consumers = mutableMapOf<String, IQueueConsumer>()
         consumers.put(issueConsumeConfiguration.queueName, tradeIssuanceConsumer)
-        return consumers
+        currentConsumers = consumers*/
+    }
+
+    fun getCordaRPCOps(): CordaRPCOps{
+        val nodeAddress = NetworkHostAndPort.parse("localhost:10003")
+        val client = CordaRPCClient(nodeAddress)
+
+        // Can be amended in the com.example.MainKt file.
+        val proxy = client.start("user1", "test").proxy
+        return proxy
+
+    }
+
+    companion object {
+        private lateinit var currentConsumers: MutableMap<String, IQueueConsumer>
     }
 }

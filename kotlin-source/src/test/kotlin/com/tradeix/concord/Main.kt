@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
     // No permissions required as we are not invoking flows.
     val user = User("user1", "test", permissions = setOf())
     // Create RabbitMQ subscriptions
-    TixMessageSubscriptionStartup.exec()
+    // TixMessageSubscriptionStartup.exec()
     driver(isDebug = true) {
 
        // Notary
