@@ -5,6 +5,7 @@ import com.rabbitmq.client.*
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.Message
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.TransactionResponseMessage
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import java.nio.charset.Charset
@@ -12,9 +13,9 @@ import java.nio.charset.Charset
 class IssuanceMessageConsumer(val channel: Channel
                               , val deadLetterProducer: IQueueDeadLetterProducer<Message>
                               , val maxRetryCount: Int
-                              , val services: CordaRPCOps) : Consumer {
+                              , val services: CordaRPCOps, val responder: RabbitMqProducer<TransactionResponseMessage>) : Consumer {
     override fun handleRecoverOk(consumerTag: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("IssuanceMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
     }
 
     override fun handleConsumeOk(consumerTag: String?) {
@@ -22,11 +23,12 @@ class IssuanceMessageConsumer(val channel: Channel
     }
 
     override fun handleShutdownSignal(consumerTag: String?, sig: ShutdownSignalException?) {
-        println("IssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
+        println("IssuanceMessageConsumer: handleShutdownSignal for consumer tag: $consumerTag")
+        println(sig)
     }
 
     override fun handleCancel(consumerTag: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("IssuanceMessageConsumer: handleCancel for consumer tag: $consumerTag")
     }
 
     override fun handleDelivery(consumerTag: String?, envelope: Envelope?, properties: AMQP.BasicProperties?, body: ByteArray?) {
@@ -41,22 +43,26 @@ class IssuanceMessageConsumer(val channel: Channel
 
 
         try {
+            println("Received message in IssuanceMessageConsumer - about to ack then process.")
             requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
-            channel.basicAck(deliveryTag!!, false)
-
-
+            println("Successfully processed IssuanceRequest - responding back to client")
+            val response = TransactionResponseMessage("1", 0, "1")
+            responder.Publish(response)
         } catch (ex: Throwable) {
-            channel.basicAck(deliveryTag!!, false)
             if(requestMessage.tryCount < maxRetryCount){
+                println("Exception handled in IssuanceMessageConsumer, writing to dlq")
                 deadLetterProducer.Publish(requestMessage)
             } else {
+                println("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
                 deadLetterProducer.Publish(requestMessage, isFatal = true)
             }
+        } finally {
+            channel.basicAck(deliveryTag!!, false)
         }
     }
 
     override fun handleCancelOk(consumerTag: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("IssuanceMessageConsumer: handleCancelOk for consumer tag: $consumerTag")
     }
 
 }

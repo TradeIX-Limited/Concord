@@ -14,9 +14,12 @@ class MessageConsumerFactoryTest{
     fun `Retrieve IssuanceMessageConsumer`() {
         val producerMock = mock<IQueueDeadLetterProducer<Message>>()
         val cordaRpcServices = mock< CordaRPCOps>()
-        val channel: Channel = ConnectionFactory().newConnection().createChannel()
-        val messageConsumerFactory = MessageConsumerFactory(cordaRpcServices)
-        val consumer = messageConsumerFactory.getMessageConsumer(channel, TradeAssetIssuanceRequestMessage::class.java, producerMock, 1)
+        val producerConfiguration = RabbitProducerConfiguration("abc", "topic", "def", false, true, emptyMap())
+        val responseConfiguration = mapOf("cordatix_response" to producerConfiguration)
+        val mockConnectionFactory = mock<ConnectionFactory>()
+        val mockChannel = mock<Channel>()
+        val messageConsumerFactory = MessageConsumerFactory(cordaRpcServices, responseConfiguration, RabbitMqConnectionProvider(mockConnectionFactory))
+        val consumer = messageConsumerFactory.getMessageConsumer(mockChannel, TradeAssetIssuanceRequestMessage::class.java, producerMock, 1)
         assert(consumer is IssuanceMessageConsumer)
     }
 }

@@ -3,22 +3,17 @@ package com.tradeix.concord.services.messaging
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 
-class RabbitMqConnectionProvider(private val rabbitMqConnctionConfiguration: RabbitMqConnectionConfiguration) {
+class RabbitMqConnectionProvider(private val connectionFactory: ConnectionFactory) {
     companion object {
-        private lateinit var connection: Connection
+        private var connection: Connection? = null
     }
 
-    fun GetConnection(): Connection{
-        if(!connection.isOpen){
-            val connectionFactory = ConnectionFactory()
-            connectionFactory.username = rabbitMqConnctionConfiguration.userName
-            connectionFactory.password = rabbitMqConnctionConfiguration.password
-            connectionFactory.host = rabbitMqConnctionConfiguration.hostName
-            connectionFactory.virtualHost = rabbitMqConnctionConfiguration.virtualHost
-            connectionFactory.port = rabbitMqConnctionConfiguration.portNumber
-            connection = connectionFactory.newConnection()
+    fun GetConnection(): Connection {
+        if(connection != null && connection!!.isOpen){
+            return connection!!
         }
 
-        return connection
+        connection = connectionFactory.newConnection()
+        return connection!!
     }
 }
