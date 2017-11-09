@@ -2,11 +2,9 @@ package com.tradeix.concord.services.messaging
 
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
-import com.tradeix.concord.messages.Message
-import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
-import net.corda.client.rpc.CordaRPCClient
+import com.tradeix.concord.messages.rabbit.RabbitMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import net.corda.core.messaging.CordaRPCOps
-import net.corda.core.utilities.NetworkHostAndPort
 
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
@@ -86,7 +84,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
                     val responderConfigurations = mapOf("cordatix_response" to transactionResponseConfiguration)
 
-                    val deadLetterProducer = RabbitDeadLetterProducer<Message>(
+                    val deadLetterProducer = RabbitDeadLetterProducer<RabbitMessage>(
                             deadLetterConfiguration = deadLetterConfig,
                             rabbitConnectionProvider = connectionProvider
                     )

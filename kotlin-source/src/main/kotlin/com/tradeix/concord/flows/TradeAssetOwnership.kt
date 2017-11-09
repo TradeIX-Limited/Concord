@@ -4,16 +4,14 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
+import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.messages.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetOwnershipRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetOwnershipFlowModelValidator
 import net.corda.core.contracts.Command
-import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
-import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
@@ -21,7 +19,7 @@ import net.corda.core.utilities.ProgressTracker
 object TradeAssetOwnership {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val message: TradeAssetOwnershipRequestMessage) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetOwnershipFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new trade asset.")
@@ -49,27 +47,26 @@ object TradeAssetOwnership {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetOwnershipRequestMessageValidator(message)
+            val validator = TradeAssetOwnershipFlowModelValidator(model)
 
             if (!validator.isValid) {
-                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
+                throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
-            val inputStates = message.linearIds?.map {
+            val inputStates = model.getLinearIds().map {
                 VaultHelper.getStateAndRefByLinearId(
                         serviceHub,
                         it,
                         TradeAssetState::class.java)
             }
 
-            val outputStates = if (inputStates == null || inputStates.isEmpty()) {
+            val outputStates = if (inputStates.isEmpty()) {
                 throw FlowException("No states found for ownership change.")
             } else {
                 inputStates.map {
-                    it.state.data.copy(owner = FlowHelper
-                            .getPeerByLegalNameOrThrow(serviceHub, message.newOwner))
+                    it.state.data.copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
                 }
             }
 

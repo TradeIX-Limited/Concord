@@ -5,12 +5,12 @@ import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
+import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.messages.TradeAssetAmendmentRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetAmendmentRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetAmendmentFlowModelValidator
 import net.corda.core.contracts.*
 import net.corda.core.flows.*
 import net.corda.core.identity.Party
@@ -22,7 +22,7 @@ import java.util.*
 object TradeAssetAmendment {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val message: TradeAssetAmendmentRequestMessage) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetAmendmentFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
 
@@ -57,25 +57,25 @@ object TradeAssetAmendment {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetAmendmentRequestMessageValidator(message)
+            val validator = TradeAssetAmendmentFlowModelValidator(model)
 
             if (!validator.isValid) {
-                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
+                throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
             val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
                     serviceHub = serviceHub,
-                    linearId = message.linearId,
+                    linearId = model.getLinearId(),
                     contractStateType = TradeAssetState::class.java)
 
             val inputState = inputStateAndRef.state.data
 
             val amount = Amount.fromDecimal(
-                    displayQuantity = message.value ?:
+                    displayQuantity = model.value ?:
                             inputState.tradeAsset.amount.toDecimal(),
-                    token = Currency.getInstance(message.currency ?:
+                    token = Currency.getInstance(model.currency ?:
                             inputState.tradeAsset.amount.token.currencyCode)
             )
 

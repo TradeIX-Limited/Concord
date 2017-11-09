@@ -3,6 +3,7 @@ package com.tradeix.concord.flows
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.messages.TradeAssetAmendmentRequestMessage
 import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.webapi.tradeasset.TradeAssetIssuanceRequestMessage
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow

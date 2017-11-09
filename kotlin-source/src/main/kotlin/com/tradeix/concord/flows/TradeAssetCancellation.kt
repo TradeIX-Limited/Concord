@@ -4,12 +4,12 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
+import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.messages.TradeAssetCancellationRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetCancellationRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetCancellationFlowModelValidator
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
@@ -21,7 +21,7 @@ import net.corda.core.utilities.ProgressTracker
 object TradeAssetCancellation {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val message: TradeAssetCancellationRequestMessage) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetCancellationFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
 
@@ -56,17 +56,17 @@ object TradeAssetCancellation {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetCancellationRequestMessageValidator(message)
+            val validator = TradeAssetCancellationFlowModelValidator(model)
 
             if(!validator.isValid) {
-                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
+                throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
             val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
                     serviceHub = serviceHub,
-                    linearId = message.linearId,
+                    linearId = model.getLinearId(),
                     contractStateType = TradeAssetState::class.java)
 
             val inputState = inputStateAndRef.state.data

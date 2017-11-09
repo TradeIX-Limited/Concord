@@ -28,7 +28,7 @@ class SerializationTests {
         val json = "{\"conductor\":\"C=GB,L=London,O=TradeIX\"}"
 
         val serializer = GsonBuilder()
-                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameDeserializer())
+                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
                 .disableHtmlEscaping()
                 .create()
 

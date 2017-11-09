@@ -4,12 +4,12 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
+import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetIssuanceRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetIssuanceFlowModelValidator
 import net.corda.core.contracts.*
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
@@ -21,7 +21,7 @@ import net.corda.core.utilities.ProgressTracker.Step
 object TradeAssetIssuance {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val message: TradeAssetIssuanceRequestMessage) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetIssuanceFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
             object GENERATING_TRANSACTION : Step("Generating transaction based on new trade asset.")
@@ -42,6 +42,7 @@ object TradeAssetIssuance {
                     GATHERING_SIGNATURES,
                     FINALISING_TRANSACTION
             )
+
             val EX_INVALID_HASH_FOR_ATTACHMENT = "Invalid SecureHash for the Supporting Document"
 
         }
@@ -51,27 +52,27 @@ object TradeAssetIssuance {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetIssuanceRequestMessageValidator(message)
+            val validator = TradeAssetIssuanceFlowModelValidator(model)
 
-            if(!validator.isValid) {
-                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
+            if (!validator.isValid) {
+                throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
-            val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, message.buyer)
-            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.supplier)
-            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, message.conductor)
-            if (message.attachmentId !=null && !VaultHelper.isAttachmentInVault(serviceHub,message.attachmentId)) {
+            val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.buyer)
+            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.supplier)
+            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
+            if (model.attachmentId != null && !VaultHelper.isAttachmentInVault(serviceHub, model.attachmentId)) {
                 throw FlowValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
             }
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
             val outputState = TradeAssetState(
-                    linearId = message.linearId,
+                    linearId = model.getLinearId(),
                     tradeAsset = TradeAsset(
-                            status = TradeAsset.TradeAssetStatus.valueOf(message.status!!),
-                            amount = message.amount),
+                            status = TradeAsset.TradeAssetStatus.valueOf(model.status!!),
+                            amount = model.amount),
                     owner = supplier,
                     buyer = buyer,
                     supplier = supplier,
@@ -85,9 +86,8 @@ object TradeAssetIssuance {
                     .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
                     .addCommand(command)
 
-            if (message.attachmentId !=null)
-            {
-               transactionBuilder.addAttachment(parse(message.attachmentId))
+            if (model.attachmentId != null) {
+                transactionBuilder.addAttachment(parse(model.attachmentId))
             }
 
             // Stage 2 - Verify transaction

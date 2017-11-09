@@ -3,9 +3,9 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.AMQP
 import com.tradeix.concord.interfaces.IQueueProducer
-import com.tradeix.concord.messages.Message
+import com.tradeix.concord.messages.rabbit.RabbitMessage
 
-class RabbitMqProducer<T : Message>(
+class RabbitMqProducer<T : RabbitMessage>(
         private val rabbitProducerConfiguration: RabbitProducerConfiguration,
         private val rabbitConnectionProvider: RabbitMqConnectionProvider
 ) : IQueueProducer<T> {

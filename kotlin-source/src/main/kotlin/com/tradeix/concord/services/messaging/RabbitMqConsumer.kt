@@ -2,12 +2,12 @@ package com.tradeix.concord.services.messaging
 
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
-import com.tradeix.concord.messages.Message
+import com.tradeix.concord.messages.rabbit.RabbitMessage
 
-class RabbitMqConsumer<T : Message>(
+class RabbitMqConsumer<T : RabbitMessage>(
         private val rabbitConsumerConfiguration: RabbitConsumerConfiguration,
         private val messageClass: Class<T>,
-        private val deadLetterProducer: IQueueDeadLetterProducer<Message>,
+        private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val rabbitConnectionProvider: RabbitMqConnectionProvider,
         private val messageConsumerFactory: MessageConsumerFactory
 ) : IQueueConsumer {
