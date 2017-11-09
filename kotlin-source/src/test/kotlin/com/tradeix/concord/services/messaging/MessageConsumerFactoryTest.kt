@@ -9,17 +9,29 @@ import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
 import net.corda.core.messaging.CordaRPCOps
 import org.junit.Test
 
-class MessageConsumerFactoryTest{
+class MessageConsumerFactoryTest {
     @Test
     fun `Retrieve IssuanceMessageConsumer`() {
         val producerMock = mock<IQueueDeadLetterProducer<Message>>()
-        val cordaRpcServices = mock< CordaRPCOps>()
+        val cordaRpcServices = mock<CordaRPCOps>()
         val producerConfiguration = RabbitProducerConfiguration("abc", "topic", "def", false, true, emptyMap())
         val responseConfiguration = mapOf("cordatix_response" to producerConfiguration)
         val mockConnectionFactory = mock<ConnectionFactory>()
         val mockChannel = mock<Channel>()
-        val messageConsumerFactory = MessageConsumerFactory(cordaRpcServices, responseConfiguration, RabbitMqConnectionProvider(mockConnectionFactory))
-        val consumer = messageConsumerFactory.getMessageConsumer(mockChannel, TradeAssetIssuanceRequestMessage::class.java, producerMock, 1)
+
+        val messageConsumerFactory = MessageConsumerFactory(
+                services = cordaRpcServices,
+                responderConfigurations = responseConfiguration,
+                rabbitConnectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)
+        )
+
+        val consumer = messageConsumerFactory.getMessageConsumer(
+                channel = mockChannel,
+                type = TradeAssetIssuanceRequestMessage::class.java,
+                deadLetterProducer = producerMock,
+                maxRetries = 1
+        )
+
         assert(consumer is IssuanceMessageConsumer)
     }
 }

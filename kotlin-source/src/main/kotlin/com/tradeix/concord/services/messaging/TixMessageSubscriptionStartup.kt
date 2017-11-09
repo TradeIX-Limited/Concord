@@ -12,50 +12,61 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
     init {
         println("Reached TixMessageSub")
-        if (services.nodeInfo().legalIdentities.single().name.organisation.equals("TradeIX")) {
-            TixMessageSubscriptionStartup.intializeQueues(services)
+        if (services.nodeInfo().legalIdentities.single().name.organisation == "TradeIX") {
+            TixMessageSubscriptionStartup.initializeQueues(services)
         }
     }
 
     companion object {
-        private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf<String, IQueueConsumer>()
-        private fun intializeQueues(cordarpcService: CordaRPCOps) {
+        private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
+        private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
                 if (currentConsumers.count() == 0) {
-                    println("Intializing RabbitMQ Subscriptions - this should happen only once")
-                    val issueConsumeConfiguration = RabbitConsumerConfiguration("tixcorda_messaging"
-                            , "topic"
-                            , "issue_asset"
-                            , true
-                            , false
-                            , emptyMap()
-                            , "issue_asset_request_queue"
-                            , true
-                            , false
-                            , false
-                            , emptyMap(), 2)
+                    println("Initializing RabbitMQ Subscriptions - this should happen only once")
 
-                    val deadLetterConfig = RabbitDeadLetterConfiguration("tixcorda_messaging_dlt"
-                            , "topic"
-                            , "issue_asset"
-                            , true
-                            , false
-                            , emptyMap()
-                            , "issue_asset_request_dlt_queue"
-                            , true
-                            , false
-                            , false
-                            , mapOf("x-dead-letter-exchange" to "tixcorda_messaging", "x-message-ttl" to 10000)
-                            , "corda_poison_message_queue"
-                            , "corda_poison")
+                    val issueConsumeConfiguration = RabbitConsumerConfiguration(
+                            exchangeName = "tixcorda_messaging",
+                            exchangeType = "topic",
+                            exchangeRoutingKey = "issue_asset",
+                            durableExchange = true,
+                            autoDeleteExchange = false,
+                            exchangeArguments = emptyMap(),
+                            queueName = "issue_asset_request_queue",
+                            durableQueue = true,
+                            exclusiveQueue = false,
+                            autoDeleteQueue = false,
+                            queueArguments = emptyMap(),
+                            maxRetries = 2
+                    )
 
-                    val connectionConfig = RabbitMqConnectionConfiguration("guest"
-                            , "guest"
-                            , "localhost"
-                            , "/"
-                            , 5672)
+                    val deadLetterConfig = RabbitDeadLetterConfiguration(
+                            exchangeName = "tixcorda_messaging_dlt",
+                            exchangeType = "topic",
+                            exchangeRoutingKey = "issue_asset",
+                            durableExchange = true,
+                            autoDeleteExchange = false,
+                            exchangeArguments = emptyMap(),
+                            queueName = "issue_asset_request_dlt_queue",
+                            durableQueue = true,
+                            exclusiveQueue = false,
+                            autoDeleteQueue = false,
+                            queueArguments = mapOf(
+                                    "x-dead-letter-exchange" to "tixcorda_messaging",
+                                    "x-message-ttl" to 10000),
+                            poisonQueueName = "corda_poison_message_queue",
+                            poisonQueueRoutingKey = "corda_poison"
+                    )
+
+                    val connectionConfig = RabbitMqConnectionConfiguration(
+                            userName = "guest",
+                            password = "guest",
+                            hostName = "localhost",
+                            virtualHost = "/",
+                            portNumber = 5672
+                    )
 
                     val connectionFactory = ConnectionFactory()
+
                     connectionFactory.username = connectionConfig.userName
                     connectionFactory.password = connectionConfig.password
                     connectionFactory.host = connectionConfig.hostName
@@ -65,19 +76,35 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                     val connectionProvider = RabbitMqConnectionProvider(ConnectionFactory())
 
                     val transactionResponseConfiguration = RabbitProducerConfiguration(
-                            "tixcorda_messaging",
-                            "topic",
-                            "cordatix_response",
-                            true,
-                            false,
-                            emptyMap()
+                            exchangeName = "tixcorda_messaging",
+                            exchangeType = "topic",
+                            exchangeRoutingKey = "cordatix_response",
+                            durableExchange = true,
+                            autoDeleteExchange = false,
+                            exchangeArguments = emptyMap()
                     )
 
-                    val responderConfurations = mapOf("cordatix_response" to transactionResponseConfiguration)
+                    val responderConfigurations = mapOf("cordatix_response" to transactionResponseConfiguration)
 
-                    val deadLetterProducer = RabbitDeadLetterProducer<Message>(deadLetterConfig, connectionProvider)// RabbitMqProducer<Message>(null, deadLetterConfiguration)
-                    val messageConsumerFactory = MessageConsumerFactory(cordarpcService, responderConfurations, connectionProvider)
-                    val tradeIssuanceConsumer = RabbitMqConsumer(issueConsumeConfiguration, TradeAssetIssuanceRequestMessage::class.java, deadLetterProducer, connectionProvider, messageConsumerFactory)
+                    val deadLetterProducer = RabbitDeadLetterProducer<Message>(
+                            deadLetterConfiguration = deadLetterConfig,
+                            rabbitConnectionProvider = connectionProvider
+                    )
+
+                    val messageConsumerFactory = MessageConsumerFactory(
+                            services = cordaRpcService,
+                            responderConfigurations = responderConfigurations,
+                            rabbitConnectionProvider = connectionProvider
+                    )
+
+                    val tradeIssuanceConsumer = RabbitMqConsumer(
+                            rabbitConsumerConfiguration = issueConsumeConfiguration,
+                            messageClass = TradeAssetIssuanceRequestMessage::class.java,
+                            deadLetterProducer = deadLetterProducer,
+                            rabbitConnectionProvider = connectionProvider,
+                            messageConsumerFactory = messageConsumerFactory
+                    )
+
                     tradeIssuanceConsumer.subscribe()
                     currentConsumers.put(issueConsumeConfiguration.queueName, tradeIssuanceConsumer)
                     println("RabbitMQ subscriptions done")
@@ -89,15 +116,5 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 throw ex
             }
         }
-    }
-
-    fun getCordaRPCOps(): CordaRPCOps {
-        val nodeAddress = NetworkHostAndPort.parse("localhost:10003")
-        val client = CordaRPCClient(nodeAddress)
-
-        // Can be amended in the com.example.MainKt file.
-        val proxy = client.start("user1", "test").proxy
-        return proxy
-
     }
 }

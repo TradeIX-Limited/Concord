@@ -5,11 +5,15 @@ import com.rabbitmq.client.AMQP
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.Message
 
-class RabbitDeadLetterProducer<T : Message>(private val deadLetterConfiguration: RabbitDeadLetterConfiguration, private val rabbitConnectionProvider: RabbitMqConnectionProvider) : IQueueDeadLetterProducer<T> {
-    override fun Publish(message: T, isFatal: Boolean) {
+class RabbitDeadLetterProducer<in T : Message>(
+        private val deadLetterConfiguration: RabbitDeadLetterConfiguration,
+        private val rabbitConnectionProvider: RabbitMqConnectionProvider
+) : IQueueDeadLetterProducer<T> {
+
+    override fun publish(message: T, isFatal: Boolean) {
         val serializer = Gson()
         val serializedMessage = serializer.toJson(message)
-        val connection = rabbitConnectionProvider.GetConnection()
+        val connection = rabbitConnectionProvider.getConnection()
         val channel = connection.createChannel()
 
         channel?.exchangeDeclare(
@@ -35,32 +39,43 @@ class RabbitDeadLetterProducer<T : Message>(private val deadLetterConfiguration:
                     deadLetterConfiguration.exchangeName,
                     deadLetterConfiguration.poisonQueueRoutingKey)
 
-            channel?.basicPublish(deadLetterConfiguration.exchangeName, deadLetterConfiguration.poisonQueueRoutingKey, AMQP.BasicProperties.Builder()
-                    .contentType("text/plain")
-                    .deliveryMode(2)
-                    .priority(1)
-                    .build(), serializedMessage.toByteArray())
+            channel?.basicPublish(
+                    deadLetterConfiguration.exchangeName,
+                    deadLetterConfiguration.poisonQueueRoutingKey,
+                    AMQP.BasicProperties
+                            .Builder()
+                            .contentType("text/plain")
+                            .deliveryMode(2)
+                            .priority(1)
+                            .build(), serializedMessage.toByteArray()
+            )
         } else {
             val queueDeclare = channel?.queueDeclare(
                     deadLetterConfiguration.queueName,
                     deadLetterConfiguration.durableQueue,
                     deadLetterConfiguration.exclusiveQueue,
                     deadLetterConfiguration.autoDeleteQueue,
-                    deadLetterConfiguration.queueArguments)
+                    deadLetterConfiguration.queueArguments
+            )
 
             val assignedQueueName = queueDeclare?.queue
 
             channel?.queueBind(
                     assignedQueueName,
                     deadLetterConfiguration.exchangeName,
-                    deadLetterConfiguration.exchangeRoutingKey)
+                    deadLetterConfiguration.exchangeRoutingKey
+            )
 
-            channel?.basicPublish(deadLetterConfiguration.exchangeName, deadLetterConfiguration.exchangeRoutingKey, AMQP.BasicProperties.Builder()
-                    .contentType("text/plain")
-                    .deliveryMode(2)
-                    .priority(1)
-                    .build(), serializedMessage.toByteArray())
+            channel?.basicPublish(
+                    deadLetterConfiguration.exchangeName,
+                    deadLetterConfiguration.exchangeRoutingKey,
+                    AMQP.BasicProperties
+                            .Builder()
+                            .contentType("text/plain")
+                            .deliveryMode(2)
+                            .priority(1)
+                            .build(), serializedMessage.toByteArray()
+            )
         }
     }
-
 }

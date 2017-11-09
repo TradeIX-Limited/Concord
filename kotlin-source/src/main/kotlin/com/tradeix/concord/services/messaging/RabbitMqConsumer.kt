@@ -1,18 +1,19 @@
 package com.tradeix.concord.services.messaging
 
-import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
-import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.Message
 
-class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: RabbitConsumerConfiguration
-                                    , private val messageClass: Class<T>
-                                    , private val deadLetterProducer: IQueueDeadLetterProducer<Message>
-                                    , private val rabbitConnectionProvider: RabbitMqConnectionProvider
-                                    , private val messageConsumerFactory: MessageConsumerFactory) : IQueueConsumer {
+class RabbitMqConsumer<T : Message>(
+        private val rabbitConsumerConfiguration: RabbitConsumerConfiguration,
+        private val messageClass: Class<T>,
+        private val deadLetterProducer: IQueueDeadLetterProducer<Message>,
+        private val rabbitConnectionProvider: RabbitMqConnectionProvider,
+        private val messageConsumerFactory: MessageConsumerFactory
+) : IQueueConsumer {
+
     override fun subscribe() {
-        val connection = rabbitConnectionProvider.GetConnection()
+        val connection = rabbitConnectionProvider.getConnection()
         val channel = connection.createChannel()
 
         channel?.exchangeDeclare(
@@ -37,7 +38,13 @@ class RabbitMqConsumer<T : Message>(private val rabbitConsumerConfiguration: Rab
                 rabbitConsumerConfiguration.exchangeName,
                 rabbitConsumerConfiguration.exchangeRoutingKey)
 
-        val consumer = messageConsumerFactory.getMessageConsumer(channel!!, messageClass, deadLetterProducer, rabbitConsumerConfiguration.maxRetries)
+        val consumer = messageConsumerFactory.getMessageConsumer(
+                channel!!,
+                messageClass,
+                deadLetterProducer,
+                rabbitConsumerConfiguration.maxRetries
+        )
+
         channel.basicConsume(assignedQueueName, false, consumer)
     }
 }

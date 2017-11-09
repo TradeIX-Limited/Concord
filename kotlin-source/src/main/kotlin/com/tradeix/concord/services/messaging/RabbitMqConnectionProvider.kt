@@ -8,12 +8,12 @@ class RabbitMqConnectionProvider(private val connectionFactory: ConnectionFactor
         private var connection: Connection? = null
     }
 
-    fun GetConnection(): Connection {
-        if(connection != null && connection!!.isOpen){
-            return connection!!
+    fun getConnection(): Connection {
+        return if (connection != null && connection!!.isOpen) {
+            connection!!
+        } else {
+            connection = connectionFactory.newConnection()
+            connection!!
         }
-
-        connection = connectionFactory.newConnection()
-        return connection!!
     }
 }
