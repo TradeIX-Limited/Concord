@@ -1,7 +1,9 @@
 package com.tradeix.concord.flows
 
 import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
 import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
@@ -32,6 +34,36 @@ object FlowTestHelper {
         val future = initiator
                 .services
                 .startFlow(TradeAssetAmendment.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
+    fun cancelTradeAsset(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: TradeAssetCancellationFlowModel) : SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(TradeAssetCancellation.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
+    fun changeTradeAssetOwner(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: TradeAssetOwnershipFlowModel): SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(TradeAssetOwnership.InitiatorFlow(model))
                 .resultFuture
 
         network.runNetwork()

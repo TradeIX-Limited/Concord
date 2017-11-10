@@ -13,7 +13,10 @@ object TestValueHelper {
 
     // State Identity
     val EXTERNAL_ID get() = "TEST_EXTERNAL_ID"
-    val LINEAR_ID get() = UniqueIdentifier(EXTERNAL_ID, UUID.fromString("00000000-0000-4000-0000-000000000000"))
+    val LINEAR_ID get() = UniqueIdentifier(EXTERNAL_ID)
+
+    val EXTERNAL_IDS get() = listOf("TEST_EXTERNAL_ID_1", "TEST_EXTERNAL_ID_2", "TEST_EXTERNAL_ID_3")
+    val LINEAR_IDS get() = EXTERNAL_IDS.map { UniqueIdentifier(it) }
 
     // Node Identity
     val BUYER get() = BOB

@@ -25,11 +25,11 @@ object TradeAssetCancellation {
 
         companion object {
 
-            private val EX_BUYER_CANNOT_CANCEL_MSG =
-                    "Trade asset can only be cancelled by the buyer when the status of the trade asset is Purchase Order."
+            private val EX_BUYER_CANNOT_CANCEL_INVOICE =
+                    "Trade asset of status INVOICE cannot be cancelled by the buyer."
 
-            private val EX_SUPPLIER_CANNOT_CANCEL_MSG =
-                    "Trade asset can only be cancelled by the supplier when the status of the trade asset is Invoice."
+            private val EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER =
+                    "Trade asset of status PURCHASE_ORDER cannot be cancelled by the supplier."
 
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on the given trade asset.")
             object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
@@ -118,12 +118,12 @@ object TradeAssetCancellation {
         private fun verify(initiator: Party, state: TradeAssetState) {
             val errors = ArrayList<String>()
 
-            if(initiator == state.buyer && state.tradeAsset.status != TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
-                errors.add(EX_BUYER_CANNOT_CANCEL_MSG)
+            if(initiator == state.buyer && state.tradeAsset.status == TradeAsset.TradeAssetStatus.INVOICE) {
+                errors.add(EX_BUYER_CANNOT_CANCEL_INVOICE)
             }
 
-            if(initiator == state.supplier && state.tradeAsset.status != TradeAsset.TradeAssetStatus.INVOICE) {
-                errors.add(EX_SUPPLIER_CANNOT_CANCEL_MSG)
+            if(initiator == state.supplier && state.tradeAsset.status == TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
+                errors.add(EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER)
             }
 
             if(!errors.isEmpty()) {
