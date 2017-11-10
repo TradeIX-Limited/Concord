@@ -14,8 +14,8 @@ class TradeAssetIssuanceFlowModelValidator(message: TradeAssetIssuanceFlowModel)
         private val EX_STATUS_INVALID = "Invalid status value."
         private val EX_SUPPLIER_REQUIRED = "Field 'supplier' is required."
         private val EX_CURRENCY_REQUIRED = "Field 'currency' is required."
-        private val EX_VALUE_NEGATIVE = "Field 'value' cannot be negative."
         private val EX_VALUE_REQUIRED = "Field 'value' is required."
+        private val EX_VALUE_NEGATIVE = "Field 'value' cannot be negative."
         private val EX_INVALID_ATTACHMENT = "Invalid Secure hash for attachment."
     }
 

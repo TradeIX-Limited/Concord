@@ -8,8 +8,8 @@ import java.util.*
 
 data class TradeAssetIssuanceFlowModel(
         override val externalId: String?,
-        val attachmentId: String?,
-        val buyer: CordaX500Name?,
+        val attachmentId: String? = null,
+        val buyer: CordaX500Name? = null,
         val supplier: CordaX500Name?,
         val conductor: CordaX500Name?,
         val status: String?,

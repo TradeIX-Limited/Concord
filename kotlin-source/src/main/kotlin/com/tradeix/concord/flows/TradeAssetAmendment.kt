@@ -27,10 +27,10 @@ object TradeAssetAmendment {
         companion object {
 
             private val EX_BUYER_CANNOT_AMEND_MSG =
-                    "Trade asset can only be amended by the buyer when the status of the trade asset is Purchase Order."
+                    "Trade asset of status PURCHASE_ORDER can only be amended by the buyer."
 
             private val EX_SUPPLIER_CANNOT_AMEND_MSG =
-                    "Trade asset can only be amended by the supplier when the status of the trade asset is Invoice."
+                    "Trade asset of status INVOICE can only be amended by the supplier."
 
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new trade asset.")
             object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
@@ -84,7 +84,7 @@ object TradeAssetAmendment {
             val outputState = inputState.copy(
                     tradeAsset = TradeAsset(
                             amount = amount,
-                            status = TradeAsset.TradeAssetStatus.INVOICE
+                            status = inputState.tradeAsset.status
                     )
             )
 
