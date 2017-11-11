@@ -5,6 +5,7 @@ import com.tradeix.concord.TestValueHelper.EXTERNAL_IDS
 import com.tradeix.concord.TestValueHelper.FUNDER
 import com.tradeix.concord.TestValueHelper.STATUS_INVOICE
 import com.tradeix.concord.exceptions.FlowValidationException
+import com.tradeix.concord.exceptions.FlowVerificationException
 import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
@@ -72,7 +73,7 @@ class TradeAssetOwnershipFlowTests : AbstractFlowTest() {
     @Test
     fun `Ownership flow initiated by the buyer fails because they're not the owner`() {
         issueTradeAssets(STATUS_INVOICE)
-        val exception = assertFailsWith<FlowException> {
+        val exception = assertFailsWith<FlowVerificationException> {
             changeTradeAssetOwner(network, buyer.node, TradeAssetOwnershipFlowModel(
                     externalIds = EXTERNAL_IDS,
                     newOwner = funder.name

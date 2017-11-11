@@ -146,7 +146,7 @@ object TradeAssetAmendment {
                 errors.add(EX_SUPPLIER_CANNOT_AMEND_MSG)
             }
 
-            if(!errors.isEmpty()) {
+            if(errors.isNotEmpty()) {
                 throw FlowVerificationException(verificationErrors = errors)
             }
         }
