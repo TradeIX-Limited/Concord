@@ -50,7 +50,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                             autoDeleteQueue = false,
                             queueArguments = mapOf(
                                     "x-dead-letter-exchange" to "tixcorda_messaging",
-                                    "x-message-ttl" to 10000),
+                                    "x-message-ttl" to 60000),
                             poisonQueueName = "corda_poison_message_queue",
                             poisonQueueRoutingKey = "corda_poison"
                     )
