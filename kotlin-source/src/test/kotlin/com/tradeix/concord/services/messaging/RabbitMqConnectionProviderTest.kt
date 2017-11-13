@@ -11,7 +11,7 @@ class RabbitMqConnectionProviderTest {
     @Test
     fun `Get Connection`() {
         val mockConnectionFactory = mock<ConnectionFactory>()
-        var mockConnection: Connection? = mock<Connection>()
+        var mockConnection: Connection? = mock()
         whenever(mockConnectionFactory.newConnection()).thenReturn(mockConnection)
         val connectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)
         val connection = connectionProvider.getConnection()
@@ -23,7 +23,7 @@ class RabbitMqStaticConnectionProviderTest {
     @Test
     fun `Always get the same connection`() {
         val mockConnectionFactory = mock<ConnectionFactory>()
-        var mockConnection: Connection? = mock<Connection>()
+        var mockConnection: Connection? = mock()
         whenever(mockConnectionFactory.newConnection()).thenReturn(mockConnection)
         whenever(mockConnection!!.isOpen).thenReturn(true)
         val connectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)

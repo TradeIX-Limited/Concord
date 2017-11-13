@@ -3,9 +3,9 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.*
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
-import com.tradeix.concord.messages.Message
-import com.tradeix.concord.messages.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.messages.TransactionResponseMessage
+import com.tradeix.concord.messages.rabbit.RabbitMessage
+import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import java.nio.charset.Charset
@@ -13,9 +13,9 @@ import java.nio.charset.Charset
 class IssuanceMessageConsumer(
         val services: CordaRPCOps,
         private val channel: Channel,
-        private val deadLetterProducer: IQueueDeadLetterProducer<Message>,
+        private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<TransactionResponseMessage>
+        private val responder: RabbitMqProducer<RabbitResponseMessage>
 ) : Consumer {
 
     override fun handleRecoverOk(consumerTag: String?) {
@@ -63,7 +63,13 @@ class IssuanceMessageConsumer(
             println("Received message in IssuanceMessageConsumer - about to ack then process.")
             requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
             println("Successfully processed IssuanceRequest - responding back to client")
-            val response = TransactionResponseMessage("1", 0, "1")
+            val response = RabbitResponseMessage(
+                    correlationId = "1",
+                    transactionId = null,
+                    errorMessages = null,
+                    externalIds = listOf("1"),
+                    success = false
+            )
             responder.publish(response)
         } catch (ex: Throwable) {
             if (requestMessage.tryCount < maxRetryCount) {

@@ -4,12 +4,12 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
+import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.messages.TradeAssetCancellationRequestMessage
 import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetCancellationRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetCancellationFlowModelValidator
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
@@ -21,15 +21,15 @@ import net.corda.core.utilities.ProgressTracker
 object TradeAssetCancellation {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val message: TradeAssetCancellationRequestMessage) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetCancellationFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
 
-            private val EX_BUYER_CANNOT_CANCEL_MSG =
-                    "Trade asset can only be cancelled by the buyer when the status of the trade asset is Purchase Order."
+            private val EX_BUYER_CANNOT_CANCEL_INVOICE =
+                    "Trade asset of status INVOICE cannot be cancelled by the buyer."
 
-            private val EX_SUPPLIER_CANNOT_CANCEL_MSG =
-                    "Trade asset can only be cancelled by the supplier when the status of the trade asset is Invoice."
+            private val EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER =
+                    "Trade asset of status PURCHASE_ORDER cannot be cancelled by the supplier."
 
             object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on the given trade asset.")
             object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
@@ -56,17 +56,17 @@ object TradeAssetCancellation {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetCancellationRequestMessageValidator(message)
+            val validator = TradeAssetCancellationFlowModelValidator(model)
 
             if(!validator.isValid) {
-                throw FlowValidationException(validationErrors = validator.getValidationErrorMessages())
+                throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
             val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
                     serviceHub = serviceHub,
-                    linearId = message.linearId,
+                    linearId = model.getLinearId(),
                     contractStateType = TradeAssetState::class.java)
 
             val inputState = inputStateAndRef.state.data
@@ -118,12 +118,12 @@ object TradeAssetCancellation {
         private fun verify(initiator: Party, state: TradeAssetState) {
             val errors = ArrayList<String>()
 
-            if(initiator == state.buyer && state.tradeAsset.status != TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
-                errors.add(EX_BUYER_CANNOT_CANCEL_MSG)
+            if(initiator == state.buyer && state.tradeAsset.status == TradeAsset.TradeAssetStatus.INVOICE) {
+                errors.add(EX_BUYER_CANNOT_CANCEL_INVOICE)
             }
 
-            if(initiator == state.supplier && state.tradeAsset.status != TradeAsset.TradeAssetStatus.INVOICE) {
-                errors.add(EX_SUPPLIER_CANNOT_CANCEL_MSG)
+            if(initiator == state.supplier && state.tradeAsset.status == TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
+                errors.add(EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER)
             }
 
             if(!errors.isEmpty()) {

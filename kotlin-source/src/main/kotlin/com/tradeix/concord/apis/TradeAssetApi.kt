@@ -6,6 +6,14 @@ import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.messages.*
+import com.tradeix.concord.messages.webapi.FailedResponseMessage
+import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
+import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
+import com.tradeix.concord.messages.webapi.SingleIdentitySuccessResponseMessage
+import com.tradeix.concord.messages.webapi.tradeasset.TradeAssetAmendmentRequestMessage
+import com.tradeix.concord.messages.webapi.tradeasset.TradeAssetCancellationRequestMessage
+import com.tradeix.concord.messages.webapi.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.webapi.tradeasset.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
@@ -32,34 +40,24 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Produces(MediaType.APPLICATION_JSON)
     fun issueTradeAsset(message: TradeAssetIssuanceRequestMessage): Response {
         try {
-
-            val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, message)
+            val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, message.toModel())
             flowHandle.progress.subscribe { println(">> $it") }
             val result = flowHandle.returnValue.getOrThrow()
-
             return Response
                     .status(Response.Status.CREATED)
-                    .entity(LinearTransactionResponseMessage(
-                            correlationId = message.correlationId!!,
-                            transactionId = result.id.toString(),
-                            linearId = message.linearId
-                    ))
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()))
                     .build()
-
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ValidationErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message,
-                                validationErrors = ex.validationErrors, tryCount = message.tryCount))
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!, tryCount = message.tryCount))
+                        .entity(FailedResponseMessage(ex.message!!))
                         .build()
             }
         }
@@ -71,33 +69,24 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Produces(MediaType.APPLICATION_JSON)
     fun changeTradeAssetOwner(message: TradeAssetOwnershipRequestMessage): Response {
         try {
-
-            val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, message)
+            val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, message.toModel())
             flowHandle.progress.subscribe { println(">> $it") }
             val result = flowHandle.returnValue.getOrThrow()
-
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(
-                            correlationId = message.correlationId!!,
-                            transactionId = result.id.toString(), tryCount = message.tryCount
-                    ))
+                    .entity(MultiIdentitySuccessResponseMessage(
+                            externalIds = message.externalIds!!,
+                            transactionId = result.id.toString()))
                     .build()
-
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ValidationErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message,
-                                validationErrors = ex.validationErrors, tryCount = message.tryCount))
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!, tryCount = message.tryCount))
+                        .entity(FailedResponseMessage(ex.message!!))
                         .build()
             }
         }
@@ -109,35 +98,24 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Produces(MediaType.APPLICATION_JSON)
     fun cancelTradeAsset(message: TradeAssetCancellationRequestMessage): Response {
         try {
-            val flowHandle = services.startTrackedFlow(TradeAssetCancellation::InitiatorFlow, message)
+            val flowHandle = services.startTrackedFlow(TradeAssetCancellation::InitiatorFlow, message.toModel())
             flowHandle.progress.subscribe { println(">> $it") }
             val result = flowHandle.returnValue.getOrThrow()
-
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(
-                            correlationId = message.correlationId!!,
-                            transactionId = result.id.toString(),
-                            tryCount = message.tryCount
-                    ))
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()))
                     .build()
-
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ValidationErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message,
-                                validationErrors = ex.validationErrors,
-                                tryCount = message.tryCount))
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!,
-                                tryCount = message.tryCount))
+                        .entity(FailedResponseMessage(ex.message!!))
                         .build()
             }
         }
@@ -149,39 +127,24 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @Produces(MediaType.APPLICATION_JSON)
     fun amendTradeAsset(message: TradeAssetAmendmentRequestMessage): Response {
         try {
-            val flowHandle = services.startTrackedFlow(TradeAssetAmendment::InitiatorFlow, message)
-
+            val flowHandle = services.startTrackedFlow(TradeAssetAmendment::InitiatorFlow, message.toModel())
             flowHandle.progress.subscribe { println(">> $it") }
-
-            val result = flowHandle
-                    .returnValue
-                    .getOrThrow()
-
+            val result = flowHandle.returnValue.getOrThrow()
             return Response
                     .status(Response.Status.OK)
-                    .entity(TransactionResponseMessage(
-                            correlationId = message.correlationId!!,
-                            transactionId = result.id.toString(),
-                            tryCount = message.tryCount
-                    ))
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()))
                     .build()
-
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity(ValidationErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message,
-                                validationErrors = ex.validationErrors,
-                                tryCount = message.tryCount))
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
                         .build()
                 else -> Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(ErrorResponseMessage(
-                                correlationId = message.correlationId!!,
-                                errorMessage = ex.message!!,
-                                tryCount = message.tryCount))
+                        .entity(FailedResponseMessage(ex.message!!))
                         .build()
             }
         }
