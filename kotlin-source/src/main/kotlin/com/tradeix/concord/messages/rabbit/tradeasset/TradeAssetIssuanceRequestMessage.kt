@@ -17,4 +17,4 @@ class TradeAssetIssuanceRequestMessage(
         val status: String?,
         val value: BigDecimal?,
         val currency: String?
-) : RabbitRequestMessage(correlationId, tryCount), SingleIdentityMessage, AttachmentMessage
+) : RabbitRequestMessage(), SingleIdentityMessage, AttachmentMessage

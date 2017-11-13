@@ -10,4 +10,4 @@ class TradeAssetAmendmentRequestMessage(
         override val tryCount: Int,
         val value: BigDecimal?,
         val currency: String?
-) : RabbitRequestMessage(correlationId, tryCount), SingleIdentityMessage
+) : RabbitRequestMessage(), SingleIdentityMessage

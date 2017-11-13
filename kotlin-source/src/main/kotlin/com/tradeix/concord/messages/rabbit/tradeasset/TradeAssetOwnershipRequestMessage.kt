@@ -7,4 +7,4 @@ class TradeAssetOwnershipRequestMessage(
         override val correlationId: String?,
         override val externalIds: List<String>?,
         override val tryCount: Int
-) : RabbitRequestMessage(correlationId, tryCount), MultiIdentityMessage
+) : RabbitRequestMessage(), MultiIdentityMessage

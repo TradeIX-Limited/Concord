@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.rabbit
 
-abstract class RabbitRequestMessage(
-        override val correlationId: String?,
-        open val tryCount: Int = 0
-) : RabbitMessage(correlationId)
+abstract class RabbitRequestMessage : RabbitMessage() {
+    abstract override val correlationId: String?
+    abstract val tryCount: Int
+}

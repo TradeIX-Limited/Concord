@@ -9,4 +9,4 @@ class RabbitResponseMessage(
         override val errorMessages: List<String>?,
         val externalIds: List<String>?,
         val success: Boolean
-) : RabbitMessage(correlationId), TransactionMessage, MultiErrorMessage
+) : RabbitMessage(), TransactionMessage, MultiErrorMessage
