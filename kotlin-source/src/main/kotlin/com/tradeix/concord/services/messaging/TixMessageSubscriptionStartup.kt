@@ -71,7 +71,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                     connectionFactory.virtualHost = connectionConfig.virtualHost
                     connectionFactory.port = connectionConfig.portNumber
 
-                    val connectionProvider = RabbitMqConnectionProvider(ConnectionFactory())
+                    val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
                     val transactionResponseConfiguration = RabbitProducerConfiguration(
                             exchangeName = "tixcorda_messaging",
