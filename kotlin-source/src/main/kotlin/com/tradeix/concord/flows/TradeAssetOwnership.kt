@@ -111,6 +111,11 @@ object TradeAssetOwnership {
                     .distinct()
                     .map { initiateFlow(it) }
 
+            // TODO : Remove this. It's a demo-day hack. General Electric never sign for change of ownership.
+            if (outputStates.map { it.supplier }.any { it.name.organisation == "General Electric" }) {
+                throw FlowException("Supplier failed to sign.")
+            }
+
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
                     requiredSignatureFlowSessions,

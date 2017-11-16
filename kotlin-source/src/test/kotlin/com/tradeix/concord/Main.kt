@@ -29,7 +29,6 @@ fun main(args: Array<String>) {
                 ).getOrThrow()
         )
 
-        /*
         // Buyer 1
         startWebserver(
                 startNode(
@@ -76,7 +75,7 @@ fun main(args: Array<String>) {
                         providedName = CordaX500Name("JP Morgan Chase", "New York", "US"),
                         rpcUsers = listOf(user)
                 ).getOrThrow()
-        )*/
+        )
 
         waitForAllNodesToFinish()
     }
