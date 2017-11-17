@@ -1,13 +1,19 @@
 package com.tradeix.concord.services.messaging
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.rabbitmq.client.*
+import com.tradeix.concord.exceptions.FlowValidationException
+import com.tradeix.concord.flows.TradeAssetIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.serialization.CordaX500NameSerializer
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
+import net.corda.core.messaging.startTrackedFlow
+import net.corda.core.utilities.getOrThrow
 import java.nio.charset.Charset
 
 class IssuanceMessageConsumer(
@@ -15,7 +21,8 @@ class IssuanceMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<RabbitResponseMessage>
+        private val responder: RabbitMqProducer<RabbitResponseMessage>,
+        private val serializer: Gson
 ) : Consumer {
 
     override fun handleRecoverOk(consumerTag: String?) {
@@ -40,16 +47,15 @@ class IssuanceMessageConsumer(
             envelope: Envelope?,
             properties: AMQP.BasicProperties?,
             body: ByteArray?) {
-        val deliveryTag = envelope?.deliveryTag
+        // val deliveryTag = envelope?.deliveryTag
 
         // Handler logic here
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
-        val serializer = Gson()
 
         var requestMessage = TradeAssetIssuanceRequestMessage(
-                correlationId = null,
-                tryCount = 1,
+                correlationId = "ERR",
+                tryCount = 0,
                 externalId = null,
                 buyer = null,
                 supplier = null,
@@ -60,27 +66,59 @@ class IssuanceMessageConsumer(
                 attachmentId = null)
 
         try {
-            println("Received message in IssuanceMessageConsumer - about to ack then process.")
+            println("Received message in IssuanceMessageConsumer - about to process.")
             requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
-            println("Successfully processed IssuanceRequest - responding back to client")
-            val response = RabbitResponseMessage(
-                    correlationId = "1",
-                    transactionId = null,
-                    errorMessages = null,
-                    externalIds = listOf("1"),
-                    success = false
-            )
-            responder.publish(response)
+            try {
+                val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, requestMessage.toModel())
+                flowHandle.progress.subscribe { println(">> $it") }
+                val result = flowHandle.returnValue.getOrThrow()
+
+
+                println("Successfully processed IssuanceRequest - responding back to client")
+                val response = RabbitResponseMessage(
+                        correlationId = requestMessage.correlationId!!,
+                        transactionId = result.id.toString(),
+                        errorMessages = null,
+                        externalIds = listOf(requestMessage.externalId!!),
+                        success = true
+                )
+                responder.publish(response)
+            } catch (ex: Throwable){
+                return when (ex){
+                    is FlowValidationException -> {
+                        println("Flow validation exception occurred, sending failed response")
+                        val response = RabbitResponseMessage(
+                                correlationId = requestMessage.correlationId!!,
+                                transactionId = null,
+                                errorMessages = ex.validationErrors,
+                                externalIds = listOf(requestMessage.externalId!!),
+                                success = false
+                        )
+
+                        responder.publish(response)
+                    }
+                    else -> {
+                        val response = RabbitResponseMessage(
+                                correlationId = requestMessage.correlationId!!,
+                                transactionId = null,
+                                errorMessages = listOf(ex.message!!),
+                                externalIds = listOf(requestMessage.externalId!!),
+                                success = false
+                        )
+
+                        responder.publish(response)
+                    }
+                }
+
+            }
         } catch (ex: Throwable) {
             if (requestMessage.tryCount < maxRetryCount) {
                 println("Exception handled in IssuanceMessageConsumer, writing to dlq")
-                deadLetterProducer.publish(requestMessage)
+                deadLetterProducer.publish(requestMessage, false)
             } else {
                 println("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
-                deadLetterProducer.publish(requestMessage, isFatal = true)
+                deadLetterProducer.publish(requestMessage, true)
             }
-        } finally {
-            channel.basicAck(deliveryTag!!, false)
         }
     }
 

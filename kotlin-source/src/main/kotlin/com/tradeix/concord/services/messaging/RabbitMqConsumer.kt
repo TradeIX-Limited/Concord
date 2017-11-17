@@ -45,6 +45,6 @@ class RabbitMqConsumer<T : RabbitMessage>(
                 rabbitConsumerConfiguration.maxRetries
         )
 
-        channel.basicConsume(assignedQueueName, false, consumer)
+        channel.basicConsume(assignedQueueName, true, consumer)
     }
 }

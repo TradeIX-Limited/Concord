@@ -1,11 +1,14 @@
 package com.tradeix.concord.services.messaging
 
+import com.google.gson.GsonBuilder
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Consumer
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.serialization.CordaX500NameSerializer
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 
 class MessageConsumerFactory(
@@ -25,7 +28,12 @@ class MessageConsumerFactory(
                         rabbitConnectionProvider
                 )
 
-                IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder)
+                val serializer = GsonBuilder()
+                        .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                        .disableHtmlEscaping()
+                        .create()
+
+                IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, serializer)
             }
             else -> throw ClassNotFoundException()
         }

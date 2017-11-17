@@ -4,6 +4,8 @@ import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.typesafe.config.ConfigFactory
+import com.typesafe.config.ConfigParseOptions
 import net.corda.core.messaging.CordaRPCOps
 
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
@@ -17,11 +19,18 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
     companion object {
         private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
+        val  defaultConfig = ConfigFactory.parseResources("tix.integration.conf", ConfigParseOptions.defaults().setAllowMissing(false))
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
                 if (currentConsumers.count() == 0) {
                     println("Initializing RabbitMQ Subscriptions - this should happen only once")
-
+                    val connectionConfig = RabbitMqConnectionConfiguration(
+                            userName = "guest",
+                            password = "guest",
+                            hostName = "localhost",
+                            virtualHost = "/",
+                            portNumber = 5672
+                    )
                     val issueConsumeConfiguration = RabbitConsumerConfiguration(
                             exchangeName = "tixcorda_messaging",
                             exchangeType = "topic",
@@ -38,7 +47,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                     )
 
                     val deadLetterConfig = RabbitDeadLetterConfiguration(
-                            exchangeName = "tixcorda_messaging_dlt",
+                            exchangeName = "tixcorda_messaging_dlq",
                             exchangeType = "topic",
                             exchangeRoutingKey = "issue_asset",
                             durableExchange = true,
@@ -53,14 +62,6 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                                     "x-message-ttl" to 60000),
                             poisonQueueName = "corda_poison_message_queue",
                             poisonQueueRoutingKey = "corda_poison"
-                    )
-
-                    val connectionConfig = RabbitMqConnectionConfiguration(
-                            userName = "guest",
-                            password = "guest",
-                            hostName = "localhost",
-                            virtualHost = "/",
-                            portNumber = 5672
                     )
 
                     val connectionFactory = ConnectionFactory()
