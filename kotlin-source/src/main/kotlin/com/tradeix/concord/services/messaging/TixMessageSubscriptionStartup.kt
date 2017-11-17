@@ -1,12 +1,15 @@
 package com.tradeix.concord.services.messaging
 
+import com.google.gson.Gson
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigParseOptions
+import com.typesafe.config.ConfigRenderOptions
 import net.corda.core.messaging.CordaRPCOps
+import net.corda.nodeapi.config.parseAs
 
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
@@ -24,45 +27,14 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
             try {
                 if (currentConsumers.count() == 0) {
                     println("Initializing RabbitMQ Subscriptions - this should happen only once")
-                    val connectionConfig = RabbitMqConnectionConfiguration(
-                            userName = "guest",
-                            password = "guest",
-                            hostName = "localhost",
-                            virtualHost = "/",
-                            portNumber = 5672
-                    )
-                    val issueConsumeConfiguration = RabbitConsumerConfiguration(
-                            exchangeName = "tixcorda_messaging",
-                            exchangeType = "topic",
-                            exchangeRoutingKey = "issue_asset",
-                            durableExchange = true,
-                            autoDeleteExchange = false,
-                            exchangeArguments = emptyMap(),
-                            queueName = "issue_asset_request_queue",
-                            durableQueue = true,
-                            exclusiveQueue = false,
-                            autoDeleteQueue = false,
-                            queueArguments = emptyMap(),
-                            maxRetries = 2
-                    )
+                    val serializer = Gson()
+                    val connectionConfig = defaultConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()
 
-                    val deadLetterConfig = RabbitDeadLetterConfiguration(
-                            exchangeName = "tixcorda_messaging_dlq",
-                            exchangeType = "topic",
-                            exchangeRoutingKey = "issue_asset",
-                            durableExchange = true,
-                            autoDeleteExchange = false,
-                            exchangeArguments = emptyMap(),
-                            queueName = "issue_asset_request_dlt_queue",
-                            durableQueue = true,
-                            exclusiveQueue = false,
-                            autoDeleteQueue = false,
-                            queueArguments = mapOf(
-                                    "x-dead-letter-exchange" to "tixcorda_messaging",
-                                    "x-message-ttl" to 60000),
-                            poisonQueueName = "corda_poison_message_queue",
-                            poisonQueueRoutingKey = "corda_poison"
-                    )
+                    val consumerConfigurationString = defaultConfig.resolve().getConfig("tix-integration").getObject("issuanceConsumeConfiguration").render(ConfigRenderOptions.concise())
+                    val issueConsumeConfiguration = serializer.fromJson(consumerConfigurationString, RabbitConsumerConfiguration::class.java)
+
+                    val deadLetterConfigurationString = defaultConfig.resolve().getConfig("tix-integration").getObject("issuanceDeadLetterConfiguration").render(ConfigRenderOptions.concise())
+                    val deadLetterConfig =  serializer.fromJson(deadLetterConfigurationString, RabbitDeadLetterConfiguration::class.java)
 
                     val connectionFactory = ConnectionFactory()
 
@@ -74,14 +46,8 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
                     val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
-                    val transactionResponseConfiguration = RabbitProducerConfiguration(
-                            exchangeName = "tixcorda_messaging",
-                            exchangeType = "topic",
-                            exchangeRoutingKey = "cordatix_response",
-                            durableExchange = true,
-                            autoDeleteExchange = false,
-                            exchangeArguments = emptyMap()
-                    )
+                    val transactionResponseConfigurationString = defaultConfig.resolve().getConfig("tix-integration").getObject("transactionResponseConfiguration").render(ConfigRenderOptions.concise())
+                    val transactionResponseConfiguration = serializer.fromJson(transactionResponseConfigurationString, RabbitProducerConfiguration::class.java)
 
                     val responderConfigurations = mapOf("cordatix_response" to transactionResponseConfiguration)
 
