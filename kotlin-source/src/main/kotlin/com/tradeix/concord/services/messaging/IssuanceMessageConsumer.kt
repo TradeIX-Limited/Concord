@@ -54,7 +54,7 @@ class IssuanceMessageConsumer(
         println("Received message $messageBody")
 
         var requestMessage = TradeAssetIssuanceRequestMessage(
-                correlationId = "ERR",
+                correlationId = null,
                 tryCount = 0,
                 externalId = null,
                 buyer = null,
@@ -66,8 +66,8 @@ class IssuanceMessageConsumer(
                 attachmentId = null)
 
         try {
-            println("Received message in IssuanceMessageConsumer - about to process.")
             requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
+            println("Received message with id $(requestMessage.correlationId) in IssuanceMessageConsumer - about to process.")
             try {
                 val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
@@ -112,6 +112,7 @@ class IssuanceMessageConsumer(
 
             }
         } catch (ex: Throwable) {
+            requestMessage.tryCount++
             if (requestMessage.tryCount < maxRetryCount) {
                 println("Exception handled in IssuanceMessageConsumer, writing to dlq")
                 deadLetterProducer.publish(requestMessage, false)

@@ -6,6 +6,8 @@ buildscript {
     ext.quasar_version = '0.7.6'
     ext.rabbit_version = '5.0.0'
     ext.gson_version = '2.8.2'
+    ext.mockito_kotlin_version = '1.5.0'
+    ext.mockito_core_version = '2.1.0'
 
     repositories {
         mavenLocal()
@@ -60,8 +62,6 @@ configurations {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "com.rabbitmq:amqp-client:$rabbit_version"
-    compile "com.google.code.gson:gson:$gson_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
 
@@ -96,7 +96,7 @@ task copyTixIntegrationConfiguration(dependsOn: []){
     }
 
     project.copy {
-        from "./tix.integration.test.conf"
+        from "./tix.test.conf"
         into "kotlin-source/src/test/resources"
     }
 

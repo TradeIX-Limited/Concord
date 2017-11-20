@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 class TradeAssetIssuanceRequestMessage(
         override val correlationId: String?,
-        override val tryCount: Int,
+        override var tryCount: Int,
         override val externalId: String?,
         override val attachmentId: String?,
         val buyer: CordaX500Name?,

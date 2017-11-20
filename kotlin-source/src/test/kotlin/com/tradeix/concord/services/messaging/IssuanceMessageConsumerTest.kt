@@ -140,6 +140,7 @@ class IssuanceMessageConsumerTest {
 
         whenever(mockSerializer.fromJson(requestString, TradeAssetIssuanceRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
 
+
         val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 

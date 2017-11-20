@@ -6,5 +6,5 @@ import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 class TradeAssetCancellationRequestMessage(
         override val correlationId: String?,
         override val externalId: String?,
-        override val tryCount: Int
+        override var tryCount: Int
 ) : RabbitRequestMessage(), SingleIdentityMessage

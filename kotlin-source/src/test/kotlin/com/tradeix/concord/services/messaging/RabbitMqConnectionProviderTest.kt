@@ -9,7 +9,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 class RabbitMqConnectionProviderTest {
-    @Ignore
+    @Test
     fun `Get Connection`() {
         val mockConnectionFactory = mock<ConnectionFactory>()
         var mockConnection: Connection? = mock()

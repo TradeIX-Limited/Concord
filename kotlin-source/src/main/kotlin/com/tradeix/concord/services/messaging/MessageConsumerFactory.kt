@@ -28,12 +28,12 @@ class MessageConsumerFactory(
                         rabbitConnectionProvider
                 )
 
-                val serializer = GsonBuilder()
+                val cordaNameSerialiser = GsonBuilder()
                         .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
                         .disableHtmlEscaping()
                         .create()
 
-                IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, serializer)
+                IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, cordaNameSerialiser)
             }
             else -> throw ClassNotFoundException()
         }

@@ -15,7 +15,7 @@ class ConfigurationReadTests{
 
 
     companion object {
-        val  defaultConfig = ConfigFactory.parseResources("tix.integration.test.conf", ConfigParseOptions.defaults().setAllowMissing(false))
+        val  defaultConfig = ConfigFactory.parseResources("tix.test.conf", ConfigParseOptions.defaults().setAllowMissing(false))
     }
 
     @Test

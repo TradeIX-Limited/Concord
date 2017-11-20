@@ -6,5 +6,5 @@ import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 class TradeAssetOwnershipRequestMessage(
         override val correlationId: String?,
         override val externalIds: List<String>?,
-        override val tryCount: Int
+        override var tryCount: Int
 ) : RabbitRequestMessage(), MultiIdentityMessage
