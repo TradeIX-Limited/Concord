@@ -13,8 +13,8 @@ class ConcordPlugin : WebServerPluginRegistry {
      */
     override val webApis: List<Function<CordaRPCOps, out Any>> = listOf(
             Function(::NodeInfoApi),
-            Function(::TradeAssetApi)/*,
-            Function(::TixMessageSubscriptionStartup)*/)
+            Function(::TradeAssetApi),
+            Function(::TixMessageSubscriptionStartup))
 
 
     /**
