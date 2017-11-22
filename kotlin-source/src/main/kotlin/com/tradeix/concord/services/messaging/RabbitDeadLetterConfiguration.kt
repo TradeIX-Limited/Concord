@@ -11,7 +11,19 @@ data class RabbitDeadLetterConfiguration(
         val durableQueue: Boolean,
         val exclusiveQueue: Boolean,
         val autoDeleteQueue: Boolean,
-        val queueArguments: Map<String, Any>,
+        var queueArguments: Map<String, Any>,
         val poisonQueueName: String,
         val poisonQueueRoutingKey: String
 )
+
+{
+    fun getParsedQueueArguments():Map<String, Any> {
+        return queueArguments.mapValues {
+            if(it.value is Double) {
+                (it.value as Double).toInt()
+            } else {
+                it.value
+            }
+        }
+    }
+}

@@ -55,7 +55,7 @@ class RabbitDeadLetterProducer<in T : RabbitMessage>(
                     deadLetterConfiguration.durableQueue,
                     deadLetterConfiguration.exclusiveQueue,
                     deadLetterConfiguration.autoDeleteQueue,
-                    deadLetterConfiguration.queueArguments
+                    deadLetterConfiguration.getParsedQueueArguments()
             )
 
             val assignedQueueName = queueDeclare?.queue
