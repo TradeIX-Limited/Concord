@@ -111,8 +111,8 @@ object TradeAssetOwnership {
                     .distinct()
                     .map { initiateFlow(it) }
 
-            // TODO : Remove this. It's a demo-day hack. General Electric never sign for change of ownership.
-            if (outputStates.map { it.supplier }.any { it.name.organisation == "General Electric" }) {
+            // TODO : Remove this. It's a demo-day hack. Fake Supplier never sign for change of ownership.
+            if (outputStates.map { it.supplier }.any { it.name.organisation == "Fake Supplier" }) {
                 throw FlowException("Supplier failed to sign.")
             }
 
