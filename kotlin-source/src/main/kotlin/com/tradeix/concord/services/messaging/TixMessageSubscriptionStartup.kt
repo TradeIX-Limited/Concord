@@ -5,6 +5,7 @@ import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.services.messaging.subscribers.ChangeOwnerFlowQueuesSubscriber
 import com.tradeix.concord.services.messaging.subscribers.IssuanceFlowQueuesSubscriber
 import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigParseOptions
@@ -42,6 +43,9 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
                 IssuanceFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
+                        .initialize(connectionProvider, currentConsumers)
+
+                ChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
             } catch (ex: Throwable) {

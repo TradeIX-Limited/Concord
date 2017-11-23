@@ -28,7 +28,7 @@ class IssuanceFlowQueuesSubscriber(
             val issuanceDeadLetterConfigurationString = config.resolve().getConfig("tix-integration").getObject("issuanceDeadLetterConfiguration").render(ConfigRenderOptions.concise())
             val issuanceDeadLetterConfig =  serializer.fromJson(issuanceDeadLetterConfigurationString, RabbitDeadLetterConfiguration::class.java)
 
-            val issuanceResponseConfigurationString = TixMessageSubscriptionStartup.defaultConfig.resolve().getConfig("tix-integration").getObject("issuanceResponseConfiguration").render(ConfigRenderOptions.concise())
+            val issuanceResponseConfigurationString = config.resolve().getConfig("tix-integration").getObject("issuanceResponseConfiguration").render(ConfigRenderOptions.concise())
             val issuanceResponseConfiguration = serializer.fromJson(issuanceResponseConfigurationString, RabbitProducerConfiguration::class.java)
 
             val responderConfigurations = mapOf("cordatix_issuance_response" to issuanceResponseConfiguration)

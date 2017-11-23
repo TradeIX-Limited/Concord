@@ -6,6 +6,7 @@ import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
 import net.corda.core.messaging.CordaRPCOps
 import org.junit.Test
 
@@ -33,5 +34,30 @@ class MessageConsumerFactoryTest {
         )
 
         assert(consumer is IssuanceMessageConsumer)
+    }
+
+    @Test
+    fun `Retrieve ChangeOwnerMessageConsumer`() {
+        val producerMock = mock<IQueueDeadLetterProducer<RabbitMessage>>()
+        val cordaRpcServices = mock<CordaRPCOps>()
+        val producerConfiguration = RabbitProducerConfiguration("abc", "topic", "def", false, true, emptyMap())
+        val responseConfiguration = mapOf("cordatix_changeowner_response" to producerConfiguration)
+        val mockConnectionFactory = mock<ConnectionFactory>()
+        val mockChannel = mock<Channel>()
+
+        val messageConsumerFactory = MessageConsumerFactory(
+                services = cordaRpcServices,
+                responderConfigurations = responseConfiguration,
+                rabbitConnectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)
+        )
+
+        val consumer = messageConsumerFactory.getMessageConsumer(
+                channel = mockChannel,
+                type = TradeAssetOwnershipRequestMessage::class.java,
+                deadLetterProducer = producerMock,
+                maxRetries = 1
+        )
+
+        assert(consumer is ChangeOwnerMessageConsumer)
     }
 }
