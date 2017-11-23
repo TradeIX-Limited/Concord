@@ -15,7 +15,7 @@ class MessageConsumerFactoryTest {
         val producerMock = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val cordaRpcServices = mock<CordaRPCOps>()
         val producerConfiguration = RabbitProducerConfiguration("abc", "topic", "def", false, true, emptyMap())
-        val responseConfiguration = mapOf("cordatix_response" to producerConfiguration)
+        val responseConfiguration = mapOf("cordatix_issuance_response" to producerConfiguration)
         val mockConnectionFactory = mock<ConnectionFactory>()
         val mockChannel = mock<Channel>()
 

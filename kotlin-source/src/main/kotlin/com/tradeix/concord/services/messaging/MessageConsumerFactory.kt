@@ -24,7 +24,7 @@ class MessageConsumerFactory(
         return when {
             type.isAssignableFrom(TradeAssetIssuanceRequestMessage::class.java) -> {
                 val responder = RabbitMqProducer<RabbitResponseMessage>(
-                        responderConfigurations["cordatix_response"]!!,
+                        responderConfigurations["cordatix_issuance_response"]!!,
                         rabbitConnectionProvider
                 )
 
