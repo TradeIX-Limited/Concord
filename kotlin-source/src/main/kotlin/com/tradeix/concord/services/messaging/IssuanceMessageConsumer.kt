@@ -9,6 +9,7 @@ import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import net.corda.core.identity.CordaX500Name
@@ -22,7 +23,7 @@ class IssuanceMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<RabbitResponseMessage>,
+        private val responder: RabbitMqProducer<TradeAssetResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
 
@@ -82,7 +83,7 @@ class IssuanceMessageConsumer(
 
 
                 println("Successfully processed IssuanceRequest - responding back to client")
-                val response = RabbitResponseMessage(
+                val response = TradeAssetResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
@@ -96,7 +97,7 @@ class IssuanceMessageConsumer(
                 return when (ex){
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
-                        val response = RabbitResponseMessage(
+                        val response = TradeAssetResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
@@ -107,7 +108,7 @@ class IssuanceMessageConsumer(
                         responder.publish(response)
                     }
                     else -> {
-                        val response = RabbitResponseMessage(
+                        val response = TradeAssetResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),

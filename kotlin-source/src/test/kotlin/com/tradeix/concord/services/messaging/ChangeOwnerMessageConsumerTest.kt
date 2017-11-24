@@ -14,6 +14,7 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
@@ -33,7 +34,8 @@ class ChangeOwnerMessageConsumerTest {
                 correlationId = "corr1",
                 tryCount = 1,
                 externalIds = listOf("ext1"),
-                newOwner = null)
+                newOwner = null,
+                bidUniqueId = "uniqueId")
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -48,7 +50,7 @@ class ChangeOwnerMessageConsumerTest {
         val mockCordaFuture = mock<CordaFuture<SignedTransaction>>()
         val mockSignedTransaction = mock<SignedTransaction>() //SignedTransaction(mockCoreTransaction, mockTransactionSignature)
         val mockSecureHash = mock<SecureHash>()
-        val mockResponder = mock<RabbitMqProducer<RabbitResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
@@ -63,12 +65,13 @@ class ChangeOwnerMessageConsumerTest {
         val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockResponder, times(1)).publish(any<RabbitResponseMessage>())
+        verify(mockResponder, times(1)).publish(any<TradeAssetOwnershipResponseMessage>())
         verify(mockResponder).publish(argForWhich { externalIds?.last() == "ext1" })
         verify(mockResponder).publish(argForWhich { correlationId == "corr1" })
         verify(mockResponder).publish(argForWhich { transactionId!! == "abc" })
         verify(mockResponder).publish(argForWhich { success })
         verify(mockResponder).publish(argForWhich { errorMessages == null })
+        verify(mockResponder).publish(argForWhich { bidUniqueId == "uniqueId" })
     }
 
     @Test
@@ -77,7 +80,8 @@ class ChangeOwnerMessageConsumerTest {
                 correlationId = "corr1",
                 tryCount = 1,
                 externalIds = listOf("ext1"),
-                newOwner = null)
+                newOwner = null,
+                bidUniqueId = null)
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -87,7 +91,7 @@ class ChangeOwnerMessageConsumerTest {
         val requestString = serializer.toJson(request)
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<RabbitResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
@@ -107,7 +111,8 @@ class ChangeOwnerMessageConsumerTest {
                 correlationId = "corr1",
                 tryCount = 4,
                 externalIds = listOf("ext1"),
-                newOwner = null)
+                newOwner = null,
+                bidUniqueId = null)
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -117,7 +122,7 @@ class ChangeOwnerMessageConsumerTest {
         val requestString = serializer.toJson(request)
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<RabbitResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()

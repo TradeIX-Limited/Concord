@@ -8,6 +8,7 @@ import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
@@ -18,7 +19,7 @@ class ChangeOwnerMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<RabbitResponseMessage>,
+        private val responder: RabbitMqProducer<TradeAssetOwnershipResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
 
@@ -54,7 +55,8 @@ class ChangeOwnerMessageConsumer(
                 correlationId = null,
                 tryCount = 0,
                 externalIds = null,
-                newOwner = null)
+                newOwner = null,
+                bidUniqueId = null)
 
         try {
             requestMessage = serializer.fromJson(messageBody, TradeAssetOwnershipRequestMessage::class.java)
@@ -66,35 +68,38 @@ class ChangeOwnerMessageConsumer(
 
 
                 println("Successfully processed OwnershipRequest - responding back to client")
-                val response = RabbitResponseMessage(
+                val response = TradeAssetOwnershipResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
                         externalIds = requestMessage.externalIds!!,
-                        success = true
+                        success = true,
+                        bidUniqueId = requestMessage.bidUniqueId
                 )
                 responder.publish(response)
             } catch (ex: Throwable){
                 return when (ex){
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
-                        val response = RabbitResponseMessage(
+                        val response = TradeAssetOwnershipResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
                                 externalIds = requestMessage.externalIds!!,
-                                success = false
+                                success = false,
+                                bidUniqueId = requestMessage.bidUniqueId
                         )
 
                         responder.publish(response)
                     }
                     else -> {
-                        val response = RabbitResponseMessage(
+                        val response = TradeAssetOwnershipResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),
                                 externalIds = requestMessage.externalIds!!,
-                                success = false
+                                success = false,
+                                bidUniqueId = requestMessage.bidUniqueId
                         )
 
                         responder.publish(response)
