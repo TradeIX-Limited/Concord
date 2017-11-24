@@ -9,9 +9,12 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
+import com.tradeix.concord.validators.RabbitRequestMessageValidator
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 import java.nio.charset.Charset
 
 class ChangeOwnerMessageConsumer(
@@ -22,6 +25,10 @@ class ChangeOwnerMessageConsumer(
         private val responder: RabbitMqProducer<TradeAssetOwnershipResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
+
+    companion object {
+        protected val log: Logger = loggerFor<ChangeOwnerMessageConsumer>()
+    }
 
     override fun handleRecoverOk(consumerTag: String?) {
         println("ChangeOwnerMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
@@ -61,7 +68,13 @@ class ChangeOwnerMessageConsumer(
         try {
             requestMessage = serializer.fromJson(messageBody, TradeAssetOwnershipRequestMessage::class.java)
             println("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
+            log.info("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
             try {
+                val validator = RabbitRequestMessageValidator(requestMessage)
+
+                if (!validator.isValid) {
+                    throw FlowValidationException(validationErrors = validator.validationErrors)
+                }
                 val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
                 val result = flowHandle.returnValue.getOrThrow()
@@ -77,7 +90,9 @@ class ChangeOwnerMessageConsumer(
                         bidUniqueId = requestMessage.bidUniqueId
                 )
                 responder.publish(response)
+                log.info("Successfully processed OwnershipRequest - responded back to client")
             } catch (ex: Throwable){
+                log.error("Failed to process the message ${ex}, Returning a error response")
                 return when (ex){
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
@@ -111,9 +126,11 @@ class ChangeOwnerMessageConsumer(
             requestMessage.tryCount++
             if (requestMessage.tryCount < maxRetryCount) {
                 println("Exception handled in ChangeOwnerMessageConsumer, writing to dlq")
+                log.error("Exception handled in ChangeOwnerMessageConsumer, writing to dlq")
                 deadLetterProducer.publish(requestMessage, false)
             } else {
                 println("Exception handled in ChangeOwnerMessageConsumer, writing to dlq fatally")
+                log.error("Exception handled in ChangeOwnerMessageConsumer, writing to dlq fatally")
                 deadLetterProducer.publish(requestMessage, true)
             }
         }

@@ -10,6 +10,8 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
+import com.tradeix.concord.validators.RabbitRequestMessageValidator
+import com.tradeix.concord.validators.TradeAssetAmendmentFlowModelValidator
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import net.corda.core.identity.CordaX500Name
@@ -77,6 +79,12 @@ class IssuanceMessageConsumer(
             log.info("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
 
             try {
+                val validator = RabbitRequestMessageValidator(requestMessage)
+
+                if (!validator.isValid) {
+                    throw FlowValidationException(validationErrors = validator.validationErrors)
+                }
+
                 val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
                 val result = flowHandle.returnValue.getOrThrow()
