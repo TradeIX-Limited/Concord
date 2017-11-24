@@ -9,7 +9,8 @@ import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.serialization.CordaX500NameSerializer
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
@@ -24,6 +25,10 @@ class IssuanceMessageConsumer(
         private val responder: RabbitMqProducer<RabbitResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
+
+    companion object {
+        protected val log: Logger = loggerFor<IssuanceMessageConsumer>()
+    }
 
     override fun handleRecoverOk(consumerTag: String?) {
         println("IssuanceMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
@@ -67,7 +72,9 @@ class IssuanceMessageConsumer(
 
         try {
             requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
-            println("Received message with id $(requestMessage.correlationId) in IssuanceMessageConsumer - about to process.")
+            println("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
+            log.info("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
+
             try {
                 val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
@@ -83,7 +90,9 @@ class IssuanceMessageConsumer(
                         success = true
                 )
                 responder.publish(response)
+                log.info("Successfully processed IssuanceRequest - responded back to client")
             } catch (ex: Throwable){
+                log.error("Failed to process the message ${ex.message}, Returning a error response")
                 return when (ex){
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
@@ -115,9 +124,12 @@ class IssuanceMessageConsumer(
             requestMessage.tryCount++
             if (requestMessage.tryCount < maxRetryCount) {
                 println("Exception handled in IssuanceMessageConsumer, writing to dlq")
+                log.error("Exception handled in IssuanceMessageConsumer, writing to dlq")
+
                 deadLetterProducer.publish(requestMessage, false)
             } else {
                 println("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
+                log.error("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
                 deadLetterProducer.publish(requestMessage, true)
             }
         }

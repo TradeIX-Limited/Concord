@@ -116,6 +116,87 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
 }
 
+task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    directory "./build/nodes"
+    networkMap "O=R3Net,L=London,C=GB"
+    node { //NOTARY
+        name "O=R3Net,L=London,C=GB"
+        advertisedServices = ["corda.notary.validating"]
+        p2pPort 10002
+        rpcPort 10003
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+    }
+    node { //CONDUCTOR
+        name "O=TradeIX,L=London,C=GB"
+        advertisedServices = []
+        p2pPort 10004
+        rpcPort 10005
+        webPort 10006
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+   node { //BUYER_1
+        name "O=Exxon Mobil,L=Irving,C=US"
+        advertisedServices = []
+        p2pPort 10007
+        rpcPort 10008
+        webPort 10009
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+    node { //SUPPLIER_1
+        name "O=Royal Dutch Shell,L=The Hague,C=NL"
+        advertisedServices = []
+        p2pPort 10010
+        rpcPort 10011
+        webPort 10012
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+    node { //SUPPLIER_2
+        name "O=General Electric,L=Boston,C=US"
+        advertisedServices = []
+        p2pPort 10013
+        rpcPort 10014
+        webPort 10015
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+    node { //FUNDER_1
+        name "O=BNY Mellon,L=New York,C=US"
+        advertisedServices = []
+        p2pPort 10016
+        rpcPort 10017
+        webPort 10018
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+}
+
 // TODO: Make into gradle plugins without any references to Jython
 task installJythonDeps(dependsOn: ['build']) {
     project.copy {

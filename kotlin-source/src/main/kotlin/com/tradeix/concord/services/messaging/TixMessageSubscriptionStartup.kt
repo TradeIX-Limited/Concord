@@ -10,6 +10,8 @@ import com.typesafe.config.ConfigParseOptions
 import com.typesafe.config.ConfigRenderOptions
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.nodeapi.config.parseAs
+import org.slf4j.Logger
+import net.corda.core.utilities.loggerFor
 
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
@@ -21,6 +23,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
     }
 
     companion object {
+        protected  val log: Logger = loggerFor<TixMessageSubscriptionStartup>()
         private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
         val  defaultConfig = ConfigFactory.parseResources("tix.integration.conf", ConfigParseOptions.defaults().setAllowMissing(false))
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
@@ -76,9 +79,8 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 }
 
             } catch (ex: Throwable) {
-                println("Oooh Exception")
+                log.error(ex.message)
                 println(ex)
-                throw ex
             }
         }
     }
