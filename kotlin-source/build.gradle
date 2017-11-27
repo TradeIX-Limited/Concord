@@ -170,7 +170,7 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
     }
     node { //SUPPLIER_2
-        name "O=General Electric,L=Boston,C=US"
+        name "O=Fake Supplier,L=London,C=GB"
         advertisedServices = []
         p2pPort 10013
         rpcPort 10014
