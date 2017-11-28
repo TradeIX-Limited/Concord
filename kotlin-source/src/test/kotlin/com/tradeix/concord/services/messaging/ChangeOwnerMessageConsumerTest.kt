@@ -6,12 +6,15 @@ import com.google.gson.JsonSyntaxException
 import com.nhaarman.mockito_kotlin.*
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Envelope
+import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.TradeAssetOwnership
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
@@ -23,21 +26,16 @@ import net.corda.core.transactions.SignedTransaction
 import org.junit.Test
 import rx.Observable
 
-class IssuanceMessageConsumerTest {
+class ChangeOwnerMessageConsumerTest {
 
     @Test
     fun `Handle Delivery Successful Response`() {
-        val request = TradeAssetIssuanceRequestMessage(
+        val request = TradeAssetOwnershipRequestMessage(
                 correlationId = "corr1",
                 tryCount = 1,
-                externalId = "ext1",
-                buyer = null,
-                supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
-                value = null,
-                currency = null,
-                attachmentId = null)
+                externalIds = listOf("ext1"),
+                newOwner = null,
+                bidUniqueId = "uniqueId")
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -52,42 +50,38 @@ class IssuanceMessageConsumerTest {
         val mockCordaFuture = mock<CordaFuture<SignedTransaction>>()
         val mockSignedTransaction = mock<SignedTransaction>() //SignedTransaction(mockCoreTransaction, mockTransactionSignature)
         val mockSecureHash = mock<SecureHash>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
 
-        whenever(mockCordaRPCOps.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, request.toModel())).thenReturn(mockFlowHandle)
+        whenever(mockCordaRPCOps.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, request.toModel())).thenReturn(mockFlowHandle)
         whenever(mockFlowHandle.progress).thenReturn(mockFlowObservable)
         whenever(mockFlowHandle.returnValue).thenReturn(mockCordaFuture)
         whenever(mockCordaFuture.get()).thenReturn(mockSignedTransaction)
         whenever(mockSignedTransaction.id).thenReturn(mockSecureHash)
         whenever(mockSecureHash.toString()).thenReturn("abc")
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockResponder, times(1)).publish(any<TradeAssetResponseMessage>())
+        verify(mockResponder, times(1)).publish(any<TradeAssetOwnershipResponseMessage>())
         verify(mockResponder).publish(argForWhich { externalIds?.last() == "ext1" })
         verify(mockResponder).publish(argForWhich { correlationId == "corr1" })
         verify(mockResponder).publish(argForWhich { transactionId!! == "abc" })
         verify(mockResponder).publish(argForWhich { success })
         verify(mockResponder).publish(argForWhich { errorMessages == null })
+        verify(mockResponder).publish(argForWhich { bidUniqueId == "uniqueId" })
     }
 
     @Test
     fun `Handle serialization error within retry limit`(){
-        val request = TradeAssetIssuanceRequestMessage(
+        val request = TradeAssetOwnershipRequestMessage(
                 correlationId = "corr1",
                 tryCount = 1,
-                externalId = "ext1",
-                buyer = null,
-                supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
-                value = null,
-                currency = null,
-                attachmentId = null)
+                externalIds = listOf("ext1"),
+                newOwner = null,
+                bidUniqueId = null)
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -97,33 +91,28 @@ class IssuanceMessageConsumerTest {
         val requestString = serializer.toJson(request)
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
         val mockSerializer = mock<Gson>()
 
-        whenever(mockSerializer.fromJson(requestString, TradeAssetIssuanceRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
+        whenever(mockSerializer.fromJson(requestString, TradeAssetOwnershipRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
+        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetOwnershipRequestMessage>(), any<Boolean>())
     }
 
     @Test
     fun `Handle serialization error outside retry limit`(){
-        val request = TradeAssetIssuanceRequestMessage(
+        val request = TradeAssetOwnershipRequestMessage(
                 correlationId = "corr1",
                 tryCount = 4,
-                externalId = "ext1",
-                buyer = null,
-                supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
-                value = null,
-                currency = null,
-                attachmentId = null)
+                externalIds = listOf("ext1"),
+                newOwner = null,
+                bidUniqueId = null)
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
@@ -133,18 +122,18 @@ class IssuanceMessageConsumerTest {
         val requestString = serializer.toJson(request)
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
         val mockSerializer = mock<Gson>()
 
-        whenever(mockSerializer.fromJson(requestString, TradeAssetIssuanceRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
+        whenever(mockSerializer.fromJson(requestString, TradeAssetOwnershipRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
 
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
+        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetOwnershipRequestMessage>(), any<Boolean>())
     }
 }
