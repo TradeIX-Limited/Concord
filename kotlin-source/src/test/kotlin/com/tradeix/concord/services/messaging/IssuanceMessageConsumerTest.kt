@@ -21,6 +21,7 @@ import net.corda.core.messaging.FlowProgressHandle
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.transactions.SignedTransaction
 import org.junit.Test
+import org.mockito.plugins.MockMaker
 import rx.Observable
 
 class IssuanceMessageConsumerTest {
@@ -94,18 +95,15 @@ class IssuanceMessageConsumerTest {
                 .disableHtmlEscaping()
                 .create()
 
-        val requestString = serializer.toJson(request)
+        val requestString = "{\"blah\":\"corr1\",\"tryCount\":4,\"externalId\":\"ext1\",\"conductor\":\"C=GB,L=London,O=TradeIX\"}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
         val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
-        val mockSerializer = mock<Gson>()
 
-        whenever(mockSerializer.fromJson(requestString, TradeAssetIssuanceRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
-
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
@@ -130,19 +128,16 @@ class IssuanceMessageConsumerTest {
                 .disableHtmlEscaping()
                 .create()
 
-        val requestString = serializer.toJson(request)
+        val requestString = "{\"blah\":\"corr1\",\"tryCount\":4,\"externalId\":\"ext1\",\"conductor\":\"C=GB,L=London,O=TradeIX\"}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
         val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
-        val mockSerializer = mock<Gson>()
-
-        whenever(mockSerializer.fromJson(requestString, TradeAssetIssuanceRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
 
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
