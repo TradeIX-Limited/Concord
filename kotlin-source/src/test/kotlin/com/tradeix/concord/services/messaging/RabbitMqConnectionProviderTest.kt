@@ -14,6 +14,7 @@ class RabbitMqConnectionProviderTest {
         val mockConnectionFactory = mock<ConnectionFactory>()
         var mockConnection: Connection? = mock()
         whenever(mockConnectionFactory.newConnection()).thenReturn(mockConnection)
+        whenever(mockConnection!!.isOpen()).thenReturn(true)
         val connectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)
         val connection = connectionProvider.getConnection()
         assertEquals(mockConnection, connection)
