@@ -16,4 +16,8 @@ class RabbitMqConnectionProvider(private val connectionFactory: ConnectionFactor
             connection!!
         }
     }
+
+    fun resetForTesting(){
+        connection = null
+    }
 }

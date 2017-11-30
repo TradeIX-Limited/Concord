@@ -76,30 +76,20 @@ class ChangeOwnerMessageConsumerTest {
 
     @Test
     fun `Handle serialization error within retry limit`(){
-        val request = TradeAssetOwnershipRequestMessage(
-                correlationId = "corr1",
-                tryCount = 1,
-                externalIds = listOf("ext1"),
-                newOwner = null,
-                bidUniqueId = null)
-
-        val serializer = GsonBuilder()
-                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
-                .disableHtmlEscaping()
-                .create()
-
-        val requestString = serializer.toJson(request)
+        val requestString = "{\"correlationId\":\"corr1\",\"exxxxxxxxx\":[\"ext1\"],\"tryCount\":1}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
         val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
-        val mockSerializer = mock<Gson>()
 
-        whenever(mockSerializer.fromJson(requestString, TradeAssetOwnershipRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
+        val serializer = GsonBuilder()
+                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .disableHtmlEscaping()
+                .create()
 
-        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetOwnershipRequestMessage>(), any<Boolean>())
@@ -107,31 +97,20 @@ class ChangeOwnerMessageConsumerTest {
 
     @Test
     fun `Handle serialization error outside retry limit`(){
-        val request = TradeAssetOwnershipRequestMessage(
-                correlationId = "corr1",
-                tryCount = 4,
-                externalIds = listOf("ext1"),
-                newOwner = null,
-                bidUniqueId = null)
-
-        val serializer = GsonBuilder()
-                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
-                .disableHtmlEscaping()
-                .create()
-
-        val requestString = serializer.toJson(request)
+        val requestString = "{\"corrrrrrr\":\"corr1\",\"externalIds\":[\"ext1\"],\"tryCount\":4}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
         val mockResponder = mock<RabbitMqProducer<TradeAssetOwnershipResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
-        val mockSerializer = mock<Gson>()
+        val serializer = GsonBuilder()
+                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .disableHtmlEscaping()
+                .create()
 
-        whenever(mockSerializer.fromJson(requestString, TradeAssetOwnershipRequestMessage::class.java)).thenThrow(JsonSyntaxException("Oh Dear"))
 
-
-        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, mockSerializer)
+        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetOwnershipRequestMessage>(), any<Boolean>())

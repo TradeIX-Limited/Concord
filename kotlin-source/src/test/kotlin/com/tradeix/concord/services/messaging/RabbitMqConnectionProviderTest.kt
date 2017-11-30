@@ -18,6 +18,7 @@ class RabbitMqConnectionProviderTest {
         val connectionProvider = RabbitMqConnectionProvider(mockConnectionFactory)
         val connection = connectionProvider.getConnection()
         assertEquals(mockConnection, connection)
+        connectionProvider.resetForTesting()
     }
 }
 
@@ -34,5 +35,6 @@ class RabbitMqStaticConnectionProviderTest {
 
         val secondConnection = connectionProvider.getConnection()
         assertEquals(mockConnection, secondConnection)
+        connectionProvider.resetForTesting()
     }
 }
