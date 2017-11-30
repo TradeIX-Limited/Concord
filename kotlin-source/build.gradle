@@ -195,6 +195,32 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         ]
         rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
     }
+    node { //SUPPLIER_3
+        name "O=TradeIXTestSupplier1,L=London,C=GB"
+        advertisedServices = []
+        p2pPort 10019
+        rpcPort 10020
+        webPort 10021
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
+    node { //SUPPLIER_4
+        name "O=TradeIXTestSupplier2,L=London,C=GB"
+        advertisedServices = []
+        p2pPort 10022
+        rpcPort 10023
+        webPort 10024
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "net.corda:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+    }
 }
 
 // TODO: Make into gradle plugins without any references to Jython
