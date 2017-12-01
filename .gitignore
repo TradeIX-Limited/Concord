@@ -58,7 +58,7 @@ lib/dokka.jar
 # IntelliJ
 /out/
 /java-source/out/
-/kotlin-source/out/
+/tradeix-concord/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -75,4 +75,4 @@ crashlytics-build.properties
 docs/virtualenv/
 
 # node_modules
-/kotlin-source/src/main/resources/cordax/node_modules
+/node_modules/
