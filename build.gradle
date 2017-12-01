@@ -108,6 +108,8 @@ task copyTixIntegrationConfiguration(dependsOn: []){
     }
 }
 
+copyTixIntegrationConfiguration.shouldRunAfter build
+
 task integrationTest(type: Test, dependsOn: []) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
