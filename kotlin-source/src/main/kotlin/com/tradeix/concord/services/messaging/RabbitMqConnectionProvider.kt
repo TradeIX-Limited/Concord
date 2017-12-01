@@ -18,6 +18,10 @@ class RabbitMqConnectionProvider(private val connectionFactory: ConnectionFactor
     }
 
     fun resetForTesting(){
+        if(connection != null && connection!!.isOpen()){
+            connection!!.close()
+        }
+
         connection = null
     }
 }
