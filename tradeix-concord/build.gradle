@@ -238,7 +238,7 @@ task generateFlowDiagram(type: JavaExec) {
     main = "net.sourceforge.plantuml.Run"
     args = [
             "-tsvg",
-            "-output", "../kotlin-source/build/doc",
+            "-output", "../tradeix-concord/build/doc",
             "-exclude", "inc_*",
             "../doc/*.plantuml"
     ]

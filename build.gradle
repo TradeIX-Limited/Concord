@@ -94,17 +94,17 @@ task copyTixIntegrationConfiguration(dependsOn: []){
 
     project.copy {
         from "./tix.integration.conf"
-        into "kotlin-source/src/test/resources"
+        into "tradeix-concord/src/test/resources"
     }
 
     project.copy {
         from "./tix.test.conf"
-        into "kotlin-source/src/test/resources"
+        into "tradeix-concord/src/test/resources"
     }
 
     project.copy {
         from "./tix.integration.conf"
-        into "kotlin-source/src/main/resources"
+        into "tradeix-concord/src/main/resources"
     }
 }
 
