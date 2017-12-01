@@ -1,0 +1,32 @@
+<div fxLayout="column">
+  <div class="app-padding" fxFlex>
+    <h2>Trade Assets</h2>
+    <h4>Participating as {{name?.organizationName}}</h4>
+  </div>
+  <div class="app-padding" fxFlex>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Buyer</th>
+          <th>Supplier</th>
+          <th>Owner</th>
+          <th>Status</th>
+          <th class="align-right">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let state of states">
+          <tr>
+            <td>{{state.linearId.externalId}}</td>
+            <td>{{getName(state.buyer).organizationName}}</td>
+            <td>{{getName(state.supplier).organizationName}}</td>
+            <td>{{getName(state.owner).organizationName}}</td>
+            <td>{{state.tradeAsset.status}}</td>
+            <td class="align-right">{{state.tradeAsset.amount}}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
