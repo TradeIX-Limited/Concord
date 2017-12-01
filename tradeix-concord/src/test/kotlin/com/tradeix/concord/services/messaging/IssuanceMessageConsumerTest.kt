@@ -77,8 +77,8 @@ class IssuanceMessageConsumerTest {
     }
 
     @Test
-    fun `Handle serialization error within retry limit`(){
-        val request = TradeAssetIssuanceRequestMessage(
+    fun `Handle serialization error within retry limit`() {
+        TradeAssetIssuanceRequestMessage(
                 correlationId = "corr1",
                 tryCount = 1,
                 externalId = "ext1",
@@ -106,12 +106,12 @@ class IssuanceMessageConsumerTest {
         val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
+        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any())
     }
 
     @Test
-    fun `Handle serialization error outside retry limit`(){
-        val request = TradeAssetIssuanceRequestMessage(
+    fun `Handle serialization error outside retry limit`() {
+        TradeAssetIssuanceRequestMessage(
                 correlationId = "corr1",
                 tryCount = 4,
                 externalId = "ext1",

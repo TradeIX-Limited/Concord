@@ -73,7 +73,7 @@ class TradeAssetOwnershipFlowTests : AbstractFlowTest() {
     @Test
     fun `Ownership flow initiated by the buyer fails because they're not the owner`() {
         issueTradeAssets(STATUS_INVOICE)
-        val exception = assertFailsWith<FlowVerificationException> {
+        assertFailsWith<FlowVerificationException> {
             changeTradeAssetOwner(network, buyer.node, TradeAssetOwnershipFlowModel(
                     externalIds = EXTERNAL_IDS,
                     newOwner = funder.name

@@ -8,7 +8,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="C:\JDK\jre" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <module name="kotlin-source_test" />
+    <module name="tradeix-concord_test" />
     <envs />
     <method />
   </configuration>
