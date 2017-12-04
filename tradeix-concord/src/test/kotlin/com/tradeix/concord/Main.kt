@@ -14,17 +14,15 @@ class Main {
         private val USER = User("user1", "test", permissions = setOf())
 
         // Nodes
-        private val NOTARY = CordaX500Name("R3Net", "London", "GB")
+        private val NOTARY = CordaX500Name("Controller", "London", "GB")
         private val CONDUCTOR = CordaX500Name("TradeIX", "London", "GB")
 
-        private val BUYER_1 = CordaX500Name("Exxon Mobil", "Irving", "US")
-        private val BUYER_2 = CordaX500Name("Boeing", "Chicago", "US")
-
-        private val SUPPLIER_1 = CordaX500Name("Royal Dutch Shell", "The Hague", "NL")
-        private val SUPPLIER_2 = CordaX500Name("General Electric", "Boston", "US")
-
-        private val FUNDER_1 = CordaX500Name("BNY Mellon", "New York", "US")
-        private val FUNDER_2 = CordaX500Name("JP Morgan Chase", "New York", "US")
+        private val TEST_NODE_1 = CordaX500Name("TradeIXFakeSupplier", "London", "GB")
+        private val TEST_NODE_4 = CordaX500Name("TradeIXTestSupplier", "London", "GB")
+        private val TEST_NODE_2 = CordaX500Name("TradeIXTestSupplier1", "London", "GB")
+        private val TEST_NODE_3 = CordaX500Name("TradeIXTestSupplier2", "London", "GB")
+        private val TEST_NODE_5 = CordaX500Name("TradeIXTestFunder", "London", "GB")
+        private val TEST_NODE_6 = CordaX500Name("TradeIXTestBuyer", "London", "GB")
 
 
         @JvmStatic
@@ -38,12 +36,12 @@ class Main {
 
                 val peerNodes = listOf(
                         CONDUCTOR,
-                        BUYER_1,
-                        BUYER_2,
-                        SUPPLIER_1,
-                        SUPPLIER_2,
-                        FUNDER_1,
-                        FUNDER_2
+                        TEST_NODE_1,
+                        TEST_NODE_2,
+                        TEST_NODE_3,
+                        TEST_NODE_4,
+                        TEST_NODE_5,
+                        TEST_NODE_6
                 )
 
                 peerNodes.forEach {
