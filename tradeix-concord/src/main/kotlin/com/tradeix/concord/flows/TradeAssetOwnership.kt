@@ -112,7 +112,7 @@ object TradeAssetOwnership {
                     .map { initiateFlow(it) }
 
             // TODO : Remove this. It's a demo-day hack. Fake Supplier never sign for change of ownership.
-            if (outputStates.map { it.supplier }.any { it.name.organisation == "Fake Supplier" }) {
+            if (outputStates.map { it.supplier }.any { it.name.organisation == "TradeIXFakeSupplier" }) {
                 throw FlowException("Supplier failed to sign.")
             }
 
