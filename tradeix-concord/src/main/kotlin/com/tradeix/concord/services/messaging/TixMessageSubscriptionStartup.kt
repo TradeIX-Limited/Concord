@@ -18,8 +18,10 @@ import net.corda.core.utilities.loggerFor
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
     init {
-        println("Reached TixMessageSub")
-        if (services.nodeInfo().legalIdentities.single().name.organisation == "TradeIX") {
+        val legalEntity = services.nodeInfo().legalIdentities.single()
+        log.info("Reached TixMessageSub in ${legalEntity.name.organisation}")
+
+        if (legalEntity.name.organisation == "TradeIX") {
             TixMessageSubscriptionStartup.initializeQueues(services)
         }
     }
@@ -42,13 +44,16 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
                 val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
+                log.info("Starting Issuance Rabbit Subscription")
                 IssuanceFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
+                log.info("Starting Change of owner Rabbit Subscription")
                 ChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
             } catch (ex: Throwable) {
+                log.error("Exception caught when subscribing to Rabbit queues")
                 log.error(ex.message)
                 println(ex)
             }
