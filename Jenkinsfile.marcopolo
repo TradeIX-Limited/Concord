@@ -2,7 +2,8 @@ pipeline {
     agent any
 
 	environment {
-		RABBIT_LOGIN = credentials('RabbitUserDev')		
+		RABBIT_LOGIN = credentials('RabbitUserDemo')
+		BUILD_DATE = sh(returnStdout: true, script: "date +%F-%H-%M-%S")
 	}
 
 	stages {
@@ -10,10 +11,11 @@ pipeline {
 			steps {
 				timeout(time: 10, unit: 'MINUTES') {
 					// Load system-specific environment variables
-					load "/etc/tradeix/build-environment.dev.groovy"					
+					load "/etc/tradeix/build-environment.demo.groovy"
 
 					// Set deployment scripts as executable
 					sh script: 'chmod a+x ./Deployment/*.sh'
+					sh 'Deployment/1-init.sh'
 				}
 			}
 		}
