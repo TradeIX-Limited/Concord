@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+if [ "${buildenv}" == "demo" ]; then
+    tagname=marcopolo-release-$BUILD_DATE
+    git tag -a $tagname
+    git push origin $tagname
+fi
 
 cp tix.integration.template.conf tix.integration.conf
     sed -i -- "s|{{Username}}|${RABBIT_LOGIN_USR}|g" tix.integration.conf
