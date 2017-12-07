@@ -91,20 +91,14 @@ dependencies {
 }
 
 task copyTixIntegrationConfiguration(dependsOn: []){
-
-    project.copy {
-        from "./tix.integration.conf"
-        into "tradeix-concord/src/test/resources"
-    }
-
     project.copy {
         from "./tix.test.conf"
         into "tradeix-concord/src/test/resources"
     }
 
     project.copy {
-        from "./tix.integration.conf"
-        into "tradeix-concord/src/main/resources"
+        from "./tix.test.conf"
+        into "tradeix-concord"
     }
 }
 

@@ -3,17 +3,14 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
-import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.services.messaging.subscribers.ChangeOwnerFlowQueuesSubscriber
 import com.tradeix.concord.services.messaging.subscribers.IssuanceFlowQueuesSubscriber
 import com.typesafe.config.ConfigFactory
-import com.typesafe.config.ConfigParseOptions
-import com.typesafe.config.ConfigRenderOptions
 import net.corda.core.messaging.CordaRPCOps
+import net.corda.core.utilities.loggerFor
 import net.corda.nodeapi.config.parseAs
 import org.slf4j.Logger
-import net.corda.core.utilities.loggerFor
+import java.io.File
 
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
@@ -29,9 +26,12 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
     companion object {
         protected  val log: Logger = loggerFor<TixMessageSubscriptionStartup>()
         private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
-        val  defaultConfig = ConfigFactory.parseResources("tix.integration.conf", ConfigParseOptions.defaults().setAllowMissing(false))
+
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
+                val currentPath = System.getProperty("user.dir")
+                log.info("The current path is ${currentPath}")
+                val  defaultConfig = ConfigFactory.parseFile(File("${currentPath}/tix.integration.conf"))
                 val serializer = Gson()
                 val connectionConfig = defaultConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()
                 val connectionFactory = ConnectionFactory()

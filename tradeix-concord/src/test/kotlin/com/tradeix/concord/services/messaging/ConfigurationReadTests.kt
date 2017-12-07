@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigParseOptions
 import com.typesafe.config.ConfigRenderOptions
 import net.corda.nodeapi.config.parseAs
 import org.junit.Test
+import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -53,5 +54,18 @@ class ConfigurationReadTests{
         assertTrue { consumerConfiguration.durableExchange }
         assertEquals(5, consumerConfiguration.maxRetries)
         assertNull(consumerConfiguration.exchangeArguments)
+    }
+
+    @Test
+    fun `Read at runtime`(){
+        val path = System.getProperty("user.dir")
+        println("The current path is ${path}")
+        val runtimeConfig = ConfigFactory.parseFile(File("${path}/tix.test.conf"))
+        val connectionConfig = runtimeConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()
+        assertEquals("guest", connectionConfig.userName)
+        assertEquals("guest", connectionConfig.password)
+        assertEquals("localhost", connectionConfig.hostName)
+        assertEquals(5672, connectionConfig.portNumber)
+        assertEquals("/", connectionConfig.virtualHost)
     }
 }
