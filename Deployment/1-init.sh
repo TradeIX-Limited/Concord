@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ "${buildenv}" == "demo" ]; then
-    tagname=marcopolo-release-$BUILD_DATE
+    tagname=${release_name}-${BUILD_DATE%$'\n'}
     git tag -a $tagname -m "Tagged by Jenkins from Build Num: ${BUILD_NUMBER}"
     git push origin $tagname
 fi

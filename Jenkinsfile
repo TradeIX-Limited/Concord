@@ -2,7 +2,8 @@ pipeline {
     agent any
 
 	environment {
-		RABBIT_LOGIN = credentials('RabbitUserDev')		
+		RABBIT_LOGIN = credentials('RabbitUserDev')
+		BUILD_DATE = sh(returnStdout: true, script: "date +%F-%H-%M-%S")
 	}
 
 	stages {
@@ -14,6 +15,7 @@ pipeline {
 
 					// Set deployment scripts as executable
 					sh script: 'chmod a+x ./Deployment/*.sh'
+					sh 'Deployment/1-init.sh'
 				}
 			}
 		}
@@ -25,5 +27,13 @@ pipeline {
 				}
 			}
 		}
+
+		stage('Deploy') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    sh 'Deployment/3-deploy.sh'
+                }
+            }
+        }
 	}
 }
