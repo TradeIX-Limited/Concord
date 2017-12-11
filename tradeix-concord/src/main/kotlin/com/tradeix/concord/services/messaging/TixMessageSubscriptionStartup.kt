@@ -30,7 +30,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
                 val currentPath = System.getProperty("user.dir")
-                log.info("The current path is ${currentPath}")
+                log.debug("The current path is ${currentPath}")
                 val  defaultConfig = ConfigFactory.parseFile(File("${currentPath}/tix.integration.conf"))
                 val serializer = Gson()
                 val connectionConfig = defaultConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()

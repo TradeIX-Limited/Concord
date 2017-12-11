@@ -59,7 +59,6 @@ class ConfigurationReadTests{
     @Test
     fun `Read at runtime`(){
         val path = System.getProperty("user.dir")
-        println("The current path is ${path}")
         val runtimeConfig = ConfigFactory.parseFile(File("${path}/tix.test.conf"))
         val connectionConfig = runtimeConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()
         assertEquals("guest", connectionConfig.userName)

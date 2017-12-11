@@ -35,13 +35,13 @@ class Main {
                         advertisedServices = setOf(ServiceInfo(ValidatingNotaryService.type)))
 
                 val peerNodes = listOf(
-                        CONDUCTOR
-//                        TEST_NODE_1,
-//                        TEST_NODE_2,
-//                        TEST_NODE_3,
-//                        TEST_NODE_4,
-//                        TEST_NODE_5,
-//                        TEST_NODE_6
+                        CONDUCTOR,
+                        TEST_NODE_1,
+                        TEST_NODE_2,
+                        TEST_NODE_3,
+                        TEST_NODE_4,
+                        TEST_NODE_5,
+                        TEST_NODE_6
                 )
 
                 peerNodes.forEach {
