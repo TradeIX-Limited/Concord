@@ -39,5 +39,5 @@ webAddress="$CORDA_HOST:$CORDA_PORT_WEB"
 EOF
 
 chown corda:corda node.conf
-exec /sbin/setuser corda java $JAVA_OPTIONS -Dcapsule.jvm.args="$CAPSULE_ARGS" -jar /opt/corda/corda.jar >>/opt/corda/logs/corda-output.log 2>&1
-exec /sbin/setuser corda java $JAVA_OPTIONS -Dcapsule.jvm.args="$CAPSULE_ARGS" -jar /opt/corda/corda-webserver.jar >>/opt/corda/logs/corda-web-output.log 2>&1
+exec /sbin/setuser corda java $JAVA_OPTIONS -Dcapsule.jvm.args="$CAPSULE_ARGS" -jar /opt/corda/corda.jar >>/opt/corda/logs/corda-output.log 2>&1 &
+exec /sbin/setuser corda java $JAVA_OPTIONS -jar /opt/corda/corda-webserver.jar >>/opt/corda/logs/corda-web-output.log 2>&1 &

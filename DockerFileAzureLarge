@@ -30,7 +30,7 @@ RUN groupadd corda \
  && useradd -c "Corda user" -g corda -m -s /bin/bash corda
 
 # Create /opt/corda directory
-RUN mkdir -p /opt/corda/plugins && mkdir -p /opt/corda/logs
+RUN mkdir -p /opt/corda/plugins && mkdir -p /opt/corda/logs && mkdir -p /opt/corda/log/web
 
 # Copy corda jars
 ADD https://dl.bintray.com/r3/corda/net/corda/corda/$version/corda-$version.jar /opt/corda/corda.jar
