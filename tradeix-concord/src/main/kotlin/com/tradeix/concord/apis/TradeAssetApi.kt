@@ -18,6 +18,9 @@ import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.messaging.vaultQueryBy
+import net.corda.core.node.services.Vault
+import net.corda.core.node.services.vault.PageSpecification
+import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -27,12 +30,41 @@ import javax.ws.rs.core.Response
 class TradeAssetApi(val services: CordaRPCOps) {
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    fun getTradeAsset(@QueryParam(value = "externalId") externalId: String): Response {
+        if(externalId.isEmpty() || externalId.isBlank()) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(IllegalArgumentException("externalId is required to query a trade asset state"))
+                    .build()
+        }
+
+        val criteria = QueryCriteria.LinearStateQueryCriteria(
+                externalId = listOf(externalId),
+                status = Vault.StateStatus.ALL)
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(services.vaultQueryBy<TradeAssetState>(criteria = criteria).states)
+                .build()
+    }
+
+    @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getAllTradeAssets(): Response = Response
-            .status(Response.Status.OK)
-            .entity(services.vaultQueryBy<TradeAssetState>().states)
-            .build()
+    fun getAllTradeAssets(
+            @QueryParam(value = "page") page: Int,
+            @QueryParam(value = "count") count: Int): Response {
+
+        val pageNumber = if (page == 0) 1 else page
+        val pageSize = if (count == 0) 50 else count
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(services.vaultQueryBy<TradeAssetState>(
+                        paging = PageSpecification(pageNumber, pageSize)).states)
+                .build()
+    }
 
     @POST
     @Path("issue")
