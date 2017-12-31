@@ -1,0 +1,59 @@
+# TODO: The volumes are hardcoded with my dev-environment path. This will be removed in the next release
+version: "3.3"
+services:
+  tradeix:
+    image: concord:1.0
+    ports:
+      - "10005:10005"
+      - "10006:10006"
+      - "10007:10007"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIX:/mnt/vol
+  tradeixfakesupplier:
+    image: concord:1.0
+    ports:
+      - "10008:10008"
+      - "10009:10009"
+      - "10010:10010"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXFakeSupplier:/mnt/vol
+  tradeixtestbuyer:
+    image: concord:1.0
+    ports:
+      - "10023:10023"
+      - "10024:10024"
+      - "10025:10025"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestBuyer:/mnt/vol
+  tradeixtestfunder:
+    image: concord:1.0
+    ports:
+      - "10020:10020"
+      - "10021:10021"
+      - "10022:10022"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestFunder:/mnt/vol
+  tradeixtestsupplier:
+    image: concord:1.0
+    ports:
+      - "10011:10011"
+      - "10012:10012"
+      - "10013:10013"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier:/mnt/vol
+  tradeixtestsupplier1:
+    image: concord:1.0
+    ports:
+      - "10014:10014"
+      - "10015:10015"
+      - "10016:10016"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier1:/mnt/vol
+  tradeixtestsupplier2:
+    image: concord:1.0
+    ports:
+      - "10017:10017"
+      - "10018:10018"
+      - "10019:10019"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier2:/mnt/vol
