@@ -126,7 +126,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-task buildImage(type: DockerBuildImage, dependsOn: ["tradeix-concord:deployDevNodes"]) {
+task buildImage(type: DockerBuildImage, dependsOn: ["tradeix-concord:deployNodes"]) {
     inputDir = project.file(".//")
     tag = 'concord:1.0'
 }
