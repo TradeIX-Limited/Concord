@@ -4,9 +4,9 @@ import { Config } from "../../app/config/config";
 
 @Injectable()
 export class BaseService {
-  private readonly config: Config;
+  private readonly config: Config = null;
   private useOrigin: boolean = true;
-  private apiUrl: string;
+  private apiUrl: string = null;
 
   public constructor(protected readonly http: Http) {
     this.config = new Config(http);

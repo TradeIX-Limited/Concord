@@ -34,32 +34,29 @@ h1,
 h2,
 h3,
 h4,
-h5 h6 {
+h5,
+h6 {
     margin: 0;
     font-weight: 400;
 }
 
 hr {
     border: none;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-
     thead {
-        border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-
+        background: rgba(255, 255, 255, 0.1);
         tr {
             background: transparent;
         }
     }
-
     th {
         text-align: left;
     }
-
     th,
     td {
         padding: 20px 10px;
@@ -68,12 +65,37 @@ table {
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-
     tr:nth-child(even) {
         background: rgba(255, 255, 255, 0.066)
     }
-
     tr:nth-child(odd) {
         background: rgba(255, 255, 255, 0.033)
     }
+}
+
+.mat-tab-body-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}
+
+.mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.scroll-container {
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    background: rgba(255, 255, 255, 0.15);
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00BCD4;
 }

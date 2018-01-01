@@ -2,9 +2,9 @@
 
 @include mat-core();
 
-$primary: mat-palette($mat-blue);
-$accent:  mat-palette($mat-light-blue);
-$warn:    mat-palette($mat-red);
-$theme:   mat-dark-theme($primary, $accent, $warn);
+$concord-app-primary: mat-palette($mat-teal, 900);
+$concord-app-accent:  mat-palette($mat-cyan);
+$concord-app-warn:    mat-palette($mat-red);
+$concord-app-theme:   mat-dark-theme($concord-app-primary, $concord-app-accent, $concord-app-warn);
 
-@include angular-material-theme($theme);
+@include angular-material-theme($concord-app-theme);

@@ -1,32 +1,45 @@
-<div fxLayout="column">
-  <div class="app-padding" fxFlex>
-    <h2>Trade Assets</h2>
-    <h4>Participating as {{name?.organizationName}}</h4>
-  </div>
-  <div class="app-padding" fxFlex>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Buyer</th>
-          <th>Supplier</th>
-          <th>Owner</th>
-          <th>Status</th>
-          <th class="align-right">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let state of states">
-          <tr>
-            <td>{{state.linearId.externalId}}</td>
-            <td>{{getName(state.buyer).organizationName}}</td>
-            <td>{{getName(state.supplier).organizationName}}</td>
-            <td>{{getName(state.owner).organizationName}}</td>
-            <td>{{state.tradeAsset.status}}</td>
-            <td class="align-right">{{state.tradeAsset.amount}}</td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </div>
-</div>
+<mat-tab-group color="accent">
+  <mat-tab label="Invoices">
+    <div [hidden]="visibleState !== 'full'">
+      <mat-paginator #invoicePaginator (page)="onPage($event)"></mat-paginator>
+      <div class="scroll-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Buyer</th>
+              <th>Supplier</th>
+              <th>Owner</th>
+              <th>Status</th>
+              <th class="align-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let state of states">
+              <tr>
+                <td>
+                  <a (click)="onOpenDrawer(state.linearId.externalId)" href="#">{{state.linearId.externalId}}</a>
+                </td>
+                <td>{{getName(state.buyer).organizationName}}</td>
+                <td>{{getName(state.supplier).organizationName}}</td>
+                <td>{{getName(state.owner).organizationName}}</td>
+                <td>{{state.tradeAsset.status}}</td>
+                <td class="align-right">{{state.tradeAsset.amount}}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div [hidden]="visibleState !== 'empty'">
+      <h2 class="message">Nothing to see here</h2>
+    </div>
+    <div [hidden]="visibleState !== 'loading'">
+      <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+      <h2 class="message">Loading</h2>
+    </div>
+  </mat-tab>
+  <mat-tab label="Purchase Orders">
+    <mat-paginator [pageSize]="50"></mat-paginator>
+  </mat-tab>
+</mat-tab-group>

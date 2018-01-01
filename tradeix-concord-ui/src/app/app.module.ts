@@ -21,7 +21,10 @@ import {
   MatInputModule,
   MatFormFieldModule,
   MatProgressSpinnerModule,
-  MatChipsModule
+  MatChipsModule,
+  MatTabsModule,
+  MatPaginatorModule,
+  MatProgressBarModule
 } from "@angular/material";
 
 import { RootComponent } from "./root/root.component";
@@ -29,11 +32,14 @@ import { MainComponent } from "./main/main.component";
 
 import { NodeService } from "../api/domain/nodes/node.service";
 import { TradeAssetService } from "api/domain/trade-assets/trade-asset.service";
+import { HistoryService } from "api/domain/history/history.service";
+import { HistoryComponent } from "./history/history.component";
 
 @NgModule({
   declarations: [
     RootComponent,
-    MainComponent
+    MainComponent,
+    HistoryComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -54,9 +60,12 @@ import { TradeAssetService } from "api/domain/trade-assets/trade-asset.service";
     MatInputModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTabsModule,
+    MatPaginatorModule,
+    MatProgressBarModule
   ],
-  providers: [NodeService, TradeAssetService],
+  providers: [NodeService, TradeAssetService, HistoryService],
   bootstrap: [RootComponent],
   entryComponents: []
 })

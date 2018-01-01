@@ -25,6 +25,7 @@ import net.corda.core.utilities.getOrThrow
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
 
 @Path("tradeassets")
 class TradeAssetApi(val services: CordaRPCOps) {
@@ -32,7 +33,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun getTradeAsset(@QueryParam(value = "externalId") externalId: String): Response {
-        if(externalId.isEmpty() || externalId.isBlank()) {
+        if (externalId.isEmpty() || externalId.isBlank()) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(IllegalArgumentException("externalId is required to query a trade asset state"))
@@ -50,6 +51,33 @@ class TradeAssetApi(val services: CordaRPCOps) {
     }
 
     @GET
+    @Path("count")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun test(): Response {
+        return Response
+                .status(Response.Status.OK)
+                .entity(mapOf("count" to services.vaultCountBy<TradeAssetState>()))
+                .build()
+    }
+
+    @GET
+    @Path("hash")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun foo(): Response {
+        return try {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(mapOf("hash" to services.vaultQueryBy<TradeAssetState>().states.last().ref.txhash))
+                    .build()
+        } catch (ex: Throwable) {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(mapOf("hash" to null))
+                    .build()
+        }
+    }
+
+    @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAllTradeAssets(
@@ -62,7 +90,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
         return Response
                 .status(Response.Status.OK)
                 .entity(services.vaultQueryBy<TradeAssetState>(
-                        paging = PageSpecification(pageNumber, pageSize)).states)
+                        paging = PageSpecification(pageNumber, pageSize)).states.asReversed())
                 .build()
     }
 
