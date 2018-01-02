@@ -589,29 +589,32 @@ var MainComponent = /** @class */ (function () {
         this.historyService = historyService;
         this.states = null;
         this.name = null;
-        this.pageNumber = 1;
-        this.pageSize = 50;
         this.hash = undefined;
         this.visibleState = "loading";
+        this.pageNumber = 1;
+        this.pageSize = 50;
         this.update();
     }
     MainComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.invoicePaginator.pageSize = this.pageSize;
-        window
-            .setInterval(function () { return _this.update(); }, 5000);
+        window.setInterval(function () { return _this.update(); }, 5000);
     };
     MainComponent.prototype.update = function (forceUpdate) {
         var _this = this;
         if (forceUpdate === void 0) { forceUpdate = false; }
         try {
-            this.tradeAssetService.getLatestTradeAssetHash().subscribe(function (hash) {
+            this.tradeAssetService
+                .getLatestTradeAssetHash()
+                .subscribe(function (hash) {
                 if (hash !== _this.hash) {
                     _this.hash = hash;
                     forceUpdate = true;
                 }
                 if (forceUpdate) {
-                    _this.tradeAssetService.getTradeAssetCount().subscribe(function (count) {
+                    _this.tradeAssetService
+                        .getTradeAssetCount()
+                        .subscribe(function (count) {
                         _this.invoicePaginator.length = count;
                         if (count === 0) {
                             _this.visibleState = "empty";
@@ -626,15 +629,18 @@ var MainComponent = /** @class */ (function () {
                 }
             });
         }
-        catch (e) { }
+        catch (e) {
+            console.error(e);
+        }
     };
     MainComponent.prototype.getName = function (value) {
         return __WEBPACK_IMPORTED_MODULE_1_api_domain_shared_corda__["a" /* CordaX500Name */].parse(value);
     };
     MainComponent.prototype.onPage = function (event) {
         var _this = this;
-        clearInterval(this.pageInterval);
-        this.pageInterval = window.setInterval(function () {
+        window.clearTimeout(this.pageTimeout);
+        this.pageTimeout = window.setTimeout(function () {
+            _this.visibleState = "loading";
             _this.pageNumber = event.pageIndex + 1;
             _this.update(true);
         }, 1000);

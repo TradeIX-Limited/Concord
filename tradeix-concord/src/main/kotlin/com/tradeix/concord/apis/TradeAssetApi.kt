@@ -53,7 +53,7 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @GET
     @Path("count")
     @Produces(MediaType.APPLICATION_JSON)
-    fun test(): Response {
+    fun getTradeAssetCount(): Response {
         return Response
                 .status(Response.Status.OK)
                 .entity(mapOf("count" to services.vaultCountBy<TradeAssetState>()))
@@ -63,11 +63,12 @@ class TradeAssetApi(val services: CordaRPCOps) {
     @GET
     @Path("hash")
     @Produces(MediaType.APPLICATION_JSON)
-    fun foo(): Response {
+    fun getMostRecentTradeAssetHash(): Response {
         return try {
             Response
                     .status(Response.Status.OK)
-                    .entity(mapOf("hash" to services.vaultQueryBy<TradeAssetState>().states.last().ref.txhash))
+                    .entity(mapOf("hash" to services.vaultQueryBy<TradeAssetState>(
+                            paging = PageSpecification(1, Int.MAX_VALUE)).states.last().ref.txhash))
                     .build()
         } catch (ex: Throwable) {
             Response
