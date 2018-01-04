@@ -1,0 +1,36 @@
+<div *ngFor="let item of items; let i = index">
+  <br />
+  <table>
+    <thead>
+      <tr>
+        <th colspan="2">Asset Version {{i + 1}}</th>
+      </tr>
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Buyer</td>
+        <td>{{getName(item.state.data.buyer).organizationName}}</td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td>{{getName(item.state.data.supplier).organizationName}}</td>
+      </tr>
+      <tr>
+        <td>Owner</td>
+        <td>{{getName(item.state.data.owner).organizationName}}</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>{{item.state.data.tradeAsset.status}}</td>
+      </tr>
+      <tr>
+        <td>Amount</td>
+        <td>{{item.state.data.tradeAsset.amount}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
