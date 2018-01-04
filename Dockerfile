@@ -14,11 +14,12 @@ RUN mkdir /opt/corda
 RUN mkdir /opt/corda/plugins
 RUN mkdir /opt/corda/certificates
 RUN mkdir /opt/corda/logs
-#ADD http://jcenter.bintray.com/net/corda/corda/1.0.0/corda-1.0.0.jar /opt/corda/corda.jar
+ADD http://jcenter.bintray.com/net/corda/corda/1.0.0/corda-1.0.0.jar /opt/corda/corda.jar
+ADD http://jcenter.bintray.com/net/corda/corda-webserver/1.0.0/corda-webserver-1.0.0.jar /opt/corda/corda-webserver.jar
 # Copy corda jars
 COPY tradeix-concord/build/nodes/TradeIX/plugins/tradeix-concord-0.1.jar /opt/corda/plugins/
-COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/
-COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/
+#COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/
+#COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/
 
 VOLUME /mnt/vol
 RUN ln -s /mnt/vol/node.conf /opt/corda/node.conf

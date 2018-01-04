@@ -3,64 +3,116 @@ version: "3.3"
 services:
   controller:
     image: concord:1.0
+    extra_hosts:
+    - "controller:127.0.0.1"
     ports:
       - "10002:10002"
       - "10003:10003"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/Controller:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/Controller:/mnt/vol
   tradeix:
     image: concord:1.0
+    extra_hosts:
+    - "tradeix:127.0.0.1"
     ports:
       - "10005:10005"
       - "10006:10006"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIX:/mnt/vol
+  tradeixweb:
+    image: concordweb:1.0
+    ports:
       - "10007:10007"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIX:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIX:/mnt/vol
   tradeixfakesupplier:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixfakesupplier:127.0.0.1"
     ports:
       - "10008:10008"
       - "10009:10009"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXFakeSupplier:/mnt/vol
+  tradeixfakesupplierweb:
+    image: concordweb:1.0
+    ports:
       - "10010:10010"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXFakeSupplier:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXFakeSupplier:/mnt/vol
   tradeixtestbuyer:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixtestbuyer:127.0.0.1"
     ports:
       - "10023:10023"
       - "10024:10024"
-      - "10025:10025"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestBuyer:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestBuyer:/mnt/vol
+  tradeixtestbuyerweb:
+     image: concordweb:1.0
+     ports:
+       - "10025:10025"
+     volumes:
+       - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestBuyer:/mnt/vol
+
   tradeixtestfunder:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixtestfunder:127.0.0.1"    
     ports:
       - "10020:10020"
       - "10021:10021"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestFunder:/mnt/vol
+  tradeixtestfunderweb:
+    image: concord:1.0
+    ports:
       - "10022:10022"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestFunder:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestFunder:/mnt/vol
   tradeixtestsupplier:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixtestsupplier:127.0.0.1"      
     ports:
       - "10011:10011"
       - "10012:10012"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier:/mnt/vol
+  tradeixtestsupplierweb:
+    image: concord:1.0
+    ports:
       - "10013:10013"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier:/mnt/vol
   tradeixtestsupplier1:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixtestsupplier1:127.0.0.1"      
     ports:
       - "10014:10014"
       - "10015:10015"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier1:/mnt/vol
+  tradeixtestsupplier1web:
+    image: concord:1.0
+    ports:
       - "10016:10016"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier1:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier1:/mnt/vol
   tradeixtestsupplier2:
     image: concord:1.0
+    extra_hosts:
+    - "tradeixtestsupplier2:127.0.0.1"       
     ports:
       - "10017:10017"
       - "10018:10018"
+    volumes:
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier2:/mnt/vol
+  tradeixtestsupplier2web:
+    image: concord:1.0
+    ports:
       - "10019:10019"
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/tradeix-concord/build/nodes/TradeIXTestSupplier2:/mnt/vol
+      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier2:/mnt/vol
