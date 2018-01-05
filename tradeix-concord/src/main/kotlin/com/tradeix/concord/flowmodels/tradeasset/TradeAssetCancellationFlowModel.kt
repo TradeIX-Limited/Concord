@@ -1,4 +1,4 @@
-package com.tradeix.concord.flowmodels
+package com.tradeix.concord.flowmodels.tradeasset
 
 import com.tradeix.concord.messages.SingleIdentityMessage
 

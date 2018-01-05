@@ -1,15 +1,15 @@
-package com.tradeix.concord.flows
+package com.tradeix.concord.flows.tradeasset
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
+import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
-import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetCancellationFlowModelValidator
+import com.tradeix.concord.validators.tradeasset.TradeAssetOwnershipFlowModelValidator
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
@@ -18,23 +18,20 @@ import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
-object TradeAssetCancellation {
+object TradeAssetOwnership {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val model: TradeAssetCancellationFlowModel) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetOwnershipFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
 
-            private val EX_BUYER_CANNOT_CANCEL_INVOICE =
-                    "Trade asset of status INVOICE cannot be cancelled by the buyer."
+            private val EX_CANNOT_CHANGE_OWNER =
+                    "Only the current owner or the conductor can change ownership of a trade asset."
 
-            private val EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER =
-                    "Trade asset of status PURCHASE_ORDER cannot be cancelled by the supplier."
-
-            object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on the given trade asset.")
+            object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new trade asset.")
             object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
             object SIGNING_TRANSACTION : ProgressTracker.Step("Signing transaction with our private key.")
-            object GATHERING_SIGNATURES : ProgressTracker.Step("Gathering the signature from the concerned parties.") {
+            object GATHERING_SIGNATURES : ProgressTracker.Step("Gathering the counterparty's signature.") {
                 override fun childProgressTracker() = CollectSignaturesFlow.tracker()
             }
 
@@ -56,37 +53,48 @@ object TradeAssetCancellation {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetCancellationFlowModelValidator(model)
+            val validator = TradeAssetOwnershipFlowModelValidator(model)
 
-            if(!validator.isValid) {
+            if (!validator.isValid) {
                 throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
 
-            val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
-                    serviceHub = serviceHub,
-                    linearId = model.getLinearId(),
-                    contractStateType = TradeAssetState::class.java)
+            val inputStates = model.getLinearIds().map {
+                VaultHelper.getStateAndRefByLinearId(
+                        serviceHub,
+                        it,
+                        TradeAssetState::class.java)
+            }
 
-            val inputState = inputStateAndRef.state.data
+            val outputStates = if (inputStates.isEmpty()) {
+                throw FlowException("No states found for ownership change.")
+            } else {
+                inputStates.map {
+                    it.state.data.copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
+                }
+            }
+
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
 
             val command = Command(
-                    value = TradeAssetContract.Commands.Cancel(),
-                    signers = FlowHelper.getPublicKeysFromParticipants(inputState.participants))
+                    value = TradeAssetContract.Commands.ChangeOwner(),
+                    signers = outputStates.first().participants.map { it.owningKey })
 
             val transactionBuilder = TransactionBuilder(notary)
-                    .addInputState(inputStateAndRef)
-                    .addCommand(command)
+
+            inputStates.map { transactionBuilder.addInputState(it) }
+            outputStates.map { transactionBuilder.addOutputState(it, TRADE_ASSET_CONTRACT_ID) }
+
+            transactionBuilder.addCommand(command)
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
-            verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), inputState)
+            inputStates.forEach { verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), it.state.data) }
             transactionBuilder.verify(serviceHub)
-
 
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
@@ -95,13 +103,22 @@ object TradeAssetCancellation {
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
             val requiredSignatureFlowSessions = listOf(
-                    inputState.owner,
-                    inputState.buyer,
-                    inputState.supplier,
-                    inputState.conductor)
+                    outputStates.first().owner,
+                    outputStates.first().buyer,
+                    outputStates.first().supplier,
+                    outputStates.first().conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
-                    .map { initiateFlow(it) }
+                    .map { initiateFlow(serviceHub.identityService.requireWellKnownPartyFromAnonymous(it)) }
+
+
+            // TODO : Remove this. It's a demo-day hack. Fake Supplier never sign for change of ownership.
+            if (outputStates
+                    .map { it.supplier }
+                    .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
+                    .any { it.name.organisation == "TradeIXFakeSupplier" }) {
+                throw FlowException("Supplier failed to sign.")
+            }
 
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
@@ -118,28 +135,27 @@ object TradeAssetCancellation {
         private fun verify(initiator: Party, state: TradeAssetState) {
             val errors = ArrayList<String>()
 
-            if(initiator == state.buyer && state.tradeAsset.status == TradeAsset.TradeAssetStatus.INVOICE) {
-                errors.add(EX_BUYER_CANNOT_CANCEL_INVOICE)
+            if (initiator != state.conductor && initiator != state.owner) {
+                errors.add(EX_CANNOT_CHANGE_OWNER)
             }
 
-            if(initiator == state.supplier && state.tradeAsset.status == TradeAsset.TradeAssetStatus.PURCHASE_ORDER) {
-                errors.add(EX_SUPPLIER_CANNOT_CANCEL_PURCHASE_ORDER)
-            }
-
-            if(!errors.isEmpty()) {
+            if (errors.isNotEmpty()) {
                 throw FlowVerificationException(verificationErrors = errors)
             }
         }
     }
 
     @InitiatedBy(InitiatorFlow::class)
-    class AcceptorFlow(val flowSession: FlowSession) : FlowLogic<SignedTransaction>() {
+    class AcceptorFlow(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
-            val signTransactionFlow = object : SignTransactionFlow(flowSession) {
+            val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
-//                    val output = stx.tx.outputs.single().data
-//                    "This must be a trade asset transaction." using (output is TradeAssetState)
+                    stx.tx.outputs.forEach {
+                        "This must be a trade asset transaction." using
+                                (it.data is TradeAssetState)
+                    }
+
                 }
             }
 

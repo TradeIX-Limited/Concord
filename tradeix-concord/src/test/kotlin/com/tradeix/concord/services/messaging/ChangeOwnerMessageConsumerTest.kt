@@ -1,18 +1,12 @@
 package com.tradeix.concord.services.messaging
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonSyntaxException
 import com.nhaarman.mockito_kotlin.*
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Envelope
-import com.tradeix.concord.contracts.TradeAssetContract
-import com.tradeix.concord.flows.TradeAssetIssuance
-import com.tradeix.concord.flows.TradeAssetOwnership
+import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer

@@ -1,6 +1,7 @@
-package com.tradeix.concord.validators
+package com.tradeix.concord.validators.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.validators.Validator
 
 class TradeAssetAmendmentFlowModelValidator(message: TradeAssetAmendmentFlowModel)
     : Validator<TradeAssetAmendmentFlowModel>(message) {

@@ -1,10 +1,13 @@
 package com.tradeix.concord.flows
 
-import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
-import net.corda.core.identity.Party
+import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
+import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.node.internal.StartedNode

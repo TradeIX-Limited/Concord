@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.webapi.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.messages.AttachmentMessage
 import com.tradeix.concord.messages.SingleIdentityMessage
 import net.corda.core.identity.CordaX500Name

@@ -1,37 +1,44 @@
-package com.tradeix.concord.flows
+package com.tradeix.concord.flows.tradeasset
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.exceptions.FlowVerificationException
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
-import com.tradeix.concord.models.TradeAsset
 import com.tradeix.concord.states.TradeAssetState
-import com.tradeix.concord.validators.TradeAssetIssuanceFlowModelValidator
+import com.tradeix.concord.validators.tradeasset.TradeAssetAmendmentFlowModelValidator
 import net.corda.core.contracts.*
-import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
+import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
-import net.corda.core.utilities.ProgressTracker.Step
+import java.util.*
 
-object TradeAssetIssuance {
+object TradeAssetAmendment {
     @InitiatingFlow
     @StartableByRPC
-    class InitiatorFlow(private val model: TradeAssetIssuanceFlowModel) : FlowLogic<SignedTransaction>() {
+    class InitiatorFlow(private val model: TradeAssetAmendmentFlowModel) : FlowLogic<SignedTransaction>() {
 
         companion object {
-            object GENERATING_TRANSACTION : Step("Generating transaction based on new trade asset.")
-            object VERIFYING_TRANSACTION : Step("Verifying contracts constraints.")
-            object SIGNING_TRANSACTION : Step("Signing transaction with our private key.")
-            object GATHERING_SIGNATURES : Step("Gathering the counterparty's signature.") {
+
+            private val EX_BUYER_CANNOT_AMEND_MSG =
+                    "Trade asset of status PURCHASE_ORDER can only be amended by the buyer."
+
+            private val EX_SUPPLIER_CANNOT_AMEND_MSG =
+                    "Trade asset of status INVOICE can only be amended by the supplier."
+
+            object GENERATING_TRANSACTION : ProgressTracker.Step("Generating transaction based on new trade asset.")
+            object VERIFYING_TRANSACTION : ProgressTracker.Step("Verifying contracts constraints.")
+            object SIGNING_TRANSACTION : ProgressTracker.Step("Signing transaction with our private key.")
+            object GATHERING_SIGNATURES : ProgressTracker.Step("Gathering the counterparty's signature.") {
                 override fun childProgressTracker() = CollectSignaturesFlow.tracker()
             }
 
-            object FINALISING_TRANSACTION : Step("Obtaining notary signature and recording transaction.") {
+            object FINALISING_TRANSACTION : ProgressTracker.Step("Obtaining notary signature and recording transaction.") {
                 override fun childProgressTracker() = FinalityFlow.tracker()
             }
 
@@ -42,9 +49,6 @@ object TradeAssetIssuance {
                     GATHERING_SIGNATURES,
                     FINALISING_TRANSACTION
             )
-
-            val EX_INVALID_HASH_FOR_ATTACHMENT = "Invalid SecureHash for the Supporting Document"
-
         }
 
         override val progressTracker = tracker()
@@ -52,54 +56,61 @@ object TradeAssetIssuance {
         @Suspendable
         override fun call(): SignedTransaction {
 
-            val validator = TradeAssetIssuanceFlowModelValidator(model)
+            val validator = TradeAssetAmendmentFlowModelValidator(model)
 
             if (!validator.isValid) {
                 throw FlowValidationException(validationErrors = validator.validationErrors)
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
-            val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.buyer)
-            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.supplier)
-            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
-            if (model.attachmentId != null && !VaultHelper.isAttachmentInVault(serviceHub, model.attachmentId)) {
-                throw FlowValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
-            }
 
-            // Stage 1 - Create unsigned transaction
-            progressTracker.currentStep = GENERATING_TRANSACTION
-            val outputState = TradeAssetState(
+            val inputStateAndRef = VaultHelper.getStateAndRefByLinearId(
+                    serviceHub = serviceHub,
                     linearId = model.getLinearId(),
-                    tradeAsset = TradeAsset(
-                            status = TradeAsset.TradeAssetStatus.valueOf(model.status!!),
-                            amount = model.amount),
-                    owner = supplier,
-                    buyer = buyer,
-                    supplier = supplier,
-                    conductor = conductor)
+                    contractStateType = TradeAssetState::class.java)
+
+            val inputState = inputStateAndRef.state.data
+
+            val amount = Amount.fromDecimal(
+                    displayQuantity = model.value ?:
+                            inputState.amount.toDecimal(),
+                    token = Currency.getInstance(model.currency ?:
+                            inputState.amount.token.currencyCode)
+            )
+
+            // val status = null // TODO : Can we amend status?
+
+            val outputState = inputState.copy(
+                    amount = amount,
+                    status = inputState.status
+            )
+
+            // Stage 1 - Create an unsigned transaction
+            progressTracker.currentStep = GENERATING_TRANSACTION
 
             val command = Command(
-                    value = TradeAssetContract.Commands.Issue(),
-                    signers = outputState.participants.map { it.owningKey })
+                    value = TradeAssetContract.Commands.Amend(),
+                    signers = FlowHelper.getPublicKeysFromParticipants(outputState.participants)
+            )
 
             val transactionBuilder = TransactionBuilder(notary)
+                    .addInputState(inputStateAndRef)
                     .addOutputState(outputState, TRADE_ASSET_CONTRACT_ID)
                     .addCommand(command)
 
-            if (model.attachmentId != null) {
-                transactionBuilder.addAttachment(parse(model.attachmentId))
-            }
 
-            // Stage 2 - Verify transaction
+            // Stage 2 - Verify the transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
+            verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), outputState)
             transactionBuilder.verify(serviceHub)
 
             // Stage 3 - Sign the transaction
             progressTracker.currentStep = SIGNING_TRANSACTION
             val partiallySignedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
 
-            // Stage 4 - Gather counterparty signatures
+            // Stage 4
             progressTracker.currentStep = GATHERING_SIGNATURES
+
             val requiredSignatureFlowSessions = listOf(
                     outputState.owner,
                     outputState.buyer,
@@ -107,9 +118,7 @@ object TradeAssetIssuance {
                     outputState.conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
-                    .map { initiateFlow(it) }
-
-            // TODO : Move this into FlowHelper ^
+                    .map { initiateFlow(serviceHub.identityService.requireWellKnownPartyFromAnonymous(it)) }
 
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
@@ -119,8 +128,24 @@ object TradeAssetIssuance {
             // Stage 5 - Finalize transaction
             progressTracker.currentStep = FINALISING_TRANSACTION
             return subFlow(FinalityFlow(
-                    transaction = fullySignedTransaction,
-                    progressTracker = FINALISING_TRANSACTION.childProgressTracker()))
+                    fullySignedTransaction,
+                    FINALISING_TRANSACTION.childProgressTracker()))
+        }
+
+        private fun verify(initiator: Party, state: TradeAssetState) {
+            val errors = ArrayList<String>()
+
+            if (initiator == state.buyer && state.status != TradeAssetState.TradeAssetStatus.PURCHASE_ORDER) {
+                errors.add(EX_BUYER_CANNOT_AMEND_MSG)
+            }
+
+            if (initiator == state.supplier && state.status != TradeAssetState.TradeAssetStatus.INVOICE) {
+                errors.add(EX_SUPPLIER_CANNOT_AMEND_MSG)
+            }
+
+            if (errors.isNotEmpty()) {
+                throw FlowVerificationException(verificationErrors = errors)
+            }
         }
     }
 

@@ -8,13 +8,13 @@ import com.tradeix.concord.TestValueHelper.POUNDS
 import com.tradeix.concord.TestValueHelper.STATUS_INVOICE
 import com.tradeix.concord.TestValueHelper.STATUS_PURCHASE_ORDER
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.amendTradeAsset
-import com.tradeix.concord.flows.TradeAssetAmendment
-import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import net.corda.core.flows.FlowException
 import net.corda.core.transactions.SignedTransaction
 import net.corda.node.internal.StartedNode

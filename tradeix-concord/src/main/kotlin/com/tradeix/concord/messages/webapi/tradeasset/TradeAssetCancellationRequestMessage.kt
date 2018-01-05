@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.webapi.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
 import com.tradeix.concord.messages.SingleIdentityMessage
 
 class TradeAssetCancellationRequestMessage(

@@ -1,10 +1,7 @@
 package com.tradeix.concord
 
-import com.tradeix.concord.models.TradeAsset
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
-import net.corda.finance.DOLLARS
-import net.corda.finance.POUNDS
 import net.corda.testing.*
 import java.math.BigDecimal
 import java.util.*
@@ -51,12 +48,6 @@ object TestValueHelper {
     val TEN_DOLLARS get() = Amount.fromDecimal(POSITIVE_TEN, USD)
     val ONE_EURO get() = Amount.fromDecimal(POSITIVE_ONE, EUR)
     val TEN_EUROS get() = Amount.fromDecimal(POSITIVE_TEN, EUR)
-
-    // Trade Assets
-    val TRADE_ASSET_INVOICE_ONE_POUND = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, ONE_POUND)
-    val TRADE_ASSET_INVOICE_TEN_POUNDS = TradeAsset(TradeAsset.TradeAssetStatus.INVOICE, TEN_POUNDS)
-    val TRADE_ASSET_PURCHASE_ORDER_ONE_POUND = TradeAsset(TradeAsset.TradeAssetStatus.PURCHASE_ORDER, ONE_POUND)
-    val TRADE_ASSET_PURCHASE_ORDER_TEN_POUNDS = TradeAsset(TradeAsset.TradeAssetStatus.PURCHASE_ORDER, TEN_POUNDS)
 
     // Attachments
     val ATTACHMENT get() = "src/test/resources/good.jar"

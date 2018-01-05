@@ -1,6 +1,7 @@
-package com.tradeix.concord.validators
+package com.tradeix.concord.validators.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.validators.Validator
 
 class TradeAssetOwnershipFlowModelValidator(message: TradeAssetOwnershipFlowModel)
     : Validator<TradeAssetOwnershipFlowModel>(message) {

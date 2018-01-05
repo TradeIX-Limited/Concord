@@ -3,13 +3,13 @@ package com.tradeix.concord.flows.tradeassets
 import com.tradeix.concord.TestValueHelper
 import com.tradeix.concord.TestValueHelper.EXTERNAL_ID
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetCancellationFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
-import com.tradeix.concord.flows.TradeAssetCancellation
-import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import net.corda.core.flows.FlowException
 import net.corda.core.transactions.SignedTransaction
 import net.corda.node.internal.StartedNode
@@ -173,7 +173,7 @@ class TradeAssetCancellationFlowTests : AbstractFlowTest() {
 
     private fun issueTradeAsset(status: String): SignedTransaction {
         return FlowTestHelper.issueTradeAsset(network, conductor.node, TradeAssetIssuanceFlowModel(
-                externalId = TestValueHelper.EXTERNAL_ID,
+                externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 conductor = conductor.name,

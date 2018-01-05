@@ -9,9 +9,9 @@ import com.tradeix.concord.TestValueHelper.POUNDS
 import com.tradeix.concord.TestValueHelper.STATUS_INVOICE
 import com.tradeix.concord.TestValueHelper.NOT_A_VALID_STATUS
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
-import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
 import org.junit.Test

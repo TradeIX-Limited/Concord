@@ -1,17 +1,14 @@
 package com.tradeix.concord.services.messaging
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.rabbitmq.client.*
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
 import com.tradeix.concord.validators.RabbitRequestMessageValidator
-import com.tradeix.concord.validators.TradeAssetAmendmentFlowModelValidator
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import net.corda.core.identity.CordaX500Name

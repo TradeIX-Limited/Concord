@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.rabbit.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.messages.AttachmentMessage
 import com.tradeix.concord.messages.SingleIdentityMessage
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage

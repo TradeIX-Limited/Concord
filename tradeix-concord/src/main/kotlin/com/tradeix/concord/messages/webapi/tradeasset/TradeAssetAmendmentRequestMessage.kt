@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.webapi.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetAmendmentFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.messages.SingleIdentityMessage
 import java.math.BigDecimal
 

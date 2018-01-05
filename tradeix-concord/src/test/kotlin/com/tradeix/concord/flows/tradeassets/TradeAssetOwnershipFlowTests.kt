@@ -2,18 +2,16 @@ package com.tradeix.concord.flows.tradeassets
 
 import com.tradeix.concord.TestValueHelper
 import com.tradeix.concord.TestValueHelper.EXTERNAL_IDS
-import com.tradeix.concord.TestValueHelper.FUNDER
 import com.tradeix.concord.TestValueHelper.STATUS_INVOICE
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
-import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.changeTradeAssetOwner
-import com.tradeix.concord.flows.TradeAssetIssuance
-import com.tradeix.concord.flows.TradeAssetOwnership
-import net.corda.core.flows.FlowException
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import net.corda.core.transactions.SignedTransaction
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork

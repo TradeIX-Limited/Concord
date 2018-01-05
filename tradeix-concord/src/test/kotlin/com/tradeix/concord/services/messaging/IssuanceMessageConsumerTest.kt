@@ -1,15 +1,12 @@
 package com.tradeix.concord.services.messaging
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonSyntaxException
 import com.nhaarman.mockito_kotlin.*
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Envelope
-import com.tradeix.concord.flows.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
@@ -21,7 +18,6 @@ import net.corda.core.messaging.FlowProgressHandle
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.transactions.SignedTransaction
 import org.junit.Test
-import org.mockito.plugins.MockMaker
 import rx.Observable
 
 class IssuanceMessageConsumerTest {

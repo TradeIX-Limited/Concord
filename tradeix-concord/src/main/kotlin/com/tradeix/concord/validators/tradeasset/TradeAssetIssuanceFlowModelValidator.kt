@@ -1,7 +1,8 @@
-package com.tradeix.concord.validators
+package com.tradeix.concord.validators.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetIssuanceFlowModel
-import com.tradeix.concord.models.TradeAsset
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
+import com.tradeix.concord.states.TradeAssetState
+import com.tradeix.concord.validators.Validator
 import net.corda.core.crypto.SecureHash
 import java.math.BigDecimal
 
@@ -28,7 +29,7 @@ class TradeAssetIssuanceFlowModelValidator(message: TradeAssetIssuanceFlowModel)
 
         if (message.status != null) {
             try {
-                TradeAsset.TradeAssetStatus.valueOf(message.status)
+                TradeAssetState.TradeAssetStatus.valueOf(message.status)
             } catch (ex: Throwable) {
                 errors.add(EX_STATUS_INVALID)
             }

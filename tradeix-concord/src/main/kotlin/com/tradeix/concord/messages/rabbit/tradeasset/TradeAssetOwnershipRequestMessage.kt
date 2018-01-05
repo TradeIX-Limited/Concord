@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.rabbit.tradeasset
 
-import com.tradeix.concord.flowmodels.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.messages.MultiIdentityMessage
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import net.corda.core.identity.CordaX500Name

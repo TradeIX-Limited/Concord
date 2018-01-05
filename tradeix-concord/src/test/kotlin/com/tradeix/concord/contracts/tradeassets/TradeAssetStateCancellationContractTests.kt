@@ -6,9 +6,9 @@ import com.tradeix.concord.TestValueHelper.CONDUCTOR
 import com.tradeix.concord.TestValueHelper.CONDUCTOR_PUBKEY
 import com.tradeix.concord.TestValueHelper.FUNDER
 import com.tradeix.concord.TestValueHelper.LINEAR_ID
+import com.tradeix.concord.TestValueHelper.ONE_POUND
 import com.tradeix.concord.TestValueHelper.SUPPLIER
 import com.tradeix.concord.TestValueHelper.SUPPLIER_PUBKEY
-import com.tradeix.concord.TestValueHelper.TRADE_ASSET_INVOICE_ONE_POUND
 import com.tradeix.concord.contracts.TradeAssetContract
 import com.tradeix.concord.contracts.TradeAssetContract.Companion.TRADE_ASSET_CONTRACT_ID
 import com.tradeix.concord.states.TradeAssetState
@@ -35,11 +35,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 fails()
                 command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
@@ -57,11 +58,12 @@ class TradeAssetStateCancellationContractTests {
                 output(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -78,20 +80,22 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 output(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -108,11 +112,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = FUNDER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -129,11 +134,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -150,11 +156,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -171,11 +178,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, CONDUCTOR_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()
@@ -192,11 +200,12 @@ class TradeAssetStateCancellationContractTests {
                 input(TRADE_ASSET_CONTRACT_ID) {
                     TradeAssetState(
                             linearId = LINEAR_ID,
-                            tradeAsset = TRADE_ASSET_INVOICE_ONE_POUND,
                             owner = SUPPLIER,
                             buyer = BUYER,
                             supplier = SUPPLIER,
-                            conductor = CONDUCTOR)
+                            conductor = CONDUCTOR,
+                            amount = ONE_POUND,
+                            status = TradeAssetState.TradeAssetStatus.INVOICE)
                 }
                 command(BUYER_PUBKEY, SUPPLIER_PUBKEY) {
                     TradeAssetContract.Commands.Cancel()

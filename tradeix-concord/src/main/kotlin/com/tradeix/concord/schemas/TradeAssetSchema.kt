@@ -1,6 +1,6 @@
 package com.tradeix.concord.schemas
 
-import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal
@@ -31,15 +31,15 @@ object TradeAssetSchemaV1 : MappedSchema(
             var status: String,
 
             @Column(name = "owner")
-            var owner: String,
+            var owner: AbstractParty,
 
             @Column(name = "buyer")
-            var buyer: String,
+            var buyer: AbstractParty,
 
             @Column(name = "supplier")
-            var supplier: String,
+            var supplier: AbstractParty,
 
             @Column(name = "conductor")
-            var conductor: String
+            var conductor: AbstractParty
     ) : PersistentState()
 }

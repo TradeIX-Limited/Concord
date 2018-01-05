@@ -1,11 +1,10 @@
 package com.tradeix.concord.apis
 
-import com.tradeix.concord.flows.TradeAssetAmendment
-import com.tradeix.concord.flows.TradeAssetCancellation
+import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
+import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.TradeAssetIssuance
-import com.tradeix.concord.flows.TradeAssetOwnership
-import com.tradeix.concord.messages.*
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import com.tradeix.concord.messages.webapi.FailedResponseMessage
 import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
 import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
