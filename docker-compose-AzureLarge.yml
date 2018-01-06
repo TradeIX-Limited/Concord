@@ -13,8 +13,8 @@ services:
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     ports:
-      - "10012:10002"
-      - "10013:10003"
+      - "10002:10002"
+      - "10003:10003"
     image: concord:1.0
     container_name: controller
     volumes:
