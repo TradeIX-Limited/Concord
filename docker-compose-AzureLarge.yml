@@ -1,3 +1,5 @@
+# TODO Volume mount logs, persistence. Test consecutively built plugins, Write a script to seed the directory structure
+# TODO Test if persistence is retained between builds
 version: '3.3'
 services:
 
