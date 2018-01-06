@@ -1,34 +1,50 @@
-FROM debian:9
+# Base image from (http://phusion.github.io/baseimage-docker)
+FROM openjdk:8u151-jre-alpine
 
-RUN apt-get -qq update && apt-get -y install gnupg
+# Override default value with 'docker build --build-arg BUILDTIME_CORDA_VERSION=version'
+# example: 'docker build --build-arg BUILDTIME_CORDA_VERSION=2.0.0 -t concord:2.0 .'
+ARG BUILDTIME_CORDA_VERSION=1.0.0
+ARG BUILDTIME_JAVA_OPTIONS
 
-# Pull Zulu OpenJDK binaries from official repository:
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
-RUN echo "deb http://repos.azulsystems.com/debian stable  main" >> /etc/apt/sources.list.d/zulu.list
-RUN apt-get -qq update && apt-get -y install zulu-8
+ENV CORDA_VERSION=${BUILDTIME_CORDA_VERSION}
+ENV JAVA_OPTIONS=${BUILDTIME_JAVA_OPTIONS}
 
 MAINTAINER <rajesh@tradeix.com>
 
-# Add Corda
-RUN mkdir /opt/corda
-RUN mkdir /opt/corda/plugins
-RUN mkdir /opt/corda/certificates
-RUN mkdir /opt/corda/logs
-ADD http://jcenter.bintray.com/net/corda/corda/1.0.0/corda-1.0.0.jar /opt/corda/corda.jar
-ADD http://jcenter.bintray.com/net/corda/corda-webserver/1.0.0/corda-webserver-1.0.0.jar /opt/corda/corda-webserver.jar
-# Copy corda jars
-COPY tradeix-concord/build/nodes/TradeIX/plugins/tradeix-concord-0.1.jar /opt/corda/plugins/
-#COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/
-#COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/
+# Set image labels
+LABEL net.corda.version = ${CORDA_VERSION}
+LABEL vendor = "TradeIX"
 
-VOLUME /mnt/vol
-RUN ln -s /mnt/vol/node.conf /opt/corda/node.conf
-#Certificates received from R3
-RUN ln -s /mnt/vol/certificates/nodekeystore.jks /opt/corda/certificates/nodekeystore.jks
-RUN ln -s /mnt/vol/certificates/sslkeystore.jks /opt/corda/certificates/sslkeystore.jks
-RUN ln -s /mnt/vol/certificates/truststore.jks /opt/corda/certificates/truststore.jks
-#Persistence
-RUN ln -s /mnt/vol/persistence.mv.db /opt/corda/persistence.mv.db
+RUN apk upgrade --update && \
+	apk add --update --no-cache bash iputils && \
+	rm -rf /var/cache/apk/*
 
+# Add user to run the app
+RUN addgroup corda && \
+    adduser -G corda -D -s /bin/bash corda
+
+# Create /opt/corda directory
+RUN mkdir -p /opt/corda/plugins && \
+    mkdir -p /opt/corda/logs
+
+# Copy corda jar
+ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
+ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
+
+COPY config/dockerconfig/nodes/run-corda.sh /run-corda.sh
+RUN chmod +x /run-corda.sh && sync
+
+RUN chown -R corda:corda /opt/corda
+
+# Expose port for corda (default is 10002) and RPC
+EXPOSE 10002
+EXPOSE 10003
+EXPOSE 10004
+
+# Working directory for Corda
 WORKDIR /opt/corda
-ENTRYPOINT ["java", "-jar", "corda.jar" ]
+ENV HOME=/opt/corda
+USER corda
+
+# Start it
+CMD ["/run-corda.sh"]

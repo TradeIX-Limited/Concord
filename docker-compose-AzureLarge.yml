@@ -1,118 +1,182 @@
-# TODO: The volumes are hardcoded with my dev-environment path. This will be removed in the next release
-version: "3.3"
+version: '3.3'
 services:
-  controller:
-    image: concord:1.0
-    extra_hosts:
-    - "controller:127.0.0.1"
-    ports:
-      - "10002:10002"
-      - "10003:10003"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/Controller:/mnt/vol
-  tradeix:
-    image: concord:1.0
-    extra_hosts:
-    - "tradeix:127.0.0.1"
-    ports:
-      - "10005:10005"
-      - "10006:10006"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIX:/mnt/vol
-  tradeixweb:
-    image: concordweb:1.0
-    ports:
-      - "10007:10007"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIX:/mnt/vol
-  tradeixfakesupplier:
-    image: concord:1.0
-    extra_hosts:
-    - "tradeixfakesupplier:127.0.0.1"
-    ports:
-      - "10008:10008"
-      - "10009:10009"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXFakeSupplier:/mnt/vol
-  tradeixfakesupplierweb:
-    image: concordweb:1.0
-    ports:
-      - "10010:10010"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXFakeSupplier:/mnt/vol
-  tradeixtestbuyer:
-    image: concord:1.0
-    extra_hosts:
-    - "tradeixtestbuyer:127.0.0.1"
-    ports:
-      - "10023:10023"
-      - "10024:10024"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestBuyer:/mnt/vol
-  tradeixtestbuyerweb:
-     image: concordweb:1.0
-     ports:
-       - "10025:10025"
-     volumes:
-       - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestBuyer:/mnt/vol
 
-  tradeixtestfunder:
-    image: concord:1.0
-    extra_hosts:
-    - "tradeixtestfunder:127.0.0.1"    
+  Controller:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
     ports:
-      - "10020:10020"
-      - "10021:10021"
-    volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestFunder:/mnt/vol
-  tradeixtestfunderweb:
+      - "10012:10002"
+      - "10013:10003"
     image: concord:1.0
-    ports:
-      - "10022:10022"
+    container_name: controller
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestFunder:/mnt/vol
-  tradeixtestsupplier:
+      - ./config/dockerconfig/nodes/Controller/node.conf:/opt/corda/node.conf
+
+  TradeIX:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10005:10002"
+      - "10006:10003"
+      - "10007:10004"
     image: concord:1.0
-    extra_hosts:
-    - "tradeixtestsupplier:127.0.0.1"      
-    ports:
-      - "10011:10011"
-      - "10012:10012"
+    container_name: tradeix
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier:/mnt/vol
-  tradeixtestsupplierweb:
+      - ./config/dockerconfig/nodes/TradeIX/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIX/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIX/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXFakeSupplier:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10008:10002"
+      - "10009:10003"
+      - "10010:10004"
     image: concord:1.0
-    ports:
-      - "10013:10013"
+    container_name: tradeixfakesupplier
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier:/mnt/vol
-  tradeixtestsupplier1:
+      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXTestBuyer:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10023:10002"
+      - "10024:10003"
+      - "10025:10004"
     image: concord:1.0
-    extra_hosts:
-    - "tradeixtestsupplier1:127.0.0.1"      
-    ports:
-      - "10014:10014"
-      - "10015:10015"
+    container_name: tradeixtestbuyer
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier1:/mnt/vol
-  tradeixtestsupplier1web:
+      - ./config/dockerconfig/nodes/TradeIXTestBuyer/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXTestBuyer/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestBuyer/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXTestFunder:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10020:10002"
+      - "10021:10003"
+      - "10022:10004"
     image: concord:1.0
-    ports:
-      - "10016:10016"
+    container_name: tradeixtestbuyer
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier1:/mnt/vol
-  tradeixtestsupplier2:
+      - ./config/dockerconfig/nodes/TradeIXTestFunder/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXTestFunder/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestFunder/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXTestSupplier:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10011:10002"
+      - "10012:10003"
+      - "10013:10004"
     image: concord:1.0
-    extra_hosts:
-    - "tradeixtestsupplier2:127.0.0.1"       
-    ports:
-      - "10017:10017"
-      - "10018:10018"
+    container_name: tradeixtestsupplier
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier2:/mnt/vol
-  tradeixtestsupplier2web:
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXTestSupplier1:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10014:10002"
+      - "10015:10003"
+      - "10016:10004"
     image: concord:1.0
-    ports:
-      - "10019:10019"
+    container_name: tradeixtestsupplier1
     volumes:
-      - /home/rajesh/Workspace/IdeaProjects/Concord/config/dockerconfig/nodes/TradeIXTestSupplier2:/mnt/vol
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
+  TradeIXTestSupplier2:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    ports:
+      - "10017:10002"
+      - "10018:10003"
+      - "10019:10004"
+    image: concord:1.0
+    container_name: tradeixtestsupplier2
+    volumes:
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+networks:
+  corda:
