@@ -103,7 +103,7 @@ services:
       - "10021:10003"
       - "10022:10004"
     image: concord:1.0
-    container_name: tradeixtestbuyer
+    container_name: tradeixtestfunder
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestFunder/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/tradeix-concord-0.1.jar:/opt/corda/plugins/tradeix-concord-0.1.jar
