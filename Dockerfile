@@ -28,11 +28,11 @@ RUN mkdir -p /opt/corda/plugins && \
     mkdir -p /opt/corda/logs
 
 # Copy corda jar
-#ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
-#ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
+ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
+ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
 #Debugging ...just to save time
-COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/corda.jar
-COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/corda-webserver.jar
+#COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/corda.jar
+#COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/corda-webserver.jar
 
 COPY config/dockerconfig/nodes/run-corda.sh /run-corda.sh
 RUN chmod +x /run-corda.sh && sync

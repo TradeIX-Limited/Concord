@@ -30,26 +30,27 @@ while true; do
     esac
 done
 
-mkdir -p nodes
-mkdir -p nodes/Controller
-mkdir -p nodes/Controller/certificates
-mkdir -p nodes/plugins
-mkdir -p nodes/TradeIX
-mkdir -p nodes/TradeIX/certificates
-mkdir -p nodes/TradeIXFakeSupplier
-mkdir -p nodes/TradeIXFakeSupplier/certificates
-mkdir -p nodes/TradeIXTestBuyer
-mkdir -p nodes/TradeIXTestBuyer/certificates
-mkdir -p nodes/TradeIXTestFunder
-mkdir -p nodes/TradeIXTestFunder/certificates
-mkdir -p nodes/TradeIXTestSupplier
-mkdir -p nodes/TradeIXTestSupplier/certificates
-mkdir -p nodes/TradeIXTestSupplier1
-mkdir -p nodes/TradeIXTestSupplier1/certificates
-mkdir -p nodes/TradeIXTestSupplier2
-mkdir -p nodes/TradeIXTestSupplier2/certificates
+mkdir -p config
+mkdir -p config/nodes
+mkdir -p config/nodes/Controller
+mkdir -p config/nodes/Controller/certificates
+mkdir -p config/nodes/plugins
+mkdir -p config/nodes/TradeIX
+mkdir -p config/nodes/TradeIX/certificates
+mkdir -p config/nodes/TradeIXFakeSupplier
+mkdir -p config/nodes/TradeIXFakeSupplier/certificates
+mkdir -p config/nodes/TradeIXTestBuyer
+mkdir -p config/nodes/TradeIXTestBuyer/certificates
+mkdir -p config/nodes/TradeIXTestFunder
+mkdir -p config/nodes/TradeIXTestFunder/certificates
+mkdir -p config/nodes/TradeIXTestSupplier
+mkdir -p config/nodes/TradeIXTestSupplier/certificates
+mkdir -p config/nodes/TradeIXTestSupplier1
+mkdir -p config/nodes/TradeIXTestSupplier1/certificates
+mkdir -p config/nodes/TradeIXTestSupplier2
+mkdir -p config/nodes/TradeIXTestSupplier2/certificates
 
-cd nodes
+cd config/nodes
 cat > run-corda.sh << EOF
 #!/bin/sh
 
