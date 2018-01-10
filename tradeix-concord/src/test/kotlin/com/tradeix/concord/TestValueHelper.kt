@@ -4,6 +4,7 @@ import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.testing.*
 import java.math.BigDecimal
+import java.time.Instant
 import java.util.*
 
 object TestValueHelper {
@@ -59,4 +60,17 @@ object TestValueHelper {
 
     // Hashes
     val NOT_A_VALID_HASH get() = "THIS_IS_NOT_A_VALID_HASH"
+
+    // Purchase Order References
+    val PURCHASE_ORDER_REFERENCE = "PURCHASE_ORDER_REFERENCE"
+
+    // Dates & Times
+    val DATE_INSTANT_01 = Instant.parse("2000-01-01T00:00:00Z")
+    val DATE_INSTANT_02 = Instant.parse("2000-01-02T00:00:00Z")
+    val DATE_INSTANT_03 = Instant.parse("2000-01-03T00:00:00Z")
+
+    // Shipping Information
+    val PORT_OF_SHIPMENT = "PORT_OF_SHIPMENT"
+    val DESCRIPTION_OF_GOODS = "DESCRIPTION_OF_GOODS"
+    val DELIVERY_TERMS = "DELIVERY_TERMS"
 }

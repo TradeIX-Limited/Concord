@@ -98,7 +98,7 @@ class PurchaseOrderContract : Contract {
                 val CONTRACT_RULE_OUTPUTS =
                         "The number of outputs must be equal to the number of inputs when changing ownership of a purchase order."
 
-                val CONTRACT_RULE_ENTITIES =
+                val CONTRACT_RULE_OWNER =
                         "The supplier must be the new owner when changing ownership of a purchase order."
 
                 val CONTRACT_RULE_SIGNERS =
@@ -112,7 +112,7 @@ class PurchaseOrderContract : Contract {
 
                 // State Rules
                 tx.outputsOfType<PurchaseOrderState>().forEach {
-                    CONTRACT_RULE_ENTITIES using (it.owner != it.buyer)
+                    CONTRACT_RULE_OWNER using (it.owner != it.buyer)
                     CONTRACT_RULE_SIGNERS using (signers.containsAll(it.participants.map { it.owningKey }))
                 }
             }

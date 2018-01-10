@@ -1,4 +1,4 @@
-package com.tradeix.concord.contracts.tradeassets
+package com.tradeix.concord.contracts.tradeasset
 
 import com.tradeix.concord.TestValueHelper.BUYER
 import com.tradeix.concord.TestValueHelper.BUYER_PUBKEY
