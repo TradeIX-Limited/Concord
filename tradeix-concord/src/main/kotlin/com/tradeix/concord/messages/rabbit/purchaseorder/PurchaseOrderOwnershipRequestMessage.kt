@@ -1,19 +1,18 @@
-package com.tradeix.concord.messages.rabbit.tradeasset
+package com.tradeix.concord.messages.rabbit.purchaseorder
 
-import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderOwnershipFlowModel
 import com.tradeix.concord.messages.MultiIdentityMessage
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import net.corda.core.identity.CordaX500Name
 
-class TradeAssetOwnershipRequestMessage(
+class PurchaseOrderOwnershipRequestMessage(
         override val correlationId: String?,
-        override val externalIds: List<String>?,
         override var tryCount: Int,
-        val newOwner: CordaX500Name?,
-        val bidUniqueId: String?
+        override val externalIds: List<String>?,
+        val newOwner: CordaX500Name?
 ) : RabbitRequestMessage(), MultiIdentityMessage {
 
-    fun toModel() = TradeAssetOwnershipFlowModel(
+    fun toModel() = PurchaseOrderOwnershipFlowModel(
             externalIds,
             newOwner
     )

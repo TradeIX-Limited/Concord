@@ -61,6 +61,13 @@ object TestValueHelper {
     // Hashes
     val NOT_A_VALID_HASH get() = "THIS_IS_NOT_A_VALID_HASH"
 
+    // PurchaseOrder State Identity
+    val PURCHASE_ORDER_EXTERNAL_IDS get() = listOf(
+            "PURCHASE_ORDER_TEST_EXTERNAL_ID_1",
+            "PURCHASE_ORDER_TEST_EXTERNAL_ID_2",
+            "PURCHASE_ORDER_TEST_EXTERNAL_ID_3"
+    )
+
     // Purchase Order References
     val PURCHASE_ORDER_REFERENCE = "PURCHASE_ORDER_REFERENCE"
 

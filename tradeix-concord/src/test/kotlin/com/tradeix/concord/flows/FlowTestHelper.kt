@@ -1,5 +1,7 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowModel
+import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderOwnershipFlowModel
 import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
 import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
 import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
@@ -8,6 +10,8 @@ import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.node.internal.StartedNode
@@ -67,6 +71,36 @@ object FlowTestHelper {
         val future = initiator
                 .services
                 .startFlow(TradeAssetOwnership.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
+    fun issuePurchaseOrder(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: PurchaseOrderIssuanceFlowModel): SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(PurchaseOrderIssuance.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
+    fun changePurchaseOrderOwner(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: PurchaseOrderOwnershipFlowModel): SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(PurchaseOrderOwnership.InitiatorFlow(model))
                 .resultFuture
 
         network.runNetwork()

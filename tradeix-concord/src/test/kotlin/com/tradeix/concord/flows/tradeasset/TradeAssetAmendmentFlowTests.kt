@@ -1,4 +1,4 @@
-package com.tradeix.concord.flows.tradeassets
+package com.tradeix.concord.flows.tradeasset
 
 import com.tradeix.concord.TestValueHelper.DOLLARS
 import com.tradeix.concord.TestValueHelper.EXTERNAL_ID
@@ -13,8 +13,6 @@ import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.amendTradeAsset
-import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
-import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
 import net.corda.core.flows.FlowException
 import net.corda.core.transactions.SignedTransaction
 import net.corda.node.internal.StartedNode

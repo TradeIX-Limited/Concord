@@ -1,6 +1,7 @@
 package com.tradeix.concord.states
 
 import com.tradeix.concord.contracts.PurchaseOrderContract
+import com.tradeix.concord.interfaces.OwnerState
 import com.tradeix.concord.schemas.PurchaseOrderSchemaV1
 import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
@@ -24,17 +25,17 @@ data class PurchaseOrderState(
         val portOfShipment: String,
         val descriptionOfGoods: String,
         val deliveryTerms: String
-) : LinearState, OwnableState, QueryableState {
+) : LinearState, OwnerState, QueryableState {
     override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, conductor)
 
-    override fun withNewOwner(newOwner: AbstractParty): CommandAndState =
-            CommandAndState(PurchaseOrderContract.Commands.ChangeOwner(), this.copy(owner = newOwner))
+//    override fun withNewOwner(newOwner: AbstractParty): CommandAndState =
+//            CommandAndState(PurchaseOrderContract.Commands.ChangeOwner(), this.copy(owner = newOwner))
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         return when (schema) {
             is PurchaseOrderSchemaV1 -> PurchaseOrderSchemaV1.PersistentPurchaseOrderSchemaV1(
                     linearId = linearId.id,
-                    externalId = linearId.externalId!!,
+                    externalId = linearId.externalId.toString(),
                     owner = owner,
                     buyer = buyer,
                     supplier = supplier,

@@ -1,7 +1,9 @@
-package com.tradeix.concord.flows.tradeassets
+package com.tradeix.concord.flows.tradeasset
 
 import com.tradeix.concord.TestValueHelper
 import com.tradeix.concord.TestValueHelper.EXTERNAL_IDS
+import com.tradeix.concord.TestValueHelper.POSITIVE_ONE
+import com.tradeix.concord.TestValueHelper.POUNDS
 import com.tradeix.concord.TestValueHelper.STATUS_INVOICE
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.exceptions.FlowVerificationException
@@ -10,8 +12,6 @@ import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.changeTradeAssetOwner
-import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
-import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import net.corda.core.transactions.SignedTransaction
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
@@ -158,8 +158,8 @@ class TradeAssetOwnershipFlowTests : AbstractFlowTest() {
                     supplier = supplier.name,
                     conductor = conductor.name,
                     status = status,
-                    value = TestValueHelper.POSITIVE_ONE,
-                    currency = TestValueHelper.POUNDS
+                    value = POSITIVE_ONE,
+                    currency = POUNDS
             ))
         }
     }

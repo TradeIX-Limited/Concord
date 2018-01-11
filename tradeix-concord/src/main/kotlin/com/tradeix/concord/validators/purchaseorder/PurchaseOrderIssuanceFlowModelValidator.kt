@@ -11,6 +11,7 @@ class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlow
     companion object {
         private val EX_EXTERNAL_ID_REQUIRED = "Field 'externalId' is required."
         private val EX_SUPPLIER_REQUIRED = "Field 'supplier' is required."
+        private val EX_CONDUCTOR_REQUIRED = "Field 'conductor' is required."
         private val EX_REFERENCE_REQUIRED = "Field 'reference' is required."
         private val EX_VALUE_REQUIRED = "Field 'value' is required."
         private val EX_VALUE_NEGATIVE = "Field 'value' cannot be negative."
@@ -27,6 +28,7 @@ class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlow
     override fun validate() {
         message.externalId ?: errors.add(EX_EXTERNAL_ID_REQUIRED)
         message.supplier ?: errors.add(EX_SUPPLIER_REQUIRED)
+        message.conductor ?: errors.add(EX_CONDUCTOR_REQUIRED)
         message.reference ?: errors.add(EX_REFERENCE_REQUIRED)
         message.value ?: errors.add(EX_VALUE_REQUIRED)
         message.currency ?: errors.add(EX_CURRENCY_REQUIRED)

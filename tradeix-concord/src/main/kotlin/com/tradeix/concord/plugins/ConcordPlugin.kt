@@ -1,6 +1,7 @@
 package com.tradeix.concord.plugins
 
 import com.tradeix.concord.apis.NodeInfoApi
+import com.tradeix.concord.apis.PurchaseOrderApi
 import com.tradeix.concord.apis.TradeAssetApi
 import com.tradeix.concord.services.messaging.TixMessageSubscriptionStartup
 import net.corda.core.messaging.CordaRPCOps
@@ -14,6 +15,7 @@ class ConcordPlugin : WebServerPluginRegistry {
     override val webApis: List<Function<CordaRPCOps, out Any>> = listOf(
             Function(::NodeInfoApi),
             Function(::TradeAssetApi),
+            Function(::PurchaseOrderApi),
             Function(::TixMessageSubscriptionStartup))
 
 
