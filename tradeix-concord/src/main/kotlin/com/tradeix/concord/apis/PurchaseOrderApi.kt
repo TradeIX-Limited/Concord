@@ -27,8 +27,9 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    fun getPurchaseOrderSatet(@QueryParam(value = "externalId") externalId: String): Response {
-        if (externalId.isEmpty() || externalId.isBlank()) {
+    fun getPurchaseOrderState(@QueryParam(value = "externalId") externalId: String): Response {
+        externalId.trim()
+        if (externalId.trim().isEmpty()) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(IllegalArgumentException("externalId is required to query a purchase order state"))

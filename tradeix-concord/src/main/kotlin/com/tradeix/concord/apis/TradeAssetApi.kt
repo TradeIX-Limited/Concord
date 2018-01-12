@@ -29,6 +29,10 @@ import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
 @Path("tradeassets")
 class TradeAssetApi(val services: CordaRPCOps) {
 
+    companion object {
+        val DEFAULT_PAGE_SIZE = 50
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun getTradeAsset(@QueryParam(value = "externalId") externalId: String): Response {
@@ -84,14 +88,21 @@ class TradeAssetApi(val services: CordaRPCOps) {
             @QueryParam(value = "page") page: Int,
             @QueryParam(value = "count") count: Int): Response {
 
-        val pageNumber = if (page == 0) 1 else page
-        val pageSize = if (count == 0) 50 else count
+        val pageNumber = if (page <= 0) 1 else page
+        val pageSize = if (count <= 0) DEFAULT_PAGE_SIZE else count
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(services.vaultQueryBy<TradeAssetState>(
-                        paging = PageSpecification(pageNumber, pageSize)).states.asReversed())
-                .build()
+        return try {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(services.vaultQueryBy<TradeAssetState>(
+                            paging = PageSpecification(pageNumber, pageSize)).states.asReversed())
+                    .build()
+        } catch(ex: Throwable) {
+            Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(FailedResponseMessage(ex.message!!))
+                    .build()
+        }
     }
 
     @POST
