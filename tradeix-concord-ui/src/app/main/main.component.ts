@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { StateAndRef, CordaX500Name } from "api/domain/shared/corda";
-import { TradeAssetState } from "api/domain/states/trade-asset-state";
+import {PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
 import { NodeService } from "api/domain/nodes/node.service";
-import { TradeAssetService } from "api/domain/trade-assets/trade-asset.service";
+import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.service";
 import { MatPaginator } from "@angular/material";
 import { HistoryService } from "api/domain/history/history.service";
 
@@ -12,9 +12,9 @@ import { HistoryService } from "api/domain/history/history.service";
   styleUrls: ["./main.component.scss"]
 })
 export class MainComponent implements OnInit {
-  @ViewChild("invoicePaginator") invoicePaginator: MatPaginator;
+  @ViewChild("purchaseOrderPaginator") purchaseOrderPaginator: MatPaginator;
 
-  private states: TradeAssetState[] = null;
+  private states: PurchaseOrderState[] = null;
   private name: CordaX500Name = null;
 
   private hash: string = undefined;
@@ -24,20 +24,20 @@ export class MainComponent implements OnInit {
   private pageTimeout: number;
 
   constructor(
-    private readonly tradeAssetService: TradeAssetService,
+    private readonly purchaseOrderService: PurchaseOrderService,
     private readonly historyService: HistoryService) {
     this.update();
   }
 
   public ngOnInit(): void {
-    this.invoicePaginator.pageSize = this.pageSize;
+    this.purchaseOrderPaginator.pageSize = this.pageSize;
     window.setInterval(() => this.update(), 5000);
   }
 
   public update(forceUpdate: boolean = false): void {
     try {
-      this.tradeAssetService
-        .getLatestTradeAssetHash()
+      this.purchaseOrderService
+        .getMostRecentPurchaseOrderHash()
         .subscribe(hash => {
           if (hash !== this.hash) {
             this.hash = hash;
@@ -45,18 +45,18 @@ export class MainComponent implements OnInit {
           }
 
           if (forceUpdate) {
-            this.tradeAssetService
-              .getTradeAssetCount()
+            this.purchaseOrderService
+              .getPurchaseOrderCount()
               .subscribe(count => {
-                this.invoicePaginator.length = count;
+                this.purchaseOrderPaginator.length = count;
 
                 if (count === 0) {
                   this.visibleState = "empty";
                 } else {
                   this.visibleState = "full";
-                  this.tradeAssetService
-                    .getAllTradeAssets(this.pageNumber, this.pageSize)
-                    .subscribe(assets => this.states = assets.map(o => o.state.data));
+                  this.purchaseOrderService
+                    .getAllPurchaseOrders(this.pageNumber, this.pageSize)
+                    .subscribe(assets => this.states = assets);
                 }
               });
           }
@@ -64,10 +64,6 @@ export class MainComponent implements OnInit {
     } catch (e) {
       console.error(e);
     }
-  }
-
-  public getName(value: string): CordaX500Name {
-    return CordaX500Name.parse(value);
   }
 
   public onPage(event: any): void {

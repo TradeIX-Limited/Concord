@@ -1,4 +1,4 @@
 {
-    "useOrigin": true,
+    "useOrigin": false,
     "apiUrl": "http://localhost:10007/api"
 }

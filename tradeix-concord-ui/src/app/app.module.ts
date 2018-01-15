@@ -29,11 +29,15 @@ import {
 
 import { RootComponent } from "./root/root.component";
 import { MainComponent } from "./main/main.component";
+import { HistoryComponent } from "./history/history.component";
 
 import { NodeService } from "../api/domain/nodes/node.service";
-import { TradeAssetService } from "api/domain/trade-assets/trade-asset.service";
 import { HistoryService } from "api/domain/history/history.service";
-import { HistoryComponent } from "./history/history.component";
+
+import { Mapper } from "api/domain/shared/mapper";
+import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
+import { UniqueIdentifier, CordaX500Name } from "api/domain/shared/corda";
+import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.service";
 
 @NgModule({
   declarations: [
@@ -65,8 +69,33 @@ import { HistoryComponent } from "./history/history.component";
     MatPaginatorModule,
     MatProgressBarModule
   ],
-  providers: [NodeService, TradeAssetService, HistoryService],
+  providers: [NodeService, PurchaseOrderService, HistoryService],
   bootstrap: [RootComponent],
   entryComponents: []
 })
-export class AppModule { }
+export class AppModule {
+  public constructor() {
+    this.initialize();
+  }
+
+  private initialize(): void {
+    const mapper: Mapper = Mapper.getInstance();
+
+    mapper.createMapConfiguration(Object, PurchaseOrderState, (input: any) => {
+      return new PurchaseOrderState(
+        new UniqueIdentifier(input.linearId.externalId, input.linearId.id),
+        CordaX500Name.parse(input.owner),
+        CordaX500Name.parse(input.buyer),
+        CordaX500Name.parse(input.supplier),
+        CordaX500Name.parse(input.conductor),
+        input.reference,
+        input.amount,
+        new Date(input.created),
+        new Date(input.earliestShipment),
+        new Date(input.latestShipment),
+        input.portOfShipment,
+        input.descriptionOfGoods,
+        input.deliveryTerms);
+    });
+  }
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CordaX500Name, StateAndRef } from "api/domain/shared/corda";
-import { TradeAssetState } from "api/domain/states/trade-asset-state";
+import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
 
 @Component({
   selector: "app-history",
@@ -8,10 +8,10 @@ import { TradeAssetState } from "api/domain/states/trade-asset-state";
   styleUrls: ["./history.component.scss"]
 })
 export class HistoryComponent {
-  private items: StateAndRef<TradeAssetState>[] = [];
+  private items: PurchaseOrderState[] = [];
 
 
-  public setItems(items: StateAndRef<TradeAssetState>[]): void {
+  public setItems(items: PurchaseOrderState[]): void {
     this.items = items;
   }
 

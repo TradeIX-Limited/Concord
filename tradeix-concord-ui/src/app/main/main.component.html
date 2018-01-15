@@ -1,16 +1,22 @@
 <mat-tab-group color="accent">
-  <mat-tab label="Invoices">
+  <mat-tab label="Purchase Orders">
     <div [hidden]="visibleState !== 'full'">
-      <mat-paginator #invoicePaginator (page)="onPage($event)"></mat-paginator>
+      <mat-paginator #purchaseOrderPaginator (page)="onPage($event)"></mat-paginator>
       <div class="scroll-container">
         <table>
           <thead>
             <tr>
               <th>ID</th>
+              <th>Owner</th>
               <th>Buyer</th>
               <th>Supplier</th>
-              <th>Owner</th>
-              <th>Status</th>
+              <th>Reference</th>
+              <th>Created</th>
+              <th>Earliest Shipment</th>
+              <th>Latest Shipment</th>
+              <th>Port of Shipment</th>
+              <th>Description of Goods</th>
+              <th>Delivery Terms</th>
               <th class="align-right">Amount</th>
             </tr>
           </thead>
@@ -20,11 +26,17 @@
                 <td>
                   <a (click)="onOpenDrawer(state.linearId.externalId)" href="#">{{state.linearId.externalId}}</a>
                 </td>
-                <td>{{getName(state.buyer).organizationName}}</td>
-                <td>{{getName(state.supplier).organizationName}}</td>
-                <td>{{getName(state.owner).organizationName}}</td>
-                <td>{{state.tradeAsset.status}}</td>
-                <td class="align-right">{{state.tradeAsset.amount}}</td>
+                <td>{{state.owner.organizationName}}</td>
+                <td>{{state.buyer.organizationName}}</td>
+                <td>{{state.supplier.organizationName}}</td>
+                <td>{{state.reference}}</td>
+                <td>{{state.created | date:'medium'}}</td>
+                <td>{{state.earliestShipment | date:'medium'}}</td>
+                <td>{{state.latestShipment | date:'medium'}}</td>
+                <td>{{state.portOfShipment}}</td>
+                <td>{{state.descriptionOfGoods}}</td>
+                <td>{{state.deliveryTerms}}</td>
+                <td class="align-right">{{state.amount}}</td>
               </tr>
             </ng-container>
           </tbody>
@@ -39,7 +51,7 @@
       <h2 class="message">Loading</h2>
     </div>
   </mat-tab>
-  <mat-tab label="Purchase Orders">
+  <!-- <mat-tab label="Purchase Orders">
     <mat-paginator [pageSize]="50"></mat-paginator>
-  </mat-tab>
+  </mat-tab> -->
 </mat-tab-group>
