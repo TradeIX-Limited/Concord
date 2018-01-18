@@ -26,7 +26,7 @@
                 <td>{{state.buyer.organizationName}}</td>
                 <td>{{state.supplier.organizationName}}</td>
                 <td>{{state.reference}}</td>
-                <td>{{state.created | date:'medium'}}</td>
+                <td>{{state.created | date:'short'}}</td>
                 <td class="align-right">{{state.amount}}</td>
                 <td class="align-right"><button mat-button color="accent" (click)="onOpenDialog(state.linearId.externalId)">Delivery Info</button></td>
               </tr>
