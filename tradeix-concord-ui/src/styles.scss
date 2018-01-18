@@ -48,28 +48,47 @@ hr {
 table {
     width: 100%;
     border-collapse: collapse;
+    border-top: 1px solid #616E79;
+    background: rgba(0, 0, 0, 0.25);
     thead {
-        background: rgba(255, 255, 255, 0.1);
+        background: #1C2935;
         tr {
             background: transparent;
         }
     }
-    th {
-        text-align: left;
+    tr {
+        border-bottom: 1px solid #616E79;
+        th,
+        td {
+            padding: 10px 10px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        th {
+            color: #899097;
+            text-align: left;
+            padding: 16px 10px;
+        }
     }
-    th,
-    td {
-        padding: 20px 10px;
-        max-width: 160px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    tr:nth-child(even) {
-        background: rgba(255, 255, 255, 0.066)
-    }
-    tr:nth-child(odd) {
-        background: rgba(255, 255, 255, 0.033)
+}
+
+mat-dialog-container {
+    background: #42617b !important;
+    background: -moz-linear-gradient(top, #42617b 0%, #273e59 100%) !important;
+    background: -webkit-linear-gradient(top, #42617b 0%, #273e59 100%) !important;
+    background: linear-gradient(to bottom, #42617b 0%, #273e59 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#42617b', endColorstr='#273e59', GradientType=0) !important;
+    border-radius: 4px !important;
+
+    table {
+        background: transparent !important;
+        border: none !important;
+
+        tr {
+            border: none !important;
+        }
     }
 }
 
@@ -83,7 +102,7 @@ table {
 }
 
 .mat-drawer-backdrop.mat-drawer-shown {
-    background-color: rgba(0, 0, 0, 0.75) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .scroll-container {
@@ -92,10 +111,15 @@ table {
 }
 
 ::-webkit-scrollbar {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     width: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #00BCD4;
+    height: 6px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #2BE7F8;
 }

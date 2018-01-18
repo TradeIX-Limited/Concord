@@ -38,12 +38,14 @@ import { Mapper } from "api/domain/shared/mapper";
 import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
 import { UniqueIdentifier, CordaX500Name } from "api/domain/shared/corda";
 import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.service";
+import { DeliveryInformationComponent } from './delivery-information/delivery-information.component';
 
 @NgModule({
   declarations: [
     RootComponent,
     MainComponent,
-    HistoryComponent
+    HistoryComponent,
+    DeliveryInformationComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -71,7 +73,7 @@ import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.
   ],
   providers: [NodeService, PurchaseOrderService, HistoryService],
   bootstrap: [RootComponent],
-  entryComponents: []
+  entryComponents: [DeliveryInformationComponent]
 })
 export class AppModule {
   public constructor() {
@@ -90,9 +92,9 @@ export class AppModule {
         CordaX500Name.parse(input.conductor),
         input.reference,
         input.amount,
-        new Date(input.created),
-        new Date(input.earliestShipment),
-        new Date(input.latestShipment),
+        new Date(input.created * 1000),
+        new Date(input.earliestShipment * 1000),
+        new Date(input.latestShipment * 1000),
         input.portOfShipment,
         input.descriptionOfGoods,
         input.deliveryTerms);

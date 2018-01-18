@@ -12,12 +12,8 @@
               <th>Supplier</th>
               <th>Reference</th>
               <th>Created</th>
-              <th>Earliest Shipment</th>
-              <th>Latest Shipment</th>
-              <th>Port of Shipment</th>
-              <th>Description of Goods</th>
-              <th>Delivery Terms</th>
               <th class="align-right">Amount</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -31,12 +27,8 @@
                 <td>{{state.supplier.organizationName}}</td>
                 <td>{{state.reference}}</td>
                 <td>{{state.created | date:'medium'}}</td>
-                <td>{{state.earliestShipment | date:'medium'}}</td>
-                <td>{{state.latestShipment | date:'medium'}}</td>
-                <td>{{state.portOfShipment}}</td>
-                <td>{{state.descriptionOfGoods}}</td>
-                <td>{{state.deliveryTerms}}</td>
                 <td class="align-right">{{state.amount}}</td>
+                <td class="align-right"><button mat-button color="accent" (click)="onOpenDialog(state.linearId.externalId)">Delivery Info</button></td>
               </tr>
             </ng-container>
           </tbody>
@@ -47,7 +39,7 @@
       <h2 class="message">Nothing to see here</h2>
     </div>
     <div [hidden]="visibleState !== 'loading'">
-      <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
       <h2 class="message">Loading</h2>
     </div>
   </mat-tab>

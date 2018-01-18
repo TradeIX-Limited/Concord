@@ -1,21 +1,31 @@
-mat-drawer-container {
-    background: url('../../../src/assets/images/wallpaper.png') fixed center center;
-    padding: 20px;
+mat-toolbar {
+    background: #243343;
+    border-bottom: 1px solid #616E79;
+}
 
+mat-drawer-container {
+    background: #35506b;
+    background: -moz-linear-gradient(top, #35506b 0%, #1b304b 100%);
+    background: -webkit-linear-gradient(top, #35506b 0%, #1b304b 100%);
+    background: linear-gradient(to bottom, #35506b 0%, #1b304b 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35506b', endColorstr='#1b304b', GradientType=0);
     mat-drawer {
         padding: 20px;
         width: 640px;
-        background: rgba(0, 0, 0, 0.75);
+        background: #42617b;
+        background: -moz-linear-gradient(top, #42617b 0%, #273e59 100%);
+        background: -webkit-linear-gradient(top, #42617b 0%, #273e59 100%);
+        background: linear-gradient(to bottom, #42617b 0%, #273e59 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#42617b', endColorstr='#273e59', GradientType=0);
     }
-
     mat-drawer-content {
         overflow: hidden;
     }
 }
 
-mat-card {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 32px 0px 4px;
+app-main {
+    box-sizing: border-box;
+    padding: 20px;
 }
 
 .scroll-container {

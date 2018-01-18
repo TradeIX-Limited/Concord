@@ -1,14 +1,14 @@
 <div fxFill fxLayout="column">
-  <mat-toolbar color="primary">
+  <mat-toolbar>
     <img class="logo" src="/web/tix/assets/images/MarcoPolo.svg" height="16" />
     <div fxFlex></div>
-    <span>Participating as {{nodeName?.organizationName}}</span>
+    <span>{{nodeName?.organizationName}}</span>
   </mat-toolbar>
   <mat-drawer-container #drawerContainer fxFlex>
     <mat-drawer mode="over" position="end" opened="false">
       <div fxLayout="row">
         <h1 fxFlex class="test">Asset History</h1>
-        <button mat-icon-button color="accent" (click)="drawerContainer.close()">
+        <button mat-icon-button (click)="drawerContainer.close()">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -18,9 +18,7 @@
       </div>
     </mat-drawer>
     <mat-drawer-content fxFlex fxLayout="column">
-      <mat-card fxFlex fxLayout="column">
-        <app-main fxFlex fxLayout="column"></app-main>
-      </mat-card>
+      <app-main fxFlex fxLayout="column"></app-main>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

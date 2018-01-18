@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { StateAndRef, CordaX500Name } from "api/domain/shared/corda";
-import {PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
+import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
 import { NodeService } from "api/domain/nodes/node.service";
 import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.service";
-import { MatPaginator } from "@angular/material";
+import { MatPaginator, MatDialog } from "@angular/material";
 import { HistoryService } from "api/domain/history/history.service";
+import { DeliveryInformationComponent } from "app/delivery-information/delivery-information.component";
 
 @Component({
   selector: "app-main",
@@ -25,7 +26,8 @@ export class MainComponent implements OnInit {
 
   constructor(
     private readonly purchaseOrderService: PurchaseOrderService,
-    private readonly historyService: HistoryService) {
+    private readonly historyService: HistoryService,
+    private readonly dialog: MatDialog) {
     this.update();
   }
 
@@ -73,6 +75,13 @@ export class MainComponent implements OnInit {
       this.pageNumber = event.pageIndex + 1;
       this.update(true);
     }, 1000);
+  }
+
+  public onOpenDialog(externalId: string): void {
+    this.dialog.open(DeliveryInformationComponent, {
+      width: "640px",
+      data: this.states.find(state => state.linearId.externalId === externalId)
+    });
   }
 
   public onOpenDrawer(externalId: string): void {
