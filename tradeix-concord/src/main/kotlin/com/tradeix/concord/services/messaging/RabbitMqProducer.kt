@@ -13,9 +13,10 @@ class RabbitMqProducer<T : RabbitMessage>(
         private val rabbitConnectionProvider: RabbitMqConnectionProvider
 ) : IQueueProducer<T> {
     companion object {
-        protected val log: Logger = loggerFor<IssuanceMessageConsumer>()
+        protected val log: Logger = loggerFor<RabbitMqProducer<RabbitMessage>>()
     }
     override fun publish(message: T) {
+        log.debug("message is ${message}")
         val serializer = Gson()
         val serializedMessage = serializer.toJson(message)
         try {
@@ -31,18 +32,18 @@ class RabbitMqProducer<T : RabbitMessage>(
             )
 
             handleMessage(channel, serializedMessage)
+            log.debug("handleMessage of ${serializedMessage} is successful")
         } catch (e: Exception) {
             log.error(e.message)
         }
     }
-
     private fun handleMessage(channel: Channel?, serializedMessage: String) {
         channel?.basicPublish(
                 rabbitProducerConfiguration.exchangeName,
                 rabbitProducerConfiguration.exchangeRoutingKey,
                 AMQP.BasicProperties
                         .Builder()
-                        .contentType("text/plain")
+                        .contentType("application/json")
                         .deliveryMode(2)
                         .priority(1)
                         .build(), serializedMessage.toByteArray()

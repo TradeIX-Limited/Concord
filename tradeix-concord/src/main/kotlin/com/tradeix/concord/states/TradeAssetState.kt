@@ -1,6 +1,7 @@
 package com.tradeix.concord.states
 
 import com.tradeix.concord.interfaces.OwnerState
+import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
 import com.tradeix.concord.schemas.TradeAssetSchemaV1
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.LinearState
@@ -49,4 +50,17 @@ data class TradeAssetState(
     }
 
     override fun supportedSchemas(): Iterable<MappedSchema> = listOf(TradeAssetSchemaV1)
+
+    fun toMessage() : TradeAssetIssuanceRequestMessage =
+            TradeAssetIssuanceRequestMessage(
+                    correlationId = "",
+                    tryCount = 0,
+                    externalId = linearId.externalId,
+                    buyer = buyer.nameOrNull(),
+                    supplier = supplier.nameOrNull(),
+                    conductor = conductor.nameOrNull()!!,
+                    status = status.description,
+                    value = amount.toDecimal(),
+                    currency = amount.token.currencyCode,
+                    attachmentId = "")
 }

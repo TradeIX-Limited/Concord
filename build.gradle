@@ -100,6 +100,11 @@ task copyTixIntegrationConfiguration(dependsOn: []){
         from "./tix.test.conf"
         into "tradeix-concord"
     }
+
+  //  project.copy {
+  //      from "./tix.integration.conf"
+  //      into "tradeix-concord/build/nodes/TradeIX"
+  //  }
 }
 
 copyTixIntegrationConfiguration.shouldRunAfter build

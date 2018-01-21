@@ -3,6 +3,10 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueConsumer
+import com.tradeix.concord.interfaces.IQueueProducer
+import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
+import com.tradeix.concord.services.messaging.publishers.CordaTiXPOPublisher
+import com.tradeix.concord.services.messaging.publishers.CordaTiXTradeAssetPublisher
 import com.tradeix.concord.services.messaging.subscribers.ChangeOwnerFlowQueuesSubscriber
 import com.tradeix.concord.services.messaging.subscribers.IssuanceFlowQueuesSubscriber
 import com.typesafe.config.ConfigFactory
@@ -12,6 +16,7 @@ import net.corda.nodeapi.config.parseAs
 import org.slf4j.Logger
 import java.io.File
 
+//TODO Rename this file to TixMessagingStartup
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
     init {
@@ -26,6 +31,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
     companion object {
         protected  val log: Logger = loggerFor<TixMessageSubscriptionStartup>()
         private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
+        val currentPublishers: MutableMap<String, IQueueProducer<RabbitRequestMessage>> = mutableMapOf()
 
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
@@ -51,6 +57,14 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 log.info("Starting Change of owner Rabbit Subscription")
                 ChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
+
+                log.info("Starting CordaTiXTradeAssetQueuesPublisher")
+                CordaTiXTradeAssetPublisher(defaultConfig, serializer)
+                        .initialize(connectionProvider, currentPublishers)
+
+                log.info("Starting CordaTiXPOQueuesPublisher")
+                CordaTiXPOPublisher( defaultConfig, serializer)
+                        .initialize(connectionProvider, currentPublishers)
 
             } catch (ex: Throwable) {
                 log.error("Exception caught when subscribing to Rabbit queues")
