@@ -194,7 +194,7 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         ]
         rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
     }
-/*    node {
+    node {
         name "C=GB,L=London,O=TradeIXFakeSupplier"
         advertisedServices = []
         p2pPort 10008
@@ -206,7 +206,7 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
                 "net.corda:corda-finance:$corda_release_version"
         ]
         rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }**/
+    }
 
     node {
         name "C=GB,L=London,O=TradeIXTestSupplier"
@@ -221,7 +221,7 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         ]
         rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
     }
- /**
+
     node {
         name "C=GB,L=London,O=TradeIXTestSupplier1"
         advertisedServices = []
@@ -243,8 +243,8 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
                 "net.corda:corda-finance:$corda_release_version"
         ]
         rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    } */
-/*    node {
+    }
+    node {
         name "C=GB,L=London,O=TradeIXTestFunder"
         advertisedServices = []
         p2pPort 10020
@@ -265,7 +265,7 @@ task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
                 "net.corda:corda-finance:$corda_release_version"
         ]
         rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }*/
+    }
 }
 
 // TODO: Make into gradle plugins without any references to Jython
