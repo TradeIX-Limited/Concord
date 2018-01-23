@@ -59,6 +59,7 @@ data class TradeAssetState(
                     buyer = buyer.nameOrNull(),
                     supplier = supplier.nameOrNull(),
                     conductor = conductor.nameOrNull()!!,
+                    owner = owner.nameOrNull()!!,
                     status = status.description,
                     value = amount.toDecimal(),
                     currency = amount.token.currencyCode,
