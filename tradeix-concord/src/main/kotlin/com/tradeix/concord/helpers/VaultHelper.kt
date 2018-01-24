@@ -21,7 +21,6 @@ class VaultHelper {
 
         updates.toBlocking().subscribe { update ->
             update.produced.forEach {
-                //println("Here is a new update for you")
                 try {
                     publisher.publish(it.state.data.toMessage())
                 } catch (e: Exception) {
@@ -29,7 +28,6 @@ class VaultHelper {
                     e.printStackTrace()
                     log.error(e.message, e)
                 }
-                //println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
             }
         }
     }
