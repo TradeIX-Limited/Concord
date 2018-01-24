@@ -26,7 +26,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class TradeAssetStateCancellationContractTests {
+class PurchaseOrderCancellationContractTests {
     @Before
     fun setup() {
         setCordappPackages("com.tradeix.concord.contracts")

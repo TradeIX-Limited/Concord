@@ -70,7 +70,7 @@ object PurchaseOrderOwnership {
                 throw  FlowException("No states found for ownership change.")
             } else {
                 inputStates.map {
-                    it.state.data.copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
+                    it.state.data.changeOwner(FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
                 }
             }
 
