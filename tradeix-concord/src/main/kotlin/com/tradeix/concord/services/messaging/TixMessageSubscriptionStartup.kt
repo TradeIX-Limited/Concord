@@ -63,7 +63,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                         .initialize(connectionProvider, currentPublishers)
 
                 log.info("Starting CordaTiXPOQueuesPublisher")
-                CordaTiXPOPublisher( defaultConfig, serializer)
+                CordaTiXPOPublisher(defaultConfig, serializer)
                         .initialize(connectionProvider, currentPublishers)
 
             } catch (ex: Throwable) {

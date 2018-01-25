@@ -16,25 +16,20 @@ class CordaTiXTradeAssetPublisher(
         val config: Config,
         val serializer: Gson
 ) : FlowQueuesPublisher {
-    val log: Logger = loggerFor<CordaTiXTradeAssetPublisher>()
-    val configRoot = "tix-integration"
-    val configBranch = "cordatixNotificationConfiguration1"
-    val exchanceRoutingKey = "cordatix_tradeasset_notification"
+    private val log: Logger = loggerFor<CordaTiXTradeAssetPublisher>()
+    private val configRoot = "tix-integration"
+    private val configBranch = "cordatixNotificationConfiguration1"
+    private val exchangeRoutingKey = "cordatix_tradeasset_notification"
     override fun initialize(connectionProvider: RabbitMqConnectionProvider, currentPublishers: MutableMap<String, IQueueProducer<RabbitRequestMessage>>) {
-
         val producerConfigurationString = config.resolve().getConfig(configRoot).getObject(configBranch).render(ConfigRenderOptions.concise())
         val producerConfiguration = serializer.fromJson(producerConfigurationString, RabbitProducerConfiguration::class.java)
-
         if(!currentPublishers.containsKey(producerConfiguration.exchangeRoutingKey)) {
             log.info("Initializing CordaTiXTradeAssetPublisher - this should happen only once and only for tradeix node")
-
-
-            val producerConfigurations = mapOf(exchanceRoutingKey to producerConfiguration)
+            val producerConfigurations = mapOf(exchangeRoutingKey to producerConfiguration)
             val producer = RabbitMqProducer<RabbitRequestMessage>(
-                    producerConfigurations[exchanceRoutingKey]!!,
+                    producerConfigurations[exchangeRoutingKey]!!,
                     rabbitConnectionProvider = connectionProvider
             )
-
             currentPublishers.put(producerConfiguration.exchangeRoutingKey, producer)
             println("RabbitMQ CordaTiXTradeAssetQueuesPublisher ready")
         }

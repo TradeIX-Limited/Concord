@@ -16,6 +16,7 @@ class PurchaseOrderIssuanceRequestMessage(
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
         val conductor: CordaX500Name?,
+        val owner: CordaX500Name? = null,
         val reference: String?,
         val value: BigDecimal?,
         val currency: String?,
