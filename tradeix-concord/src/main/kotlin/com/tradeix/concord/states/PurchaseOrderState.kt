@@ -57,8 +57,8 @@ data class PurchaseOrderState(
     }
 
     override fun supportedSchemas(): Iterable<MappedSchema> = listOf(PurchaseOrderSchemaV1)
-    fun changeOwner(newOwner: AbstractParty): PurchaseOrderState = copy(owner = newOwner)
 
+    fun changeOwner(newOwner: AbstractParty): PurchaseOrderState = copy(owner = newOwner)
 
     fun toMessage() : PurchaseOrderIssuanceRequestMessage =
             PurchaseOrderIssuanceRequestMessage(
@@ -80,5 +80,4 @@ data class PurchaseOrderState(
                     descriptionOfGoods = descriptionOfGoods,
                     deliveryTerms = deliveryTerms
             )
-
 }
