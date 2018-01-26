@@ -177,7 +177,7 @@ class PurchaseOrderIssuanceFlowTests : AbstractFlowTest() {
         }
 
         assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'value' cannot be negative.", exception.validationErrors.single())
+        assertEquals("Field 'value' cannot be zero or negative.", exception.validationErrors.single())
     }
 
     @Test

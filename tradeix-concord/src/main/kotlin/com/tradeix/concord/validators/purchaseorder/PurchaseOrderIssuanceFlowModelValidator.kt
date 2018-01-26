@@ -4,6 +4,9 @@ import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowMod
 import com.tradeix.concord.validators.Validator
 import net.corda.core.crypto.SecureHash
 import java.math.BigDecimal
+import com.tradeix.concord.extensions.ArrayListExtensions.addWhen
+import com.tradeix.concord.extensions.SecureHashExtensions.isValid
+import java.time.Instant
 
 class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlowModel)
     : Validator<PurchaseOrderIssuanceFlowModel>(message) {
@@ -14,11 +17,13 @@ class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlow
         private val EX_CONDUCTOR_REQUIRED = "Field 'conductor' is required."
         private val EX_REFERENCE_REQUIRED = "Field 'reference' is required."
         private val EX_VALUE_REQUIRED = "Field 'value' is required."
-        private val EX_VALUE_NEGATIVE = "Field 'value' cannot be negative."
+        private val EX_VALUE_NEGATIVE = "Field 'value' cannot be zero or negative."
         private val EX_CURRENCY_REQUIRED = "Field 'currency' is required."
         private val EX_CREATED_REQUIRED = "Field 'created' is required."
+        private val EX_CREATED_FUTURE = "Field 'created' is cannot be in the future."
         private val EX_EARLIEST_SHIPMENT_REQUIRED = "Field 'earliestShipment' is required."
         private val EX_LATEST_SHIPMENT_REQUIRED = "Field 'latestShipment' is required."
+        private val EX_EARLIEST_LATEST_SHIPMENT = "Field 'earliestShipment' cannot be later than field 'latestShipment'."
         private val EX_PORT_OF_SHIPMENT_REQUIRED = "Field 'portOfShipment' is required."
         private val EX_DESCRIPTION_OF_GOODS_REQUIRED = "Field 'descriptionOfGoods' is required."
         private val EX_DELIVERY_TERMS_REQUIRED = "Field 'deliveryTerms' is required."
@@ -26,29 +31,26 @@ class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlow
     }
 
     override fun validate() {
-        message.externalId ?: errors.add(EX_EXTERNAL_ID_REQUIRED)
-        message.supplier ?: errors.add(EX_SUPPLIER_REQUIRED)
-        message.conductor ?: errors.add(EX_CONDUCTOR_REQUIRED)
-        message.reference ?: errors.add(EX_REFERENCE_REQUIRED)
-        message.value ?: errors.add(EX_VALUE_REQUIRED)
-        message.currency ?: errors.add(EX_CURRENCY_REQUIRED)
-        message.created ?: errors.add(EX_CREATED_REQUIRED)
-        message.earliestShipment ?: errors.add(EX_EARLIEST_SHIPMENT_REQUIRED)
-        message.latestShipment ?: errors.add(EX_LATEST_SHIPMENT_REQUIRED)
-        message.portOfShipment ?: errors.add(EX_PORT_OF_SHIPMENT_REQUIRED)
-        message.descriptionOfGoods ?: errors.add(EX_DESCRIPTION_OF_GOODS_REQUIRED)
-        message.deliveryTerms ?: errors.add(EX_DELIVERY_TERMS_REQUIRED)
+        errors.addWhen(message.externalId.isNullOrBlank(), EX_EXTERNAL_ID_REQUIRED)
+        errors.addWhen(message.supplier == null, EX_SUPPLIER_REQUIRED)
+        errors.addWhen(message.conductor == null, EX_CONDUCTOR_REQUIRED)
+        errors.addWhen(message.reference.isNullOrBlank(), EX_REFERENCE_REQUIRED)
+        errors.addWhen(message.value == null, EX_VALUE_REQUIRED)
+        errors.addWhen(message.value != null && message.value <= BigDecimal.ZERO, EX_VALUE_NEGATIVE)
+        errors.addWhen(message.currency.isNullOrBlank(), EX_CURRENCY_REQUIRED)
+        errors.addWhen(message.created == null, EX_CREATED_REQUIRED)
+        errors.addWhen(message.created != null && message.created > Instant.now(), EX_CREATED_FUTURE)
+        errors.addWhen(message.earliestShipment == null, EX_EARLIEST_SHIPMENT_REQUIRED)
+        errors.addWhen(message.latestShipment == null, EX_LATEST_SHIPMENT_REQUIRED)
 
-        if (message.value != null && message.value < BigDecimal.ZERO) {
-            errors.add(EX_VALUE_NEGATIVE)
-        }
+        errors.addWhen(
+                message.earliestShipment != null &&
+                message.latestShipment != null &&
+                message.earliestShipment > message.latestShipment, EX_EARLIEST_LATEST_SHIPMENT)
 
-        if (message.attachmentId != null) {
-            try {
-                SecureHash.parse(message.attachmentId)
-            } catch (e: IllegalArgumentException) {
-                errors.add(EX_INVALID_ATTACHMENT)
-            }
-        }
+        errors.addWhen(message.portOfShipment.isNullOrBlank(), EX_PORT_OF_SHIPMENT_REQUIRED)
+        errors.addWhen(message.descriptionOfGoods.isNullOrBlank(), EX_DESCRIPTION_OF_GOODS_REQUIRED)
+        errors.addWhen(message.deliveryTerms.isNullOrBlank(), EX_DELIVERY_TERMS_REQUIRED)
+        errors.addWhen(message.attachmentId != null && !SecureHash.isValid(message.attachmentId), EX_INVALID_ATTACHMENT)
     }
 }
