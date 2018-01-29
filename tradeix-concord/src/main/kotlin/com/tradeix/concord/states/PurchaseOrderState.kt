@@ -1,6 +1,5 @@
 package com.tradeix.concord.states
 
-import com.tradeix.concord.contracts.PurchaseOrderContract
 import com.tradeix.concord.interfaces.OwnerState
 import com.tradeix.concord.schemas.PurchaseOrderSchemaV1
 import net.corda.core.contracts.*

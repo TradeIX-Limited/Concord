@@ -20,7 +20,7 @@ class PurchaseOrderIssuanceFlowModelValidator(message: PurchaseOrderIssuanceFlow
         private val EX_VALUE_NEGATIVE = "Field 'value' cannot be zero or negative."
         private val EX_CURRENCY_REQUIRED = "Field 'currency' is required."
         private val EX_CREATED_REQUIRED = "Field 'created' is required."
-        private val EX_CREATED_FUTURE = "Field 'created' is cannot be in the future."
+        private val EX_CREATED_FUTURE = "Field 'created' cannot be a future date."
         private val EX_EARLIEST_SHIPMENT_REQUIRED = "Field 'earliestShipment' is required."
         private val EX_LATEST_SHIPMENT_REQUIRED = "Field 'latestShipment' is required."
         private val EX_EARLIEST_LATEST_SHIPMENT = "Field 'earliestShipment' cannot be later than field 'latestShipment'."
