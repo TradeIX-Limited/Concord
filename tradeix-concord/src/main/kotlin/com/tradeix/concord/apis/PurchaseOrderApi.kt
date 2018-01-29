@@ -2,6 +2,7 @@ package com.tradeix.concord.apis
 
 import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderCancellation
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
@@ -9,6 +10,7 @@ import com.tradeix.concord.messages.webapi.FailedResponseMessage
 import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
 import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
 import com.tradeix.concord.messages.webapi.SingleIdentitySuccessResponseMessage
+import com.tradeix.concord.messages.webapi.purchaseorder.PurchaseOrderCancellationRequestMessage
 import com.tradeix.concord.messages.webapi.purchaseorder.PurchaseOrderAmendmentRequestMessage
 import com.tradeix.concord.messages.webapi.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import com.tradeix.concord.messages.webapi.purchaseorder.PurchaseOrderOwnershipRequestMessage
@@ -151,6 +153,34 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
         }
     }
 
+    @PUT
+    @Path("cancel")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun cancelPurchaseOrder(message: PurchaseOrderCancellationRequestMessage): Response {
+        try {
+            val flowHandle = services.startTrackedFlow(PurchaseOrderCancellation::InitiatorFlow, message.toModel())
+            flowHandle.progress.subscribe { println(">> $it") }
+            val result = flowHandle.returnValue.getOrThrow()
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()))
+                    .build()
+        } catch (ex: Throwable) {
+            return when (ex) {
+                is FlowValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(FailedResponseMessage(ex.message!!))
+                        .build()
+            }
+        }
+    }
     @PUT
     @Path("amend")
     @Consumes(MediaType.APPLICATION_JSON)

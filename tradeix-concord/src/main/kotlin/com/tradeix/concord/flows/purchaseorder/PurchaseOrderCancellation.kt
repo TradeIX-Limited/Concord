@@ -91,9 +91,12 @@ object PurchaseOrderCancellation {
                     inputState.buyer,
                     inputState.supplier,
                     inputState.conductor)
+                    .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
-                    .map { initiateFlow(serviceHub.identityService.requireWellKnownPartyFromAnonymous(it)) }
+                    .map { initiateFlow(it) }
+
+            requiredSignatureFlowSessions.forEach { println(it.counterparty.name) }
 
             val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                     partiallySignedTransaction,
@@ -114,8 +117,6 @@ object PurchaseOrderCancellation {
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
-                    val output = stx.tx.outputs.single().data
-                    "This must be a purchase order transaction." using (output is PurchaseOrderState)
                 }
             }
 
