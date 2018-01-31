@@ -2,7 +2,7 @@
 
 export CORDA_PORT_P2P="10002"
 export CORDA_PORT_RPC="10003"
-export CORDA_WEBADDRESS="0.0.0.0:10004"
+export CORDA_PORT_WEB="10004"
 export CONTROLLER_CORDA_LEGAL_NAME="C=GB,L=London,O=Controller"
 export TRADEIX_CORDA_LEGAL_NAME="C=GB,L=London,O=TradeIX"
 export FAKESUPPLIER_CORDA_LEGAL_NAME="C=GB,L=London,O=TradeIXFakeSupplier"
@@ -31,26 +31,29 @@ while true; do
 done
 
 mkdir -p config
-mkdir -p config/nodes
-mkdir -p config/nodes/Controller
-mkdir -p config/nodes/Controller/certificates
-mkdir -p config/nodes/plugins
-mkdir -p config/nodes/TradeIX
-mkdir -p config/nodes/TradeIX/certificates
-mkdir -p config/nodes/TradeIXFakeSupplier
-mkdir -p config/nodes/TradeIXFakeSupplier/certificates
-mkdir -p config/nodes/TradeIXTestBuyer
-mkdir -p config/nodes/TradeIXTestBuyer/certificates
-mkdir -p config/nodes/TradeIXTestFunder
-mkdir -p config/nodes/TradeIXTestFunder/certificates
-mkdir -p config/nodes/TradeIXTestSupplier
-mkdir -p config/nodes/TradeIXTestSupplier/certificates
-mkdir -p config/nodes/TradeIXTestSupplier1
-mkdir -p config/nodes/TradeIXTestSupplier1/certificates
-mkdir -p config/nodes/TradeIXTestSupplier2
-mkdir -p config/nodes/TradeIXTestSupplier2/certificates
+mkdir -p config/dockerconfig
+mkdir -p config/dockerconfig/nodes
+mkdir -p config/dockerconfig/nodes/Controller
+mkdir -p config/dockerconfig/nodes/Controller/certificates
+mkdir -p config/dockerconfig/nodes/plugins
+mkdir -p config/dockerconfig/nodes/TradeIX
+mkdir -p config/dockerconfig/nodes/TradeIX/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXFakeSupplier
+mkdir -p config/dockerconfig/nodes/TradeIXFakeSupplier/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestBuyer
+mkdir -p config/dockerconfig/nodes/TradeIXTestBuyer/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestFunder
+mkdir -p config/dockerconfig/nodes/TradeIXTestFunder/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier1
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier1/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier2
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier2/certificates
+cp tix.integration.conf config/dockerconfig/nodes/TradeIX/
+cp tradeix-concord*.jar config/dockerconfig/nodes/plugins/
 
-cd config/nodes
+cd config/dockerconfig/nodes
 cat > run-corda.sh << EOF
 #!/bin/sh
 
@@ -96,7 +99,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TRADEIX_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -119,13 +122,14 @@ rpcUsers=[
 ]
 EOF
 
+
 cd ..
 cd TradeIXFakeSupplier
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$FAKESUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -154,7 +158,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTBUYER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -183,7 +187,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTFUNDER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -212,7 +216,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -236,12 +240,12 @@ rpcUsers=[
 EOF
 
 cd ..
-cd TradeIXTestSupplier
+cd TradeIXTestSupplier1
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER1_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -270,7 +274,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:10004"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER2_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
