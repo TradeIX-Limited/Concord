@@ -78,6 +78,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_RPC"
+webAddress : "0.0.0.0:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$CONTROLLER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "corda.notary.validating" ]

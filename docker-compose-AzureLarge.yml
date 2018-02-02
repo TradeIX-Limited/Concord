@@ -15,10 +15,14 @@ services:
     ports:
       - "10002:10002"
       - "10003:10003"
-    image: concord:1.0
+      - "10004:10004"
+    image: corda/concord:1.0
     container_name: controller
     volumes:
       - ./config/dockerconfig/nodes/Controller/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/Controller/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/Controller/logs/:/opt/corda/logs/
 
   TradeIX:
     networks:
@@ -33,12 +37,14 @@ services:
       - "10005:10002"
       - "10006:10003"
       - "10007:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeix
     volumes:
       - ./config/dockerconfig/nodes/TradeIX/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIX/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIX/tix.integration.conf/:/opt/corda/tix.integration.conf
+      - ./config/dockerconfig/nodes/TradeIX/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -55,12 +61,13 @@ services:
       - "10008:10002"
       - "10009:10003"
       - "10010:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixfakesupplier
     volumes:
       - ./config/dockerconfig/nodes/TradeIXFakeSupplier/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXFakeSupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -77,12 +84,13 @@ services:
       - "10023:10002"
       - "10024:10003"
       - "10025:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixtestbuyer
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestBuyer/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestBuyer/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestBuyer/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -99,12 +107,13 @@ services:
       - "10020:10002"
       - "10021:10003"
       - "10022:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixtestfunder
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestFunder/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestFunder/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestFunder/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -121,12 +130,13 @@ services:
       - "10011:10002"
       - "10012:10003"
       - "10013:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixtestsupplier
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestSupplier/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -143,12 +153,13 @@ services:
       - "10014:10002"
       - "10015:10003"
       - "10016:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixtestsupplier1
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestSupplier1/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier1/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 
@@ -165,12 +176,13 @@ services:
       - "10017:10002"
       - "10018:10003"
       - "10019:10004"
-    image: concord:1.0
+    image: corda/concord:1.0
     container_name: tradeixtestsupplier2
     volumes:
       - ./config/dockerconfig/nodes/TradeIXTestSupplier2/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier2/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/logs/:/opt/corda/logs/
     depends_on:
       - Controller
 networks:
