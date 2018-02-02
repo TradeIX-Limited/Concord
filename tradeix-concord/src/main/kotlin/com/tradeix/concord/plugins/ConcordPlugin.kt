@@ -1,9 +1,6 @@
 package com.tradeix.concord.plugins
 
-import com.tradeix.concord.apis.NodeInfoApi
-import com.tradeix.concord.apis.PurchaseOrderApi
-import com.tradeix.concord.apis.TiXNotifier
-import com.tradeix.concord.apis.TradeAssetApi
+import com.tradeix.concord.apis.*
 import com.tradeix.concord.services.messaging.TixMessageSubscriptionStartup
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.webserver.services.WebServerPluginRegistry
@@ -17,6 +14,7 @@ class ConcordPlugin : WebServerPluginRegistry {
             Function(::NodeInfoApi),
             Function(::TradeAssetApi),
             Function(::PurchaseOrderApi),
+            Function(::InvoiceApi),
             Function(::TixMessageSubscriptionStartup),
             Function(::TiXNotifier)
     )
