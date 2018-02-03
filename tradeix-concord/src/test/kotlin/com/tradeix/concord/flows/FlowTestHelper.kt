@@ -127,20 +127,20 @@ object FlowTestHelper {
 
         return future.getOrThrow()
     }
+
+
+fun cancelPurchaseOrder(
+        network: MockNetwork,
+        initiator: StartedNode<MockNetwork.MockNode>,
+        model: PurchaseOrderCancellationFlowModel) : SignedTransaction {
+
+    val future = initiator
+            .services
+            .startFlow(PurchaseOrderCancellation.InitiatorFlow(model))
+            .resultFuture
+
+    network.runNetwork()
+
+    return future.getOrThrow()
 }
-
-    fun cancelPurchaseOrder(
-            network: MockNetwork,
-            initiator: StartedNode<MockNetwork.MockNode>,
-            model: PurchaseOrderCancellationFlowModel) : SignedTransaction {
-
-        val future = initiator
-                .services
-                .startFlow(PurchaseOrderCancellation.InitiatorFlow(model))
-                .resultFuture
-
-        network.runNetwork()
-
-        return future.getOrThrow()
-    }
 }
