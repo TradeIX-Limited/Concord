@@ -79,7 +79,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$CONTROLLER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "corda.notary.validating" ]
@@ -102,7 +102,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TRADEIX_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -132,7 +132,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$FAKESUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -161,7 +161,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTBUYER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -190,7 +190,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTFUNDER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -219,7 +219,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -248,7 +248,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER1_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
@@ -277,7 +277,7 @@ cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_RPC"
-webAddress : "0.0.0.0:$CORDA_PORT_WEB"
+webAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_WEB"
 h2port : 11000
 myLegalName : "$TESTSUPPLIER2_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
