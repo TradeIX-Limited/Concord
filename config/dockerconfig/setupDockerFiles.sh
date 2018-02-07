@@ -22,6 +22,7 @@ export TESTSUPPLIER2_CORDA_HOST="tradeixtestsupplier2"
 
 
 echo "The directories for concord's docker container will be set up here"
+echo "Before you set up, you should have configured the correct rabbit credentials in tix.integration.conf."
 while true; do
     read -p "Do you wish to continue this program?" yn
     case $yn in
@@ -94,6 +95,7 @@ rpcUsers=[
     }
 ]
 EOF
+
 cd ..
 cd TradeIX
 cat > node.conf << EOF
