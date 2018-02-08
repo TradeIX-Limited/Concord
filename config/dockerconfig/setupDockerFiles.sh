@@ -75,12 +75,12 @@ JAVA_OPTIONS=-Xmx512m
 EOF
 
 cd Controller
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$CONTROLLER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "corda.notary.validating" ]
 useHTTPS : false
@@ -94,16 +94,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIX
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TRADEIX_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -123,17 +127,21 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 
 cd ..
 cd TradeIXFakeSupplier
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$FAKESUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -153,16 +161,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIXTestBuyer
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TESTBUYER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -182,16 +194,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIXTestFunder
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TESTFUNDER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -211,16 +227,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIXTestSupplier
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TESTSUPPLIER_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -240,16 +260,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIXTestSupplier1
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TESTSUPPLIER1_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -269,16 +293,20 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF
 
 cd ..
 cd TradeIXTestSupplier2
+>persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_P2P"
 rpcAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_RPC"
 webAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_WEB"
-h2port : 11000
 myLegalName : "$TESTSUPPLIER2_CORDA_LEGAL_NAME"
 extraAdvertisedServiceIds: [ "" ]
 useHTTPS : false
@@ -298,4 +326,8 @@ rpcUsers=[
         ]
     }
 ]
+dataSourceProperties : {
+    dataSourceClassName : org.h2.jdbcx.JdbcDataSource
+    "dataSource.url" : "jdbc:h2:file:/opt/corda/persistence.mv.db"
+}
 EOF

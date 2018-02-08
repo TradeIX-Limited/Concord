@@ -23,6 +23,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/Controller/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/Controller/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/Controller/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
 
   TradeIX:
     networks:
@@ -46,6 +47,8 @@ services:
       - ./config/dockerconfig/nodes/TradeIX/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIX/tix.integration.conf/:/opt/corda/tix.integration.conf
       - ./config/dockerconfig/nodes/TradeIX/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIX/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
+
     depends_on:
       - Controller
 
@@ -70,6 +73,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXFakeSupplier/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXFakeSupplier/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 
@@ -94,6 +98,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestBuyer/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXTestBuyer/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXTestBuyer/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 
@@ -118,6 +123,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestFunder/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXTestFunder/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXTestFunder/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 
@@ -142,6 +148,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 
@@ -166,6 +173,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier1/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier1/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 
@@ -190,6 +198,7 @@ services:
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier2/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/TradeIXTestSupplier2/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/persistence.mv.db:/opt/corda/node.conf/persistence.mv.db
     depends_on:
       - Controller
 networks:
