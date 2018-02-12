@@ -39,6 +39,8 @@ RUN chmod +x /run-corda.sh && sync
 
 RUN chown -R corda:corda /opt/corda
 
+RUN chmod 666 /opt/corda/logs
+
 # Expose port for corda (default is 10002) and RPC
 EXPOSE 10002
 EXPOSE 10003
