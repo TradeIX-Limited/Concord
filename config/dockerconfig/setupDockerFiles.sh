@@ -36,21 +36,37 @@ mkdir -p config/dockerconfig
 mkdir -p config/dockerconfig/nodes
 mkdir -p config/dockerconfig/nodes/Controller
 mkdir -p config/dockerconfig/nodes/Controller/certificates
+mkdir -p config/dockerconfig/nodes/Controller/logs
+chmod 777 config/dockerconfig/nodes/Controller/logs
 mkdir -p config/dockerconfig/nodes/plugins
 mkdir -p config/dockerconfig/nodes/TradeIX
 mkdir -p config/dockerconfig/nodes/TradeIX/certificates
+mkdir -p config/dockerconfig/nodes/TradeIX/logs
+chmod 777 config/dockerconfig/nodes/TradeIX/logs
 mkdir -p config/dockerconfig/nodes/TradeIXFakeSupplier
 mkdir -p config/dockerconfig/nodes/TradeIXFakeSupplier/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXFakeSupplier/logs
+chmod 777 config/dockerconfig/nodes/TradeIXFakeSupplier/logs
 mkdir -p config/dockerconfig/nodes/TradeIXTestBuyer
 mkdir -p config/dockerconfig/nodes/TradeIXTestBuyer/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestBuyer/logs
+chmod 777 config/dockerconfig/nodes/TradeIXTestBuyer/logs
 mkdir -p config/dockerconfig/nodes/TradeIXTestFunder
 mkdir -p config/dockerconfig/nodes/TradeIXTestFunder/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestFunder/logs
+chmod 777 config/dockerconfig/nodes/TradeIXTestFunder/logs
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier/logs
+chmod 777 config/dockerconfig/nodes/TradeIXTestSupplier/logs
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier1
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier1/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier1/logs
+chmod 777 config/dockerconfig/nodes/TradeIXTestSupplier1/logs
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier2
 mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier2/certificates
+mkdir -p config/dockerconfig/nodes/TradeIXTestSupplier2/logs
+chmod 777 config/dockerconfig/nodes/TradeIXTestSupplier2/logs
 cp tix.integration.conf config/dockerconfig/nodes/TradeIX/
 cp tradeix-concord*.jar config/dockerconfig/nodes/plugins/
 
@@ -76,6 +92,7 @@ EOF
 
 cd Controller
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
@@ -103,6 +120,7 @@ EOF
 cd ..
 cd TradeIX
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TRADEIX_CORDA_HOST:$CORDA_PORT_P2P"
@@ -137,6 +155,7 @@ EOF
 cd ..
 cd TradeIXFakeSupplier
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$FAKESUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
@@ -170,6 +189,7 @@ EOF
 cd ..
 cd TradeIXTestBuyer
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTBUYER_CORDA_HOST:$CORDA_PORT_P2P"
@@ -203,6 +223,7 @@ EOF
 cd ..
 cd TradeIXTestFunder
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTFUNDER_CORDA_HOST:$CORDA_PORT_P2P"
@@ -236,6 +257,7 @@ EOF
 cd ..
 cd TradeIXTestSupplier
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER_CORDA_HOST:$CORDA_PORT_P2P"
@@ -269,6 +291,7 @@ EOF
 cd ..
 cd TradeIXTestSupplier1
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER1_CORDA_HOST:$CORDA_PORT_P2P"
@@ -302,6 +325,7 @@ EOF
 cd ..
 cd TradeIXTestSupplier2
 >persistence.mv.db
+chmod 777 persistence.mv.db
 cat > node.conf << EOF
 basedir : "/opt/corda"
 p2pAddress : "$TESTSUPPLIER2_CORDA_HOST:$CORDA_PORT_P2P"
