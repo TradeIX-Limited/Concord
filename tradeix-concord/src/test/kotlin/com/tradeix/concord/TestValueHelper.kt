@@ -75,9 +75,32 @@ object TestValueHelper {
     val DATE_INSTANT_01 = Instant.parse("2000-01-01T00:00:00Z")
     val DATE_INSTANT_02 = Instant.parse("2000-01-02T00:00:00Z")
     val DATE_INSTANT_03 = Instant.parse("2000-01-03T00:00:00Z")
+    val DATE_INSTANT_04 = Instant.parse("2000-01-04T00:00:00Z")
+    val DATE_INSTANT_05 = Instant.parse("2000-01-05T00:00:00Z")
+    val DATE_INSTANT_06 = Instant.parse("2000-01-06T00:00:00Z")
+    val DATE_INSTANT_07 = Instant.parse("2000-01-07T00:00:00Z")
+    val DATE_INSTANT_08 = Instant.parse("2000-01-08T00:00:00Z")
+    val DATE_INSTANT_09 = Instant.parse("2000-01-09T00:00:00Z")
 
     // Shipping Information
     val PORT_OF_SHIPMENT = "PORT_OF_SHIPMENT"
     val DESCRIPTION_OF_GOODS = "DESCRIPTION_OF_GOODS"
     val DELIVERY_TERMS = "DELIVERY_TERMS"
+
+    // Invoice Helper Data
+    val INVOICE_VERSION = "INVOICE_VERSION"
+    val TIX_INVOICE_VERSION = 1
+    val INVOICE_NUMBER = "INVOICE_NUMBER"
+    val INVOICE_TYPE = "INVOICE_TYPE"
+    val REFERENCE = "REFERENCE"
+    val OFFER_ID = 1
+    val STATUS = "STATUS"
+    val REJECTION_REASON = "REJECTION_REASON"
+    val CANCELLED = false
+    val ORIGINATION_NETWORK = "ORIGINATION_NETWORK"
+    val HASH = "HASH"
+    val SITE_ID = "SITE_ID"
+    val PURCHASE_ORDER_NUMBER = "PURCHASE_ORDER_NUMBER"
+    val PURCHASE_ORDER_ID = "PURCHASE_ORDER_ID"
+    val COMPOSER_PROGRAM_ID = 1
 }

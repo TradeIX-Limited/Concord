@@ -1,5 +1,6 @@
 package com.tradeix.concord.contracts
 
+import com.tradeix.concord.states.InvoiceState
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.requireSingleCommand
@@ -26,12 +27,17 @@ class InvoiceContract : Contract {
             companion object {
                 val CONTRACT_RULE_INPUTS = "Zero inputs should be consumed when issuing an invoice."
                 val CONTRACT_RULE_OUTPUTS = "Only one output should be created when issuing an invoice."
+                val CONTRACT_RULE_SIGNERS = "All participants are required to sign when issuing an invoice."
             }
 
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) {
                 // Transaction Rules
                 CONTRACT_RULE_INPUTS using (tx.inputs.isEmpty())
                 CONTRACT_RULE_OUTPUTS using (tx.outputs.size == 1)
+
+                // State Rules
+                val outputState = tx.outputsOfType<InvoiceState>().single()
+                CONTRACT_RULE_SIGNERS using (signers.containsAll(outputState.participants.map { it.owningKey }))
             }
         }
 
