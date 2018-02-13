@@ -2,23 +2,27 @@ package com.tradeix.concord.flows
 
 import com.nhaarman.mockito_kotlin.reset
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
-import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderCancellationFlowModel
+import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
+import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderAmendmentFlowModel
+import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderCancellationFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderOwnershipFlowModel
-import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
-import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
-import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
-import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
 import com.tradeix.concord.flows.invoice.InvoiceIssuance
+import com.tradeix.concord.flows.invoice.InvoiceIssuance
+import com.tradeix.concord.flows.invoice.InvoiceOwnership
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderCancellation
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
+import com.tradeix.concord.flows.tradeasset.TradeAssetAmendment
+import com.tradeix.concord.flows.tradeasset.TradeAssetCancellation
+import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.node.internal.StartedNode
@@ -161,4 +165,18 @@ fun cancelPurchaseOrder(
         return future.getOrThrow()
     }
 
+    fun changeInvoiceOwner(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: InvoiceOwnershipFlowModel): SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(InvoiceOwnership.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
 }
