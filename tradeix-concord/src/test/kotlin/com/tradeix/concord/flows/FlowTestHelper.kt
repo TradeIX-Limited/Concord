@@ -1,6 +1,7 @@
 package com.tradeix.concord.flows
 
 import com.nhaarman.mockito_kotlin.reset
+import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderCancellationFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderAmendmentFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowModel
@@ -13,6 +14,7 @@ import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
+import com.tradeix.concord.flows.invoice.InvoiceIssuance
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderCancellation
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
@@ -143,4 +145,20 @@ fun cancelPurchaseOrder(
 
     return future.getOrThrow()
 }
+
+    fun issueInvoice(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: InvoiceIssuanceFlowModel): SignedTransaction {
+
+        val future = initiator
+                .services
+                .startFlow(InvoiceIssuance.InitiatorFlow(model))
+                .resultFuture
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
 }
