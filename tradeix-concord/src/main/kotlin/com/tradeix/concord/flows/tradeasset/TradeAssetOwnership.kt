@@ -113,7 +113,7 @@ object TradeAssetOwnership {
             if (outputStates
                     .map { it.supplier }
                     .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
-                    .any { it.name.organisation == "TradeIXFakeSupplier" }) {
+                    .any { it.name.organisation.endsWith("FakeSupplier",true) }) {
                 throw FlowException("Supplier failed to sign.")
             }
 
