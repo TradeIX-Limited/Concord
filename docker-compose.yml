@@ -19,11 +19,11 @@ services:
     image: corda/concord:1.0
     container_name: controller
     volumes:
-      - ./config/dockerconfig/nodes/Controller/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/controller/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/Controller/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/Controller/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/Controller/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/controller/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/controller/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/controller/persistence.mv.db:/opt/corda/persistence.mv.db
 
   TradeIX:
     networks:
@@ -42,17 +42,16 @@ services:
     image: corda/concord:1.0
     container_name: tradeix
     volumes:
-      - ./config/dockerconfig/nodes/TradeIX/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/tradeix/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIX/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIX/tix.integration.conf/:/opt/corda/tix.integration.conf
-      - ./config/dockerconfig/nodes/TradeIX/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIX/persistence.mv.db:/opt/corda/persistence.mv.db
-
+      - ./config/dockerconfig/nodes/tradeix/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/tradeix/tix.integration.conf/:/opt/corda/tix.integration.conf
+      - ./config/dockerconfig/nodes/tradeix/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/tradeix/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
 
-  TradeIXFakeSupplier:
+  Buyer:
     networks:
       - corda
     build:
@@ -61,48 +60,23 @@ services:
         BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixfakesupplier
-    ports:
-      - "10008:10002"
-      - "10009:10003"
-      - "10010:10004"
-    image: corda/concord:1.0
-    container_name: tradeixfakesupplier
-    volumes:
-      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/node.conf:/opt/corda/node.conf
-      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXFakeSupplier/persistence.mv.db:/opt/corda/persistence.mv.db
-    depends_on:
-      - Controller
-
-  TradeIXTestBuyer:
-    networks:
-      - corda
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
-    env_file:
-      - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixtestbuyer
+    hostname: buyer
     ports:
       - "10023:10002"
       - "10024:10003"
       - "10025:10004"
     image: corda/concord:1.0
-    container_name: tradeixtestbuyer
+    container_name: buyer
     volumes:
-      - ./config/dockerconfig/nodes/TradeIXTestBuyer/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/buyer/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXTestBuyer/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXTestBuyer/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXTestBuyer/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/buyer/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/buyer/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/buyer/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
 
-  TradeIXTestFunder:
+  Funder:
     networks:
       - corda
     build:
@@ -111,23 +85,23 @@ services:
         BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixtestfunder
+    hostname: funder
     ports:
       - "10020:10002"
       - "10021:10003"
       - "10022:10004"
     image: corda/concord:1.0
-    container_name: tradeixtestfunder
+    container_name: funder
     volumes:
-      - ./config/dockerconfig/nodes/TradeIXTestFunder/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/funder/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXTestFunder/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXTestFunder/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXTestFunder/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/funder/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/funder/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/funder/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
 
-  TradeIXTestSupplier:
+  Supplier1:
     networks:
       - corda
     build:
@@ -136,23 +110,23 @@ services:
         BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixtestsupplier
+    hostname: supplier1
     ports:
       - "10011:10002"
       - "10012:10003"
       - "10013:10004"
     image: corda/concord:1.0
-    container_name: tradeixtestsupplier
+    container_name: supplier1
     volumes:
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/supplier1/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/supplier1/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier1/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier1/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
 
-  TradeIXTestSupplier1:
+  Supplier2:
     networks:
       - corda
     build:
@@ -161,23 +135,23 @@ services:
         BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixtestsupplier1
+    hostname: supplier2
     ports:
       - "10014:10002"
       - "10015:10003"
       - "10016:10004"
     image: corda/concord:1.0
-    container_name: tradeixtestsupplier1
+    container_name: supplier2
     volumes:
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/supplier2/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier1/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/supplier2/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier2/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier2/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
 
-  TradeIXTestSupplier2:
+  Supplier3:
     networks:
       - corda
     build:
@@ -186,20 +160,46 @@ services:
         BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
-    hostname: tradeixtestsupplier2
+    hostname: supplier3
     ports:
       - "10017:10002"
       - "10018:10003"
       - "10019:10004"
     image: corda/concord:1.0
-    container_name: tradeixtestsupplier2
+    container_name: supplier3
     volumes:
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/supplier3/node.conf:/opt/corda/node.conf
       - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/certificates/:/opt/corda/certificates/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/logs/:/opt/corda/logs/
-      - ./config/dockerconfig/nodes/TradeIXTestSupplier2/persistence.mv.db:/opt/corda/persistence.mv.db
+      - ./config/dockerconfig/nodes/supplier3/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier3/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier3/persistence.mv.db:/opt/corda/persistence.mv.db
     depends_on:
       - Controller
+
+  FakeSupplier:
+    networks:
+      - corda
+    build:
+      context: .
+      args:
+        BUILDTIME_CORDA_VERSION: 1.0.0
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: fakesupplier
+    ports:
+      - "10008:10002"
+      - "10009:10003"
+      - "10010:10004"
+    image: corda/concord:1.0
+    container_name: fakesupplier
+    volumes:
+      - ./config/dockerconfig/nodes/fakesupplier/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/fakesupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/fakesupplier/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/fakesupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+    depends_on:
+      - Controller
+
 networks:
   corda:
