@@ -1,7 +1,5 @@
 package com.tradeix.concord.flows
 
-import com.nhaarman.mockito_kotlin.reset
-import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderAmendmentFlowModel
@@ -12,7 +10,6 @@ import com.tradeix.concord.flowmodels.tradeasset.TradeAssetAmendmentFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetCancellationFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetIssuanceFlowModel
 import com.tradeix.concord.flowmodels.tradeasset.TradeAssetOwnershipFlowModel
-import com.tradeix.concord.flows.invoice.InvoiceIssuance
 import com.tradeix.concord.flows.invoice.InvoiceIssuance
 import com.tradeix.concord.flows.invoice.InvoiceOwnership
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
@@ -62,7 +59,7 @@ object FlowTestHelper {
     fun cancelTradeAsset(
             network: MockNetwork,
             initiator: StartedNode<MockNetwork.MockNode>,
-            model: TradeAssetCancellationFlowModel) : SignedTransaction {
+            model: TradeAssetCancellationFlowModel): SignedTransaction {
 
         val future = initiator
                 .services
@@ -122,7 +119,7 @@ object FlowTestHelper {
     fun amendPurchaseOrder(
             network: MockNetwork,
             initiator: StartedNode<MockNetwork.MockNode>,
-            model: PurchaseOrderAmendmentFlowModel) : SignedTransaction {
+            model: PurchaseOrderAmendmentFlowModel): SignedTransaction {
 
         val future = initiator
                 .services
@@ -135,20 +132,20 @@ object FlowTestHelper {
     }
 
 
-fun cancelPurchaseOrder(
-        network: MockNetwork,
-        initiator: StartedNode<MockNetwork.MockNode>,
-        model: PurchaseOrderCancellationFlowModel) : SignedTransaction {
+    fun cancelPurchaseOrder(
+            network: MockNetwork,
+            initiator: StartedNode<MockNetwork.MockNode>,
+            model: PurchaseOrderCancellationFlowModel): SignedTransaction {
 
-    val future = initiator
-            .services
-            .startFlow(PurchaseOrderCancellation.InitiatorFlow(model))
-            .resultFuture
+        val future = initiator
+                .services
+                .startFlow(PurchaseOrderCancellation.InitiatorFlow(model))
+                .resultFuture
 
-    network.runNetwork()
+        network.runNetwork()
 
-    return future.getOrThrow()
-}
+        return future.getOrThrow()
+    }
 
     fun issueInvoice(
             network: MockNetwork,

@@ -165,7 +165,6 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
                     attachmentId = HASH,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    funder = funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
