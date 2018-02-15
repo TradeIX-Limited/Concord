@@ -99,7 +99,6 @@ object InvoiceOwnership {
                     outputState.owner,
                     outputState.buyer,
                     outputState.supplier,
-                    outputState.funder,
                     outputState.conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()

@@ -17,7 +17,6 @@ data class InvoiceState(
         override val owner: AbstractParty,
         val buyer: AbstractParty,
         val supplier: AbstractParty,
-        val funder: AbstractParty,
         val conductor: AbstractParty,
         val invoiceVersion: String,
         val invoiceVersionDate: Instant,
@@ -53,7 +52,7 @@ data class InvoiceState(
         val purchaseOrderId: String,
         val composerProgramId: Int
 ) : LinearState, OwnerState, QueryableState {
-    override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, funder, conductor)
+    override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, conductor)
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         return when(schema) {
@@ -63,7 +62,6 @@ data class InvoiceState(
                     owner = owner,
                     buyer = buyer,
                     supplier = supplier,
-                    funder = funder,
                     conductor = conductor,
                     invoiceVersion = invoiceVersion,
                     invoiceVersionDate = invoiceVersionDate,

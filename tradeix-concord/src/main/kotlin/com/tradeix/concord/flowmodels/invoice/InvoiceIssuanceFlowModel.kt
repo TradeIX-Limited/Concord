@@ -9,9 +9,9 @@ import java.time.Instant
 data class InvoiceIssuanceFlowModel(
         override val externalId: String?,
         val attachmentId: String?,
+        val conductor: CordaX500Name?  = CordaX500Name("TradeIX", "London", "GB"),
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
-        val funder: CordaX500Name?,
         val invoiceVersion: String?,
         val invoiceVersionDate: Instant?,
         val tixInvoiceVersion: Int?,
@@ -45,6 +45,4 @@ data class InvoiceIssuanceFlowModel(
         val purchaseOrderNumber: String?,
         val purchaseOrderId: String?,
         val composerProgramId: Int?
-) : SingleIdentityMessage {
-    val conductor = CordaX500Name("TradeIX", "London", "GB")
-}
+) : SingleIdentityMessage

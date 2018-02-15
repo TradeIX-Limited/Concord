@@ -25,58 +25,55 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "external_id")
             var externalId: String,
 
-            @Column(name = "owner")
+            @Column(name = "owner", nullable = false)
             var owner: AbstractParty,
 
-            @Column(name = "buyer")
+            @Column(name = "buyer", nullable = false)
             var buyer: AbstractParty,
 
-            @Column(name = "supplier")
+            @Column(name = "supplier", nullable = false)
             var supplier: AbstractParty,
 
-            @Column(name = "funder")
-            var funder: AbstractParty,
-
-            @Column(name = "conductor")
+            @Column(name = "conductor", nullable = false)
             var conductor: AbstractParty,
 
             @Column(name = "invoice_version")
-            var invoiceVersion: String,
+            var invoiceVersion: String?,
 
             @Column(name = "invoice_version_date")
-            var invoiceVersionDate: Instant,
+            var invoiceVersionDate: Instant?,
 
             @Column(name = "tix_invoice_version")
-            var tixInvoiceVersion: Int,
+            var tixInvoiceVersion: Int?,
 
-            @Column(name = "invoice_number")
+            @Column(name = "invoice_number", nullable = false)
             var invoiceNumber: String,
 
-            @Column(name = "invoice_type")
+            @Column(name = "invoice_type", nullable = false)
             val invoiceType: String,
 
             @Column(name = "reference")
-            val reference: String,
+            val reference: String?,
 
-            @Column(name = "due_date")
+            @Column(name = "due_date", nullable = false)
             val dueDate: Instant,
 
             @Column(name = "offer_id")
             val offerId: Int?,
 
-            @Column(name = "amount")
+            @Column(name = "amount", nullable = false)
             val amount: BigDecimal,
 
-            @Column(name = "total_outstanding")
+            @Column(name = "total_outstanding", nullable = false)
             val totalOutstanding: BigDecimal,
 
-            @Column(name = "created")
+            @Column(name = "created", nullable = false)
             val created: Instant,
 
-            @Column(name = "updated")
+            @Column(name = "updated", nullable = false)
             val updated: Instant,
 
-            @Column(name = "expected_settlement_date")
+            @Column(name = "expected_settlement_date", nullable = false)
             val expectedSettlementDate: Instant,
 
             @Column(name = "settlement_date")
@@ -85,19 +82,19 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "mandatory_reconciliation_date")
             val mandatoryReconciliationDate: Instant?,
 
-            @Column(name = "invoice_date")
+            @Column(name = "invoice_date", nullable = false)
             val invoiceDate: Instant,
 
-            @Column(name = "status")
+            @Column(name = "status", nullable = false)
             val status: String,
 
             @Column(name = "rejection_reason")
-            val rejectionReason: String,
+            val rejectionReason: String?,
 
-            @Column(name = "eligible_value")
+            @Column(name = "eligible_value", nullable = false)
             val eligibleValue: BigDecimal,
 
-            @Column(name = "invoice_purchase_value")
+            @Column(name = "invoice_purchase_value", nullable = false)
             val invoicePurchaseValue: BigDecimal,
 
             @Column(name = "trade_date")
@@ -106,37 +103,37 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "trade_payment_date")
             val tradePaymentDate: Instant?,
 
-            @Column(name = "invoice_payments")
+            @Column(name = "invoice_payments", nullable = false)
             val invoicePayments: BigDecimal,
 
-            @Column(name = "invoice_dilutions")
-            val invoiceDilutions: BigDecimal,
+            @Column(name = "invoice_dilutions", nullable = false)
+            val invoiceDilutions: BigDecimal?,
 
             @Column(name = "cancelled")
-            val cancelled: Boolean,
+            val cancelled: Boolean?,
 
             @Column(name = "close_date")
             val closeDate: Instant?,
 
-            @Column(name = "origination_network")
+            @Column(name = "origination_network", nullable = false)
             val originationNetwork: String,
 
             @Column(name = "hash")
-            val hash: String,
+            val hash: String?,
 
-            @Column(name = "currency")
+            @Column(name = "currency", nullable = false)
             val currency: String,
 
             @Column(name = "site_id")
-            val siteId: String,
+            val siteId: String?,
 
             @Column(name = "purchase_order_number")
-            val purchaseOrderNumber: String,
+            val purchaseOrderNumber: String?,
 
             @Column(name = "purchase_order_id")
-            val purchaseOrderId: String,
+            val purchaseOrderId: String?,
 
             @Column(name = "composer_program_id")
-            val composerProgramId: Int
+            val composerProgramId: Int?
     ) : PersistentState()
 }

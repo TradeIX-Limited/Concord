@@ -48,10 +48,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow initiated by the buyer is signed by the initiator`() {
         val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -94,10 +94,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow initiated by the buyer is signed by the acceptor`() {
         val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -140,10 +140,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow initiated by the conductor is signed by the initiator`() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -186,10 +186,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow initiated by the conductor is signed by the acceptor`() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -232,10 +232,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow records a transaction in all counter-party vaults`() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -279,10 +279,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     fun `Invoice issuance flow has zero inputs and a single output`() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = null,
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -334,10 +334,10 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
 
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
-                attachmentId = HASH,
+                attachmentId = validAttachment.toString(),
+                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,

@@ -60,7 +60,6 @@ object InvoiceIssuance {
             val notary = FlowHelper.getNotary(serviceHub)
             val buyer = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.supplier)
-            val funder = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.funder)
             val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
             val currency = Currency.getInstance(model.currency)
 
@@ -75,7 +74,6 @@ object InvoiceIssuance {
                     owner = supplier,
                     buyer = buyer,
                     supplier = supplier,
-                    funder = funder,
                     conductor = conductor,
                     invoiceVersion = model.invoiceVersion!!,
                     invoiceVersionDate = model.invoiceVersionDate!!,
@@ -139,7 +137,6 @@ object InvoiceIssuance {
                     outputState.owner,
                     outputState.buyer,
                     outputState.supplier,
-                    outputState.funder,
                     outputState.conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()

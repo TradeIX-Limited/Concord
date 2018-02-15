@@ -32,8 +32,9 @@ import com.tradeix.concord.flows.FlowTestHelper.issueInvoice
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
 import org.junit.Test
-import kotlin.test.assertEquals
+import java.math.BigDecimal
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
     override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
@@ -45,10 +46,10 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                     externalId = null, //EXTERNAL_ID,
-                    attachmentId = HASH,
+                    attachmentId = null,
+                    conductor = conductor.name,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    funder = funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -85,8 +86,8 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
             ))
         }
 
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'externalId' is required.", exception.validationErrors.single())
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'externalId' is required."))
     }
 
     @Test
@@ -94,10 +95,10 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                     externalId = EXTERNAL_ID,
-                    attachmentId = HASH,
+                    attachmentId = null,
+                    conductor = conductor.name,
                     buyer = buyer.name,
                     supplier = null, //supplier.name,
-                    funder = funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -134,8 +135,8 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
             ))
         }
 
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'supplier' is required.", exception.validationErrors.single())
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'supplier' is required."))
     }
 
     @Test
@@ -143,10 +144,10 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                     externalId = EXTERNAL_ID,
-                    attachmentId = HASH,
+                    attachmentId = null,
+                    conductor = conductor.name,
                     buyer = null, //buyer.name,
                     supplier = supplier.name,
-                    funder = funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -183,19 +184,19 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
             ))
         }
 
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'buyer' is required.", exception.validationErrors.single())
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'buyer' is required."))
     }
 
     @Test
-    fun `Invoice issuance flow will fail if funder is omitted`() {
+    fun `Invoice issuance flow will fail if conductor is omitted`() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                     externalId = EXTERNAL_ID,
-                    attachmentId = HASH,
+                    attachmentId = null,
+                    conductor = null, //conductor.name,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    funder = null, //funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -232,8 +233,8 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
             ))
         }
 
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'funder' is required.", exception.validationErrors.single())
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'conductor' is required."))
     }
 
     @Test
@@ -241,10 +242,10 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                     externalId = EXTERNAL_ID,
-                    attachmentId = HASH,
+                    attachmentId = null,
+                    conductor = conductor.name,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    funder = funder.name,
                     invoiceVersion = INVOICE_VERSION,
                     invoiceVersionDate = DATE_INSTANT_01,
                     tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -281,8 +282,743 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
             ))
         }
 
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'currency' is required.", exception.validationErrors.single())
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'currency' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoiceNumber is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = null, //INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoiceNumber' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoiceType is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = null, //INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoiceType' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if dueDate is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = null, //DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'dueDate' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoiceValue or amount is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = null, //POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'amount' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if totalOutstanding is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = null, //POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'totalOutstanding' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if created is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = null, //DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'created' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if updated is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = null, //DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'updated' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if expectedSettlementDate is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = null, //DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'expectedSettlementDate' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoiceDate is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = null, //DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoiceDate' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if status is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = null, //STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'status' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if eligibleValue is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = null, //POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'eligibleValue' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoicePurchaseValue is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = BigDecimal.ZERO, //POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoicePurchaseValue' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoicePayments is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = BigDecimal.ZERO, //POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoicePayments' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if invoiceDilutions is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = BigDecimal.ZERO, //POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'invoiceDilutions' is required."))
+    }
+
+    @Test
+    fun `Invoice issuance flow will fail if originationNetwork is omitted`() {
+        val exception = assertFailsWith<FlowValidationException> {
+            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    conductor = conductor.name,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = null, //ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
+        }
+
+        assertTrue(exception.validationErrors.size > 0)
+        assertTrue(exception.validationErrors.contains("Field 'originationNetwork' is required."))
     }
 
 }

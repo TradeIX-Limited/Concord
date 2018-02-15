@@ -67,7 +67,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -123,7 +122,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -166,7 +164,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -221,7 +218,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -264,7 +260,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -319,7 +314,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -374,7 +368,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
@@ -420,61 +413,6 @@ class InvoiceStateIssuanceContractTests {
     }
 
     @Test
-    fun `InvoiceState issuance transaction all participants must sign (funder must sign)`() {
-        ledger {
-            transaction {
-                output(INVOICE_CONTRACT_ID) {
-                    InvoiceState(
-                            LINEAR_ID,
-                            SUPPLIER,
-                            BUYER,
-                            SUPPLIER,
-                            FUNDER,
-                            CONDUCTOR,
-                            INVOICE_VERSION,
-                            DATE_INSTANT_01,
-                            TIX_INVOICE_VERSION,
-                            INVOICE_NUMBER,
-                            INVOICE_TYPE,
-                            REFERENCE,
-                            DATE_INSTANT_02,
-                            OFFER_ID,
-                            TEN_POUNDS,
-                            ONE_POUND,
-                            DATE_INSTANT_03,
-                            DATE_INSTANT_04,
-                            DATE_INSTANT_05,
-                            DATE_INSTANT_06,
-                            DATE_INSTANT_07,
-                            DATE_INSTANT_08,
-                            STATUS,
-                            REJECTION_REASON,
-                            TEN_POUNDS,
-                            TEN_POUNDS,
-                            DATE_INSTANT_09,
-                            DATE_INSTANT_01,
-                            ONE_POUND,
-                            ONE_POUND,
-                            CANCELLED,
-                            DATE_INSTANT_02,
-                            ORIGINATION_NETWORK,
-                            HASH,
-                            GBP,
-                            SITE_ID,
-                            PURCHASE_ORDER_NUMBER,
-                            PURCHASE_ORDER_ID,
-                            COMPOSER_PROGRAM_ID
-                    )
-                }
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    InvoiceContract.Commands.Issue()
-                }
-                failsWith(InvoiceContract.Commands.Issue.CONTRACT_RULE_SIGNERS)
-            }
-        }
-    }
-
-    @Test
     fun `InvoiceState issuance transaction all participants must sign (conductor must sign)`() {
         ledger {
             transaction {
@@ -484,7 +422,6 @@ class InvoiceStateIssuanceContractTests {
                             SUPPLIER,
                             BUYER,
                             SUPPLIER,
-                            FUNDER,
                             CONDUCTOR,
                             INVOICE_VERSION,
                             DATE_INSTANT_01,
