@@ -1,10 +1,7 @@
-# TODO Volume persistence. Test consecutively built plugins
 version: '3.3'
 services:
 
   Controller:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -24,10 +21,11 @@ services:
       - ./config/dockerconfig/nodes/controller/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/controller/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/controller/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.2
 
   TradeIX:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -48,12 +46,13 @@ services:
       - ./config/dockerconfig/nodes/tradeix/tix.integration.conf/:/opt/corda/tix.integration.conf
       - ./config/dockerconfig/nodes/tradeix/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/tradeix/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.3
     depends_on:
       - Controller
 
   Buyer:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -73,12 +72,13 @@ services:
       - ./config/dockerconfig/nodes/buyer/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/buyer/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/buyer/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.4
     depends_on:
       - Controller
 
   Funder:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -98,12 +98,13 @@ services:
       - ./config/dockerconfig/nodes/funder/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/funder/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/funder/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.5
     depends_on:
       - Controller
 
   Supplier1:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -123,12 +124,13 @@ services:
       - ./config/dockerconfig/nodes/supplier1/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/supplier1/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/supplier1/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.6
     depends_on:
       - Controller
 
   Supplier2:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -148,12 +150,13 @@ services:
       - ./config/dockerconfig/nodes/supplier2/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/supplier2/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/supplier2/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.7
     depends_on:
       - Controller
 
   Supplier3:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -173,12 +176,13 @@ services:
       - ./config/dockerconfig/nodes/supplier3/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/supplier3/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/supplier3/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.8
     depends_on:
       - Controller
 
   FakeSupplier:
-    networks:
-      - corda
     build:
       context: .
       args:
@@ -198,8 +202,15 @@ services:
       - ./config/dockerconfig/nodes/fakesupplier/certificates/:/opt/corda/certificates/
       - ./config/dockerconfig/nodes/fakesupplier/logs/:/opt/corda/logs/
       - ./config/dockerconfig/nodes/fakesupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.9
     depends_on:
       - Controller
 
 networks:
   corda:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.20.0.0/16
