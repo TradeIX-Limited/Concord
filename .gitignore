@@ -75,4 +75,7 @@ crashlytics-build.properties
 docs/virtualenv/
 
 # node_modules
+/node_modules
+node_modules/
 /node_modules/
+/tradeix-concord-ui/node_modules
