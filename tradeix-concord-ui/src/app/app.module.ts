@@ -29,7 +29,6 @@ import {
 
 import { RootComponent } from "./root/root.component";
 import { MainComponent } from "./main/main.component";
-import { HistoryComponent } from "./history/history.component";
 
 import { NodeService } from "../api/domain/nodes/node.service";
 import { HistoryService } from "api/domain/history/history.service";
@@ -38,14 +37,25 @@ import { Mapper } from "api/domain/shared/mapper";
 import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-state";
 import { UniqueIdentifier, CordaX500Name } from "api/domain/shared/corda";
 import { PurchaseOrderService } from "api/domain/purchase-orders/purchase-order.service";
-import { DeliveryInformationComponent } from './delivery-information/delivery-information.component';
+import { InvoicesService } from "api/domain/invoices/invoices.service";
+import { DeliveryInformationComponent } from "./delivery-information/delivery-information.component";
+import { PurchaseOrderTableComponent } from "./purchase-order-table/purchase-order-table.component";
+import { InvoiceTableComponent } from "./invoice-table/invoice-table.component";
+import { InvoiceState } from "api/domain/invoices/invoice-state";
+import { InvoiceInformationComponent } from "./invoice-information/invoice-information.component";
+import { PurchaseOrderHistoryComponent } from "./purchase-order-history/purchase-order-history.component";
+import { InvoiceHistoryComponent } from "./invoice-history/invoice-history.component";
 
 @NgModule({
   declarations: [
     RootComponent,
     MainComponent,
-    HistoryComponent,
-    DeliveryInformationComponent
+    DeliveryInformationComponent,
+    PurchaseOrderTableComponent,
+    InvoiceTableComponent,
+    InvoiceInformationComponent,
+    PurchaseOrderHistoryComponent,
+    InvoiceHistoryComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -71,9 +81,9 @@ import { DeliveryInformationComponent } from './delivery-information/delivery-in
     MatPaginatorModule,
     MatProgressBarModule
   ],
-  providers: [NodeService, PurchaseOrderService, HistoryService],
+  providers: [NodeService, PurchaseOrderService, InvoicesService, HistoryService],
   bootstrap: [RootComponent],
-  entryComponents: [DeliveryInformationComponent]
+  entryComponents: [DeliveryInformationComponent, InvoiceInformationComponent]
 })
 export class AppModule {
   public constructor() {
@@ -98,6 +108,48 @@ export class AppModule {
         input.portOfShipment,
         input.descriptionOfGoods,
         input.deliveryTerms);
+    });
+
+    mapper.createMapConfiguration(Object, InvoiceState, (input: any) => {
+      return new InvoiceState(
+        new UniqueIdentifier(input.linearId.externalId, input.linearId.id),
+        CordaX500Name.parse(input.owner),
+        CordaX500Name.parse(input.buyer),
+        CordaX500Name.parse(input.supplier),
+        CordaX500Name.parse(input.conductor),
+        input.invoiceVersion,
+        input.invoiceVersionDate,
+        input.tixInvoiceVersion,
+        input.invoiceNumber,
+        input.invoiceType,
+        input.reference,
+        new Date(input.dueDate * 1000),
+        input.offerId,
+        input.amount,
+        input.totalOutstanding,
+        new Date(input.created * 1000),
+        new Date(input.updated * 1000),
+        new Date(input.expectedSettlementDate * 1000),
+        new Date(input.settlementDate * 1000),
+        new Date(input.mandatoryReconciliationDate * 1000),
+        new Date(input.invoiceDate * 1000),
+        input.status,
+        input.rejectionReason,
+        input.eligibleValue,
+        input.invoicePurchaseValue,
+        new Date(input.tradeDate * 1000),
+        new Date(input.tradePaymentDate * 1000),
+        input.invoicePayments,
+        input.invoiceDilutions,
+        input.cancelled,
+        new Date(input.closeDate * 1000),
+        input.originationNetwork,
+        input.hash,
+        input.currency,
+        input.siteId,
+        input.purchaseOrderNumber,
+        input.purchaseOrderId,
+        input.composerProgramId);
     });
   }
 }

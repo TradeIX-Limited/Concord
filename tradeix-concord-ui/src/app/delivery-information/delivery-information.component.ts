@@ -8,6 +8,6 @@ import { PurchaseOrderState } from "api/domain/purchase-orders/purchase-order-st
   styleUrls: ["./delivery-information.component.scss"]
 })
 export class DeliveryInformationComponent {
-  public constructor( @Inject(MAT_DIALOG_DATA) private readonly data: PurchaseOrderState) {
+  public constructor( @Inject(MAT_DIALOG_DATA) public readonly data: PurchaseOrderState) {
   }
 }

@@ -1,0 +1,42 @@
+<div [hidden]="visibleState !== 'full'">
+  <mat-paginator #invoicePaginator (page)="onPage($event)"></mat-paginator>
+  <div class="scroll-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Owner</th>
+          <th>Buyer</th>
+          <th>Supplier</th>
+          <th>Created</th>
+          <th class="align-right">Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let state of states">
+          <tr>
+            <td>
+              <a (click)="onOpenDrawer(state.linearId.externalId)" href="#">{{state.linearId.externalId}}</a>
+            </td>
+            <td>{{state.owner.organizationName}}</td>
+            <td>{{state.buyer.organizationName}}</td>
+            <td>{{state.supplier.organizationName}}</td>
+            <td>{{state.created | date:'short'}}</td>
+            <td class="align-right">{{state.amount}}</td>
+            <td class="align-right">
+              <button mat-button color="accent" (click)="onOpenDialog(state.linearId.externalId)">More Information</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div [hidden]="visibleState !== 'empty'">
+  <h2 class="message">Nothing to see here</h2>
+</div>
+<div [hidden]="visibleState !== 'loading'">
+  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  <h2 class="message">Loading</h2>
+</div>

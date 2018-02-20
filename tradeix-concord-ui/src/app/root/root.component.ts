@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ComponentRef } from "@angular/core";
 import { NodeService } from "api/domain/nodes/node.service";
 import { CordaX500Name } from "api/domain/shared/corda";
 import { HistoryService } from "api/domain/history/history.service";
 import { MatDrawerContainer, MatDrawer } from "@angular/material";
-import { HistoryComponent } from "app/history/history.component";
+import { PurchaseOrderHistoryComponent } from "app/purchase-order-history/purchase-order-history.component";
+import { InvoiceHistoryComponent } from "app/invoice-history/invoice-history.component";
 
 @Component({
   selector: "app-root",
@@ -12,7 +13,8 @@ import { HistoryComponent } from "app/history/history.component";
 })
 export class RootComponent implements OnInit {
   @ViewChild("drawerContainer") drawerContainer: MatDrawerContainer;
-  @ViewChild("history") history: HistoryComponent;
+  @ViewChild("purchaseOrderHistory") purchaseOrderHistory: PurchaseOrderHistoryComponent;
+  @ViewChild("invoiceHistory") invoiceHistory: InvoiceHistoryComponent;
 
   public nodeName: CordaX500Name = null;
 
@@ -22,7 +24,9 @@ export class RootComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.historyService.setComponents(this.drawerContainer, this.history);
+    this.historyService.setDrawerContainer(this.drawerContainer);
+    this.historyService.setPurchaseOrderHistoryComponent(this.purchaseOrderHistory);
+    this.historyService.setInvoiceHistoryComponent(this.invoiceHistory);
 
     (window as any).setTimeout(() => this.nodeService
       .getLocalNode()

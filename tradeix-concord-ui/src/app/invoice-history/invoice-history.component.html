@@ -1,0 +1,230 @@
+<div *ngFor="let item of items; let i = index">
+  <br />
+  <h4>Invoice Version {{i + 1}}</h4>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <strong>ID</strong>
+        </td>
+        <td>{{item.linearId.externalId}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Owner</strong>
+        </td>
+        <td>{{item.owner.organizationName}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Buyer</strong>
+        </td>
+        <td>{{item.buyer.organizationName}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Supplier</strong>
+        </td>
+        <td>{{item.supplier.organizationName}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Version</strong>
+        </td>
+        <td>{{item.invoiceVersion}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Version Date</strong>
+        </td>
+        <td>{{item.invoiceVersionDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>TIX Invoice Version</strong>
+        </td>
+        <td>{{item.tixInvoiceVersion}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Number</strong>
+        </td>
+        <td>{{item.invoiceNumber}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Type</strong>
+        </td>
+        <td>{{item.invoiceType}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Reference</strong>
+        </td>
+        <td>{{item.reference}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Due Date</strong>
+        </td>
+        <td>{{item.dueDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Offer ID</strong>
+        </td>
+        <td>{{item.offerId}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Amount</strong>
+        </td>
+        <td>{{item.amount}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Total Outstanding</strong>
+        </td>
+        <td>{{item.totalOutstanding}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Created</strong>
+        </td>
+        <td>{{item.created | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Updated</strong>
+        </td>
+        <td>{{item.updated | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Expected Settlement Date</strong>
+        </td>
+        <td>{{item.expectedSettlementDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Settlement Date</strong>
+        </td>
+        <td>{{item.settlementDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Mandatory Reconciliation Date</strong>
+        </td>
+        <td>{{item.mandatoryReconciliationDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Date</strong>
+        </td>
+        <td>{{item.invoiceDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Status</strong>
+        </td>
+        <td>{{item.status}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Rejection Reason</strong>
+        </td>
+        <td>{{item.rejectionReason}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>EligibleValue</strong>
+        </td>
+        <td>{{item.eligibleValue}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Purchase Value</strong>
+        </td>
+        <td>{{item.invoicePurchaseValue}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Trade Date</strong>
+        </td>
+        <td>{{item.tradeDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Trade Payment Date</strong>
+        </td>
+        <td>{{item.tradePaymentDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Payments</strong>
+        </td>
+        <td>{{item.invoicePayments}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Invoice Dilutions</strong>
+        </td>
+        <td>{{item.invoiceDilutions}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Cancelled</strong>
+        </td>
+        <td>{{item.cancelled ? 'Yes' : 'No'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Close Date</strong>
+        </td>
+        <td>{{item.closeDate | date:'short'}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Origination Network</strong>
+        </td>
+        <td>{{item.originationNetwork}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Hash</strong>
+        </td>
+        <td>{{item.hash}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Currency</strong>
+        </td>
+        <td>{{item.currency}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Site ID</strong>
+        </td>
+        <td>{{item.siteId}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Purchase Order Number</strong>
+        </td>
+        <td>{{item.purchaseOrderNumber}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Purchase Order Id</strong>
+        </td>
+        <td>{{item.purchaseOrderId}}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Composer Program Id</strong>
+        </td>
+        <td>{{item.composerProgramId}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
