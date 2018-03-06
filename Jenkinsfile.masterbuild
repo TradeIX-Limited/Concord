@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+	environment {
+		RABBIT_LOGIN = credentials('RabbitUserDev')
+		BUILD_DATE = sh(returnStdout: true, script: "date +%F-%H-%M-%S")
+	}
+
+	stages {
+	    stage('Init') {
+			steps {
+				timeout(time: 10, unit: 'MINUTES') {
+					// Set deployment scripts as executable
+					sh script: 'chmod a+x ./Deployment/*.sh'					
+				}
+			}
+		}
+
+		stage('Build') {
+			steps {
+				timeout(time: 25, unit: 'MINUTES') {
+					sh 'Deployment/2-build.sh'
+				}
+			}
+		}
+
+		stage('Publish') {
+			environment {
+				AZ_CONTAINER_REG_LOGIN = credentials('AzureContainerRegistry')
+			}
+
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    sh 'Deployment/4-publish.sh'
+                }
+            }
+        }
+	}
+}
