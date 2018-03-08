@@ -1,0 +1,184 @@
+version: '3.3'
+services:
+
+  Controller:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: controller
+    ports:
+      - "10002:10002"
+      - "10003:10003"
+      - "10004:10004"
+    image: corda/concord:1.0
+    container_name: controller
+    volumes:
+      - ./config/dockerconfig/nodes/controller/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/controller/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/controller/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/controller/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.2
+
+  TradeIX:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: tradeix
+    ports:
+      - "10005:10002"
+      - "10006:10003"
+      - "10007:10004"
+    image: corda/concord:1.0
+    container_name: tradeix
+    volumes:
+      - ./config/dockerconfig/nodes/tradeix/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/tradeix/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/tradeix/tix.integration.conf/:/opt/corda/tix.integration.conf
+      - ./config/dockerconfig/nodes/tradeix/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/tradeix/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.3
+    depends_on:
+      - Controller
+
+  Buyer:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: buyer
+    ports:
+      - "10023:10002"
+      - "10024:10003"
+      - "10025:10004"
+    image: corda/concord:1.0
+    container_name: buyer
+    volumes:
+      - ./config/dockerconfig/nodes/buyer/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/buyer/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/buyer/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/buyer/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.4
+    depends_on:
+      - Controller
+
+  Funder:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: funder
+    ports:
+      - "10020:10002"
+      - "10021:10003"
+      - "10022:10004"
+    image: corda/concord:1.0
+    container_name: funder
+    volumes:
+      - ./config/dockerconfig/nodes/funder/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/funder/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/funder/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/funder/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.5
+    depends_on:
+      - Controller
+
+  Supplier1:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: supplier1
+    ports:
+      - "10011:10002"
+      - "10012:10003"
+      - "10013:10004"
+    image: corda/concord:1.0
+    container_name: supplier1
+    volumes:
+      - ./config/dockerconfig/nodes/supplier1/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/supplier1/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier1/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier1/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.6
+    depends_on:
+      - Controller
+
+  Supplier2:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: supplier2
+    ports:
+      - "10014:10002"
+      - "10015:10003"
+      - "10016:10004"
+    image: corda/concord:1.0
+    container_name: supplier2
+    volumes:
+      - ./config/dockerconfig/nodes/supplier2/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/supplier2/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier2/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier2/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.7
+    depends_on:
+      - Controller
+
+  Supplier3:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: supplier3
+    ports:
+      - "10017:10002"
+      - "10018:10003"
+      - "10019:10004"
+    image: corda/concord:1.0
+    container_name: supplier3
+    volumes:
+      - ./config/dockerconfig/nodes/supplier3/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/supplier3/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/supplier3/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/supplier3/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.8
+    depends_on:
+      - Controller
+
+  FakeSupplier:
+    env_file:
+      - ./config/dockerconfig/nodes/corda_docker.env
+    hostname: fakesupplier
+    ports:
+      - "10008:10002"
+      - "10009:10003"
+      - "10010:10004"
+    image: corda/concord:1.0
+    container_name: fakesupplier
+    volumes:
+      - ./config/dockerconfig/nodes/fakesupplier/node.conf:/opt/corda/node.conf
+      - ./config/dockerconfig/nodes/plugins/:/opt/corda/plugins/
+      - ./config/dockerconfig/nodes/fakesupplier/certificates/:/opt/corda/certificates/
+      - ./config/dockerconfig/nodes/fakesupplier/logs/:/opt/corda/logs/
+      - ./config/dockerconfig/nodes/fakesupplier/persistence.mv.db:/opt/corda/persistence.mv.db
+    networks:
+      corda:
+        ipv4_address: 172.20.0.9
+    depends_on:
+      - Controller
+
+networks:
+  corda:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.20.0.0/16
