@@ -21,7 +21,6 @@ pipeline {
 			}
 		}
 
-	stages {
 	    stage('Deploy') {
 			environment {
 				AZ_CONTAINER_REG_LOGIN = credentials('AzureContainerRegistry')
