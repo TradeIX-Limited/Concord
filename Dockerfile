@@ -19,25 +19,19 @@ RUN apk upgrade --update && \
 	apk add --update --no-cache bash iputils && \
 	rm -rf /var/cache/apk/*
 
-# Add user to run the app
-RUN addgroup corda && \
-    adduser -G corda -D -s /bin/bash corda
-
 # Create /opt/corda directory
 RUN mkdir -p /opt/corda/plugins && \
     mkdir -p /opt/corda/logs
 
 # Copy corda jar
-ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
-ADD --chown=corda:corda https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
+ADD https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
+ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
 #Debugging ...just to save time
 #COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/corda.jar
 #COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/corda-webserver.jar
 
 COPY config/dockerconfig/nodes/run-corda.sh /run-corda.sh
 RUN chmod +x /run-corda.sh && sync
-
-RUN chown -R corda:corda /opt/corda
 
 RUN chmod 777 /opt/corda/logs
 
@@ -49,7 +43,6 @@ EXPOSE 10004
 # Working directory for Corda
 WORKDIR /opt/corda
 ENV HOME=/opt/corda
-USER corda
 
 # Start it
 CMD ["/run-corda.sh"]
