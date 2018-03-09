@@ -2,10 +2,6 @@ version: '3.3'
 services:
 
   Controller:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: controller
@@ -13,7 +9,7 @@ services:
       - "10002:10002"
       - "10003:10003"
       - "10004:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: controller
     volumes:
       - ./config/dockerconfig/nodes/controller/node.conf:/opt/corda/node.conf
@@ -26,10 +22,6 @@ services:
         ipv4_address: 172.20.0.2
 
   TradeIX:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: tradeix
@@ -37,7 +29,7 @@ services:
       - "10005:10002"
       - "10006:10003"
       - "10007:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: tradeix
     volumes:
       - ./config/dockerconfig/nodes/tradeix/node.conf:/opt/corda/node.conf
@@ -53,10 +45,6 @@ services:
       - Controller
 
   Buyer:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: buyer
@@ -64,7 +52,7 @@ services:
       - "10023:10002"
       - "10024:10003"
       - "10025:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: buyer
     volumes:
       - ./config/dockerconfig/nodes/buyer/node.conf:/opt/corda/node.conf
@@ -79,10 +67,6 @@ services:
       - Controller
 
   Funder:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: funder
@@ -90,7 +74,7 @@ services:
       - "10020:10002"
       - "10021:10003"
       - "10022:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: funder
     volumes:
       - ./config/dockerconfig/nodes/funder/node.conf:/opt/corda/node.conf
@@ -105,10 +89,6 @@ services:
       - Controller
 
   Supplier1:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: supplier1
@@ -116,7 +96,7 @@ services:
       - "10011:10002"
       - "10012:10003"
       - "10013:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: supplier1
     volumes:
       - ./config/dockerconfig/nodes/supplier1/node.conf:/opt/corda/node.conf
@@ -131,10 +111,6 @@ services:
       - Controller
 
   Supplier2:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: supplier2
@@ -142,7 +118,7 @@ services:
       - "10014:10002"
       - "10015:10003"
       - "10016:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: supplier2
     volumes:
       - ./config/dockerconfig/nodes/supplier2/node.conf:/opt/corda/node.conf
@@ -157,10 +133,6 @@ services:
       - Controller
 
   Supplier3:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: supplier3
@@ -168,7 +140,7 @@ services:
       - "10017:10002"
       - "10018:10003"
       - "10019:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: supplier3
     volumes:
       - ./config/dockerconfig/nodes/supplier3/node.conf:/opt/corda/node.conf
@@ -183,10 +155,6 @@ services:
       - Controller
 
   FakeSupplier:
-    build:
-      context: .
-      args:
-        BUILDTIME_CORDA_VERSION: 1.0.0
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env
     hostname: fakesupplier
@@ -194,7 +162,7 @@ services:
       - "10008:10002"
       - "10009:10003"
       - "10010:10004"
-    image: corda/concord:1.0
+    image: tradeixdev.azurecr.io/corda:latest
     container_name: fakesupplier
     volumes:
       - ./config/dockerconfig/nodes/fakesupplier/node.conf:/opt/corda/node.conf
