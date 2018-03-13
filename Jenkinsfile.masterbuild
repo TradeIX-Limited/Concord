@@ -24,6 +24,13 @@ pipeline {
 				AZ_CONTAINER_REG_LOGIN = credentials('AzureContainerRegistry')
 			}
 
+			when {
+				// Only publish on master build
+				expression {
+					!env.isPullRequestBuild
+				}
+			}
+
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     sh 'Deployment/4-publish.sh'
