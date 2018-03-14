@@ -20,7 +20,7 @@ import java.io.File
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
     init {
-        val legalEntity = services.nodeInfo().legalIdentities.single()
+        val legalEntity = services.nodeInfo().legalIdentities.first()
         log.info("Reached TixMessageSub in ${legalEntity.name.organisation}")
 
         if (legalEntity.name.organisation == "TradeIX") {

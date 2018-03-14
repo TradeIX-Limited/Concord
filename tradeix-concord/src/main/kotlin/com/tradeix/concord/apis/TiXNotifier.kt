@@ -12,7 +12,7 @@ class TiXNotifier(val services: CordaRPCOps) {
 
     init {
         val log: Logger = loggerFor<TiXNotifier>()
-        val legalEntity = services.nodeInfo().legalIdentities.single()
+        val legalEntity = services.nodeInfo().legalIdentities.first()
 
         if (legalEntity.name.organisation == "TradeIX") {
             val lock = java.lang.Object()
