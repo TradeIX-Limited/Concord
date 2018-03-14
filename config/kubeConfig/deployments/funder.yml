@@ -1,0 +1,49 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: funder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: funder
+  template:
+    metadata:
+      labels:
+        app: funder
+    spec:
+      containers:
+      - name: node
+        image: corda:1.0.0
+        args: ["controller"]
+        env:
+        - name: "CONFIG_FILE"
+          value: "/config/funder.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: certificates
+          mountPath: /opt/corda/certificates
+      - name: web
+        image: corda:1.0.0
+        args: ["web", "funder"]
+        env:
+        - name: "CONFIG_FILE"
+          value: "/config/funder.conf"
+        ports:
+        - containerPort: 10004
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: certificates
+          mountPath: /opt/corda/certificates
+      volumes:
+      - name: certificates
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: corda

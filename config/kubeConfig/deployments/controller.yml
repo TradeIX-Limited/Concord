@@ -1,0 +1,31 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller
+  template:
+    metadata:
+      labels:
+        app: controller
+    spec:
+      containers:
+      - name: corda
+        image: corda:1.0.0
+        args: ["none"]
+        env:
+        - name: "CONFIG_FILE"
+          value: "/config/controller.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: corda

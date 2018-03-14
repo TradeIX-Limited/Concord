@@ -1,0 +1,49 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: supplier1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supplier1
+  template:
+    metadata:
+      labels:
+        app: supplier1
+    spec:
+      containers:
+      - name: node
+        image: corda:1.0.0
+        args: ["controller"]
+        env:
+        - name: "CONFIG_FILE"
+          value: "/config/supplier1.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: certificates
+          mountPath: /opt/corda/certificates
+      - name: web
+        image: corda:1.0.0
+        args: ["web", "supplier1"]
+        env:
+        - name: "CONFIG_FILE"
+          value: "/config/supplier1.conf"
+        ports:
+        - containerPort: 10004
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: certificates
+          mountPath: /opt/corda/certificates
+      volumes:
+      - name: certificates
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: corda
