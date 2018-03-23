@@ -12,9 +12,6 @@ pipeline {
 		stage('Init') {
 			steps {
 				timeout(time: 10, unit: 'MINUTES') {
-					// Load system-specific environment variables
-					load "/etc/tradeix/build-environment-corda-uat.groovy"
-            
 					// Set deployment scripts as executable
 					sh script: 'chmod a+x ./Deployment/*.sh'
 				}
@@ -24,6 +21,7 @@ pipeline {
 	    stage('Deploy') {
 			environment {
 				AZ_CONTAINER_REG_LOGIN = credentials('AzureContainerRegistry')
+				machineip="10.0.1.8"
 			}
 
             steps {
