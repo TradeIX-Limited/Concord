@@ -30,8 +30,11 @@ pipeline {
             steps {
                 timeout(time: 30, unit: 'MINUTES') {
 					withCredentials([sshUserPrivateKey(credentialsId: 'dev-userdeploy', keyFileVariable: 'usrdeployfk', passphraseVariable: 'usrdeploypf', usernameVariable: 'devusername')]) {
-						sh 'scp -i $usrdeployfk /datadrive/share/corda/tradeix-concord-0.1.jar $devusername@$externalmachineip:/etc/tradeix/containervolumes/corda'
-						sh 'ssh -i $usrdeployfk $devusername@$externalmachineip /etc/tradeix/containervolumes/corda/bring-up-services.sh $AZ_CONTAINER_REG_LOGIN_USR $AZ_CONTAINER_REG_LOGIN_PSW'
+						sh '''
+							export docker_tag=$(echo $GIT_BRANCH | awk -F"/" '{print $NF}')
+							scp -i $usrdeployfk /datadrive/share/corda/tradeix-concord-0.1.jar $devusername@$externalmachineip:/etc/tradeix/containervolumes/corda
+							ssh -i $usrdeployfk $devusername@$externalmachineip /etc/tradeix/containervolumes/corda/bring-up-services.sh $AZ_CONTAINER_REG_LOGIN_USR $AZ_CONTAINER_REG_LOGIN_PSW $docker_tag
+						'''
 					}					
 				}
             }
