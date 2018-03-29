@@ -6,6 +6,7 @@ metadata:
     app: buyer
   name: buyer
 spec:
+  type: LoadBalancer
   ports:
   - name: "p2p"
     port: 10002

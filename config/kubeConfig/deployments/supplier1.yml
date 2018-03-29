@@ -12,9 +12,10 @@ spec:
       labels:
         app: supplier1
     spec:
+# Remember to edit the image as required
       containers:
       - name: node
-        image: corda:1.0.0
+        image: tradeixdev.azurecr.io/corda:1.0.0.0
         args: ["controller"]
         env:
         - name: "CONFIG_FILE"
@@ -25,10 +26,16 @@ spec:
         - name: config
           mountPath: /config
           readOnly: true
-        - name: certificates
+        - name: pvclaim
           mountPath: /opt/corda/certificates
+          subPath: certificates
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+        - name: pvclaim
+          mountPath: db
       - name: web
-        image: corda:1.0.0
+        image: tradeixdev.azurecr.io/corda:1.0.0.0
         args: ["web", "supplier1"]
         env:
         - name: "CONFIG_FILE"
@@ -39,11 +46,23 @@ spec:
         - name: config
           mountPath: /config
           readOnly: true
-        - name: certificates
+        - name: pvclaim
           mountPath: /opt/corda/certificates
+          subPath: certificates
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+      imagePullSecrets:
+      - name: acr-secret
       volumes:
       - name: certificates
         emptyDir: {}
       - name: config
         configMap:
           name: corda
+      - name: logs
+        emptyDir: {}
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-supplier1
+          readOnly: false

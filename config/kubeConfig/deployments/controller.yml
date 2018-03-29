@@ -13,8 +13,9 @@ spec:
         app: controller
     spec:
       containers:
-      - name: corda
-        image: corda:1.0.0
+# Remember to edit the image as required
+      - name: node
+        image: tradeixdev.azurecr.io/corda:1.0.0.0
         args: ["none"]
         env:
         - name: "CONFIG_FILE"
@@ -25,7 +26,23 @@ spec:
         - name: config
           mountPath: /config
           readOnly: true
+        - name: pvclaim
+          mountPath: /opt/corda/certificates
+          subPath: certificates
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+        - name: pvclaim
+          mountPath: db
+      imagePullSecrets:
+      - name: acr-secret
       volumes:
       - name: config
         configMap:
           name: corda
+      - name: logs
+        emptyDir: {}
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-controller
+          readOnly: false

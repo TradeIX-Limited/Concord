@@ -13,8 +13,9 @@ spec:
         app: conductor
     spec:
       containers:
+# Remember to edit the image as required
       - name: node
-        image: corda:1.0.0
+        image: tradeixdev.azurecr.io/corda:1.0.0.0
         args: ["controller"]
         env:
         - name: "CONFIG_FILE"
@@ -25,10 +26,19 @@ spec:
         - name: config
           mountPath: /config
           readOnly: true
-        - name: certificates
+        - name: pvclaim
           mountPath: /opt/corda/certificates
+          subPath: certificates
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+        - name: pvclaim
+          mountPath: db
+#        - name: pvclaim
+#          mountPath: /tixintegration
+#          readOnly: true
       - name: web
-        image: corda:1.0.0
+        image: tradeixdev.azurecr.io/corda:1.0.0.0
         args: ["web", "conductor"]
         env:
         - name: "CONFIG_FILE"
@@ -39,11 +49,26 @@ spec:
         - name: config
           mountPath: /config
           readOnly: true
-        - name: certificates
+        - name: pvclaim
           mountPath: /opt/corda/certificates
+          subPath: certificates
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+#        - name: pvclaim
+#          mountPath: /tixintegration
+#          readOnly: true
+      imagePullSecrets:
+      - name: acr-secret
+#      volumes:
+#      - name: tixintegration
+#        configMap:
+#          name: tixintegration
       volumes:
-      - name: certificates
-        emptyDir: {}
       - name: config
         configMap:
           name: corda
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-conductor
+          readOnly: false
