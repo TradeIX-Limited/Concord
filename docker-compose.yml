@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-
+# This file and the feature is deprecated. Please refer config/kubeconfig
   Controller:
     env_file:
       - ./config/dockerconfig/nodes/corda_docker.env

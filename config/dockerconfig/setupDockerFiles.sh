@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# This file and the feature is deprecated. Please refer config/kubeconfig
 export CORDA_PORT_P2P="10002"
 export CORDA_PORT_RPC="10003"
 export CORDA_PORT_WEB="10004"

@@ -1,6 +1,6 @@
 # Base image from (http://phusion.github.io/baseimage-docker)
 FROM openjdk:8u151-jre-alpine
-
+# This file and the feature is deprecated. Please refer config/kubeconfig
 # Override default value with 'docker build --build-arg BUILDTIME_CORDA_VERSION=version'
 # example: 'docker build --build-arg BUILDTIME_CORDA_VERSION=2.0.0 -t concord:2.0 .'
 ARG BUILDTIME_CORDA_VERSION=1.0.0
