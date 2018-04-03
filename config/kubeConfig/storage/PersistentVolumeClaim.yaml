@@ -1,0 +1,67 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-controller
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-conductor
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-buyer
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-funder
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-supplier1
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
+---
