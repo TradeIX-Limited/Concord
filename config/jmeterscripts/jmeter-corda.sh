@@ -25,7 +25,7 @@ case "$ANSWER_START" in
   echo "Enter your choice"
   echo "1. Issuance"
   echo "2. Change of Ownership"
-  echo "3. Concurrent Issuance and Change of Owneship"
+  echo "3. Concurrent Issuance and Change of Ownership"
   echo "4. Exit"
   read -p "Enter your choice : " ANSWER_TYPE
         case "$ANSWER_TYPE" in
