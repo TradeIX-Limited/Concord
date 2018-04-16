@@ -9,6 +9,7 @@ class PurchaseOrderOwnershipRequestMessage(
         override val correlationId: String?,
         override var tryCount: Int,
         override val externalIds: List<String>?,
+        val bidUniqueId: String?,
         val newOwner: CordaX500Name?
 ) : RabbitRequestMessage(), MultiIdentityMessage {
 

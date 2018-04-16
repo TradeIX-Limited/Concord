@@ -7,12 +7,12 @@ import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import com.tradeix.concord.services.messaging.publishers.CordaTiXPOPublisher
 import com.tradeix.concord.services.messaging.publishers.CordaTiXTradeAssetPublisher
-import com.tradeix.concord.services.messaging.subscribers.ChangeOwnerFlowQueuesSubscriber
-import com.tradeix.concord.services.messaging.subscribers.IssuanceFlowQueuesSubscriber
+import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderChangeOwnerFlowQueuesSubscriber
+import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderIssuanceFlowQueuesSubscriber
 import com.typesafe.config.ConfigFactory
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.loggerFor
-import net.corda.nodeapi.config.parseAs
+import net.corda.nodeapi.internal.config.parseAs
 import org.slf4j.Logger
 import java.io.File
 
@@ -29,17 +29,20 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
     }
 
     companion object {
-        protected  val log: Logger = loggerFor<TixMessageSubscriptionStartup>()
+        private val log: Logger = loggerFor<TixMessageSubscriptionStartup>()
         private val currentConsumers: MutableMap<String, IQueueConsumer> = mutableMapOf()
         val currentPublishers: MutableMap<String, IQueueProducer<RabbitRequestMessage>> = mutableMapOf()
 
         private fun initializeQueues(cordaRpcService: CordaRPCOps) {
             try {
                 val currentPath = System.getProperty("user.dir")
-                log.debug("The current path is ${currentPath}")
-                val  defaultConfig = ConfigFactory.parseFile(File("${currentPath}/tix.integration.conf"))
+                log.debug("The current path is $currentPath")
+                val  defaultConfig = ConfigFactory.parseFile(File("$currentPath/tix.integration.conf"))
                 val serializer = Gson()
-                val connectionConfig = defaultConfig!!.resolve().getConfig("tix-integration.rabbitMqConnectionConfiguration").parseAs<RabbitMqConnectionConfiguration>()
+                val connectionConfig = defaultConfig!!
+                        .resolve()
+                        .getConfig("tix-integration.rabbitMqConnectionConfiguration")
+                        .parseAs<RabbitMqConnectionConfiguration>()
                 val connectionFactory = ConnectionFactory()
 
                 connectionFactory.username = connectionConfig.userName
@@ -51,11 +54,11 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
                 log.info("Starting Issuance Rabbit Subscription")
-                IssuanceFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
+                PurchaseOrderIssuanceFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
                 log.info("Starting Change of owner Rabbit Subscription")
-                ChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
+                PurchaseOrderChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
                 log.info("Starting CordaTiXTradeAssetQueuesPublisher")

@@ -1,10 +1,9 @@
 package com.tradeix.concord.flows
 
-import net.corda.node.internal.StartedNode
-import net.corda.testing.chooseIdentity
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.internal.chooseIdentity
+import net.corda.testing.node.StartedMockNode
 
-data class MockIdentity(val node: StartedNode<MockNetwork.MockNode>) {
+data class MockIdentity(val node: StartedMockNode) {
     val party get() = node.info.chooseIdentity()
     val name get() = party.name
     val publicKey get() = party.owningKey

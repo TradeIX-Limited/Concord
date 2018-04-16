@@ -18,66 +18,54 @@ import com.tradeix.concord.TestValueHelper.SUPPLIER_PUBKEY
 import com.tradeix.concord.contracts.PurchaseOrderContract
 import com.tradeix.concord.contracts.PurchaseOrderContract.Companion.PURCHASE_ORDER_CONTRACT_ID
 import com.tradeix.concord.states.PurchaseOrderState
-import net.corda.testing.ledger
-import net.corda.testing.setCordappPackages
-import net.corda.testing.unsetCordappPackages
-import org.junit.After
-import org.junit.Before
+import net.corda.testing.node.MockServices
+import net.corda.testing.node.ledger
 import org.junit.Test
 
 class PurchaseOrderStateOwnershipContractTests {
-    @Before
-    fun setup() {
-        setCordappPackages("com.tradeix.concord.contracts")
-    }
-
-    @After
-    fun tearDown() {
-        unsetCordappPackages()
-    }
+    private var ledgerServices = MockServices(listOf("com.tradeix.concord.contracts"))
 
     @Test
     fun `PurchaseOrderState Ownership transaction must include the ChangeOwner command`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
                 fails()
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                command(
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 verifies()
             }
         }
@@ -85,28 +73,28 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction must consume at least one input`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                command(
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_INPUTS)
             }
         }
@@ -114,62 +102,60 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction must create the same number of outputs to inputs`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                command(
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OUTPUTS)
             }
         }
@@ -177,46 +163,45 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction owner must be the supplier`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
                 fails()
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                command(
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OWNER)
             }
         }
@@ -224,46 +209,45 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction all participants must sign (buyer must sign)`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
                 fails()
-                command(SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                command(
+                        listOf(SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS)
             }
         }
@@ -271,46 +255,45 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction all participants must sign (supplier must sign)`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
                 fails()
-                command(BUYER_PUBKEY, CONDUCTOR_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                command(
+                        listOf(BUYER_PUBKEY, CONDUCTOR_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS)
             }
         }
@@ -318,46 +301,45 @@ class PurchaseOrderStateOwnershipContractTests {
 
     @Test
     fun `PurchaseOrderState Ownership transaction all participants must sign (conductor must sign)`() {
-        ledger {
+        ledgerServices.ledger {
             transaction {
-                input(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = BUYER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
-                output(PURCHASE_ORDER_CONTRACT_ID) {
-                    PurchaseOrderState(
-                            linearId = LINEAR_ID,
-                            owner = SUPPLIER,
-                            buyer = BUYER,
-                            supplier = SUPPLIER,
-                            conductor = CONDUCTOR,
-                            reference = PURCHASE_ORDER_REFERENCE,
-                            amount = ONE_POUND,
-                            created = DATE_INSTANT_01,
-                            earliestShipment = DATE_INSTANT_02,
-                            latestShipment = DATE_INSTANT_03,
-                            portOfShipment = PORT_OF_SHIPMENT,
-                            descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                            deliveryTerms = DELIVERY_TERMS
-                    )
-                }
+                input(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = BUYER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
+                output(PURCHASE_ORDER_CONTRACT_ID, PurchaseOrderState(
+                        linearId = LINEAR_ID,
+                        owner = SUPPLIER.party,
+                        buyer = BUYER.party,
+                        supplier = SUPPLIER.party,
+                        conductor = CONDUCTOR.party,
+                        reference = PURCHASE_ORDER_REFERENCE,
+                        amount = ONE_POUND,
+                        created = DATE_INSTANT_01,
+                        earliestShipment = DATE_INSTANT_02,
+                        latestShipment = DATE_INSTANT_03,
+                        portOfShipment = PORT_OF_SHIPMENT,
+                        descriptionOfGoods = DESCRIPTION_OF_GOODS,
+                        deliveryTerms = DELIVERY_TERMS
+                )
+                )
                 fails()
-                command(BUYER_PUBKEY, SUPPLIER_PUBKEY) {
-                    PurchaseOrderContract.Commands.ChangeOwner()
-                }
+                command(
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY),
+                        PurchaseOrderContract.Commands.ChangeOwner()
+                )
                 failsWith(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS)
             }
         }

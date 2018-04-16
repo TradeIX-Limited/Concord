@@ -5,7 +5,6 @@ import com.tradeix.concord.TestValueHelper.DATE_INSTANT_02
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_03
 import com.tradeix.concord.TestValueHelper.DELIVERY_TERMS
 import com.tradeix.concord.TestValueHelper.DESCRIPTION_OF_GOODS
-import com.tradeix.concord.TestValueHelper.EXTERNAL_IDS
 import com.tradeix.concord.TestValueHelper.PORT_OF_SHIPMENT
 import com.tradeix.concord.TestValueHelper.POSITIVE_ONE
 import com.tradeix.concord.TestValueHelper.POUNDS
@@ -19,15 +18,14 @@ import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.changePurchaseOrderOwner
 import net.corda.core.transactions.SignedTransaction
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class PurchaseOrderOwnershipFlowTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)
         node.registerInitiatedFlow(PurchaseOrderOwnership.AcceptorFlow::class.java)
     }

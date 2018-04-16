@@ -3,11 +3,11 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.*
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.tradeasset.TradeAssetOwnership
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.validators.RabbitRequestMessageValidator
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
@@ -21,7 +21,7 @@ class ChangeOwnerMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<TradeAssetOwnershipResponseMessage>,
+        private val responder: RabbitMqProducer<PurchaseOrderResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
 
@@ -57,7 +57,7 @@ class ChangeOwnerMessageConsumer(
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
 
-        var requestMessage = TradeAssetOwnershipRequestMessage(
+        var requestMessage = PurchaseOrderOwnershipRequestMessage(
                 correlationId = null,
                 tryCount = 0,
                 externalIds = null,
@@ -65,7 +65,7 @@ class ChangeOwnerMessageConsumer(
                 bidUniqueId = null)
 
         try {
-            requestMessage = serializer.fromJson(messageBody, TradeAssetOwnershipRequestMessage::class.java)
+            requestMessage = serializer.fromJson(messageBody, PurchaseOrderOwnershipRequestMessage::class.java)
             println("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
             log.info("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
             try {
@@ -74,13 +74,13 @@ class ChangeOwnerMessageConsumer(
                 if (!validator.isValid) {
                     throw FlowValidationException(validationErrors = validator.validationErrors)
                 }
-                val flowHandle = services.startTrackedFlow(TradeAssetOwnership::InitiatorFlow, requestMessage.toModel())
+                val flowHandle = services.startTrackedFlow(PurchaseOrderOwnership::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
                 val result = flowHandle.returnValue.getOrThrow()
 
 
                 println("Successfully processed OwnershipRequest - responding back to client")
-                val response = TradeAssetOwnershipResponseMessage(
+                val response = PurchaseOrderResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
@@ -90,12 +90,12 @@ class ChangeOwnerMessageConsumer(
                 )
                 responder.publish(response)
                 log.info("Successfully processed OwnershipRequest - responded back to client")
-            } catch (ex: Throwable){
+            } catch (ex: Throwable) {
                 log.error("Failed to process the message ${ex}, Returning a error response")
-                return when (ex){
+                return when (ex) {
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
-                        val response = TradeAssetOwnershipResponseMessage(
+                        val response = PurchaseOrderResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
@@ -107,7 +107,7 @@ class ChangeOwnerMessageConsumer(
                         responder.publish(response)
                     }
                     else -> {
-                        val response = TradeAssetOwnershipResponseMessage(
+                        val response = PurchaseOrderResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),

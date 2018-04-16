@@ -41,7 +41,7 @@ class TiXNotifier(val services: CordaRPCOps) {
 
     private fun startTradeAsset(tradeAssetpublisher: IQueueProducer<RabbitRequestMessage>?) {
         val tradeAssetRunnable = runnable {
-            VaultHelper().watchTradeAssetState(services, tradeAssetpublisher!!)
+            VaultHelper().watchPOState(services, tradeAssetpublisher!!)
         }
         Thread(tradeAssetRunnable).start()
     }

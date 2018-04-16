@@ -32,9 +32,7 @@ import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.changeInvoiceOwner
-import net.corda.core.transactions.SignedTransaction
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -42,7 +40,7 @@ import kotlin.test.fail
 
 //TODO: The tests are failing because the conductor is final in the Model. Hence we could not inject the mock
 class InvoiceOwnershipFlowTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)
         node.registerInitiatedFlow(InvoiceOwnership.AcceptorFlow::class.java)
     }

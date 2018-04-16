@@ -1,6 +1,5 @@
 package com.tradeix.concord.flows.purchaseorder
 
-import com.tradeix.concord.TestValueHelper
 import com.tradeix.concord.TestValueHelper.ATTACHMENT
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_01
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_02
@@ -22,8 +21,7 @@ import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.amendPurchaseOrder
 import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.transactions.SignedTransaction
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -31,7 +29,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)
         node.registerInitiatedFlow(PurchaseOrderAmendment.AcceptorFlow::class.java)
     }
@@ -529,8 +527,8 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
     @Test
     fun `PurchaseOrder issuance flow with a valid attachmentId will store the attachment`() {
         issuePurchaseOrder()
-        val validAttachment = conductor.node.database.transaction {
-            conductor.node.attachments.importAttachment(File(ATTACHMENT).inputStream())
+        val validAttachment = conductor.node.transaction {
+            conductor.node.services.attachments.importAttachment(File(ATTACHMENT).inputStream(), "UPLOADER", "FILENAME")
         }
 
         val transaction = amendPurchaseOrder(network, conductor.node, PurchaseOrderAmendmentFlowModel(

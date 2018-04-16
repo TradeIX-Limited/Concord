@@ -29,15 +29,13 @@ import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper.issueInvoice
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
-import java.math.BigDecimal
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)
     }
 

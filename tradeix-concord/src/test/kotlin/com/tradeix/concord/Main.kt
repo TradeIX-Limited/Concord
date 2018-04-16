@@ -2,16 +2,14 @@ package com.tradeix.concord
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
-import net.corda.node.services.transactions.ValidatingNotaryService
-import net.corda.nodeapi.User
-import net.corda.nodeapi.internal.ServiceInfo
-import net.corda.testing.driver.driver
+import net.corda.testing.driver.*
+import net.corda.testing.node.User
 
 class Main {
     companion object {
 
         // RPC Users
-        private val USER = User("user1", "test", permissions = setOf())
+        private val USER = User("user1", "test", permissions = setOf("ALL"))
 
         // Nodes
         private val NOTARY = CordaX500Name("Controller", "London", "GB")
@@ -24,17 +22,14 @@ class Main {
         private val TEST_NODE_5 = CordaX500Name("TradeIXTestFunder", "London", "GB")
         private val TEST_NODE_6 = CordaX500Name("TradeIXTestBuyer", "London", "GB")
 
-
         @JvmStatic
         fun main(args: Array<String>) {
-            driver(isDebug = true) {
+            driver(DriverParameters(isDebug = true, waitForAllNodesToFinish = true)) {
 
                 // Notary
-                startNode(
-                        providedName = NOTARY,
-                        advertisedServices = setOf(ServiceInfo(ValidatingNotaryService.type)))
+                startNode(NodeParameters(providedName = NOTARY))
 
-                val peerNodes = listOf(
+                val names = listOf(
                         CONDUCTOR,
                         TEST_NODE_1,
                         TEST_NODE_2,
@@ -44,13 +39,14 @@ class Main {
                         TEST_NODE_6
                 )
 
-                peerNodes.forEach {
-                    startWebserver(startNode(
-                            providedName = it,
-                            rpcUsers = listOf(USER)).getOrThrow())
-                }
+                names.map {
+                    val node = startNode(
+                            providedName = CordaX500Name("PartyA", "London", "GB"),
+                            rpcUsers = listOf(USER)
+                    ).getOrThrow()
 
-                waitForAllNodesToFinish()
+                    startWebserver(node)
+                }
             }
         }
     }

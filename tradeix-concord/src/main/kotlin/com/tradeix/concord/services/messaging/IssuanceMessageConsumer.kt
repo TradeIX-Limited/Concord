@@ -3,18 +3,18 @@ package com.tradeix.concord.services.messaging
 import com.google.gson.Gson
 import com.rabbitmq.client.*
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.validators.RabbitRequestMessageValidator
-import net.corda.core.utilities.loggerFor
-import org.slf4j.Logger
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 import java.nio.charset.Charset
 
 class IssuanceMessageConsumer(
@@ -22,7 +22,7 @@ class IssuanceMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<TradeAssetResponseMessage>,
+        private val responder: RabbitMqProducer<PurchaseOrderResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
 
@@ -58,20 +58,26 @@ class IssuanceMessageConsumer(
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
 
-        var requestMessage = TradeAssetIssuanceRequestMessage(
+        var requestMessage = PurchaseOrderIssuanceRequestMessage(
                 correlationId = null,
+                created = null,
+                deliveryTerms = null,
+                descriptionOfGoods = null,
+                earliestShipment = null,
+                latestShipment = null,
+                portOfShipment = null,
+                reference = null,
                 tryCount = 0,
                 externalId = null,
                 buyer = null,
                 supplier = null,
                 conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
                 value = null,
                 currency = null,
                 attachmentId = null)
 
         try {
-            requestMessage = serializer.fromJson(messageBody, TradeAssetIssuanceRequestMessage::class.java)
+            requestMessage = serializer.fromJson(messageBody, PurchaseOrderIssuanceRequestMessage::class.java)
             println("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
             log.info("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
 
@@ -82,43 +88,46 @@ class IssuanceMessageConsumer(
                     throw FlowValidationException(validationErrors = validator.validationErrors)
                 }
 
-                val flowHandle = services.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, requestMessage.toModel())
+                val flowHandle = services.startTrackedFlow(PurchaseOrderIssuance::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
                 val result = flowHandle.returnValue.getOrThrow()
 
 
                 println("Successfully processed IssuanceRequest - responding back to client")
-                val response = TradeAssetResponseMessage(
+                val response = PurchaseOrderResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
                         externalIds = listOf(requestMessage.externalId!!),
-                        success = true
+                        success = true,
+                        bidUniqueId = null
                 )
                 responder.publish(response)
                 log.info("Successfully processed IssuanceRequest - responded back to client")
-            } catch (ex: Throwable){
+            } catch (ex: Throwable) {
                 log.error("Failed to process the message ${ex.message}, Returning a error response")
-                return when (ex){
+                return when (ex) {
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
-                        val response = TradeAssetResponseMessage(
+                        val response = PurchaseOrderResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
                                 externalIds = listOf(requestMessage.externalId!!),
-                                success = false
+                                success = false,
+                                bidUniqueId = null
                         )
 
                         responder.publish(response)
                     }
                     else -> {
-                        val response = TradeAssetResponseMessage(
+                        val response = PurchaseOrderResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),
                                 externalIds = listOf(requestMessage.externalId!!),
-                                success = false
+                                success = false,
+                                bidUniqueId = null
                         )
 
                         responder.publish(response)

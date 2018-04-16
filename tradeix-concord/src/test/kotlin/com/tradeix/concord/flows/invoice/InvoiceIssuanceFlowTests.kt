@@ -33,6 +33,7 @@ import com.tradeix.concord.states.InvoiceState
 import net.corda.core.crypto.SecureHash
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -40,7 +41,7 @@ import kotlin.test.fail
 
 //TODO: All of this tests fails because the conductor could not be mocked
 class InvoiceIssuanceFlowTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)
     }
 
@@ -328,8 +329,8 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
 
     @Test
     fun `Invoice issuance flow with a valid attachmentId will store the attachment`() {
-        val validAttachment: SecureHash = conductor.node.database.transaction {
-            conductor.node.attachments.importAttachment(File(ATTACHMENT).inputStream())
+        val validAttachment: SecureHash = conductor.node.transaction {
+            conductor.node.services.attachments.importAttachment(File(ATTACHMENT).inputStream(), "IMPORTER", "FILENAME")
         }
 
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(

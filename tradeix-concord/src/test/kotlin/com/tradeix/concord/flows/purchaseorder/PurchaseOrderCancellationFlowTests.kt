@@ -9,22 +9,17 @@ import com.tradeix.concord.TestValueHelper.EXTERNAL_ID
 import com.tradeix.concord.TestValueHelper.PORT_OF_SHIPMENT
 import com.tradeix.concord.TestValueHelper.POSITIVE_ONE
 import com.tradeix.concord.TestValueHelper.POUNDS
-import com.tradeix.concord.TestValueHelper.PURCHASE_ORDER_EXTERNAL_IDS
 import com.tradeix.concord.TestValueHelper.PURCHASE_ORDER_REFERENCE
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.exceptions.FlowVerificationException
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderCancellationFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.cancelPurchaseOrder
-import com.tradeix.concord.flows.FlowTestHelper.changePurchaseOrderOwner
 import com.tradeix.concord.flows.FlowTestHelper.issuePurchaseOrder
-import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.transactions.SignedTransaction
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -32,7 +27,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
-    override fun configureNode(node: StartedNode<MockNetwork.MockNode>) {
+    override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)
         node.registerInitiatedFlow(PurchaseOrderOwnership.AcceptorFlow::class.java)
         node.registerInitiatedFlow(PurchaseOrderCancellation.AcceptorFlow::class.java)
@@ -42,8 +37,8 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     fun `PurchaseOrder cancellation flow fails if externalId is omitted`() {
         issuePurchaseOrder()
         val exception = assertFailsWith<FlowValidationException> {
-            cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
-             externalId = null
+            cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
+                    externalId = null
             ))
         }
 
@@ -56,7 +51,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
         issuePurchaseOrder()
         changePurchaseOrderOwner()
         assertFails {
-            cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
+            cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
                     externalId = EXTERNAL_ID
             ))
         }
@@ -65,7 +60,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     @Test
     fun `PurchaseOrder cancellation flow is signed by the initiator`() {
         issuePurchaseOrder()
-        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
+        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
                 externalId = EXTERNAL_ID
         ))
 
@@ -75,7 +70,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     @Test
     fun `PurchaseOrder cancellation flow is signed by the acceptor`() {
         issuePurchaseOrder()
-        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
+        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
                 externalId = EXTERNAL_ID
         ))
 
@@ -85,7 +80,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     @Test
     fun `PurchaseOrder cancellation flow records a transaction in all counter-party vaults`() {
         issuePurchaseOrder()
-        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
+        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
                 externalId = EXTERNAL_ID
         ))
 
@@ -97,7 +92,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     @Test
     fun `PurchaseOrder cancellation flow has one input and zero outputs`() {
         issuePurchaseOrder()
-        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel (
+        val transaction = cancelPurchaseOrder(network, conductor.node, PurchaseOrderCancellationFlowModel(
                 externalId = EXTERNAL_ID
         ))
 
@@ -126,7 +121,7 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
         ))
     }
 
-    private fun changePurchaseOrderOwner() : SignedTransaction {
+    private fun changePurchaseOrderOwner(): SignedTransaction {
         return FlowTestHelper.changePurchaseOrderOwner(network, conductor.node, PurchaseOrderOwnershipFlowModel(
                 externalIds = listOf(EXTERNAL_ID),
                 newOwner = funder.name

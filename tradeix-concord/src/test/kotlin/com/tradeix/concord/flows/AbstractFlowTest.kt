@@ -1,9 +1,7 @@
 package com.tradeix.concord.flows
 
-import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
-import net.corda.testing.setCordappPackages
-import net.corda.testing.unsetCordappPackages
+import net.corda.testing.node.StartedMockNode
 import org.junit.After
 import org.junit.Before
 
@@ -17,25 +15,23 @@ abstract class AbstractFlowTest {
 
     @Before
     open fun setup() {
-        setCordappPackages("com.tradeix.concord.contracts")
-        network = MockNetwork()
-        val nodes = network.createSomeNodes(4)
+        network = MockNetwork(listOf("com.tradeix.concord.contracts"))
+        val nodes = listOf(1, 2, 3, 4).map { network.createPartyNode() }
 
-        nodes.partyNodes.forEach { configureNode(it) }
+        nodes.forEach { configureNode(it) }
 
-        buyer = MockIdentity(nodes.partyNodes[0])
-        supplier = MockIdentity(nodes.partyNodes[1])
-        funder = MockIdentity(nodes.partyNodes[2])
-        conductor = MockIdentity(nodes.partyNodes[3])
+        buyer = MockIdentity(nodes[0])
+        supplier = MockIdentity(nodes[1])
+        funder = MockIdentity(nodes[2])
+        conductor = MockIdentity(nodes[3])
 
         network.runNetwork()
     }
 
     @After
     fun tearDown() {
-        unsetCordappPackages()
         network.stopNodes()
     }
 
-    abstract fun configureNode(node: StartedNode<MockNetwork.MockNode>)
+    abstract fun configureNode(node: StartedMockNode)
 }

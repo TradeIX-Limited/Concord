@@ -3,7 +3,6 @@ package com.tradeix.concord.helpers
 import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import com.tradeix.concord.states.PurchaseOrderState
-import com.tradeix.concord.states.TradeAssetState
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
@@ -16,22 +15,6 @@ import org.slf4j.Logger
 
 class VaultHelper {
     val log: Logger = loggerFor<VaultHelper>()
-    fun watchTradeAssetState(rpcOps: CordaRPCOps, publisher: IQueueProducer<RabbitRequestMessage>) {
-        val dataFeed = rpcOps.vaultTrack(TradeAssetState::class.java)
-        val updates = dataFeed.updates
-
-        updates.toBlocking().subscribe { update ->
-            update.produced.forEach {
-                try {
-                    publisher.publish(it.state.data.toMessage())
-                } catch (e: Exception) {
-                    //todo remove the printstack when going to prod
-                    e.printStackTrace()
-                    log.error(e.message, e)
-                }
-            }
-        }
-    }
 
     fun watchPOState(rpcOps: CordaRPCOps, publisher: IQueueProducer<RabbitRequestMessage>) {
         val dataFeed = rpcOps.vaultTrack(PurchaseOrderState::class.java)
@@ -40,7 +23,7 @@ class VaultHelper {
         updates.toBlocking().subscribe { update ->
             update.produced.forEach {
                 try {
-                    println("watchPOState = "+ it.state.data.toMessage())
+                    println("watchPOState = " + it.state.data.toMessage())
                     publisher.publish(it.state.data.toMessage())
                     println("Published PO")
                 } catch (e: Exception) {

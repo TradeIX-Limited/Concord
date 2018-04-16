@@ -2,7 +2,7 @@ package com.tradeix.concord
 
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
-import net.corda.testing.*
+import net.corda.testing.core.*
 import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
@@ -17,14 +17,17 @@ object TestValueHelper {
     val LINEAR_IDS get() = EXTERNAL_IDS.map { UniqueIdentifier(it) }
 
     // Node Identity
-    val BUYER get() = BOB
-    val BUYER_PUBKEY get() = BOB_PUBKEY
-    val SUPPLIER get() = ALICE
-    val SUPPLIER_PUBKEY get() = ALICE_PUBKEY
-    val FUNDER get() = DUMMY_BANK_A
-    val FUNDER_PUBKEY get() = DUMMY_BANK_A_KEY.public
-    val CONDUCTOR get() = CHARLIE
-    val CONDUCTOR_PUBKEY get() = CHARLIE_PUBKEY
+    val BUYER get() = TestIdentity(BOB_NAME)
+    val BUYER_PUBKEY get() = BUYER.publicKey
+
+    val SUPPLIER get() = TestIdentity(ALICE_NAME)
+    val SUPPLIER_PUBKEY get() = SUPPLIER.publicKey
+
+    val FUNDER get() = TestIdentity(DUMMY_BANK_A_NAME)
+    val FUNDER_PUBKEY get() = FUNDER.publicKey
+
+    val CONDUCTOR get() = TestIdentity(CHARLIE_NAME)
+    val CONDUCTOR_PUBKEY get() = CONDUCTOR.publicKey
 
     // Values
     val POSITIVE_ONE get() = BigDecimal.ONE.setScale(2)
@@ -62,11 +65,12 @@ object TestValueHelper {
     val NOT_A_VALID_HASH get() = "THIS_IS_NOT_A_VALID_HASH"
 
     // PurchaseOrder State Identity
-    val PURCHASE_ORDER_EXTERNAL_IDS get() = listOf(
-            "PURCHASE_ORDER_TEST_EXTERNAL_ID_1",
-            "PURCHASE_ORDER_TEST_EXTERNAL_ID_2",
-            "PURCHASE_ORDER_TEST_EXTERNAL_ID_3"
-    )
+    val PURCHASE_ORDER_EXTERNAL_IDS
+        get() = listOf(
+                "PURCHASE_ORDER_TEST_EXTERNAL_ID_1",
+                "PURCHASE_ORDER_TEST_EXTERNAL_ID_2",
+                "PURCHASE_ORDER_TEST_EXTERNAL_ID_3"
+        )
 
     // Purchase Order References
     val PURCHASE_ORDER_REFERENCE = "PURCHASE_ORDER_REFERENCE"

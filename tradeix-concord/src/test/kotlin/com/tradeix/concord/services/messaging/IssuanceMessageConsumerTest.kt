@@ -4,11 +4,11 @@ import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.*
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Envelope
-import com.tradeix.concord.flows.tradeasset.TradeAssetIssuance
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
@@ -24,14 +24,20 @@ class IssuanceMessageConsumerTest {
 
     @Test
     fun `Handle Delivery Successful Response`() {
-        val request = TradeAssetIssuanceRequestMessage(
+        val request = PurchaseOrderIssuanceRequestMessage(
                 correlationId = "corr1",
+                created = null,
+                deliveryTerms = null,
+                descriptionOfGoods = null,
+                earliestShipment = null,
+                latestShipment = null,
+                portOfShipment = null,
+                reference = null,
                 tryCount = 1,
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
                 conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
                 value = null,
                 currency = null,
                 attachmentId = null)
@@ -49,12 +55,12 @@ class IssuanceMessageConsumerTest {
         val mockCordaFuture = mock<CordaFuture<SignedTransaction>>()
         val mockSignedTransaction = mock<SignedTransaction>() //SignedTransaction(mockCoreTransaction, mockTransactionSignature)
         val mockSecureHash = mock<SecureHash>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<PurchaseOrderResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
 
-        whenever(mockCordaRPCOps.startTrackedFlow(TradeAssetIssuance::InitiatorFlow, request.toModel())).thenReturn(mockFlowHandle)
+        whenever(mockCordaRPCOps.startTrackedFlow(PurchaseOrderIssuance::InitiatorFlow, request.toModel())).thenReturn(mockFlowHandle)
         whenever(mockFlowHandle.progress).thenReturn(mockFlowObservable)
         whenever(mockFlowHandle.returnValue).thenReturn(mockCordaFuture)
         whenever(mockCordaFuture.get()).thenReturn(mockSignedTransaction)
@@ -64,7 +70,7 @@ class IssuanceMessageConsumerTest {
         val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockResponder, times(1)).publish(any<TradeAssetResponseMessage>())
+        verify(mockResponder, times(1)).publish(any())
         verify(mockResponder).publish(argForWhich { externalIds?.last() == "ext1" })
         verify(mockResponder).publish(argForWhich { correlationId == "corr1" })
         verify(mockResponder).publish(argForWhich { transactionId!! == "abc" })
@@ -74,14 +80,20 @@ class IssuanceMessageConsumerTest {
 
     @Test
     fun `Handle serialization error within retry limit`() {
-        TradeAssetIssuanceRequestMessage(
+        PurchaseOrderIssuanceRequestMessage(
                 correlationId = "corr1",
+                created = null,
+                deliveryTerms = null,
+                descriptionOfGoods = null,
+                earliestShipment = null,
+                latestShipment = null,
+                portOfShipment = null,
+                reference = null,
                 tryCount = 1,
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
                 conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
                 value = null,
                 currency = null,
                 attachmentId = null)
@@ -94,7 +106,7 @@ class IssuanceMessageConsumerTest {
         val requestString = "{\"blah\":\"corr1\",\"tryCount\":4,\"externalId\":\"ext1\",\"conductor\":\"C=GB,L=London,O=TradeIX\"}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<PurchaseOrderResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
@@ -102,19 +114,25 @@ class IssuanceMessageConsumerTest {
         val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any())
+        verify(mockDeadLetterProducer, times(1)).publish(any<PurchaseOrderIssuanceRequestMessage>(), any())
     }
 
     @Test
     fun `Handle serialization error outside retry limit`() {
-        TradeAssetIssuanceRequestMessage(
+        PurchaseOrderIssuanceRequestMessage(
                 correlationId = "corr1",
+                created = null,
+                deliveryTerms = null,
+                descriptionOfGoods = null,
+                earliestShipment = null,
+                latestShipment = null,
+                portOfShipment = null,
+                reference = null,
                 tryCount = 4,
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
                 conductor = CordaX500Name("TradeIX", "London", "GB"),
-                status = null,
                 value = null,
                 currency = null,
                 attachmentId = null)
@@ -127,7 +145,7 @@ class IssuanceMessageConsumerTest {
         val requestString = "{\"blah\":\"corr1\",\"tryCount\":4,\"externalId\":\"ext1\",\"conductor\":\"C=GB,L=London,O=TradeIX\"}"
         val requestBytes = requestString.toByteArray()
         val mockCordaRPCOps = mock<CordaRPCOps>()
-        val mockResponder = mock<RabbitMqProducer<TradeAssetResponseMessage>>()
+        val mockResponder = mock<RabbitMqProducer<PurchaseOrderResponseMessage>>()
         val mockDeadLetterProducer = mock<IQueueDeadLetterProducer<RabbitMessage>>()
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
@@ -136,6 +154,6 @@ class IssuanceMessageConsumerTest {
         val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
-        verify(mockDeadLetterProducer, times(1)).publish(any<TradeAssetIssuanceRequestMessage>(), any<Boolean>())
+        verify(mockDeadLetterProducer, times(1)).publish(any<PurchaseOrderIssuanceRequestMessage>(), any())
     }
 }

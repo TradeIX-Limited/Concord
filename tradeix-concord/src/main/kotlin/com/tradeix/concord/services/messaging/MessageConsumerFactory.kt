@@ -5,11 +5,9 @@ import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Consumer
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.RabbitResponseMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipRequestMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetOwnershipResponseMessage
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetResponseMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
@@ -25,8 +23,8 @@ class MessageConsumerFactory(
             deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
             maxRetries: Int): Consumer {
         return when {
-            type.isAssignableFrom(TradeAssetIssuanceRequestMessage::class.java) -> {
-                val responder = RabbitMqProducer<TradeAssetResponseMessage>(
+            type.isAssignableFrom(PurchaseOrderIssuanceRequestMessage::class.java) -> {
+                val responder = RabbitMqProducer<PurchaseOrderResponseMessage>(
                         responderConfigurations["cordatix_issuance_response"]!!,
                         rabbitConnectionProvider
                 )
@@ -38,8 +36,8 @@ class MessageConsumerFactory(
 
                 IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, cordaNameSerialiser)
             }
-            type.isAssignableFrom(TradeAssetOwnershipRequestMessage::class.java) -> {
-                val responder = RabbitMqProducer<TradeAssetOwnershipResponseMessage>(
+            type.isAssignableFrom(PurchaseOrderOwnershipRequestMessage::class.java) -> {
+                val responder = RabbitMqProducer<PurchaseOrderResponseMessage>(
                         responderConfigurations["cordatix_changeowner_response"]!!,
                         rabbitConnectionProvider
                 )

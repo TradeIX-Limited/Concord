@@ -1,7 +1,7 @@
 package com.tradeix.concord.serialization
 
 import com.google.gson.GsonBuilder
-import com.tradeix.concord.messages.rabbit.tradeasset.TradeAssetIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import net.corda.core.identity.CordaX500Name
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -39,7 +39,7 @@ class SerializationTests {
     }
 
     @Test
-    fun `Corda X500Name should deserialize as part of TradeAssetIssuanceRequestMessage`(){
+    fun `Corda X500Name should deserialize as part of TradeAssetIssuanceRequestMessage`() {
         val testRequestMessageJson = "{\"externalId\":\"1\",\"buyer\":\"CN=Buyer One, OU=ABC, O=Buyer1, L=London, S=Whitehall, C=GB\",\"supplier\":\"CN=Supplier One, OU=ABC, O=Supplier1, L=London, S=Whitehall, C=GB\",\"conductor\":\"CN=Conductor One, OU=ABC, O=Conductor1, L=London, S=Whitehall, C=GB\",\"status\":\"Test\",\"value\":100.0,\"currency\":\"GBP\",\"attachmentId\":\"c026064d-1c4d-44d8-8932-d47205a7f863\",\"correlationId\":\"fe3f3cd7-4ab3-41d8-8b5d-705667b8e7c1\",\"tryCount\":0}"
 
         val serializer = GsonBuilder()
@@ -47,7 +47,11 @@ class SerializationTests {
                 .disableHtmlEscaping()
                 .create()
 
-        val result = serializer.fromJson<TradeAssetIssuanceRequestMessage>(testRequestMessageJson, TradeAssetIssuanceRequestMessage::class.java)
+        val result = serializer
+                .fromJson<PurchaseOrderIssuanceRequestMessage>(
+                        testRequestMessageJson,
+                        PurchaseOrderIssuanceRequestMessage::class.java)
+
         assertEquals("London", result.buyer?.locality)
     }
 
