@@ -25,7 +25,7 @@ case "$ANSWER_START" in
   echo "Enter your choice"
   echo "1. Issuance"
   echo "2. Change of Ownership"
-  echo "3. Concurrent Issuance and Change of Ownership"
+  echo "3. Concurrent Issuance and Change of Owneship"
   echo "4. Exit"
   read -p "Enter your choice : " ANSWER_TYPE
         case "$ANSWER_TYPE" in
@@ -54,6 +54,7 @@ esac
 read -p "Enter the csv file to record results : " RESULTS_FILE
 read -p "Enter the directory path for webreport : " FILE_TO_WEBREPORT
 read -p "Enter the number of Requests : " NUMBER_OF_REQUESTS
+read -p "Enter the Initial Value of the ExternalID : " INIT_COUNT
 read -p "Enter the IP Address of TradeIX Node : " TEST_IP
 
 #JMX_FILE="/Users/rajesh/Workspace/JMeterSpace/IssuanceCOO.jmx"
@@ -63,4 +64,4 @@ read -p "Enter the IP Address of TradeIX Node : " TEST_IP
 # jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]
 #./jmeter.sh -n -t ~/Workspace/JMeterSpace/IssuanceCOO.jmx -l ~/Workspace/JMeterSpace/Results50IssuanceCOO4vm.csv -e -o ~/Workspace/JMeterSpace/webreport50IssueCOORequests4vm
 
-/bin/bash ${PATH_TO_SCRIPT} -n -t ${JMX_FILE} -l ${RESULTS_FILE} -e -o ${FILE_TO_WEBREPORT} -Jcount=${NUMBER_OF_REQUESTS} -JTestIP=${TEST_IP}
+/bin/bash ${PATH_TO_SCRIPT} -n -t ${JMX_FILE} -l ${RESULTS_FILE} -e -o ${FILE_TO_WEBREPORT} -Jcount=${NUMBER_OF_REQUESTS} -JTestIP=${TEST_IP} -Jinitcount=${INIT_COUNT}
