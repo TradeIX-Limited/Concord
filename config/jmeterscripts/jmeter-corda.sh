@@ -57,11 +57,4 @@ read -p "Enter the number of Requests : " NUMBER_OF_REQUESTS
 read -p "Enter the Initial Value of the ExternalID : " INIT_COUNT
 read -p "Enter the IP Address of TradeIX Node : " TEST_IP
 
-#JMX_FILE="/Users/rajesh/Workspace/JMeterSpace/IssuanceCOO.jmx"
-#RESULTS_FILE="/Users/rajesh//Workspace/JMeterSpace/Results50IssuanceCOO4vm1.csv"
-#FILE_TO_WEBREPORT="/Users/rajesh/Workspace/JMeterSpace/webreport50IssueCOORequests4vm1"
-#PATH_TO_SCRIPT="/Users/rajesh/Workspace/apache-jmeter-4.0/bin/jmeter.sh"
-# jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]
-#./jmeter.sh -n -t ~/Workspace/JMeterSpace/IssuanceCOO.jmx -l ~/Workspace/JMeterSpace/Results50IssuanceCOO4vm.csv -e -o ~/Workspace/JMeterSpace/webreport50IssueCOORequests4vm
-
 /bin/bash ${PATH_TO_SCRIPT} -n -t ${JMX_FILE} -l ${RESULTS_FILE} -e -o ${FILE_TO_WEBREPORT} -Jcount=${NUMBER_OF_REQUESTS} -JTestIP=${TEST_IP} -Jinitcount=${INIT_COUNT}
