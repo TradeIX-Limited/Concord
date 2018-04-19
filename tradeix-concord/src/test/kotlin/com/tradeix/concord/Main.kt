@@ -41,7 +41,7 @@ class Main {
 
                 names.map {
                     val node = startNode(
-                            providedName = CordaX500Name("PartyA", "London", "GB"),
+                            providedName = it,
                             rpcUsers = listOf(USER)
                     ).getOrThrow()
 

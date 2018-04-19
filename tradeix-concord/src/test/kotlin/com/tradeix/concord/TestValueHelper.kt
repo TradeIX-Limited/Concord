@@ -17,17 +17,17 @@ object TestValueHelper {
     val LINEAR_IDS get() = EXTERNAL_IDS.map { UniqueIdentifier(it) }
 
     // Node Identity
-    val BUYER get() = TestIdentity(BOB_NAME)
-    val BUYER_PUBKEY get() = BUYER.publicKey
+    val BUYER = TestIdentity(BOB_NAME)
+    val BUYER_PUBKEY = BUYER.publicKey
 
-    val SUPPLIER get() = TestIdentity(ALICE_NAME)
-    val SUPPLIER_PUBKEY get() = SUPPLIER.publicKey
+    val SUPPLIER = TestIdentity(ALICE_NAME)
+    val SUPPLIER_PUBKEY = SUPPLIER.publicKey
 
-    val FUNDER get() = TestIdentity(DUMMY_BANK_A_NAME)
-    val FUNDER_PUBKEY get() = FUNDER.publicKey
+    val FUNDER = TestIdentity(DUMMY_BANK_A_NAME)
+    val FUNDER_PUBKEY = FUNDER.publicKey
 
-    val CONDUCTOR get() = TestIdentity(CHARLIE_NAME)
-    val CONDUCTOR_PUBKEY get() = CONDUCTOR.publicKey
+    val CONDUCTOR = TestIdentity(CHARLIE_NAME)
+    val CONDUCTOR_PUBKEY = CONDUCTOR.publicKey
 
     // Values
     val POSITIVE_ONE get() = BigDecimal.ONE.setScale(2)

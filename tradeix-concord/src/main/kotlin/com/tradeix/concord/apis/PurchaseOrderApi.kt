@@ -98,6 +98,7 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
     @POST
     @Path("issue")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     fun issuePurchaseOrder(message: PurchaseOrderIssuanceRequestMessage): Response {
         try {
             val flowHandle = services.startTrackedFlow(PurchaseOrderIssuance::InitiatorFlow, message.toModel())
@@ -125,6 +126,7 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
 
     @PUT
     @Path("changeowner")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun changePurchaseOrderOwnership(message: PurchaseOrderOwnershipRequestMessage): Response {
         try {

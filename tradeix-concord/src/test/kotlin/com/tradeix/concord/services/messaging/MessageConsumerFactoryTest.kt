@@ -6,6 +6,7 @@ import com.rabbitmq.client.ConnectionFactory
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderOwnershipRequestMessage
 import net.corda.core.messaging.CordaRPCOps
 import org.junit.Test
 
@@ -52,7 +53,7 @@ class MessageConsumerFactoryTest {
 
         val consumer = messageConsumerFactory.getMessageConsumer(
                 channel = mockChannel,
-                type = PurchaseOrderIssuanceRequestMessage::class.java,
+                type = PurchaseOrderOwnershipRequestMessage::class.java,
                 deadLetterProducer = producerMock,
                 maxRetries = 1
         )

@@ -19,7 +19,7 @@ class SerializationTests {
 
         val json = serializer.toJson(message)
 
-        assertEquals("{\"conductor\":\"C=GB,L=London,O=TradeIX\"}", json)
+        assertEquals("{\"conductor\":\"O=TradeIX, L=London, C=GB\"}", json)
     }
 
     @Test
