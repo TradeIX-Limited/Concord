@@ -13,14 +13,13 @@ class Main {
 
         // Nodes
         private val NOTARY = CordaX500Name("Controller", "London", "GB")
-        private val CONDUCTOR = CordaX500Name("TradeIX", "London", "GB")
-
-        private val TEST_NODE_1 = CordaX500Name("TradeIXFakeSupplier", "London", "GB")
-        private val TEST_NODE_4 = CordaX500Name("TradeIXTestSupplier", "London", "GB")
-        private val TEST_NODE_2 = CordaX500Name("TradeIXTestSupplier1", "London", "GB")
-        private val TEST_NODE_3 = CordaX500Name("TradeIXTestSupplier2", "London", "GB")
-        private val TEST_NODE_5 = CordaX500Name("TradeIXTestFunder", "London", "GB")
-        private val TEST_NODE_6 = CordaX500Name("TradeIXTestBuyer", "London", "GB")
+        private val TEST_NODE_0 = CordaX500Name("TradeIX", "London", "GB")
+        private val TEST_NODE_1 = CordaX500Name("TradeIX Test Supplier 1", "New York", "US")
+        private val TEST_NODE_4 = CordaX500Name("TradeIX Test Supplier 2", "Paris", "FR")
+        private val TEST_NODE_2 = CordaX500Name("TradeIX Test Supplier 3", "Madris", "ES")
+        private val TEST_NODE_3 = CordaX500Name("TradeIX Test Fake Supplier", "Cape Town", "SA")
+        private val TEST_NODE_5 = CordaX500Name("TradeIX Test Buyer 1", "Tokyo", "JP")
+        private val TEST_NODE_6 = CordaX500Name("TradeIX Test Funder 1", "Amsterdam", "NL")
 
         @JvmStatic
         fun main(args: Array<String>) {
@@ -30,7 +29,7 @@ class Main {
                 startNode(NodeParameters(providedName = NOTARY))
 
                 val names = listOf(
-                        CONDUCTOR,
+                        TEST_NODE_0,
                         TEST_NODE_1,
                         TEST_NODE_2,
                         TEST_NODE_3,
@@ -40,12 +39,10 @@ class Main {
                 )
 
                 names.map {
-                    val node = startNode(
+                    startWebserver(startNode(
                             providedName = it,
                             rpcUsers = listOf(USER)
-                    ).getOrThrow()
-
-                    startWebserver(node)
+                    ).getOrThrow())
                 }
             }
         }

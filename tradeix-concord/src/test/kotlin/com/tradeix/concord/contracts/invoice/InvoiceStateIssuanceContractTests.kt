@@ -15,7 +15,6 @@ import com.tradeix.concord.TestValueHelper.DATE_INSTANT_06
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_07
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_08
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_09
-import com.tradeix.concord.TestValueHelper.FUNDER
 import com.tradeix.concord.TestValueHelper.FUNDER_PUBKEY
 import com.tradeix.concord.TestValueHelper.GBP
 import com.tradeix.concord.TestValueHelper.HASH
@@ -39,10 +38,9 @@ import com.tradeix.concord.TestValueHelper.TIX_INVOICE_VERSION
 import com.tradeix.concord.contracts.InvoiceContract
 import com.tradeix.concord.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.states.InvoiceState
-import net.corda.core.contracts.TypeOnlyCommandData
 import net.corda.testing.node.MockServices
 import net.corda.testing.node.ledger
-import org.junit.*
+import org.junit.Test
 
 class InvoiceStateIssuanceContractTests {
     private var ledgerServices = MockServices(listOf("com.tradeix.concord.contracts"))

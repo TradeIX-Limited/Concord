@@ -2,6 +2,7 @@ package com.tradeix.concord.helpers
 
 import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
@@ -23,8 +24,8 @@ class VaultHelper {
         updates.toBlocking().subscribe { update ->
             update.produced.forEach {
                 try {
-                    println("watchPOState = " + it.state.data.toMessage())
-                    publisher.publish(it.state.data.toMessage())
+                    println("watchPOState = " + PurchaseOrderIssuanceRequestMessage.fromState(it.state.data))
+                    publisher.publish(PurchaseOrderIssuanceRequestMessage.fromState(it.state.data))
                     println("Published PO")
                 } catch (e: Exception) {
                     //todo remove the printstack when going to prod

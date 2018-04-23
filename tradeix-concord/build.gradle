@@ -57,6 +57,7 @@ dependencies {
 
     // CorDapp dependencies
     // Specify your cordapp's dependencies below, including dependent cordapps
+    cordapp project(":tradeix-concord-domain")
     cordapp "$corda_release_distribution:corda-finance:$corda_release_version"
 }
 
@@ -72,182 +73,119 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     directory "./build/nodes"
     node {
-        name "C=GB,L=London,O=Controller"
-        p2pPort 10002
-        rpcPort 10003
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIX"
-        p2pPort 10005
-        rpcPort 10006
-        webPort 10007
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXFakeSupplier"
-        p2pPort 10008
-        rpcPort 10009
-        webPort 10010
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXTestSupplier"
-        p2pPort 10011
-        rpcPort 10012
-        webPort 10013
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXTestSupplier1"
-        p2pPort 10014
-        rpcPort 10015
-        webPort 10016
-        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXTestSupplier2"
-        p2pPort 10017
-        rpcPort 10018
-        webPort 10019
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXTestFunder"
-        p2pPort 10020
-        rpcPort 10021
-        webPort 10022
-        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-    node {
-        name "C=GB,L=London,O=TradeIXTestBuyer"
-        p2pPort 10023
-        rpcPort 10024
-        webPort 10025
-        cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
-                "$project.group:cordapp:$project.version",
-                "$corda_release_distribution:corda-finance:$corda_release_version"
-        ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
-    }
-}
-
-task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-    directory "./build/nodes"
-    node {
         name "O=Notary,L=London,C=GB"
         notary = [validating : true]
         p2pPort 10002
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
     }
     node {
-        name "C=GB,L=London,O=TradeIX"
+        name "O=TradeIX,L=London,C=GB"
         p2pPort 10005
-        rpcPort 10006
+        rpcSettings {
+            address("localhost:10006")
+            adminAddress("localhost:10046")
+        }
         webPort 10007
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
     node {
-        name "C=GB,L=London,O=TradeIXFakeSupplier"
+        name "O=TradeIX Test Supplier 1,L=New York,C=US"
         p2pPort 10008
-        rpcPort 10009
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10049")
+        }
         webPort 10010
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
-
     node {
-        name "C=GB,L=London,O=TradeIXTestSupplier"
+        name "O=TradeIX Test Supplier 2,L=Paris,C=FR"
         p2pPort 10011
-        rpcPort 10012
+        rpcSettings {
+            address("localhost:10012")
+            adminAddress("localhost:10052")
+        }
         webPort 10013
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
-
     node {
-        name "C=GB,L=London,O=TradeIXTestSupplier1"
+        name "O=TradeIX Test Supplier 3,L=Madrid,C=ES"
         p2pPort 10014
-        rpcPort 10015
+        rpcSettings {
+            address("localhost:10015")
+            adminAddress("localhost:10055")
+        }
         webPort 10016
-        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        cordapps = [
+                "$project.group:tradeix-concord-domain:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
     node {
-        name "C=GB,L=London,O=TradeIXTestSupplier2"
+        name "O=TradeIX Test Fake Supplier,L=Cape Town,C=SA"
         p2pPort 10017
-        rpcPort 10018
+        rpcSettings {
+            address("localhost:10018")
+            adminAddress("localhost:10058")
+        }
         webPort 10019
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
     node {
-        name "C=GB,L=London,O=TradeIXTestFunder"
+        name "O=TradeIX Test Buyer 1,L=Tokyo,C=JP"
         p2pPort 10020
-        rpcPort 10021
+        rpcSettings {
+            address("localhost:10021")
+            adminAddress("localhost:10061")
+        }
         webPort 10022
-        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        cordapps = [
+                "$project.group:tradeix-concord-domain:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
     node {
-        name "C=GB,L=London,O=TradeIXTestBuyer"
+        name "O=TradeIX Test Funder 1,L=Amsterdam,C=NL"
         p2pPort 10023
-        rpcPort 10024
+        rpcSettings {
+            address("localhost:10024")
+            adminAddress("localhost:10064")
+        }
         webPort 10025
         cordapps = [
-                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:tradeix-concord-domain:$project.version",
                 "$project.group:cordapp:$project.version",
                 "$corda_release_distribution:corda-finance:$corda_release_version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
 }
 

@@ -4,6 +4,7 @@ import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowMod
 import com.tradeix.concord.messages.AttachmentMessage
 import com.tradeix.concord.messages.SingleIdentityMessage
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
+import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.identity.CordaX500Name
 import java.math.BigDecimal
 import java.time.Instant
@@ -27,6 +28,30 @@ class PurchaseOrderIssuanceRequestMessage(
         val descriptionOfGoods: String?,
         val deliveryTerms: String?
 ) : RabbitRequestMessage(), SingleIdentityMessage, AttachmentMessage {
+
+    companion object {
+        fun fromState(state: PurchaseOrderState): PurchaseOrderIssuanceRequestMessage {
+            return PurchaseOrderIssuanceRequestMessage(
+                    correlationId = "",
+                    tryCount = 0,
+                    externalId = state.linearId.externalId.toString(),
+                    attachmentId = "",
+                    buyer = state.buyer.nameOrNull(),
+                    supplier = state.supplier.nameOrNull(),
+                    conductor = state.conductor.nameOrNull(),
+                    owner = state.owner.nameOrNull(),
+                    reference = state.reference,
+                    value = state.amount.toDecimal(),
+                    currency = state.amount.token.currencyCode,
+                    created = state.created,
+                    earliestShipment = state.earliestShipment,
+                    latestShipment = state.latestShipment,
+                    portOfShipment = state.portOfShipment,
+                    descriptionOfGoods = state.descriptionOfGoods,
+                    deliveryTerms = state.deliveryTerms
+            )
+        }
+    }
 
     fun toModel() = PurchaseOrderIssuanceFlowModel(
             externalId,

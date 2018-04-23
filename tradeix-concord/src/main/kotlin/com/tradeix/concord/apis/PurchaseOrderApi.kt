@@ -54,10 +54,17 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
     @Path("count")
     @Produces(MediaType.APPLICATION_JSON)
     fun getPurchaseOrderCount(): Response {
-        return Response
-                .status(Response.Status.OK)
-                .entity(mapOf("count" to services.vaultCountBy<PurchaseOrderState>()))
-                .build()
+        return try {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(mapOf("count" to services.vaultCountBy<PurchaseOrderState>()))
+                    .build()
+        } catch (ex: Exception) {
+            Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("errorMessage" to ex.message)
+                    .build()
+        }
     }
 
     @GET
@@ -72,7 +79,7 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
                     .build()
         } catch (ex: Throwable) {
             Response
-                    .status(Response.Status.OK)
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(mapOf("hash" to null))
                     .build()
         }
