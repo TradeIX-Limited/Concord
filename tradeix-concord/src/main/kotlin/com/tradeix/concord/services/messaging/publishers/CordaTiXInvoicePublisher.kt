@@ -12,11 +12,11 @@ import com.typesafe.config.ConfigRenderOptions
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 
-class CordaTiXTradeAssetPublisher(
+class CordaTiXInvoicePublisher(
         val config: Config,
         val serializer: Gson
 ) : FlowQueuesPublisher {
-    private val log: Logger = loggerFor<CordaTiXTradeAssetPublisher>()
+    private val log: Logger = loggerFor<CordaTiXInvoicePublisher>()
     private val configRoot = "tix-integration"
     private val configBranch = "cordatixNotificationConfiguration1"
     private val exchangeRoutingKey = "cordatix_tradeasset_notification"
@@ -24,7 +24,7 @@ class CordaTiXTradeAssetPublisher(
         val producerConfigurationString = config.resolve().getConfig(configRoot).getObject(configBranch).render(ConfigRenderOptions.concise())
         val producerConfiguration = serializer.fromJson(producerConfigurationString, RabbitProducerConfiguration::class.java)
         if(!currentPublishers.containsKey(producerConfiguration.exchangeRoutingKey)) {
-            log.info("Initializing CordaTiXTradeAssetPublisher - this should happen only once and only for tradeix node")
+            log.info("Initializing CordaTiXInvoicePublisher - this should happen only once and only for tradeix node")
             val producerConfigurations = mapOf(exchangeRoutingKey to producerConfiguration)
             val producer = RabbitMqProducer<RabbitRequestMessage>(
                     producerConfigurations[exchangeRoutingKey]!!,

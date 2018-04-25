@@ -22,10 +22,8 @@ class TiXNotifier(val services: CordaRPCOps) {
                 }
             }
             log.info("TiXNotifier for ${legalEntity.name.organisation}")
-            if (TixMessageSubscriptionStartup.currentPublishers.size==2) {
-                val tradeAssetpublisher = TixMessageSubscriptionStartup.currentPublishers["cordatix_tradeasset_notification"]
+            if (TixMessageSubscriptionStartup.currentPublishers.size==1) {
                 val poAssetpublisher = TixMessageSubscriptionStartup.currentPublishers["cordatix_po_notification"]
-                startTradeAsset(tradeAssetpublisher)
                 startPO(poAssetpublisher)
             }else {
                 log.error("Unable to connect to TiX Publishers because currentPublishers.size = ${TixMessageSubscriptionStartup.currentPublishers.size}")
@@ -37,13 +35,6 @@ class TiXNotifier(val services: CordaRPCOps) {
         override fun run() {
             f()
         }
-    }
-
-    private fun startTradeAsset(tradeAssetpublisher: IQueueProducer<RabbitRequestMessage>?) {
-        val tradeAssetRunnable = runnable {
-            VaultHelper().watchPOState(services, tradeAssetpublisher!!)
-        }
-        Thread(tradeAssetRunnable).start()
     }
 
     private fun startPO(poPublisher: IQueueProducer<RabbitRequestMessage>?) {

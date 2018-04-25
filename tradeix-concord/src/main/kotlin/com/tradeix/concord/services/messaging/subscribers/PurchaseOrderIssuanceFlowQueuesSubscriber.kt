@@ -63,7 +63,7 @@ class PurchaseOrderIssuanceFlowQueuesSubscriber(
                     rabbitConnectionProvider = connectionProvider
             )
 
-            val tradeIssuanceConsumer = RabbitMqConsumer(
+            val purchaseOrderConsumer = RabbitMqConsumer(
                     rabbitConsumerConfiguration = issueConsumeConfiguration,
                     messageClass = PurchaseOrderIssuanceRequestMessage::class.java,
                     deadLetterProducer = deadLetterProducer,
@@ -71,8 +71,8 @@ class PurchaseOrderIssuanceFlowQueuesSubscriber(
                     messageConsumerFactory = messageConsumerFactory
             )
 
-            tradeIssuanceConsumer.subscribe()
-            currentConsumers.put(issueConsumeConfiguration.queueName, tradeIssuanceConsumer)
+            purchaseOrderConsumer.subscribe()
+            currentConsumers.put(issueConsumeConfiguration.queueName, purchaseOrderConsumer)
             println("RabbitMQ PurchaseOrderIssuanceFlowQueuesSubscriber subscriptions done")
         }
     }

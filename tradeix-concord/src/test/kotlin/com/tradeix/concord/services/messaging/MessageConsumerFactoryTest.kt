@@ -33,7 +33,7 @@ class MessageConsumerFactoryTest {
                 maxRetries = 1
         )
 
-        assert(consumer is IssuanceMessageConsumer)
+        assert(consumer is PurchaseOrderIssuanceMessageConsumer)
     }
 
     @Test

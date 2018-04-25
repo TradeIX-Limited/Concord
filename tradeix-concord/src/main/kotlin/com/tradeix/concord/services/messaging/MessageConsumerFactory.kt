@@ -34,7 +34,7 @@ class MessageConsumerFactory(
                         .disableHtmlEscaping()
                         .create()
 
-                IssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, cordaNameSerialiser)
+                PurchaseOrderIssuanceMessageConsumer(services, channel, deadLetterProducer, maxRetries, responder, cordaNameSerialiser)
             }
             type.isAssignableFrom(PurchaseOrderOwnershipRequestMessage::class.java) -> {
                 val responder = RabbitMqProducer<PurchaseOrderResponseMessage>(

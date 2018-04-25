@@ -17,7 +17,7 @@ import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import java.nio.charset.Charset
 
-class IssuanceMessageConsumer(
+class PurchaseOrderIssuanceMessageConsumer(
         val services: CordaRPCOps,
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
@@ -27,24 +27,24 @@ class IssuanceMessageConsumer(
 ) : Consumer {
 
     companion object {
-        protected val log: Logger = loggerFor<IssuanceMessageConsumer>()
+        protected val log: Logger = loggerFor<PurchaseOrderIssuanceMessageConsumer>()
     }
 
     override fun handleRecoverOk(consumerTag: String?) {
-        println("IssuanceMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
     }
 
     override fun handleConsumeOk(consumerTag: String?) {
-        println("IssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
     }
 
     override fun handleShutdownSignal(consumerTag: String?, sig: ShutdownSignalException?) {
-        println("IssuanceMessageConsumer: handleShutdownSignal for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleShutdownSignal for consumer tag: $consumerTag")
         println(sig)
     }
 
     override fun handleCancel(consumerTag: String?) {
-        println("IssuanceMessageConsumer: handleCancel for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleCancel for consumer tag: $consumerTag")
     }
 
     override fun handleDelivery(
@@ -78,8 +78,8 @@ class IssuanceMessageConsumer(
 
         try {
             requestMessage = serializer.fromJson(messageBody, PurchaseOrderIssuanceRequestMessage::class.java)
-            println("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
-            log.info("Received message with id ${requestMessage.correlationId} in IssuanceMessageConsumer - about to process.")
+            println("Received message with id ${requestMessage.correlationId} in PurchaseOrderIssuanceMessageConsumer - about to process.")
+            log.info("Received message with id ${requestMessage.correlationId} in PurchaseOrderIssuanceMessageConsumer - about to process.")
 
             try {
                 val validator = RabbitRequestMessageValidator(requestMessage)
@@ -138,19 +138,19 @@ class IssuanceMessageConsumer(
         } catch (ex: Throwable) {
             requestMessage.tryCount++
             if (requestMessage.tryCount < maxRetryCount) {
-                println("Exception handled in IssuanceMessageConsumer, writing to dlq")
-                log.error("Exception handled in IssuanceMessageConsumer, writing to dlq")
+                println("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq")
+                log.error("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq")
 
                 deadLetterProducer.publish(requestMessage, false)
             } else {
-                println("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
-                log.error("Exception handled in IssuanceMessageConsumer, writing to dlq fatally")
+                println("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq fatally")
+                log.error("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq fatally")
                 deadLetterProducer.publish(requestMessage, true)
             }
         }
     }
 
     override fun handleCancelOk(consumerTag: String?) {
-        println("IssuanceMessageConsumer: handleCancelOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleCancelOk for consumer tag: $consumerTag")
     }
 }

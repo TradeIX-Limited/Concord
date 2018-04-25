@@ -6,7 +6,7 @@ import com.tradeix.concord.interfaces.IQueueConsumer
 import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import com.tradeix.concord.services.messaging.publishers.CordaTiXPOPublisher
-import com.tradeix.concord.services.messaging.publishers.CordaTiXTradeAssetPublisher
+import com.tradeix.concord.services.messaging.publishers.CordaTiXInvoicePublisher
 import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderChangeOwnerFlowQueuesSubscriber
 import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderIssuanceFlowQueuesSubscriber
 import com.typesafe.config.ConfigFactory
@@ -61,11 +61,11 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                 PurchaseOrderChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
                         .initialize(connectionProvider, currentConsumers)
 
-                log.info("Starting CordaTiXTradeAssetQueuesPublisher")
-                CordaTiXTradeAssetPublisher(defaultConfig, serializer)
+                log.info("Starting CordaTiXInvoicePublisher")
+                CordaTiXInvoicePublisher(defaultConfig, serializer)
                         .initialize(connectionProvider, currentPublishers)
 
-                log.info("Starting CordaTiXPOQueuesPublisher")
+                log.info("Starting CordaTiXPOPublisher")
                 CordaTiXPOPublisher(defaultConfig, serializer)
                         .initialize(connectionProvider, currentPublishers)
 

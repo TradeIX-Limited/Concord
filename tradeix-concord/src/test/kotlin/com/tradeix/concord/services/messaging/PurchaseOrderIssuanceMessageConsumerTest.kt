@@ -20,7 +20,7 @@ import net.corda.core.transactions.SignedTransaction
 import org.junit.Test
 import rx.Observable
 
-class IssuanceMessageConsumerTest {
+class PurchaseOrderIssuanceMessageConsumerTest {
 
     @Test
     fun `Handle Delivery Successful Response`() {
@@ -67,7 +67,7 @@ class IssuanceMessageConsumerTest {
         whenever(mockSignedTransaction.id).thenReturn(mockSecureHash)
         whenever(mockSecureHash.toString()).thenReturn("abc")
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderIssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockResponder, times(1)).publish(any())
@@ -111,7 +111,7 @@ class IssuanceMessageConsumerTest {
         val mockChannel = mock<Channel>()
         val mockEnvelope = mock<Envelope>()
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderIssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<PurchaseOrderIssuanceRequestMessage>(), any())
@@ -151,7 +151,7 @@ class IssuanceMessageConsumerTest {
         val mockEnvelope = mock<Envelope>()
 
 
-        val issuanceConsumer = IssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderIssuanceMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<PurchaseOrderIssuanceRequestMessage>(), any())
