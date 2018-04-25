@@ -1,11 +1,10 @@
 buildscript {
-    ext.corda_release_version = 'corda-3.0'
+    ext.corda_release_version = '3.1-corda'
     ext.corda_release_distribution = 'net.corda'
     ext.corda_gradle_plugins_version = '3.0.9'
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.1.60'
     ext.junit_version = '4.12'
     ext.quasar_version = '0.7.9'
-    ext.jolokia_version = '1.3.7'
     ext.rabbit_version = '5.0.0'
     ext.gson_version = '2.8.2'
     ext.mockito_kotlin_version = '1.5.0'
@@ -32,9 +31,7 @@ repositories {
     mavenLocal()
     jcenter()
     mavenCentral()
-    maven { url 'https://dl.bintray.com/kotlin/exposed' }
     maven { url 'https://jitpack.io' }
-    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
 apply plugin: 'kotlin'
@@ -70,7 +67,7 @@ configurations {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
     testCompile "com.nhaarman:mockito-kotlin:$mockito_kotlin_version"
