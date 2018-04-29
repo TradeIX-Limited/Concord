@@ -162,6 +162,7 @@ class PurchaseOrderApi(val services: CordaRPCOps) {
 
     @PUT
     @Path("amend")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun amendPurchaseOrder(message: PurchaseOrderAmendmentRequestMessage): Response {
         try {
