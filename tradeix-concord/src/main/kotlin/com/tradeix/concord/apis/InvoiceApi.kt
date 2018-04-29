@@ -19,8 +19,10 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
 import com.tradeix.concord.flows.invoice.InvoiceAmendment
+import com.tradeix.concord.flows.invoice.InvoiceCancellation
 import com.tradeix.concord.flows.invoice.InvoiceOwnership
 import com.tradeix.concord.messages.webapi.invoice.InvoiceAmendmentRequestMessage
+import com.tradeix.concord.messages.webapi.invoice.InvoiceCancellationRequestMessage
 import com.tradeix.concord.messages.webapi.invoice.InvoiceOwnershipRequestMessage
 
 @Path("invoices")
@@ -161,6 +163,35 @@ class InvoiceApi(val services: CordaRPCOps) {
             val result = flowHandle.returnValue.getOrThrow()
             return Response
                     .status(Response.Status.CREATED)
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()))
+                    .build()
+        } catch (ex: Throwable) {
+            return when (ex) {
+                is FlowValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(FailedResponseMessage(ex.message!!))
+                        .build()
+            }
+        }
+    }
+
+    @PUT
+    @Path("cancel")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun cancelPurchaseOrder(message: InvoiceCancellationRequestMessage): Response {
+        try {
+            val flowHandle = services.startTrackedFlow(InvoiceCancellation::InitiatorFlow, message.toModel())
+            flowHandle.progress.subscribe { println(">> $it") }
+            val result = flowHandle.returnValue.getOrThrow()
+            return Response
+                    .status(Response.Status.OK)
                     .entity(SingleIdentitySuccessResponseMessage(
                             externalId = message.externalId!!,
                             transactionId = result.id.toString()))

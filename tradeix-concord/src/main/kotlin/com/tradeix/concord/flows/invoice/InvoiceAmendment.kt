@@ -47,7 +47,7 @@ object InvoiceAmendment {
             val EX_INVALID_HASH_FOR_ATTACHMENT = "Invalid SecureHash for the Supporting Document"
         }
 
-        override val progressTracker = InvoiceIssuance.InitiatorFlow.tracker()
+        override val progressTracker = tracker()
 
         @Suspendable
         override fun call(): SignedTransaction {
