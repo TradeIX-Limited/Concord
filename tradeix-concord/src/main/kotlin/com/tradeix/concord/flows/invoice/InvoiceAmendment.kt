@@ -12,6 +12,7 @@ import com.tradeix.concord.validators.invoice.InvoiceAmendmentFlowModelValidator
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.contracts.requireThat
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
 import net.corda.core.transactions.SignedTransaction
@@ -161,6 +162,21 @@ object InvoiceAmendment {
             return subFlow(FinalityFlow(
                     transaction = fullySignedTransaction,
                     progressTracker = FINALISING_TRANSACTION.childProgressTracker()))
+        }
+    }
+
+    @InitiatedBy(InitiatorFlow::class)
+    class AcceptorFlow(val otherPartyFlow: FlowSession) : FlowLogic<SignedTransaction>() {
+        @Suspendable
+        override fun call(): SignedTransaction {
+            val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
+                override fun checkTransaction(stx: SignedTransaction) = requireThat {
+                    val output = stx.tx.outputs.single().data
+                    "This must be an invoice transaction." using (output is InvoiceState)
+                }
+            }
+
+            return subFlow(signTransactionFlow)
         }
     }
 }
