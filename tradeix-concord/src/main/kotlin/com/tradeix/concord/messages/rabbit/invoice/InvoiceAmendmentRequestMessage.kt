@@ -1,6 +1,6 @@
 package com.tradeix.concord.messages.rabbit.invoice
 
-import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
+import com.tradeix.concord.flowmodels.invoice.InvoiceAmendmentFlowModel
 import com.tradeix.concord.messages.AttachmentMessage
 import com.tradeix.concord.messages.SingleIdentityMessage
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
@@ -9,7 +9,7 @@ import net.corda.core.identity.CordaX500Name
 import java.math.BigDecimal
 import java.time.Instant
 
-class InvoiceIssuanceRequestMessage(
+class InvoiceAmendmentRequestMessage(
         override val correlationId: String?,
         override var tryCount: Int,
         override val externalId: String?,
@@ -53,8 +53,8 @@ class InvoiceIssuanceRequestMessage(
 ) : RabbitRequestMessage(), SingleIdentityMessage, AttachmentMessage {
 
     companion object {
-        fun fromState(state: InvoiceState): InvoiceIssuanceRequestMessage {
-            return InvoiceIssuanceRequestMessage(
+        fun fromState(state: InvoiceState): InvoiceAmendmentRequestMessage {
+            return InvoiceAmendmentRequestMessage(
                     correlationId = "",
                     tryCount = 0,
                     externalId = state.linearId.externalId.toString(),
@@ -99,7 +99,7 @@ class InvoiceIssuanceRequestMessage(
         }
     }
 
-    fun toModel() = InvoiceIssuanceFlowModel(
+    fun toModel() = InvoiceAmendmentFlowModel(
             externalId = externalId,
             attachmentId = attachmentId,
             conductor = conductor,
