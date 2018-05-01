@@ -10,6 +10,7 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
+import com.tradeix.concord.services.messaging.consumers.PurchaseOrderIssuanceMessageConsumer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name

@@ -7,14 +7,14 @@ import com.tradeix.concord.interfaces.IQueueProducer
 import com.tradeix.concord.messages.rabbit.RabbitRequestMessage
 import com.tradeix.concord.services.messaging.publishers.CordaTiXPOPublisher
 import com.tradeix.concord.services.messaging.publishers.CordaTiXInvoicePublisher
-import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderChangeOwnerFlowQueuesSubscriber
-import com.tradeix.concord.services.messaging.subscribers.PurchaseOrderIssuanceFlowQueuesSubscriber
+import com.tradeix.concord.services.messaging.subscribers.*
 import com.typesafe.config.ConfigFactory
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.utilities.loggerFor
 import net.corda.nodeapi.internal.config.parseAs
 import org.slf4j.Logger
 import java.io.File
+import kotlin.reflect.KFunction
 
 //TODO Rename this file to TixMessagingStartup
 class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
@@ -37,7 +37,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
             try {
                 val currentPath = System.getProperty("user.dir")
                 log.debug("The current path is $currentPath")
-                val  defaultConfig = ConfigFactory.parseFile(File("$currentPath/tix.integration.conf"))
+                val defaultConfig = ConfigFactory.parseFile(File("$currentPath/tix.integration.conf"))
                 val serializer = Gson()
                 val connectionConfig = defaultConfig!!
                         .resolve()
@@ -53,13 +53,23 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
 
                 val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
 
-                log.info("Starting Issuance Rabbit Subscription")
-                PurchaseOrderIssuanceFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
-                        .initialize(connectionProvider, currentConsumers)
+                listOf(
+                        ::InvoiceIssuanceFlowQueuesSubscriber,
+                        ::PurchaseOrderIssuanceFlowQueuesSubscriber,
 
-                log.info("Starting Change of owner Rabbit Subscription")
-                PurchaseOrderChangeOwnerFlowQueuesSubscriber(cordaRpcService, defaultConfig, serializer)
-                        .initialize(connectionProvider, currentConsumers)
+                        ::InvoiceAmendmentFlowQueuesSubscriber,
+                        ::PurchaseOrderAmendmentFlowQueuesSubscriber,
+
+                        ::InvoiceCancellationFlowQueuesSubscriber,
+                        ::PurchaseOrderCancellationFlowQueuesSubscriber,
+
+                        ::InvoiceChangeOwnerFlowQueuesSubscriber,
+                        ::PurchaseOrderChangeOwnerFlowQueuesSubscriber
+                ).forEach {
+                    log.info("Starting ${it.javaClass.name}")
+                    it.invoke(cordaRpcService, defaultConfig, serializer)
+                            .initialize(connectionProvider, currentConsumers)
+                }
 
                 log.info("Starting CordaTiXInvoicePublisher")
                 CordaTiXInvoicePublisher(defaultConfig, serializer)

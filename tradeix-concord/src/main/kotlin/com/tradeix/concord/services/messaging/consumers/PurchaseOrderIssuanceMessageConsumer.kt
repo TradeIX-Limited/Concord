@@ -1,14 +1,16 @@
-package com.tradeix.concord.services.messaging
+package com.tradeix.concord.services.messaging.consumers
 
 import com.google.gson.Gson
 import com.rabbitmq.client.*
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
+import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
-import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
+import com.tradeix.concord.services.messaging.RabbitMqProducer
 import com.tradeix.concord.validators.RabbitRequestMessageValidator
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
@@ -16,7 +18,7 @@ import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import java.nio.charset.Charset
 
-class ChangeOwnerMessageConsumer(
+class PurchaseOrderIssuanceMessageConsumer(
         val services: CordaRPCOps,
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
@@ -26,24 +28,24 @@ class ChangeOwnerMessageConsumer(
 ) : Consumer {
 
     companion object {
-        protected val log: Logger = loggerFor<ChangeOwnerMessageConsumer>()
+        protected val log: Logger = loggerFor<PurchaseOrderIssuanceMessageConsumer>()
     }
 
     override fun handleRecoverOk(consumerTag: String?) {
-        println("ChangeOwnerMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleRecoverOk for consumer tag: $consumerTag")
     }
 
     override fun handleConsumeOk(consumerTag: String?) {
-        println("ChangeOwnerMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleConsumeOk for consumer tag: $consumerTag")
     }
 
     override fun handleShutdownSignal(consumerTag: String?, sig: ShutdownSignalException?) {
-        println("ChangeOwnerMessageConsumer: handleShutdownSignal for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleShutdownSignal for consumer tag: $consumerTag")
         println(sig)
     }
 
     override fun handleCancel(consumerTag: String?) {
-        println("ChangeOwnerMessageConsumer: handleCancel for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleCancel for consumer tag: $consumerTag")
     }
 
     override fun handleDelivery(
@@ -57,41 +59,54 @@ class ChangeOwnerMessageConsumer(
         val messageBody = body?.toString(Charset.defaultCharset())
         println("Received message $messageBody")
 
-        var requestMessage = PurchaseOrderOwnershipRequestMessage(
+        var requestMessage = PurchaseOrderIssuanceRequestMessage(
                 correlationId = null,
+                created = null,
+                deliveryTerms = null,
+                descriptionOfGoods = null,
+                earliestShipment = null,
+                latestShipment = null,
+                portOfShipment = null,
+                reference = null,
                 tryCount = 0,
-                externalIds = null,
-                newOwner = null,
-                bidUniqueId = null)
+                externalId = null,
+                buyer = null,
+                supplier = null,
+                conductor = CordaX500Name("TradeIX", "London", "GB"),
+                value = null,
+                currency = null,
+                attachmentId = null)
 
         try {
-            requestMessage = serializer.fromJson(messageBody, PurchaseOrderOwnershipRequestMessage::class.java)
-            println("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
-            log.info("Received message with id ${requestMessage.correlationId} in ChangeOwnerMessageConsumer - about to process.")
+            requestMessage = serializer.fromJson(messageBody, PurchaseOrderIssuanceRequestMessage::class.java)
+            println("Received message with id ${requestMessage.correlationId} in PurchaseOrderIssuanceMessageConsumer - about to process.")
+            log.info("Received message with id ${requestMessage.correlationId} in PurchaseOrderIssuanceMessageConsumer - about to process.")
+
             try {
                 val validator = RabbitRequestMessageValidator(requestMessage)
 
                 if (!validator.isValid) {
                     throw FlowValidationException(validationErrors = validator.validationErrors)
                 }
-                val flowHandle = services.startTrackedFlow(PurchaseOrderOwnership::InitiatorFlow, requestMessage.toModel())
+
+                val flowHandle = services.startTrackedFlow(PurchaseOrderIssuance::InitiatorFlow, requestMessage.toModel())
                 flowHandle.progress.subscribe { println(">> $it") }
                 val result = flowHandle.returnValue.getOrThrow()
 
 
-                println("Successfully processed OwnershipRequest - responding back to client")
+                println("Successfully processed IssuanceRequest - responding back to client")
                 val response = PurchaseOrderResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
-                        externalIds = requestMessage.externalIds!!,
+                        externalIds = listOf(requestMessage.externalId!!),
                         success = true,
-                        bidUniqueId = requestMessage.bidUniqueId
+                        bidUniqueId = null
                 )
                 responder.publish(response)
-                log.info("Successfully processed OwnershipRequest - responded back to client")
+                log.info("Successfully processed IssuanceRequest - responded back to client")
             } catch (ex: Throwable) {
-                log.error("Failed to process the message ${ex}, Returning a error response")
+                log.error("Failed to process the message ${ex.message}, Returning a error response")
                 return when (ex) {
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
@@ -99,9 +114,9 @@ class ChangeOwnerMessageConsumer(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
-                                externalIds = requestMessage.externalIds!!,
+                                externalIds = listOf(requestMessage.externalId!!),
                                 success = false,
-                                bidUniqueId = requestMessage.bidUniqueId
+                                bidUniqueId = null
                         )
 
                         responder.publish(response)
@@ -111,9 +126,9 @@ class ChangeOwnerMessageConsumer(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),
-                                externalIds = requestMessage.externalIds!!,
+                                externalIds = listOf(requestMessage.externalId!!),
                                 success = false,
-                                bidUniqueId = requestMessage.bidUniqueId
+                                bidUniqueId = null
                         )
 
                         responder.publish(response)
@@ -124,18 +139,19 @@ class ChangeOwnerMessageConsumer(
         } catch (ex: Throwable) {
             requestMessage.tryCount++
             if (requestMessage.tryCount < maxRetryCount) {
-                println("Exception handled in ChangeOwnerMessageConsumer, writing to dlq")
-                log.error("Exception handled in ChangeOwnerMessageConsumer, writing to dlq")
+                println("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq")
+                log.error("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq")
+
                 deadLetterProducer.publish(requestMessage, false)
             } else {
-                println("Exception handled in ChangeOwnerMessageConsumer, writing to dlq fatally")
-                log.error("Exception handled in ChangeOwnerMessageConsumer, writing to dlq fatally")
+                println("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq fatally")
+                log.error("Exception handled in PurchaseOrderIssuanceMessageConsumer, writing to dlq fatally")
                 deadLetterProducer.publish(requestMessage, true)
             }
         }
     }
 
     override fun handleCancelOk(consumerTag: String?) {
-        println("ChangeOwnerMessageConsumer: handleCancelOk for consumer tag: $consumerTag")
+        println("PurchaseOrderIssuanceMessageConsumer: handleCancelOk for consumer tag: $consumerTag")
     }
 }

@@ -10,6 +10,7 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderOwnershipRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
+import com.tradeix.concord.services.messaging.consumers.PurchaseOrderChangeOwnerMessageConsumer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -56,7 +57,7 @@ class ChangeOwnerMessageConsumerTest {
         whenever(mockSignedTransaction.id).thenReturn(mockSecureHash)
         whenever(mockSecureHash.toString()).thenReturn("abc")
 
-        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockResponder, times(1)).publish(any())
@@ -83,7 +84,7 @@ class ChangeOwnerMessageConsumerTest {
                 .disableHtmlEscaping()
                 .create()
 
-        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any(), any())
@@ -104,7 +105,7 @@ class ChangeOwnerMessageConsumerTest {
                 .create()
 
 
-        val issuanceConsumer = ChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
+        val issuanceConsumer = PurchaseOrderChangeOwnerMessageConsumer(mockCordaRPCOps, mockChannel, mockDeadLetterProducer, 3, mockResponder, serializer)
         issuanceConsumer.handleDelivery("abc", mockEnvelope, null, requestBytes)
 
         verify(mockDeadLetterProducer, times(1)).publish(any<PurchaseOrderOwnershipRequestMessage>(), any())
