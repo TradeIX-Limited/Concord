@@ -19,7 +19,7 @@ RUN apk upgrade --update && \
 	apk add --update --no-cache bash iputils && \
 	rm -rf /var/cache/apk/*
 
-# Create /opt/corda directory
+# Create /opt/corda directory.
 RUN mkdir -p /opt/corda/plugins && \
     mkdir -p /opt/corda/logs
 
