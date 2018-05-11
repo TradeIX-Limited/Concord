@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Unit Tests" type="JUnit" factoryName="JUnit">
-    <shortenClasspath name="MANIFEST" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.example.flow.*" />
@@ -8,7 +7,7 @@
       </pattern>
     </extension>
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="ALTERNATIVE_JRE_PATH" value="C:\JDK\jre" />
+    <option name="ALTERNATIVE_JRE_PATH" value="C:\jdk\jre" />
     <option name="PACKAGE_NAME" value="com.tradeix.concord" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />

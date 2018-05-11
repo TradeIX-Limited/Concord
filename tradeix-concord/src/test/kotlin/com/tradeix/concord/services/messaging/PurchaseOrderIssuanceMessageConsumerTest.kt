@@ -10,6 +10,7 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderResponseMessage
 import com.tradeix.concord.serialization.CordaX500NameSerializer
+import com.tradeix.concord.serialization.DateInstantSerializer
 import com.tradeix.concord.services.messaging.consumers.PurchaseOrderIssuanceMessageConsumer
 import net.corda.core.concurrent.CordaFuture
 import net.corda.core.crypto.SecureHash
@@ -20,6 +21,7 @@ import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.transactions.SignedTransaction
 import org.junit.Test
 import rx.Observable
+import java.time.Instant
 
 class PurchaseOrderIssuanceMessageConsumerTest {
 
@@ -45,6 +47,7 @@ class PurchaseOrderIssuanceMessageConsumerTest {
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
                 .disableHtmlEscaping()
                 .create()
 
@@ -101,6 +104,7 @@ class PurchaseOrderIssuanceMessageConsumerTest {
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
                 .disableHtmlEscaping()
                 .create()
 
@@ -140,6 +144,7 @@ class PurchaseOrderIssuanceMessageConsumerTest {
 
         val serializer = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
                 .disableHtmlEscaping()
                 .create()
 

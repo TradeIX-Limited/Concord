@@ -59,6 +59,7 @@ lib/dokka.jar
 /out/
 /java-source/out/
 /tradeix-concord/out/
+/tradeix-concord-domain/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

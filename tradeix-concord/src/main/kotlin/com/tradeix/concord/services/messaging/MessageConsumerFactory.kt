@@ -8,9 +8,11 @@ import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.invoice.*
 import com.tradeix.concord.messages.rabbit.purchaseorder.*
 import com.tradeix.concord.serialization.CordaX500NameSerializer
+import com.tradeix.concord.serialization.DateInstantSerializer
 import com.tradeix.concord.services.messaging.consumers.*
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.messaging.CordaRPCOps
+import java.time.Instant
 
 class MessageConsumerFactory(
         val services: CordaRPCOps,
@@ -25,6 +27,7 @@ class MessageConsumerFactory(
 
         val cordaNameSerialiser = GsonBuilder()
                 .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
                 .disableHtmlEscaping()
                 .create()
 
