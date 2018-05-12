@@ -66,7 +66,6 @@ class InvoiceIssuanceMessageConsumer(
 
         try {
             requestMessage = serializer.fromJson(messageBody, InvoiceIssuanceRequestMessage::class.java)
-            println("Received message with id ${requestMessage.correlationId} in InvoiceIssuanceMessageConsumer - about to process.")
             log.info("Received message with id ${requestMessage.correlationId} in InvoiceIssuanceMessageConsumer - about to process.")
 
             try {
@@ -76,8 +75,14 @@ class InvoiceIssuanceMessageConsumer(
                     throw FlowValidationException(validationErrors = validator.validationErrors)
                 }
 
-                val flowHandle = services.startTrackedFlow(InvoiceIssuance::InitiatorFlow, requestMessage.toModel())
+                log.info("About to create model from request message")
+                val model = requestMessage.toModel()
+
+                log.info("About to start tracked flow")
+                val flowHandle = services.startTrackedFlow(InvoiceIssuance::InitiatorFlow, model)
+                log.info("About to subscribe progress of flow")
                 flowHandle.progress.subscribe { println(">> $it") }
+                log.info("About to get result of flow handle or throw")
                 val result = flowHandle.returnValue.getOrThrow()
 
 
@@ -92,7 +97,7 @@ class InvoiceIssuanceMessageConsumer(
                 responder.publish(response)
                 log.info("Successfully processed IssuanceRequest - responded back to client")
             } catch (ex: Throwable) {
-                log.error("Failed to process the message ${ex.message}, Returning a error response")
+                log.error("Failed to process the message $ex, Returning a error response")
                 return when (ex) {
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")

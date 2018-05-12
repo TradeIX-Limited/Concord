@@ -2,6 +2,7 @@ package com.tradeix.concord.serialization
 
 import com.google.common.base.Predicates.instanceOf
 import com.google.gson.GsonBuilder
+import com.tradeix.concord.messages.rabbit.invoice.InvoiceIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import net.corda.core.identity.CordaX500Name
 import org.hamcrest.core.IsInstanceOf
@@ -87,6 +88,23 @@ class SerializationTests {
                         PurchaseOrderIssuanceRequestMessage::class.java)
 
         assertEquals("London", result.buyer?.locality)
+    }
+
+    @Test
+    fun `InvoiceIssuance Json string will deserialize to InvoiceIssuanceRequestMessage`() {
+        val testInvoiceIssuanceMessage = "{ \"externalId\": \"28|NID123-INVNUM-001|INVNUM-001\", \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\", \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\", \"conductor\": \"O=TradeIX,L=London,C=GB\", \"invoiceVersion\": \"1.0\", \"invoiceVersionDate\": \"2018-05-09T15:11:50.0249056Z\", \"tixInvoiceVersion\": 1, \"invoiceNumber\": \"INVNUM-001\", \"invoiceType\": \"Insured\", \"reference\": \"REFERENCE\", \"dueDate\": \"2018-05-14T15:11:50.0249072Z\", \"offerId\": null, \"amount\": 123000.0, \"totalOutstanding\": 11300.0, \"created\": \"2018-05-09T15:47:58.940311Z\", \"updated\": \"2018-05-09T15:47:58.940311Z\", \"expectedSettlementDate\": \"2018-05-14T15:11:50.0249072Z\", \"settlementDate\": \"2018-05-14T15:11:50.0249068Z\", \"mandatoryReconciliationtDate\": null, \"invoiceDate\": \"2018-05-02T15:11:50.024906Z\", \"status\": \"Accepted\", \"rejectionReason\": null, \"eligibleValue\": 0.0, \"invoicePurchaseValue\": 11300.0, \"tradeDate\": null, \"tradePaymentDate\": null, \"invoicePayments\": 1000.0, \"invoiceDilutions\": 110700.0, \"cancelled\": false, \"closeDate\": \"2018-05-16T15:11:50.0249068Z\", \"originationNetwork\": \"28\", \"hash\": \"HASH-1234567890-AAA\", \"currency\": \"GBP\", \"siteId\": \"SID123\", \"purchaseOrderNumber\": \"PONumber1\", \"purchaseOrderId\": null, \"composerProgramId\": 2, \"correlationId\": \"4437be5f-0bf8-43ae-96cc-794e36b3e2be\", \"tryCount\": 0 }"
+
+        val serializer = GsonBuilder()
+                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
+                .disableHtmlEscaping()
+                .create()
+
+        val result = serializer.fromJson<InvoiceIssuanceRequestMessage>(testInvoiceIssuanceMessage, InvoiceIssuanceRequestMessage::class.java)
+        assertEquals("Tokyo", result.buyer?.locality)
+        assertEquals(1, result.tixInvoiceVersion)
+        assertEquals("28|NID123-INVNUM-001|INVNUM-001", result.externalId)
+        assertEquals("New York", result.supplier?.locality)
     }
 
 
