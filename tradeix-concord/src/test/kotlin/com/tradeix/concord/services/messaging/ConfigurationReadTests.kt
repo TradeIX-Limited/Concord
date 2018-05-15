@@ -29,7 +29,7 @@ class ConfigurationReadTests {
 
         assertEquals("guest", connectionConfig.userName)
         assertEquals("guest", connectionConfig.password)
-        assertEquals("localhost", connectionConfig.hostName)
+        assertEquals("127.0.0.1", connectionConfig.hostName)
         assertEquals(5672, connectionConfig.portNumber)
         assertEquals("/", connectionConfig.virtualHost)
     }
@@ -40,7 +40,7 @@ class ConfigurationReadTests {
         val deadLetterConfigurationString = defaultConfig!!
                 .resolve()
                 .getConfig("tix-integration")
-                .getObject("issuanceDeadLetterConfig")
+                .getObject("invoiceIssuanceDeadLetterConfiguration")
                 .render(ConfigRenderOptions.concise())
 
         val serializer = Gson()
@@ -59,7 +59,7 @@ class ConfigurationReadTests {
         val consumerConfigurationString = defaultConfig!!
                 .resolve()
                 .getConfig("tix-integration")
-                .getObject("issuanceConsumeConfiguration")
+                .getObject("invoiceIssuanceConsumeConfiguration")
                 .render(ConfigRenderOptions.concise())
 
         val serializer = Gson()
@@ -83,7 +83,7 @@ class ConfigurationReadTests {
                 .parseAs<RabbitMqConnectionConfiguration>()
         assertEquals("guest", connectionConfig.userName)
         assertEquals("guest", connectionConfig.password)
-        assertEquals("localhost", connectionConfig.hostName)
+        assertEquals("127.0.0.1", connectionConfig.hostName)
         assertEquals(5672, connectionConfig.portNumber)
         assertEquals("/", connectionConfig.virtualHost)
     }

@@ -61,7 +61,7 @@ class InvoiceChangeOwnerMessageConsumer(
         var requestMessage = InvoiceOwnershipRequestMessage(
                 correlationId = null,
                 tryCount = 0,
-                externalId = null,
+                externalIds = null,
                 newOwner = null)
 
         try {
@@ -84,7 +84,7 @@ class InvoiceChangeOwnerMessageConsumer(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
-                        externalIds = listOf(requestMessage.externalId!!),
+                        externalIds = requestMessage.externalIds!!,
                         success = true
                 )
                 responder.publish(response)
@@ -98,7 +98,7 @@ class InvoiceChangeOwnerMessageConsumer(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
-                                externalIds = listOf(requestMessage.externalId!!),
+                                externalIds = requestMessage.externalIds!!,
                                 success = false
                         )
 
@@ -109,7 +109,7 @@ class InvoiceChangeOwnerMessageConsumer(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),
-                                externalIds = listOf(requestMessage.externalId!!),
+                                externalIds = requestMessage.externalIds!!,
                                 success = false
                         )
 

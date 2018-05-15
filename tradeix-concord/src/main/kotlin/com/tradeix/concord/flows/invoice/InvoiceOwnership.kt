@@ -62,31 +62,40 @@ object InvoiceOwnership {
 
             val notary = FlowHelper.getNotary(serviceHub)
 
-            val inputState = VaultHelper.getStateAndRefByLinearId(
-                    serviceHub,
-                    UniqueIdentifier(model.externalId!!),
-                    InvoiceState::class.java)
+            val inputStates = model.externalIds!!.map {
+                VaultHelper.getStateAndRefByLinearId(
+                        serviceHub,
+                        UniqueIdentifier(it),
+                        InvoiceState::class.java)
+            }
 
-            val outputState = inputState
-                    .state
-                    .data
-                    .copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
+
+            val outputStates = inputStates.map {
+                it.state.data.copy(owner = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.newOwner))
+            }
 
             // Stage 1 - Create unsigned transaction
             progressTracker.currentStep = GENERATING_TRANSACTION
 
             val command = Command(
                     value = InvoiceContract.Commands.ChangeOwner(),
-                    signers = outputState.participants.map { it.owningKey })
+                    signers = outputStates.first()
+                            .participants
+                            .filter { it != outputStates.first().buyer }
+                            .map { it.owningKey })
 
             val transactionBuilder = TransactionBuilder(notary)
-                    .addInputState(inputState)
-                    .addOutputState(outputState, INVOICE_CONTRACT_ID)
-                    .addCommand(command)
+
+            inputStates.forEach { transactionBuilder.addInputState(it) }
+            outputStates.forEach { transactionBuilder.addOutputState(it, INVOICE_CONTRACT_ID) }
+
+            transactionBuilder.addCommand(command)
 
             // Stage 2 - Verify transaction
             progressTracker.currentStep = VERIFYING_TRANSACTION
-            verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), inputState.state.data)
+            inputStates.forEach {
+                verify(FlowHelper.getPeerByLegalNameOrMe(serviceHub, null), it.state.data)
+            }
             transactionBuilder.verify(serviceHub)
 
             // Stage 3 - Sign the transaction
@@ -96,10 +105,9 @@ object InvoiceOwnership {
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
             val requiredSignatureFlowSessions = listOf(
-                    outputState.owner,
-                    outputState.buyer,
-                    outputState.supplier,
-                    outputState.conductor)
+                    outputStates.first().owner,
+                    outputStates.first().supplier,
+                    outputStates.first().conductor)
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
                     .map { initiateFlow(serviceHub.identityService.requireWellKnownPartyFromAnonymous(it)) }

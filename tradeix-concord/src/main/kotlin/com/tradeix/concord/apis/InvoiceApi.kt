@@ -21,6 +21,7 @@ import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
 import com.tradeix.concord.flows.invoice.InvoiceAmendment
 import com.tradeix.concord.flows.invoice.InvoiceCancellation
 import com.tradeix.concord.flows.invoice.InvoiceOwnership
+import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
 import com.tradeix.concord.messages.webapi.invoice.InvoiceAmendmentRequestMessage
 import com.tradeix.concord.messages.webapi.invoice.InvoiceCancellationRequestMessage
 import com.tradeix.concord.messages.webapi.invoice.InvoiceOwnershipRequestMessage
@@ -134,8 +135,8 @@ class InvoiceApi(val services: CordaRPCOps) {
             val result = flowHandle.returnValue.getOrThrow()
             return Response
                     .status(Response.Status.OK)
-                    .entity(SingleIdentitySuccessResponseMessage(
-                            externalId = message.externalId!!,
+                    .entity(MultiIdentitySuccessResponseMessage(
+                            externalIds = message.externalIds!!,
                             transactionId = result.id.toString()))
                     .build()
         } catch (ex: Throwable) {
