@@ -7,6 +7,7 @@ import com.tradeix.concord.flows.invoice.InvoiceOwnership
 import com.tradeix.concord.interfaces.IQueueDeadLetterProducer
 import com.tradeix.concord.messages.rabbit.RabbitMessage
 import com.tradeix.concord.messages.rabbit.invoice.InvoiceOwnershipRequestMessage
+import com.tradeix.concord.messages.rabbit.invoice.InvoiceOwnershipResponseMessage
 import com.tradeix.concord.messages.rabbit.invoice.InvoiceResponseMessage
 import com.tradeix.concord.services.messaging.RabbitMqProducer
 import com.tradeix.concord.validators.RabbitRequestMessageValidator
@@ -22,7 +23,7 @@ class InvoiceChangeOwnerMessageConsumer(
         private val channel: Channel,
         private val deadLetterProducer: IQueueDeadLetterProducer<RabbitMessage>,
         private val maxRetryCount: Int,
-        private val responder: RabbitMqProducer<InvoiceResponseMessage>,
+        private val responder: RabbitMqProducer<InvoiceOwnershipResponseMessage>,
         private val serializer: Gson
 ) : Consumer {
 
@@ -62,7 +63,8 @@ class InvoiceChangeOwnerMessageConsumer(
                 correlationId = null,
                 tryCount = 0,
                 externalIds = null,
-                newOwner = null)
+                newOwner = null,
+                bidUniqueId = "00000000-0000-0000-0000-000000000000")
 
         try {
             requestMessage = serializer.fromJson(messageBody, InvoiceOwnershipRequestMessage::class.java)
@@ -80,11 +82,12 @@ class InvoiceChangeOwnerMessageConsumer(
 
 
                 println("Successfully processed OwnershipRequest - responding back to client")
-                val response = InvoiceResponseMessage(
+                val response = InvoiceOwnershipResponseMessage(
                         correlationId = requestMessage.correlationId!!,
                         transactionId = result.id.toString(),
                         errorMessages = null,
                         externalIds = requestMessage.externalIds!!,
+                        bidUniqueId = requestMessage.bidUniqueId,
                         success = true
                 )
                 responder.publish(response)
@@ -94,22 +97,24 @@ class InvoiceChangeOwnerMessageConsumer(
                 return when (ex) {
                     is FlowValidationException -> {
                         println("Flow validation exception occurred, sending failed response")
-                        val response = InvoiceResponseMessage(
+                        val response = InvoiceOwnershipResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = ex.validationErrors,
                                 externalIds = requestMessage.externalIds!!,
+                                bidUniqueId = requestMessage.bidUniqueId,
                                 success = false
                         )
 
                         responder.publish(response)
                     }
                     else -> {
-                        val response = InvoiceResponseMessage(
+                        val response = InvoiceOwnershipResponseMessage(
                                 correlationId = requestMessage.correlationId!!,
                                 transactionId = null,
                                 errorMessages = listOf(ex.message!!),
                                 externalIds = requestMessage.externalIds!!,
+                                bidUniqueId = requestMessage.bidUniqueId,
                                 success = false
                         )
 

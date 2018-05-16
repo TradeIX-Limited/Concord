@@ -10,7 +10,8 @@ class InvoiceOwnershipRequestMessage(
         override val correlationId: String?,
         override var tryCount: Int,
         override val externalIds: List<String>?,
-        val newOwner: CordaX500Name?
+        val newOwner: CordaX500Name?,
+        val bidUniqueId: String
 ) : RabbitRequestMessage(), MultiIdentityMessage {
 
     fun toModel() = InvoiceOwnershipFlowModel(

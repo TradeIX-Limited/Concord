@@ -108,6 +108,11 @@ task copyTixIntegrationConfiguration(dependsOn: []){
         into "tradeix-concord"
     }
 
+    project.copy {
+        from "./tix.test.conf"
+        into ".idea/modules/tradeix-concord"
+    }
+
   //  project.copy {
   //      from "./tix.integration.conf"
   //      into "tradeix-concord/build/nodes/TradeIX"

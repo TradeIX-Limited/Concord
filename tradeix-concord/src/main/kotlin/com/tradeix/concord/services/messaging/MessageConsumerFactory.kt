@@ -130,7 +130,7 @@ class MessageConsumerFactory(
             }
             type.isAssignableFrom(InvoiceOwnershipRequestMessage::class.java) -> {
 
-                val responder = RabbitMqProducer<InvoiceResponseMessage>(
+                val responder = RabbitMqProducer<InvoiceOwnershipResponseMessage>(
                         responderConfigurations["cordatix_change_owner_invoice_response"]!!,
                         rabbitConnectionProvider
                 )
