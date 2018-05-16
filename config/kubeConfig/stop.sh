@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
-kubectl delete configmap corda
+
+source commonutil.sh
+
+
+genPVCNames
+genAzurePVCs ${PVC_NAMES}
 kubectl delete -f services/
-kubectl delete -f storage/
 kubectl delete -f deployments/
+kubectl delete po --all
+azDeletePVCAll
+azDeleteSecrets
+kubectl delete -f storage/
 kubectl delete secret acr-secret
+azDeleteTixIntegration

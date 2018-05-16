@@ -2,11 +2,12 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pvclaim-controller
+  name: pvclaim-notary
+  labels:
+    owner: notary
 spec:
   accessModes:
     - ReadWriteOnce
-#  volumeName: pv01
   resources:
     requests:
       storage: 1Gi
@@ -16,10 +17,11 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvclaim-conductor
+  labels:
+    owner: conductor
 spec:
   accessModes:
     - ReadWriteOnce
-#  volumeName: pv01
   resources:
     requests:
       storage: 1Gi
@@ -30,10 +32,11 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvclaim-buyer
+  labels:
+    owner: buyer
 spec:
   accessModes:
     - ReadWriteOnce
-#  volumeName: pv01
   resources:
     requests:
       storage: 1Gi
@@ -43,10 +46,11 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvclaim-funder
+  labels:
+    owner: funder
 spec:
   accessModes:
     - ReadWriteOnce
-#  volumeName: pv01
   resources:
     requests:
       storage: 1Gi
@@ -56,10 +60,11 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvclaim-supplier1
+  labels:
+    owner: supplier1
 spec:
   accessModes:
     - ReadWriteOnce
-#  volumeName: pv01
   resources:
     requests:
       storage: 1Gi

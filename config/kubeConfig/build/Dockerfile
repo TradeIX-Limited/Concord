@@ -5,20 +5,20 @@ RUN apk upgrade --update && \
 	rm -rf /var/cache/apk/*
 
 # Create /opt/corda directory
-RUN mkdir -p /opt/corda/plugins && \
+RUN mkdir -p /opt/ && \
+    mkdir -p /opt/corda/ && \
+    mkdir -p /opt/corda/cordapps && \
     mkdir -p /opt/corda/logs
 
 # RUN mkdir -p /app/plugins
-COPY plugins/*.jar /opt/corda/plugins/
+COPY cordapps/*.jar /opt/corda/cordapps/
 
-ADD https://dl.bintray.com/r3/corda/net/corda/corda/1.0.0/corda-1.0.0.jar /opt/corda/corda.jar
-ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/1.0.0/corda-webserver-1.0.0.jar /opt/corda/corda-webserver.jar
-#ADD https://dl.bintray.com/r3/corda/net/corda/corda/2.0.0/corda-2.0.0.jar /opt/corda/corda.jar
-#ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/2.0.0/corda-webserver-2.0.0.jar /opt/corda/corda-webserver.jar
+ADD https://dl.bintray.com/r3/corda/net/corda/corda/3.1-corda/corda-3.1-corda.jar /opt/corda/corda.jar
+ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/3.1-corda/corda-webserver-3.1-corda.jar /opt/corda/corda-webserver.jar
+#COPY cordajars/*.jar /opt/corda/
 
 COPY entrypoint.sh /opt/corda/entrypoint.sh
-COPY wait-for.sh /opt/corda/wait-for
-RUN chmod +x /opt/corda/wait-for
+RUN chmod 777 /opt/corda/entrypoint.sh
 
 WORKDIR /opt/corda
 

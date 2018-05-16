@@ -4,5 +4,7 @@ metadata:
   name: azurefile
 provisioner: kubernetes.io/azure-file
 parameters:
-#  Enter the name of the storage account name that you created in Azure
-  storageAccount: cordastorage1
+#  skuName: Standard_LRS
+#  location: westeurope
+# REMEMBER TO CONFIGURE THE STORAGE ACCOUNT NAME TO THE ONE YOU HAVE CREATED IN AZURE
+  storageAccount: cordastorage2

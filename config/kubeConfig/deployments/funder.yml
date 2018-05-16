@@ -12,54 +12,77 @@ spec:
       labels:
         app: funder
     spec:
-# Remember to edit the image as required
       containers:
       - name: node
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
-        args: ["controller"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/funder.conf"
+# Remember to edit the image as required
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        args: ["notary"]
         ports:
         - containerPort: 10002
         volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: funder-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: funder-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
         - name: pvclaim
-          mountPath: db
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       - name: web
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
+# Remember to edit the image as required
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
         args: ["web", "funder"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/funder.conf"
         ports:
         - containerPort: 10004
         volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: funder-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: funder-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
+        - name: pvclaim
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: certificates
-        emptyDir: {}
-      - name: config
-        configMap:
-          name: corda
+      - name: funder-nodeinfo
+        secret:
+          secretName: funder-nodeinfo
+      - name: additional-node-infos
+        secret:
+          secretName: additional-node-infos
+      - name: funder-certificates
+        secret:
+          secretName: funder-certificates
       - name: logs
         emptyDir: {}
       - name: pvclaim

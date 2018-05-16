@@ -15,53 +15,76 @@ spec:
       containers:
 # Remember to edit the image as required
       - name: node
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
-        args: ["controller"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/buyer.conf"
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        args: ["notary"]
         ports:
         - containerPort: 10002
         volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: buyer-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: buyer-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
         - name: pvclaim
-          mountPath: db
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       - name: web
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
-        args: ["web","buyer"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/buyer.conf"
+# Remember to edit the image as required
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        args: ["web", "buyer"]
         ports:
         - containerPort: 10004
         volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: buyer-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: buyer-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
+        - name: pvclaim
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: certificates
+      - name: buyer-nodeinfo
+        secret:
+          secretName: buyer-nodeinfo
+      - name: additional-node-infos
+        secret:
+          secretName: additional-node-infos
+      - name: buyer-certificates
+        secret:
+          secretName: buyer-certificates
+      - name: logs
         emptyDir: {}
-      - name: config
-        configMap:
-          name: corda
-#      - name: logs
-#        emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
           claimName: pvclaim-buyer

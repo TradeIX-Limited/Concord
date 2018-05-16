@@ -10,11 +10,8 @@ spec:
   ports:
   - name: "p2p"
     port: 10002
-    targetPort: 10002
-  - name: "rpc"
-    port: 10003
-    targetPort: 10003
-  - name: "admin"
+    targetPort: 10002   
+  - name: "web"
     port: 10004
     targetPort: 10004
   selector:

@@ -1,22 +1,22 @@
 apiVersion: "apps/v1beta1"
 kind: Deployment
 metadata:
-  name: supplier1
+  name: notary
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: supplier1
+      app: notary
   template:
     metadata:
       labels:
-        app: supplier1
+        app: notary
     spec:
       containers:
       - name: node
 # Remember to edit the image as required
         image: tradeixdev.azurecr.io/abc4:1.0.0.0
-        args: ["notary"]
+        args: ["none"]
         ports:
         - containerPort: 10002
         volumeMounts:
@@ -27,10 +27,10 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: supplier1-certificates
+        - name: notary-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
-        - name: supplier1-nodeinfo
+        - name: notary-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
         - name: pvclaim
@@ -42,50 +42,24 @@ spec:
         - name: pvclaim
           mountPath: /opt/corda/persistence.mv.db
           subPath: persistence.mv.db
-      - name: web
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
-        args: ["web", "supplier1"]
-        ports:
-        - containerPort: 10004
-        volumeMounts:
         - name: pvclaim
-          mountPath: /opt/corda/node.conf
-          subPath: node.conf
-          readOnly: true
-        - name: additional-node-infos
-          mountPath: "/opt/corda/additional-node-infos/"
-          readOnly: true
-        - name: supplier1-certificates
-          mountPath: "/opt/corda/certificates/"
-          readOnly: true
-        - name: supplier1-nodeinfo
-          mountPath: /opt/corda/nodeInfo
-          subPath: nodeInfo
-        - name: pvclaim
-          mountPath: /opt/corda/logs
-          subPath: logs
-        - name: pvclaim
-          mountPath: /opt/corda/network-parameters
-          subPath: network-parameters
-        - name: pvclaim
-          mountPath: /opt/corda/persistence.mv.db
-          subPath: persistence.mv.db
+          mountPath: /opt/corda/whitelist.txt
+          subPath: whitelist.txt
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: supplier1-nodeinfo
+      - name: notary-nodeinfo
         secret:
-          secretName: supplier1-nodeinfo
+          secretName: notary-nodeinfo
       - name: additional-node-infos
         secret:
           secretName: additional-node-infos
-      - name: supplier1-certificates
+      - name: notary-certificates
         secret:
-          secretName: supplier1-certificates
+          secretName: notary-certificates
       - name: logs
         emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
-          claimName: pvclaim-supplier1
+          claimName: pvclaim-notary
           readOnly: false

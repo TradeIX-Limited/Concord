@@ -13,61 +13,89 @@ spec:
         app: conductor
     spec:
       containers:
-# Remember to edit the image as required
       - name: node
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
-        args: ["controller"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/conductor.conf"
+# Remember to edit the image as required
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        args: ["notary"]
         ports:
         - containerPort: 10002
         volumeMounts:
-        - name: config
-          mountPath: /config
+        - name: tixconfig
+          mountPath: /opt/corda/tix.integration.conf
+          subPath: tix.integration.conf
           readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: conductor-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: conductor-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
         - name: pvclaim
-          mountPath: db
-#        - name: pvclaim
-#          mountPath: /tixintegration
-#          readOnly: true
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       - name: web
-        image: tradeixdev.azurecr.io/corda:1.0.0.0
+# Remember to edit the image as required
+        image: tradeixdev.azurecr.io/abc4:1.0.0.0
         args: ["web", "conductor"]
-        env:
-        - name: "CONFIG_FILE"
-          value: "/config/conductor.conf"
         ports:
         - containerPort: 10004
         volumeMounts:
-        - name: config
-          mountPath: /config
+        - name: tixconfig
+          mountPath: /opt/corda/tix.integration.conf
+          subPath: tix.integration.conf
           readOnly: true
         - name: pvclaim
-          mountPath: /opt/corda/certificates
-          subPath: certificates
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: conductor-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+        - name: conductor-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
         - name: pvclaim
           mountPath: /opt/corda/logs
           subPath: logs
-#        - name: pvclaim
-#          mountPath: /tixintegration
-#          readOnly: true
+        - name: pvclaim
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
       imagePullSecrets:
       - name: acr-secret
-#      volumes:
-#      - name: tixintegration
-#        configMap:
-#          name: tixintegration
       volumes:
-      - name: config
+      - name: conductor-nodeinfo
+        secret:
+          secretName: conductor-nodeinfo
+      - name: additional-node-infos
+        secret:
+          secretName: additional-node-infos
+      - name: conductor-certificates
+        secret:
+          secretName: conductor-certificates
+      - name: tixconfig
         configMap:
-          name: corda
+          name: tix
+      - name: logs
+        emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
           claimName: pvclaim-conductor
