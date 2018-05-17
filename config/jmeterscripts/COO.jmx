@@ -51,7 +51,7 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;externalId&quot;: &quot;${id}&quot; ,&#xd;
-  &quot;newOwner&quot;: &quot;C=GB,L=London,O=TradeIXTestFunder&quot;&#xd;
+  &quot;newOwner&quot;: &quot;O=TradeIX Test Funder 1, L=Amsterdam, C=NL&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>

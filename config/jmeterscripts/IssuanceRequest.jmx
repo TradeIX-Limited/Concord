@@ -42,8 +42,8 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;externalId&quot;: ${id} ,&#xd;
-  &quot;buyer&quot;: &quot;C=GB,L=London,O=TradeIXTestBuyer&quot;,&#xd;
-  &quot;supplier&quot;: &quot;C=GB,L=London,O=TradeIXTestSupplier1&quot;,&#xd;
+  &quot;buyer&quot;: &quot;O=TradeIX Test Buyer 1, L=Tokyo, C=JP&quot;,&#xd;
+  &quot;supplier&quot;: &quot;O=TradeIX Test Supplier 1, L=New York, C=US&quot;,&#xd;
   &quot;invoiceVersion&quot;: &quot;VERSION 001&quot;,&#xd;
   &quot;invoiceVersionDate&quot;: &quot;2010-01-01T00:00:00Z&quot;,&#xd;
   &quot;tixInvoiceVersion&quot;: 1,&#xd;
