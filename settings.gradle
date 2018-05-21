@@ -1,4 +1,7 @@
 include 'tradeix-concord-shared'
 include 'tradeix-concord-shared-domain'
 include 'tradeix-concord-tests'
+include 'tradeix-concord-cordapp'
+include 'tradeix-concord-client-spring-receiver'
+include 'tradeix-concord-client-spring-responder'
 
