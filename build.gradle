@@ -1,28 +1,26 @@
+group 'com.tradeix.concord'
+version '1.0'
+
 buildscript {
-    ext.corda_release_version = '3.1-corda'
-    ext.corda_release_distribution = 'net.corda'
-    ext.corda_gradle_plugins_version = '3.0.9'
     ext.kotlin_version = '1.1.60'
-    ext.junit_version = '4.12'
+    ext.corda_release_group = 'net.corda'
+    ext.corda_release_version = '3.1-corda'
+    ext.corda_gradle_plugins_version = '3.1.0'
     ext.quasar_version = '0.7.9'
-    ext.rabbit_version = '5.0.0'
+    ext.junit_version = '4.12'
     ext.gson_version = '2.8.2'
-    ext.jodatime_version = '2.9.9'
-    ext.mockito_kotlin_version = '1.5.0'
-    ext.mockito_core_version = '2.1.0'
-    ext.gradle_plugin_version = '3.2.1'
+    ext.rabbit_version = '5.0.0'
+    ext.spring_boot_version = '1.5.4.RELEASE'
 
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
-        classpath "net.corda.plugins:publish-utils:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
     }
@@ -33,97 +31,25 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'idea'
 apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
-// apply plugin: 'com.bmuschko.docker-remote-api'
 
 sourceSets {
-    main {
-        resources {
-            srcDir "config/dev"
-        }
-    }
-    test {
-        resources {
-            srcDir "config/test"
-        }
-    }
-    integrationTest {
-        kotlin {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integration-test/kotlin')
-        }
-    }
-}
-
-configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
+    main.kotlin.srcDirs = []
+    main.java.srcDirs = []
+    main.resources.srcDirs = []
+    test.kotlin.srcDirs = []
+    test.java.srcDirs = []
+    test.resources.srcDirs = []
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testCompile "junit:junit:$junit_version"
-    testCompile "com.nhaarman:mockito-kotlin:$mockito_kotlin_version"
-    testCompile "org.mockito:mockito-core:$mockito_core_version"
-
-    // Corda integration dependencies
-    cordaCompile "$corda_release_distribution:corda-core:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-finance:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-jackson:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-rpc:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-node-api:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-webserver-impl:$corda_release_version"
-    cordaRuntime "$corda_release_distribution:corda:$corda_release_version"
-    cordaRuntime "$corda_release_distribution:corda-webserver:$corda_release_version"
-
-    testCompile "$corda_release_distribution:corda-node-driver:$corda_release_version"
-
-    // GraphStream: For visualisation (required by TemplateClientRPC app)
-    compile "org.graphstream:gs-core:1.3"
-    compile("org.graphstream:gs-ui:1.3") {
-        exclude group: "bouncycastle"
-    }
-
-    // CorDapp dependencies
-    // Specify your cordapp's dependencies below, including dependent cordapps
-    cordapp "$corda_release_distribution:corda-finance:$corda_release_version"
-}
-
-task copyTixIntegrationConfiguration(dependsOn: []){
-    project.copy {
-        from "./tix.test.conf"
-        into "tradeix-concord/src/test/resources"
-    }
-
-    project.copy {
-        from "./tix.test.conf"
-        into "tradeix-concord"
-    }
-
-    project.copy {
-        from "./tix.test.conf"
-        into ".idea/modules/tradeix-concord"
-    }
-
-  //  project.copy {
-  //      from "./tix.integration.conf"
-  //      into "tradeix-concord/build/nodes/TradeIX"
-  //  }
-}
-
-copyTixIntegrationConfiguration.shouldRunAfter build
-
-task integrationTest(type: Test, dependsOn: []) {
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -131,11 +57,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         languageVersion = "1.1"
         apiVersion = "1.1"
         jvmTarget = "1.8"
-        javaParameters = true   // Useful for reflection.
+        javaParameters = true
     }
 }
-// import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-//task buildImage(type: DockerBuildImage, dependsOn: ["tradeix-concord:deployNodes"]) {
-//    inputDir = project.file(".//")
-//    tag = 'concord:1.0'
-//}

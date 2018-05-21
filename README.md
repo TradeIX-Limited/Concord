@@ -1,34 +1,11 @@
-![Concord](https://github.com/TXCTeam/Concord/blob/release-V1/Concord.png)
+![Concord](https://github.com/TXCTeam/Concord/blob/master/docs/tradeix-concord.png)
 
-# Introduction
+# Rewiring Trade Finance
 
-Welcome to **Concord**; a Corda solution written in partnership with R3 for project "Marco Polo". Concord is a proof of concept to bring Distributed Ledger Technology (DLT) into trade finance.
+TradeIX is the world’s first open platform for trade finance, pioneering the way in the dawn of the ‘internet of trade’. The trade finance solutions on our platform will unlock billions of working capital that have not yet been accessed by financial institutions or alternative funders.
 
+Powered by distributed ledger technology, our secure and connected API-driven platform facilitates the movement of assets and credit around the world.
 
+## Concord
 
-## Definitions
-
-**Formal** agreement or harmony between people or groups.
-
-**Musical** a chord that is pleasing or satisfactory in itself.
-
-
-
-## Technical Documentation
-
-### Participants
-
-In the Concord application there are several participants:
-
-- **Buyer** - Responsible for issuing a purchase order.
-- **Supplier** - The counterparty for a purchase order, and the initial owner.
-- **Conductor** - TradeIX / TIX application behind a Corda Oracle, which performs external validation.
-- **Owner** - The owner of the purchase order for any given state. This could be a supplier or a funder.
-- **Funder** - Responsible for funding a purchase order.
-
-When unit testing, the following values will be used to represent each of the participants
-
-- Buyer - `BOB` 
-- Supplier - `Alice`
-- Conductor - `BIG_CORP`
-- Owner - `MEGA_CORP`
+Concord is the pseudonym for TradeIX's first production ready DLT offering, built on Corda. We decided to call it "Concord" in keeping with our internal project naming convention which uses musical terms. The musical definition of Concord is "a chord that is pleasing or satisfactory in itself", whilst the formal definition is "an agreement or harmony between people or groups", and we feel like it fit's the bill perfectly.

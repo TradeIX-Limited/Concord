@@ -1,2 +1,4 @@
-include 'tradeix-concord'
-include 'tradeix-concord-domain'
+include 'tradeix-concord-shared'
+include 'tradeix-concord-shared-domain'
+include 'tradeix-concord-tests'
+

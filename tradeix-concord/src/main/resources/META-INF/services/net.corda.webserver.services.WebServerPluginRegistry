@@ -1,2 +1,0 @@
-# Register a ServiceLoader service extending from network.corda.webserver.services.WebServerPluginRegistry
-com.tradeix.concord.plugins.ConcordPlugin
