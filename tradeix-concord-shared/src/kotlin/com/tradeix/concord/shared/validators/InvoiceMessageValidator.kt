@@ -18,7 +18,6 @@ class InvoiceMessageValidator : ObjectModelValidator<InvoiceMessage>() {
 
         validationBuilder
                 .property(InvoiceMessage::buyer)
-                .isNotNullEmptyOrBlank()
                 .isValidCordaX500Name()
 
         validationBuilder

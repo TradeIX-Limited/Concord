@@ -27,25 +27,19 @@ class InvoiceAmendmentRequestMessageToInvoiceStateMapperConfiguration
             throw FlowException("InvoiceState with externalId '${source.externalId}' does not exist.")
         } else {
 
-            val buyer = serviceHub
-                    .networkMapCache
-                    .getPartyFromLegalNameOrThrow(
-                            CordaX500Name.tryParse(source.buyer)
-                    )
+            val buyer = serviceHub.networkMapCache.getPartyFromLegalNameOrNull(
+                    CordaX500Name.tryParse(source.buyer)
+            )
 
-            val supplier = serviceHub
-                    .networkMapCache
-                    .getPartyFromLegalNameOrMe(
-                            serviceHub,
-                            CordaX500Name.tryParse(source.supplier)
-                    )
+            val supplier = serviceHub.networkMapCache.getPartyFromLegalNameOrMe(
+                    serviceHub,
+                    CordaX500Name.tryParse(source.supplier)
+            )
 
-            val conductor = serviceHub
-                    .networkMapCache
-                    .getPartyFromLegalNameOrDefault(
-                            CordaX500Name.tryParse(source.conductor),
-                            CordaX500Name.defaultConductor
-                    )
+            val conductor = serviceHub.networkMapCache.getPartyFromLegalNameOrDefault(
+                    CordaX500Name.tryParse(source.conductor),
+                    CordaX500Name.defaultConductor
+            )
 
             return inputState.state.data.copy(
                     owner = supplier,

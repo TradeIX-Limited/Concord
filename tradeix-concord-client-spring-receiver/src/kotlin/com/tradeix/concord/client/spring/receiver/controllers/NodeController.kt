@@ -1,9 +1,8 @@
 package com.tradeix.concord.client.spring.receiver.controllers
 
-import com.tradeix.concord.shared.messages.ErrorResponseMessage
+import com.tradeix.concord.client.spring.receiver.ResponseBuilder
 import com.tradeix.concord.shared.messages.nodes.NodeResponseMessage
 import com.tradeix.concord.shared.messages.nodes.NodesResponseMessage
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,11 +23,9 @@ class NodeController : Controller() {
             val nodes = proxy
                     .networkMapSnapshot()
                     .map { it.legalIdentities.first().name.toString() }
-            ResponseEntity.ok(NodesResponseMessage(nodes))
+            ResponseBuilder.ok(NodesResponseMessage(nodes))
         } catch (ex: Exception) {
-            ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ErrorResponseMessage(ex.message ?: "Unknown server error."))
+            ResponseBuilder.internalServerError(ex.message)
         }
     }
 
@@ -41,22 +38,18 @@ class NodeController : Controller() {
                     .filter { it != proxy.nodeInfo().legalIdentities.first().name }
                     .filter { !KNOWN_NETWORK_NAMES.contains(it.organisation) }
                     .map { it.toString() }
-            ResponseEntity.ok(NodesResponseMessage(nodes))
+            ResponseBuilder.ok(NodesResponseMessage(nodes))
         } catch (ex: Exception) {
-            ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ErrorResponseMessage(ex.message ?: "Unknown server error."))
+            ResponseBuilder.internalServerError(ex.message)
         }
     }
 
     @GetMapping(path = arrayOf("/local"))
     fun getLocalNode(): ResponseEntity<*> {
         return try {
-            ResponseEntity.ok(NodeResponseMessage(proxy.nodeInfo().legalIdentities.first().name.toString()))
+            ResponseBuilder.ok(NodeResponseMessage(proxy.nodeInfo().legalIdentities.first().name.toString()))
         } catch (ex: Exception) {
-            ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ErrorResponseMessage(ex.message ?: "Unknown server error."))
+            ResponseBuilder.internalServerError(ex.message)
         }
     }
 }

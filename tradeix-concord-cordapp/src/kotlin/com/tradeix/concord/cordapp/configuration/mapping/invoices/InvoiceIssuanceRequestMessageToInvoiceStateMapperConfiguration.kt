@@ -24,29 +24,23 @@ class InvoiceIssuanceRequestMessageToInvoiceStateMapperConfiguration
                 .findByExternalId(source.externalId!!, Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
-        if(state != null) {
+        if (state != null) {
             throw FlowException("An InvoiceState with '${source.externalId}' already exists.")
         }
 
-        val buyer = serviceHub
-                .networkMapCache
-                .getPartyFromLegalNameOrThrow(
-                        CordaX500Name.tryParse(source.buyer)
-                )
+        val buyer = serviceHub.networkMapCache.getPartyFromLegalNameOrNull(
+                CordaX500Name.tryParse(source.buyer)
+        )
 
-        val supplier = serviceHub
-                .networkMapCache
-                .getPartyFromLegalNameOrMe(
-                        serviceHub,
-                        CordaX500Name.tryParse(source.supplier)
-                )
+        val supplier = serviceHub.networkMapCache.getPartyFromLegalNameOrMe(
+                serviceHub,
+                CordaX500Name.tryParse(source.supplier)
+        )
 
-        val conductor = serviceHub
-                .networkMapCache
-                .getPartyFromLegalNameOrDefault(
-                        CordaX500Name.tryParse(source.conductor),
-                        CordaX500Name.defaultConductor
-                )
+        val conductor = serviceHub.networkMapCache.getPartyFromLegalNameOrDefault(
+                CordaX500Name.tryParse(source.conductor),
+                CordaX500Name.defaultConductor
+        )
 
         return InvoiceState(
                 linearId = UniqueIdentifier(source.externalId!!),

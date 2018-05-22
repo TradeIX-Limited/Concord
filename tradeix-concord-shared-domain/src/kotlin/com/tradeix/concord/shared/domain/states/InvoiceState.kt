@@ -9,7 +9,7 @@ import java.util.*
 data class InvoiceState(
         override val linearId: UniqueIdentifier,
         override val owner: AbstractParty,
-        val buyer: AbstractParty,
+        val buyer: AbstractParty?,
         val supplier: AbstractParty,
         val conductor: AbstractParty,
         val invoiceVersion: String,
@@ -46,7 +46,14 @@ data class InvoiceState(
         val composerProgramId: Int?                             // TODO : Necessary?
 ) : LinearState, OwnableState {
 
-    override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, conductor)
+    override val participants: List<AbstractParty>
+        get() {
+            return if (buyer != null) {
+                listOf(owner, buyer, supplier, conductor)
+            } else {
+                listOf(owner, supplier, conductor)
+            }
+        }
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
         return CommandAndState(InvoiceContract.Commands.ChangeOwner(), this.copy(owner = newOwner))

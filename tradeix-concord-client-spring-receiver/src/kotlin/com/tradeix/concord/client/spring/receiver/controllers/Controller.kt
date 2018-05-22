@@ -5,9 +5,9 @@ import com.tradeix.concord.shared.services.rpc.RPCProxyProviderConfiguration
 
 abstract class Controller {
     protected val proxy = RPCProxyProvider.getRPCProxy(RPCProxyProviderConfiguration(
-            "username",
-            "password",
-            "hostName",
-            1234
+            "rpc_supplier",
+            "rpc_password_123",
+            "localhost",
+            10005
     ))
 }

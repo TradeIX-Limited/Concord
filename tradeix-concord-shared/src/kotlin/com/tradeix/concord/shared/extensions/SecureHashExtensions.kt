@@ -10,3 +10,11 @@ fun SecureHash.Companion.isParsable(hash: String): Boolean {
         false
     }
 }
+
+fun SecureHash.Companion.tryParse(hash: String?): SecureHash? {
+    return try {
+        SecureHash.parse(hash ?: "")
+    } catch (ex: Exception) {
+        null
+    }
+}

@@ -26,16 +26,29 @@ class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAda
 
     private val log: Logger = loggerFor<VaultRepository<TState>>()
 
-    fun getPagedItems(pageNumber: Int = 1, pageSize: Int = 50): Iterable<StateAndRef<TState>> {
-        return vaultAdapter.vaultQueryBy(paging = PageSpecification(pageNumber, pageSize)).states
+    fun getPagedItems(
+            pageNumber: Int = 1,
+            pageSize: Int = 50,
+            status: Vault.StateStatus = Vault.StateStatus.UNCONSUMED): Iterable<StateAndRef<TState>> {
+
+        val criteria = QueryCriteria.VaultQueryCriteria(status = status)
+
+        return vaultAdapter.vaultQueryBy(
+                paging = PageSpecification(pageNumber, pageSize),
+                criteria = criteria
+        ).states
     }
 
     fun getCount(): Int {
-        return vaultAdapter.vaultQueryBy(paging = MAX_PAGING).statesMetadata.size
+        return vaultAdapter.vaultQueryBy(
+                paging = MAX_PAGING
+        ).statesMetadata.size
     }
 
     fun getLatestHash(): String {
-        return vaultAdapter.vaultQueryBy(paging = MAX_PAGING).states.last().ref.txhash.toString()
+        return vaultAdapter.vaultQueryBy(
+                paging = MAX_PAGING
+        ).states.last().ref.txhash.toString()
     }
 
     fun findByExternalId(
@@ -45,14 +58,17 @@ class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAda
         val trimmedExternalId = externalId.trim()
 
         if (trimmedExternalId.isEmpty()) {
-            throw IllegalArgumentException("externalId is required to query a purchase order state.")
+            throw IllegalArgumentException("externalId is required to query the vault.")
         }
 
         val criteria = QueryCriteria.LinearStateQueryCriteria(
                 externalId = listOf(trimmedExternalId),
-                status = status)
+                status = status
+        )
 
-        return vaultAdapter.vaultQueryBy(criteria = criteria).states
+        return vaultAdapter.vaultQueryBy(
+                criteria = criteria
+        ).states
     }
 
     fun observe(handler: (VaultRepository<TState>, StateAndRef<TState>) -> Unit) {

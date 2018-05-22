@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Spring Client (Receiver)" type="JetRunConfigurationType" factoryName="Kotlin">
-    <module name="tradeix-concord-client-spring-receiver" />
+  <configuration default="false" name="Run Supplier CorDapp" type="JetRunConfigurationType" factoryName="Kotlin">
+    <module name="tradeix-concord-cordapp-supplier" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.client.spring.receiver.Application" />
+    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.supplier.Application" />
     <option name="WORKING_DIRECTORY" value="" />
     <method />
   </configuration>

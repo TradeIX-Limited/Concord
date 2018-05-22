@@ -72,9 +72,13 @@ class VerbalAmountTests(private val candidate: BigDecimal, private val expected:
 
     @Test
     fun `BigDecimal should produce the correct verbal amount`() {
+        // Arrange
         val systemUnderTest = VerbalAmount(candidate)
+
+        // Act
         val actual = systemUnderTest.getVerbalAmountString()
 
+        // Assert
         assertEquals(expected, actual)
     }
 }
