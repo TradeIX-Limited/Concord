@@ -1,17 +1,17 @@
 package com.tradeix.concord.cordapp.funder.flows
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.cordapp.flows.invoices.InvoiceIssuanceAcceptorFlow
-import com.tradeix.concord.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.shared.cordapp.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import net.corda.core.contracts.requireThat
+import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.FlowSession
 import net.corda.core.flows.InitiatedBy
 import net.corda.core.flows.SignTransactionFlow
 import net.corda.core.transactions.SignedTransaction
 
 @InitiatedBy(InvoiceIssuanceInitiatorFlow::class)
-class InvoiceIssuanceAcceptorFlow(flowSession: FlowSession) : InvoiceIssuanceAcceptorFlow(flowSession) {
+class InvoiceIssuanceAcceptorFlow(private val flowSession: FlowSession) : FlowLogic<SignedTransaction>() {
 
     @Suspendable
     override fun call(): SignedTransaction {

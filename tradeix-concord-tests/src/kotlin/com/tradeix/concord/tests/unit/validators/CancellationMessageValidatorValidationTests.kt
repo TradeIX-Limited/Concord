@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators
 
-import com.tradeix.concord.shared.validators.CancellationMessageValidator
+import com.tradeix.concord.shared.validators.CancellationRequestMessageValidator
 import com.tradeix.concord.tests.utils.TestMessages.INVOICE_CANCELLATION_REQUEST_MESSAGE
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ class CancellationMessageValidatorValidationTests {
 
     @Test
     fun `CancellationMessageValidator produces the expected validation messages`() {
-        val validator = CancellationMessageValidator()
+        val validator = CancellationRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank."
         )
@@ -27,7 +27,7 @@ class CancellationMessageValidatorValidationTests {
     @Test
     fun `CancellationMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = INVOICE_CANCELLATION_REQUEST_MESSAGE
-        val validator = CancellationMessageValidator()
+        val validator = CancellationRequestMessageValidator()
         validator.validate(message)
     }
 }

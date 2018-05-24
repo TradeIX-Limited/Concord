@@ -1,15 +1,15 @@
 package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.shared.cordapp.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.data.AttachmentRepository
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.Mapper
-import com.tradeix.concord.shared.messages.invoices.InvoiceIssuanceRequestMessage
-import com.tradeix.concord.shared.validators.InvoiceMessageValidator
+import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.crypto.SecureHash
 import net.corda.core.flows.CollectSignaturesFlow
@@ -21,18 +21,18 @@ import net.corda.core.transactions.TransactionBuilder
 
 @InitiatingFlow
 @StartableByRPC
-class InvoiceIssuanceInitiatorFlow(message: InvoiceIssuanceRequestMessage) : InvoiceIssuanceInitiatorFlow(message) {
+class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssuanceInitiatorFlow(message) {
 
     override val progressTracker = getDefaultProgressTracker()
 
     @Suspendable
     override fun call(): SignedTransaction {
 
-        InvoiceMessageValidator().validate(message)
+        InvoiceRequestMessageValidator().validate(message)
 
         val attachmentRepository = AttachmentRepository.fromServiceHub(serviceHub)
 
-        val invoiceOutputState = Mapper.map<InvoiceIssuanceRequestMessage, InvoiceState>(message, serviceHub)
+        val invoiceOutputState = Mapper.map<InvoiceRequestMessage, InvoiceState>("issuance", message, serviceHub)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep

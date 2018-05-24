@@ -1,9 +1,9 @@
 package com.tradeix.concord.tests.utils
 
-import com.tradeix.concord.shared.messages.invoices.InvoiceCancellationRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceIssuanceRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceOwnershipRequestMessage
-import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderIssuanceRequestMessage
+import com.tradeix.concord.shared.messages.CancellationRequestMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipRequestMessage
+import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderRequestMessage
 import com.tradeix.concord.tests.utils.TestInstants.INSTANT_FUTURE_1
 import com.tradeix.concord.tests.utils.TestInstants.INSTANT_PAST_1
 import com.tradeix.concord.tests.utils.TestInstants.INSTANT_PAST_2
@@ -12,16 +12,16 @@ import java.math.BigDecimal
 
 object TestMessages {
 
-    val INVOICE_CANCELLATION_REQUEST_MESSAGE = InvoiceCancellationRequestMessage(
+    val INVOICE_CANCELLATION_REQUEST_MESSAGE = CancellationRequestMessage(
             externalId = "EXTERNAL_ID"
     )
 
-    val INVOICE_OWNERSHIP_REQUEST_MESSAGE = InvoiceOwnershipRequestMessage(
+    val INVOICE_OWNERSHIP_REQUEST_MESSAGE = OwnershipRequestMessage(
             externalId = "EXTERNAL_ID",
             owner = "O=TradeIX Test Funder 1, L=London, C=GB"
     )
 
-    val INVOICE_ISSUANCE_REQUEST_MESSAGE = InvoiceIssuanceRequestMessage(
+    val INVOICE_ISSUANCE_REQUEST_MESSAGE = InvoiceRequestMessage(
             externalId = "INV_EXTERNAL_ID",
             attachmentId = "485157181EF8D087C3117F5F68E2DD21DCF318B277AE571AF6D6ACBF433DACF3",
             buyer = "O=TradeIX Test Buyer 1, L=London, C=GB",
@@ -61,7 +61,7 @@ object TestMessages {
             composerProgramId = 1
     )
 
-    val PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE = PurchaseOrderIssuanceRequestMessage(
+    val PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE = PurchaseOrderRequestMessage(
             externalId = "PO_EXTERNAL_ID",
             attachmentId = "8E2A8777D0B5F0A70CFEBEFA218C65B61289150C6F5472F9C060BA46E960F667",
             buyer = "O=TradeIX Test Buyer 1, L=London, C=GB",

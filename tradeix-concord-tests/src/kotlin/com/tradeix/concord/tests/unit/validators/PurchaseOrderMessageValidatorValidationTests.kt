@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators
 
-import com.tradeix.concord.shared.validators.PurchaseOrderMessageValidator
+import com.tradeix.concord.shared.validators.PurchaseOrderRequestMessageValidator
 import com.tradeix.concord.tests.utils.TestMessages
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ class PurchaseOrderMessageValidatorValidationTests {
 
     @Test
     fun `PurchaseOrderMessageValidator produces the expected validation messages`() {
-        val validator = PurchaseOrderMessageValidator()
+        val validator = PurchaseOrderRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'attachmentId' must be a valid secure hash.",
@@ -43,7 +43,7 @@ class PurchaseOrderMessageValidatorValidationTests {
     @Test
     fun `PurchaseOrderMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = TestMessages.PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE
-        val validator = PurchaseOrderMessageValidator()
+        val validator = PurchaseOrderRequestMessageValidator()
         validator.validate(message)
     }
 }
