@@ -1,9 +1,11 @@
 package com.tradeix.concord.shared.messages.invoices
 
 import com.tradeix.concord.shared.messagecontracts.InvoiceMessage
+import net.corda.core.serialization.CordaSerializable
 import java.math.BigDecimal
 import java.time.Instant
 
+@CordaSerializable
 data class InvoiceAmendmentRequestMessage(
         override val externalId: String? = null,
         override val attachmentId: String? = null,

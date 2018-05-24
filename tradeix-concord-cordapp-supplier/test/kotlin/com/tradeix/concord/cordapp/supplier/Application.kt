@@ -10,11 +10,15 @@ class Application {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            driver(DriverParameters(isDebug = true, waitForAllNodesToFinish = true)) {
-                startWebserver(startNode(
+            driver(DriverParameters(
+                    isDebug = true,
+                    waitForAllNodesToFinish = true)) {
+
+                // Start the test supplier node
+                startNode(
                         providedName = CordaX500Name("TradeIX Test Supplier 1", "New York", "US"),
                         rpcUsers = listOf(User("rpc_supplier", "rpc_password_123", permissions = setOf("ALL")))
-                ).getOrThrow())
+                ).getOrThrow()
             }
         }
     }

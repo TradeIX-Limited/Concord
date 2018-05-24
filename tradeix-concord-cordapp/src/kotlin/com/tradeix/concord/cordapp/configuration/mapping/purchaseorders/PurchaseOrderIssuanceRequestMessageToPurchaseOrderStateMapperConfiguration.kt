@@ -20,7 +20,7 @@ class PurchaseOrderIssuanceRequestMessageToPurchaseOrderStateMapperConfiguration
         val repository = VaultRepository.fromServiceHub<PurchaseOrderState>(serviceHub)
 
         val state = repository
-                .findByExternalId(source.externalId!!, Vault.StateStatus.UNCONSUMED)
+                .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
         if(state != null) {

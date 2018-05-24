@@ -10,15 +10,15 @@ object ResponseBuilder {
         return ResponseEntity.ok(entity)
     }
 
-    fun badRequest(errorMessage: String): ResponseEntity<ErrorResponseMessage> {
+    fun badRequest(errorMessage: String?): ResponseEntity<ErrorResponseMessage> {
         return ResponseEntity
                 .status(HttpStatus.BAD_GATEWAY)
-                .body(ErrorResponseMessage(errorMessage))
+                .body(ErrorResponseMessage(errorMessage ?: "Bad request."))
     }
 
     fun internalServerError(errorMessage: String?): ResponseEntity<ErrorResponseMessage> {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponseMessage(errorMessage ?: "Unknown internal server error."))
+                .body(ErrorResponseMessage(errorMessage ?: "Internal server error."))
     }
 }

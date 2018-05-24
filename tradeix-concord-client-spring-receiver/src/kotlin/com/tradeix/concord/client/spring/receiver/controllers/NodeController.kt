@@ -1,6 +1,7 @@
 package com.tradeix.concord.client.spring.receiver.controllers
 
 import com.tradeix.concord.client.spring.receiver.ResponseBuilder
+import com.tradeix.concord.client.spring.receiver.RPCProxy
 import com.tradeix.concord.shared.messages.nodes.NodeResponseMessage
 import com.tradeix.concord.shared.messages.nodes.NodesResponseMessage
 import org.springframework.http.MediaType
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(path = arrayOf("/nodes"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-class NodeController : Controller() {
+class NodeController {
+
+    private val proxy = RPCProxy.proxy
 
     companion object {
         private val KNOWN_NETWORK_NAMES = listOf<String>()

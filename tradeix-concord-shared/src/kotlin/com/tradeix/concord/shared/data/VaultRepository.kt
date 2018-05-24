@@ -53,6 +53,8 @@ class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAda
 
     fun findByExternalId(
             externalId: String,
+            pageNumber: Int = 1,
+            pageSize: Int = 50,
             status: Vault.StateStatus = Vault.StateStatus.ALL): Iterable<StateAndRef<TState>> {
 
         val trimmedExternalId = externalId.trim()
@@ -67,7 +69,8 @@ class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAda
         )
 
         return vaultAdapter.vaultQueryBy(
-                criteria = criteria
+                criteria = criteria,
+                paging = PageSpecification(pageNumber, pageSize)
         ).states
     }
 

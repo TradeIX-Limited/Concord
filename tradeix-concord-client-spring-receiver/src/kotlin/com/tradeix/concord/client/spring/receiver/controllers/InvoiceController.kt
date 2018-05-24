@@ -1,6 +1,7 @@
 package com.tradeix.concord.client.spring.receiver.controllers
 
 import com.tradeix.concord.client.spring.receiver.ResponseBuilder
+import com.tradeix.concord.client.spring.receiver.RPCProxy
 import com.tradeix.concord.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
@@ -14,77 +15,61 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(path = arrayOf("/invoices"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-class InvoiceController : Controller() {
+class InvoiceController {
 
+    private val proxy = RPCProxy.proxy
     private val repository = VaultRepository.fromCordaRPCOps<InvoiceState>(proxy)
 
-    @GetMapping(path = arrayOf("/all"))
-    fun getAllInvoiceStatesById(
-            @RequestParam(name = "externalId") externalId: String): ResponseEntity<*> {
+    @GetMapping()
+    fun getInvoiceStates(
+            @RequestParam(
+                    name = "externalId",
+                    required = false
+            ) externalId: String?,
+
+            @RequestParam(
+                    name = "status",
+                    required = false,
+                    defaultValue = "unconsumed"
+            ) status: String,
+
+            @RequestParam(
+                    name = "pageNumber",
+                    required = false,
+                    defaultValue = "1"
+            ) pageNumber: Int,
+
+            @RequestParam(
+                    name = "pageSize",
+                    required = false,
+                    defaultValue = "50"
+            ) pageSize: Int): ResponseEntity<*> {
 
         return try {
-            ResponseBuilder.ok(repository.findByExternalId(externalId, Vault.StateStatus.ALL))
+            val stateStatus = Vault.StateStatus.valueOf(status.toUpperCase())
+
+            if (externalId.isNullOrBlank()) {
+                ResponseBuilder.ok(repository.getPagedItems(pageNumber, pageSize, stateStatus))
+            } else {
+                ResponseBuilder.ok(repository.findByExternalId(externalId!!, pageNumber, pageSize, stateStatus))
+            }
         } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+            when (ex) {
+                is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
+                else -> ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 
-    @GetMapping(path = arrayOf("/all"))
-    fun getAllInvoiceStates(
-            @RequestParam(name = "pageNumber", defaultValue = "1") pageNumber: Int,
-            @RequestParam(name = "pageSize", defaultValue = "50") pageSize: Int): ResponseEntity<*> {
-
+    @GetMapping(path = arrayOf("{externalId}"))
+    fun getUnconsumedInvoiceStateByExternalId(@PathVariable externalId: String): ResponseEntity<*> {
         return try {
-            ResponseBuilder.ok(repository.getPagedItems(pageNumber, pageSize, Vault.StateStatus.ALL))
+            ResponseBuilder.ok(repository.findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED).single())
         } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
-        }
-    }
-
-    @GetMapping(path = arrayOf("/consumed"))
-    fun getConsumedInvoiceStatesById(
-            @RequestParam(name = "externalId") externalId: String): ResponseEntity<*> {
-
-        return try {
-            ResponseBuilder.ok(repository.findByExternalId(externalId, Vault.StateStatus.CONSUMED))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
-        }
-    }
-
-    @GetMapping(path = arrayOf("/consumed"))
-    fun getConsumedInvoiceStates(
-            @RequestParam(name = "pageNumber", defaultValue = "1") pageNumber: Int,
-            @RequestParam(name = "pageSize", defaultValue = "50") pageSize: Int): ResponseEntity<*> {
-
-        return try {
-            ResponseBuilder.ok(repository.getPagedItems(pageNumber, pageSize, Vault.StateStatus.CONSUMED))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
-        }
-    }
-
-    @GetMapping(path = arrayOf("/unconsumed"))
-    fun getUnconsumedInvoiceStatesById(
-            @RequestParam(name = "externalId") externalId: String): ResponseEntity<*> {
-
-        return try {
-            ResponseBuilder.ok(repository.findByExternalId(externalId, Vault.StateStatus.UNCONSUMED))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
-        }
-    }
-
-
-    @GetMapping(path = arrayOf("/unconsumed"))
-    fun getUnconsumedInvoiceStates(
-            @RequestParam(name = "pageNumber", defaultValue = "1") pageNumber: Int,
-            @RequestParam(name = "pageSize", defaultValue = "50") pageSize: Int): ResponseEntity<*> {
-
-        return try {
-            ResponseBuilder.ok(repository.getPagedItems(pageNumber, pageSize))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+            when (ex) {
+                is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
+                else -> ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 

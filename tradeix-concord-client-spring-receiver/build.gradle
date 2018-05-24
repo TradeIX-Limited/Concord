@@ -21,7 +21,11 @@ apply plugin: 'net.corda.plugins.cordapp'
 //}
 
 repositories {
+    mavenLocal()
     jcenter()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
 }
 
 sourceSets {
@@ -36,6 +40,8 @@ sourceSets {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile "org.apache.activemq:artemis-commons:2.0.0"
+    compile "org.apache.activemq:artemis-core-client:2.0.0"
 
     compile project(":tradeix-concord-shared")
     compile project(":tradeix-concord-cordapp")
