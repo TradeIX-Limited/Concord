@@ -4,7 +4,7 @@ import com.tradeix.concord.shared.domain.models.Address
 import com.tradeix.concord.shared.domain.models.VerbalAmount
 import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 data class PromissoryNoteState(
@@ -15,8 +15,8 @@ data class PromissoryNoteState(
         val guarantor: AbstractParty,
         val amount: Amount<Currency>,
         val placeOfIssue: Address,
-        val dateOfIssue: Instant,
-        val dateOfMaturity: Instant
+        val dateOfIssue: LocalDateTime,
+        val dateOfMaturity: LocalDateTime
 ) : LinearState, OwnableState {
 
     override val participants: List<AbstractParty> get() = listOf(owner, obligor, obligee, guarantor)

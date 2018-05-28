@@ -2,8 +2,6 @@ package com.tradeix.concord.shared.extensions
 
 import net.corda.core.identity.CordaX500Name
 
-val CordaX500Name.Companion.defaultConductor get() = CordaX500Name("TradeIX", "London", "GB")
-
 fun CordaX500Name.Companion.isParsable(name: String?): Boolean {
     return if (name == null) {
         false

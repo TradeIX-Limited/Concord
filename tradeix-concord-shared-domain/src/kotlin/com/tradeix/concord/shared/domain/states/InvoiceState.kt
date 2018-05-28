@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.domain.states
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 data class InvoiceState(
@@ -11,33 +11,32 @@ data class InvoiceState(
         override val owner: AbstractParty,
         val buyer: AbstractParty?,
         val supplier: AbstractParty,
-        val conductor: AbstractParty,
         val invoiceVersion: String,
-        val invoiceVersionDate: Instant,
+        val invoiceVersionDate: LocalDateTime,
         val tixInvoiceVersion: Int,                             // TODO : Necessary?
         val invoiceNumber: String,
         val invoiceType: String,                                // TODO : Make enum?
         val reference: String,
-        val dueDate: Instant,
+        val dueDate: LocalDateTime,
         val offerId: Int?,                                      // TODO : Necessary?
         val amount: Amount<Currency>,
         val totalOutstanding: Amount<Currency>,
-        val created: Instant,
-        val updated: Instant,
-        val expectedSettlementDate: Instant,
-        val settlementDate: Instant?,
-        val mandatoryReconciliationDate: Instant?,
-        val invoiceDate: Instant,
+        val created: LocalDateTime,
+        val updated: LocalDateTime,
+        val expectedSettlementDate: LocalDateTime,
+        val settlementDate: LocalDateTime?,
+        val mandatoryReconciliationDate: LocalDateTime?,
+        val invoiceDate: LocalDateTime,
         val status: String,                                     // TODO : Make enum?
         val rejectionReason: String?,
         val eligibleValue: Amount<Currency>,
         val invoicePurchaseValue: Amount<Currency>,
-        val tradeDate: Instant?,
-        val tradePaymentDate: Instant?,
+        val tradeDate: LocalDateTime?,
+        val tradePaymentDate: LocalDateTime?,
         val invoicePayments: Amount<Currency>,
         val invoiceDilutions: Amount<Currency>,
         val cancelled: Boolean,
-        val closeDate: Instant?,
+        val closeDate: LocalDateTime?,
         val originationNetwork: String,                         // TODO : Necessary?
         val currency: Currency,                                 // TODO : Necessary?
         val siteId: String,                                     // TODO : Necessary?
@@ -49,9 +48,9 @@ data class InvoiceState(
     override val participants: List<AbstractParty>
         get() {
             return if (buyer != null) {
-                listOf(owner, buyer, supplier, conductor)
+                listOf(owner, buyer, supplier)
             } else {
-                listOf(owner, supplier, conductor)
+                listOf(owner, supplier)
             }
         }
 

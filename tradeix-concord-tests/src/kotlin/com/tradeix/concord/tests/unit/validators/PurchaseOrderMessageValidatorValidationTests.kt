@@ -17,7 +17,6 @@ class PurchaseOrderMessageValidatorValidationTests {
                 "Property 'buyer' must be a valid X500 name.",
                 "Property 'supplier' must not be null, empty or blank.",
                 "Property 'supplier' must be a valid X500 name.",
-                "Property 'conductor' must be a valid X500 name.",
                 "Property 'reference' must not be null, empty or blank.",
                 "Property 'value' must not be null.",
                 "Property 'value' must be greater than the specified value.",

@@ -12,19 +12,11 @@ class InvoiceRequestMessageValidator : ObjectModelValidator<InvoiceRequestMessag
                 .isNotNullEmptyOrBlank()
 
         validationBuilder
-                .property(InvoiceRequestMessage::attachmentId)
-                .isValidSecureHash()
-
-        validationBuilder
                 .property(InvoiceRequestMessage::buyer)
                 .isValidCordaX500Name()
 
         validationBuilder
                 .property(InvoiceRequestMessage::supplier)
-                .isValidCordaX500Name()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::conductor)
                 .isValidCordaX500Name()
 
         validationBuilder

@@ -133,27 +133,4 @@ class InvoiceAmendmentContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On invoice amendment all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            InvoiceContract.Commands.Amend()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

@@ -4,10 +4,10 @@ import com.tradeix.concord.shared.messages.CancellationRequestMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipRequestMessage
 import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderRequestMessage
-import com.tradeix.concord.tests.utils.TestInstants.INSTANT_FUTURE_1
-import com.tradeix.concord.tests.utils.TestInstants.INSTANT_PAST_1
-import com.tradeix.concord.tests.utils.TestInstants.INSTANT_PAST_2
-import com.tradeix.concord.tests.utils.TestInstants.INSTANT_PAST_3
+import com.tradeix.concord.tests.utils.TestLocalDateTimes.LOCAL_DATE_TIME_FUTURE_1
+import com.tradeix.concord.tests.utils.TestLocalDateTimes.LOCAL_DATE_TIME_PAST_1
+import com.tradeix.concord.tests.utils.TestLocalDateTimes.LOCAL_DATE_TIME_PAST_2
+import com.tradeix.concord.tests.utils.TestLocalDateTimes.LOCAL_DATE_TIME_PAST_3
 import java.math.BigDecimal
 
 object TestMessages {
@@ -23,26 +23,24 @@ object TestMessages {
 
     val INVOICE_ISSUANCE_REQUEST_MESSAGE = InvoiceRequestMessage(
             externalId = "INV_EXTERNAL_ID",
-            attachmentId = "485157181EF8D087C3117F5F68E2DD21DCF318B277AE571AF6D6ACBF433DACF3",
             buyer = "O=TradeIX Test Buyer 1, L=London, C=GB",
             supplier = "O=TradeIX Test Supplier 1, L=London, C=GB",
-            conductor = "O=TradeIX Test Conductor 1, L=London, C=GB",
             invoiceVersion = "INV_VER_001",
-            invoiceVersionDate = INSTANT_PAST_1,
+            invoiceVersionDate = LOCAL_DATE_TIME_PAST_1,
             tixInvoiceVersion = 1,
             invoiceNumber = "INV_NUM_001",
             invoiceType = "INVOICE_TYPE",
             reference = "INVOICE_REFERENCE",
-            dueDate = INSTANT_FUTURE_1,
+            dueDate = LOCAL_DATE_TIME_FUTURE_1,
             offerId = null,
             amount = BigDecimal.TEN,
             totalOutstanding = BigDecimal.TEN,
-            created = INSTANT_PAST_1,
-            updated = INSTANT_PAST_1,
-            expectedSettlementDate = INSTANT_PAST_1,
+            created = LOCAL_DATE_TIME_PAST_1,
+            updated = LOCAL_DATE_TIME_PAST_1,
+            expectedSettlementDate = LOCAL_DATE_TIME_PAST_1,
             settlementDate = null,
             mandatoryReconciliationDate = null,
-            invoiceDate = INSTANT_PAST_1,
+            invoiceDate = LOCAL_DATE_TIME_PAST_1,
             status = "INVOICE_STATUS",
             rejectionReason = null,
             eligibleValue = BigDecimal.TEN,
@@ -66,13 +64,12 @@ object TestMessages {
             attachmentId = "8E2A8777D0B5F0A70CFEBEFA218C65B61289150C6F5472F9C060BA46E960F667",
             buyer = "O=TradeIX Test Buyer 1, L=London, C=GB",
             supplier = "O=TradeIX Test Supplier 1, L=London, C=GB",
-            conductor = "O=TradeIX Test Conductor 1, L=London, C=GB",
             reference = "PURCHASE_ORDER_REFERENCE",
             value = BigDecimal.TEN,
             currency = "GBP",
-            created = INSTANT_PAST_1,
-            earliestShipment = INSTANT_PAST_2,
-            latestShipment = INSTANT_PAST_3,
+            created = LOCAL_DATE_TIME_PAST_1,
+            earliestShipment = LOCAL_DATE_TIME_PAST_2,
+            latestShipment = LOCAL_DATE_TIME_PAST_3,
             portOfShipment = "PORT OF SHIPMENT",
             descriptionOfGoods = "DESCRIPTION OF GOODS",
             deliveryTerms = "DELIVERY TERMS"

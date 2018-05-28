@@ -156,27 +156,4 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On purchase order ownership change all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    input(
-                            PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE
-                    )
-                    output(
-                            PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE.copy(owner = SUPPLIER_1.party)
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

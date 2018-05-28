@@ -5,6 +5,7 @@ import com.tradeix.concord.shared.client.rpc.RPCProxy
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
+import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validation.ValidationException
@@ -51,7 +52,11 @@ class InvoiceController {
             val stateStatus = Vault.StateStatus.valueOf(status.toUpperCase())
 
             if (externalId.isNullOrBlank()) {
-                ResponseBuilder.ok(repository.getPagedItems(pageNumber, pageSize, stateStatus))
+                ResponseBuilder.ok(
+                        repository
+                                .getPagedItems(pageNumber, pageSize, stateStatus)
+                                .map { Mapper.map<InvoiceState, InvoiceRequestMessage>("response", it.state.data) }
+                )
             } else {
                 ResponseBuilder.ok(repository.findByExternalId(externalId!!, pageNumber, pageSize, stateStatus))
             }
@@ -94,10 +99,11 @@ class InvoiceController {
     }
 
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun issueInvoice(message: InvoiceRequestMessage): ResponseEntity<*> {
+    fun issueInvoice(@RequestBody message: InvoiceRequestMessage): ResponseEntity<*> {
         return try {
-            val flowHandle = proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
-            val result = flowHandle.returnValue.getOrThrow()
+            val future = proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
+            future.progress.subscribe { println(it) }
+            val result = future.returnValue.getOrThrow()
             ResponseBuilder.ok(TransactionResponseMessage(message.externalId!!, result.id.toString()))
         } catch (ex: Exception) {
             when (ex) {

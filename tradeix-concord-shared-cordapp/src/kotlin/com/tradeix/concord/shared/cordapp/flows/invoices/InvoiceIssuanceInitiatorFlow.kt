@@ -1,4 +1,4 @@
-package com.tradeix.concord.shared.cordapp.invoices
+package com.tradeix.concord.shared.cordapp.flows.invoices
 
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import net.corda.core.flows.FlowLogic

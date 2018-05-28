@@ -113,23 +113,4 @@ class InvoiceIssuanceContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On invoice issuance all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            InvoiceContract.Commands.Issue()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

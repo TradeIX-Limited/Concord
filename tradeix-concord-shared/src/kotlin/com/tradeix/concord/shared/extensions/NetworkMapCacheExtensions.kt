@@ -18,14 +18,6 @@ fun NetworkMapCache.getPartyFromLegalNameOrThrow(cordaX500Name: CordaX500Name?):
             ?: throw FlowException("$EX_FAILED_TO_GET_PARTY '$cordaX500Name'.")
 }
 
-fun NetworkMapCache.getPartyFromLegalNameOrDefault(
-        cordaX500Name: CordaX500Name?,
-        defaultCordaX500Name: CordaX500Name) : Party {
-
-    return this.getPeerByLegalName(cordaX500Name ?: defaultCordaX500Name)
-            ?: throw FlowException("$EX_FAILED_TO_GET_PARTY '$cordaX500Name'.")
-}
-
 fun NetworkMapCache.getPartyFromLegalNameOrNull(cordaX500Name: CordaX500Name?): Party? {
     return if (cordaX500Name != null) {
         this.getPeerByLegalName(cordaX500Name)

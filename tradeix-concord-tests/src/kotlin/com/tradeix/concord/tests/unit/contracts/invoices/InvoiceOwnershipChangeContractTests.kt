@@ -133,27 +133,4 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On invoice ownership change all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            InvoiceContract.Commands.ChangeOwner()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

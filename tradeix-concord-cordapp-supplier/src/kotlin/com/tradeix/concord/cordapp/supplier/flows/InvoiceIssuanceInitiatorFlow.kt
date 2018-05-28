@@ -1,8 +1,8 @@
 package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.shared.cordapp.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.shared.data.AttachmentRepository
+import com.tradeix.concord.shared.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.shared.cordapp.mapping.registerInvoiceMappers
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
@@ -11,7 +11,6 @@ import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
 import net.corda.core.contracts.Command
-import net.corda.core.crypto.SecureHash
 import net.corda.core.flows.CollectSignaturesFlow
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.InitiatingFlow
@@ -30,9 +29,9 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
 
         InvoiceRequestMessageValidator().validate(message)
 
-        val attachmentRepository = AttachmentRepository.fromServiceHub(serviceHub)
-
-        val invoiceOutputState = Mapper.map<InvoiceRequestMessage, InvoiceState>("issuance", message, serviceHub)
+        // TODO : review logic here, this is configuration and shouldn't be in the flow...
+        Mapper.registerInvoiceMappers()
+        val invoiceOutputState: InvoiceState = Mapper.map("issuance", message, serviceHub)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
@@ -40,11 +39,6 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
         val transactionBuilder = TransactionBuilder(serviceHub.networkMapCache.getNotaryParty())
                 .addOutputState(invoiceOutputState, INVOICE_CONTRACT_ID)
                 .addCommand(command)
-
-        val attachmentId = SecureHash.tryParse(message.attachmentId)
-        if (attachmentId != null && !attachmentRepository.hasAttachment(attachmentId)) {
-            transactionBuilder.addAttachment(attachmentId)
-        }
 
         // Step 2 - Validate Unsigned Transaction
         progressTracker.currentStep = ValidatingTransactionStep

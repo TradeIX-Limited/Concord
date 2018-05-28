@@ -13,10 +13,8 @@ class InvoiceRequestMessageValidatorValidationTests {
         val validator = InvoiceRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
-                "Property 'attachmentId' must be a valid secure hash.",
                 "Property 'buyer' must be a valid X500 name.",
                 "Property 'supplier' must be a valid X500 name.",
-                "Property 'conductor' must be a valid X500 name.",
                 "Property 'invoiceVersion' must not be null, empty or blank.",
                 "Property 'invoiceVersionDate' must not be null.",
                 "Property 'tixInvoiceVersion' must not be null.",

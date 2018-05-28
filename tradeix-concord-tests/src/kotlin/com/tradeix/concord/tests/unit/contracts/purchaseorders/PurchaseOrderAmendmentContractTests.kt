@@ -179,27 +179,4 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On purchase order amendment all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    input(
-                            PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE
-                    )
-                    output(
-                            PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

@@ -25,10 +25,6 @@ class PurchaseOrderRequestMessageValidator : ObjectModelValidator<PurchaseOrderR
                 .isValidCordaX500Name()
 
         validationBuilder
-                .property(PurchaseOrderRequestMessage::conductor)
-                .isValidCordaX500Name()
-
-        validationBuilder
                 .property(PurchaseOrderRequestMessage::reference)
                 .isNotNullEmptyOrBlank()
 

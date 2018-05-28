@@ -113,23 +113,4 @@ class InvoiceCancellationContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On invoice cancellation all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Cancel.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            InvoiceContract.Commands.Cancel()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

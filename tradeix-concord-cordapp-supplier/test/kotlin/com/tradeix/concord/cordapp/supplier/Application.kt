@@ -10,9 +10,14 @@ class Application {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            driver(DriverParameters(
+
+            val parameters = DriverParameters(
                     isDebug = true,
-                    waitForAllNodesToFinish = true)) {
+                    waitForAllNodesToFinish = true,
+                    extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain")
+            )
+
+            driver(parameters) {
 
                 // Start the test supplier node
                 startNode(

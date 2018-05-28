@@ -151,23 +151,4 @@ class PurchaseOrderIssuanceContractTests : ContractTest() {
             }
         }
     }
-
-    @Test
-    fun `On purchase order issuance all participants must sign the transaction (conductor must sign)`() {
-        services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
-                transaction {
-                    output(
-                            PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE
-                    )
-                    command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey),
-                            PurchaseOrderContract.Commands.Issue()
-                    )
-                    verifies()
-                }
-            }
-        }
-    }
 }

@@ -24,9 +24,9 @@ sourceSets {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
-    compile project(":tradeix-concord-shared")
-    compile project(":tradeix-concord-shared-domain")
-    compile project(":tradeix-concord-shared-cordapp")
+    cordapp project(":tradeix-concord-shared")
+    cordapp project(":tradeix-concord-shared-domain")
+    cordapp project(":tradeix-concord-shared-cordapp")
 
     cordaCompile "net.corda:corda-rpc:$corda_release_version"
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"

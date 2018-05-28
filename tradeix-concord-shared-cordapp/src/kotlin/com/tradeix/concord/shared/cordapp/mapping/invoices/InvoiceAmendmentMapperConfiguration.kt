@@ -2,8 +2,12 @@ package com.tradeix.concord.shared.cordapp.mapping.invoices
 
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.extensions.*
+import com.tradeix.concord.shared.extensions.fromValueAndCurrency
+import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrMe
+import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrNull
+import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.MapperConfiguration
+import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import net.corda.core.contracts.Amount
 import net.corda.core.flows.FlowException
@@ -13,7 +17,7 @@ import net.corda.core.node.services.Vault
 import java.util.*
 
 class InvoiceAmendmentMapperConfiguration
-    : MapperConfiguration<InvoiceRequestMessage, InvoiceState>() {
+    : ServiceHubMapperConfiguration<InvoiceRequestMessage, InvoiceState>() {
 
     override fun map(source: InvoiceRequestMessage, serviceHub: ServiceHub): InvoiceState {
 
@@ -36,16 +40,10 @@ class InvoiceAmendmentMapperConfiguration
                     CordaX500Name.tryParse(source.supplier)
             )
 
-            val conductor = serviceHub.networkMapCache.getPartyFromLegalNameOrDefault(
-                    CordaX500Name.tryParse(source.conductor),
-                    CordaX500Name.defaultConductor
-            )
-
             return inputState.state.data.copy(
                     owner = supplier,
                     buyer = buyer,
                     supplier = supplier,
-                    conductor = conductor,
                     invoiceVersion = source.invoiceVersion!!,
                     invoiceVersionDate = source.invoiceVersionDate!!,
                     tixInvoiceVersion = source.tixInvoiceVersion!!,
