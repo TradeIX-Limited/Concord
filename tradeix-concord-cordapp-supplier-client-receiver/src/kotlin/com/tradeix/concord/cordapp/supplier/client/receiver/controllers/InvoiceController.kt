@@ -1,7 +1,7 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.supplier.client.receiver.RPCConnection
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.shared.client.rpc.RPCProxy
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(path = arrayOf("/invoices"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-class InvoiceController {
+class InvoiceController(private val rpc: RPCConnection) {
 
-    private val proxy = RPCProxy.proxy
-    private val repository = VaultRepository.fromCordaRPCOps<InvoiceState>(proxy)
+    private val repository = VaultRepository.fromCordaRPCOps<InvoiceState>(rpc.proxy)
 
     @GetMapping()
     fun getInvoiceStates(
@@ -101,7 +100,7 @@ class InvoiceController {
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun issueInvoice(@RequestBody message: InvoiceRequestMessage): ResponseEntity<*> {
         return try {
-            val future = proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
+            val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             ResponseBuilder.ok(TransactionResponseMessage(message.externalId!!, result.id.toString()))

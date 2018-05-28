@@ -74,11 +74,11 @@ class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAda
         ).states
     }
 
-    fun observe(handler: (VaultRepository<TState>, StateAndRef<TState>) -> Unit) {
+    fun observe(func: (StateAndRef<TState>) -> Unit) {
         vaultAdapter.trackBy().updates.toBlocking().subscribe {
             it.produced.forEach {
                 try {
-                    handler(this, it)
+                    func(it)
                 } catch (ex: Exception) {
                     ex.printStackTrace()
                     log.error(ex.message, ex)

@@ -22,7 +22,7 @@ class Application {
                 // Start the test supplier node
                 startNode(
                         providedName = CordaX500Name("TradeIX Test Supplier 1", "New York", "US"),
-                        rpcUsers = listOf(User("rpc_supplier", "rpc_password_123", permissions = setOf("ALL")))
+                        rpcUsers = listOf(User("user1", "test", permissions = setOf("ALL")))
                 ).getOrThrow()
             }
         }
