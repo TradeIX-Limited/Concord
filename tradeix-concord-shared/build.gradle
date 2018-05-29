@@ -13,7 +13,7 @@ repositories {
 }
 
 sourceSets {
-    main.kotlin.srcDirs = ['src/kotlin']
+    main.kotlin.srcDirs = ['src/main/kotlin']
     main.java.srcDirs = []
     main.resources.srcDirs = []
     test.kotlin.srcDirs = []
