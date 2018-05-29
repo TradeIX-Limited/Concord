@@ -15,7 +15,9 @@ class Application {
             val parameters = DriverParameters(
                     isDebug = true,
                     waitForAllNodesToFinish = true,
-                    extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain")
+                    extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain"),
+                    portAllocation = PortAllocation.Incremental(10100),
+                    debugPortAllocation = PortAllocation.Incremental(5106)
             )
 
             driver(parameters) {
