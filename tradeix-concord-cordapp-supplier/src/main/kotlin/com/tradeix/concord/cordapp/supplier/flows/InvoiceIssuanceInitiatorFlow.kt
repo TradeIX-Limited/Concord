@@ -15,6 +15,7 @@ import net.corda.core.flows.CollectSignaturesFlow
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 
@@ -55,6 +56,10 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
                 invoiceOutputState.participants.getFlowSessionsForCounterparties(this),
                 GatheringSignaturesStep.childProgressTracker())
         )
+
+        listOf(serviceHub.networkMapCache
+                .getPartyFromLegalNameOrThrow(CordaX500Name("TradeIX Mock Funder 1", "Madrid", "ES")))
+                .map { initiateFlow(it) }
 
         // Step 5 - Finalize Transaction
         progressTracker.currentStep = FinalizingTransactionStep

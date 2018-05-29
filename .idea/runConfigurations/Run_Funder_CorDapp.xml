@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Funder CorDapp" type="JetRunConfigurationType" factoryName="Kotlin">
+  <configuration default="false" name="Run Funder CorDapp" type="JetRunConfigurationType" factoryName="Kotlin" folderName="Funder">
     <module name="tradeix-concord-cordapp-funder" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="" />

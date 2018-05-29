@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Supplier Client (Responder)" type="JetRunConfigurationType" factoryName="Kotlin">
+  <configuration default="false" name="Run Supplier Client (Responder)" type="JetRunConfigurationType" factoryName="Kotlin" folderName="Supplier">
     <module name="tradeix-concord-cordapp-supplier-client-responder" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="" />
