@@ -1,6 +1,6 @@
-package com.tradeix.concord.cordapp.supplier
+package com.tradeix.concord.cordapp.funder
 
-import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
+import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.PortAllocation
@@ -15,15 +15,14 @@ class Application {
             val parameters = DriverParameters(
                     isDebug = true,
                     waitForAllNodesToFinish = true,
-                    extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain"),
-                    debugPortAllocation = PortAllocation.Incremental(10000)
+                    extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain")
             )
 
             driver(parameters) {
 
-                // Start the test supplier node
+                // Start the test funder node
                 startNode(
-                        providedName = SUPPLIER_1_NAME,
+                        providedName = FUNDER_1_NAME,
                         rpcUsers = listOf(User("user1", "test", permissions = setOf("ALL")))
                 ).getOrThrow()
             }
