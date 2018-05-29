@@ -12,10 +12,6 @@ class PurchaseOrderRequestMessageValidator : ObjectModelValidator<PurchaseOrderR
                 .isNotNullEmptyOrBlank()
 
         validationBuilder
-                .property(PurchaseOrderRequestMessage::attachmentId)
-                .isValidSecureHash()
-
-        validationBuilder
                 .property(PurchaseOrderRequestMessage::buyer)
                 .isValidCordaX500Name()
 

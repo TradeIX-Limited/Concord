@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 @CordaSerializable
 data class PurchaseOrderRequestMessage(
         val externalId: String? = null,
-        val attachmentId: String? = null,
         val buyer: String? = null,
         val supplier: String? = null,
         val reference: String? = null,

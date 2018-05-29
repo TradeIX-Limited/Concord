@@ -1,4 +1,4 @@
-package com.tradeix.concord.shared.serialization
+package com.tradeix.concord.shared.serialization.serializers
 
 import com.google.gson.*
 import net.corda.core.identity.CordaX500Name

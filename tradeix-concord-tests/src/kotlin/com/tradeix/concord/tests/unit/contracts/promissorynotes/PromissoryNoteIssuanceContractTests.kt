@@ -2,11 +2,11 @@ package com.tradeix.concord.tests.unit.contracts.promissorynotes
 
 import com.tradeix.concord.shared.domain.contracts.PromissoryNoteContract
 import com.tradeix.concord.shared.domain.contracts.PromissoryNoteContract.Companion.PROMISSORY_NOTE_CONTRACT_ID
+import com.tradeix.concord.shared.mockdata.MockIdentities.GUARANTOR_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGEE_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGOR_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockStates.PROMISSORY_NOTE_STATE
 import com.tradeix.concord.tests.unit.contracts.ContractTest
-import com.tradeix.concord.tests.utils.TestIdentities.GUARANTOR_1
-import com.tradeix.concord.tests.utils.TestIdentities.OBLIGEE_1
-import com.tradeix.concord.tests.utils.TestIdentities.OBLIGOR_1
-import com.tradeix.concord.tests.utils.TestStates.PROMISSORY_NOTE_STATE
 import net.corda.testing.node.ledger
 import org.junit.Test
 
@@ -22,7 +22,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                 )
                 fails()
                 command(
-                        listOf(OBLIGOR_1.publicKey, OBLIGEE_1.publicKey, GUARANTOR_1.publicKey),
+                        listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
                         PromissoryNoteContract.Commands.Issue()
                 )
                 verifies()
@@ -44,7 +44,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                             PROMISSORY_NOTE_STATE
                     )
                     command(
-                            listOf(OBLIGOR_1.publicKey, OBLIGEE_1.publicKey, GUARANTOR_1.publicKey),
+                            listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
                             PromissoryNoteContract.Commands.Issue()
                     )
                     verifies()
@@ -67,7 +67,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                             PROMISSORY_NOTE_STATE
                     )
                     command(
-                            listOf(OBLIGOR_1.publicKey, OBLIGEE_1.publicKey, GUARANTOR_1.publicKey),
+                            listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
                             PromissoryNoteContract.Commands.Issue()
                     )
                     verifies()
@@ -86,7 +86,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                             PROMISSORY_NOTE_STATE
                     )
                     command(
-                            listOf(OBLIGEE_1.publicKey, GUARANTOR_1.publicKey),
+                            listOf(OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
                             PromissoryNoteContract.Commands.Issue()
                     )
                     verifies()
@@ -105,7 +105,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                             PROMISSORY_NOTE_STATE
                     )
                     command(
-                            listOf(OBLIGOR_1.publicKey, GUARANTOR_1.publicKey),
+                            listOf(OBLIGOR_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
                             PromissoryNoteContract.Commands.Issue()
                     )
                     verifies()
@@ -124,7 +124,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                             PROMISSORY_NOTE_STATE
                     )
                     command(
-                            listOf(OBLIGOR_1.publicKey, OBLIGEE_1.publicKey),
+                            listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey),
                             PromissoryNoteContract.Commands.Issue()
                     )
                     verifies()

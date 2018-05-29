@@ -30,8 +30,9 @@ dependencies {
     testCompile "$corda_release_group:corda-core:$corda_release_version"
 
     testCompile project(":tradeix-concord-shared")
-    testCompile project(":tradeix-concord-shared-domain")
     testCompile project(":tradeix-concord-shared-cordapp")
+    testCompile project(":tradeix-concord-shared-domain")
+    testCompile project(":tradeix-concord-shared-mock-data")
     testCompile project(":tradeix-concord-cordapp-supplier")
     testCompile project(":tradeix-concord-cordapp-funder")
 }

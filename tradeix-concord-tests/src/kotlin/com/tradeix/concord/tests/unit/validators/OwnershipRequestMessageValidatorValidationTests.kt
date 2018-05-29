@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.unit.validators
 
+import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.OwnershipRequestMessageValidator
-import com.tradeix.concord.tests.utils.TestMessages
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -28,7 +28,7 @@ class OwnershipRequestMessageValidatorValidationTests {
 
     @Test
     fun `OwnershipMessageValidator does not throw a ValidationException when the message state is valid`() {
-        val message = TestMessages.INVOICE_OWNERSHIP_REQUEST_MESSAGE
+        val message = INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
         val validator = OwnershipRequestMessageValidator()
         validator.validate(message)
     }

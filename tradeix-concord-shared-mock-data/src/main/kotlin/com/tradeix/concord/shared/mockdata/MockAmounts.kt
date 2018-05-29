@@ -1,10 +1,11 @@
-package com.tradeix.concord.tests.utils
+package com.tradeix.concord.shared.mockdata
 
 import net.corda.core.contracts.Amount
 import java.math.BigDecimal
 import java.util.*
 
-object TestAmounts {
+object MockAmounts {
+
     val ZERO_POUNDS = Amount.fromDecimal(BigDecimal.ZERO, Currency.getInstance("GBP"))
     val ONE_POUNDS = Amount.fromDecimal(BigDecimal.ONE, Currency.getInstance("GBP"))
     val TEN_POUNDS = Amount.fromDecimal(BigDecimal.TEN, Currency.getInstance("GBP"))
@@ -16,4 +17,5 @@ object TestAmounts {
     val ZERO_EUROS = Amount.fromDecimal(BigDecimal.ZERO, Currency.getInstance("EUR"))
     val ONE_EUROS = Amount.fromDecimal(BigDecimal.ONE, Currency.getInstance("EUR"))
     val TEN_EUROS = Amount.fromDecimal(BigDecimal.TEN, Currency.getInstance("EUR"))
+
 }

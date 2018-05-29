@@ -9,3 +9,6 @@ include 'tradeix-concord-cordapp-supplier-client-receiver'
 include 'tradeix-concord-cordapp-supplier-client-responder'
 include 'tradeix-concord-shared-client'
 include 'tradeix-concord-shared-cordapp'
+include 'tradeix-concord-tools-postman'
+include 'tradeix-concord-shared-mock-data'
+

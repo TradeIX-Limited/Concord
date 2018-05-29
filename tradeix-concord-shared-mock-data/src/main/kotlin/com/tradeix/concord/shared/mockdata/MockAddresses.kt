@@ -1,8 +1,8 @@
-package com.tradeix.concord.tests.utils
+package com.tradeix.concord.shared.mockdata
 
 import com.tradeix.concord.shared.domain.models.Address
 
-object TestAddresses {
+object MockAddresses {
 
     val BANK_OF_ENGLAND = Address(
             residenceNameOrNumber = "Bank of England",

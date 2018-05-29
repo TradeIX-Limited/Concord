@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.unit.validators
 
+import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_CANCELLATION_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.CancellationRequestMessageValidator
-import com.tradeix.concord.tests.utils.TestMessages.INVOICE_CANCELLATION_REQUEST_MESSAGE
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

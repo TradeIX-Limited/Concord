@@ -1,8 +1,8 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
 import com.tradeix.concord.cordapp.funder.flows.InvoiceIssuanceAcceptorFlow
+import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_ISSUANCE_REQUEST_MESSAGE
 import com.tradeix.concord.tests.unit.flows.FlowTest
-import com.tradeix.concord.tests.utils.TestMessages.INVOICE_ISSUANCE_REQUEST_MESSAGE
 import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import kotlin.test.assertEquals

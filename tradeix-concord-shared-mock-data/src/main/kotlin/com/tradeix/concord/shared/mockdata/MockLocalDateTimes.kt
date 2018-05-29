@@ -1,8 +1,9 @@
-package com.tradeix.concord.tests.utils
+package com.tradeix.concord.shared.mockdata
 
 import java.time.LocalDateTime
 
-object TestLocalDateTimes {
+object MockLocalDateTimes {
+
     val LOCAL_DATE_TIME_PAST_1 = LocalDateTime.of(2000, 1, 1, 0, 0, 0)
     val LOCAL_DATE_TIME_PAST_2 = LocalDateTime.of(2000, 2, 2, 0, 0, 0)
     val LOCAL_DATE_TIME_PAST_3 = LocalDateTime.of(2000, 3, 3, 0, 0, 0)
@@ -22,4 +23,5 @@ object TestLocalDateTimes {
     val LOCAL_DATE_TIME_FUTURE_7 = LocalDateTime.of(2100, 7, 7, 0, 0, 0)
     val LOCAL_DATE_TIME_FUTURE_8 = LocalDateTime.of(2100, 8, 8, 0, 0, 0)
     val LOCAL_DATE_TIME_FUTURE_9 = LocalDateTime.of(2100, 9, 9, 0, 0, 0)
+
 }

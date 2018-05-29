@@ -2,11 +2,10 @@ package com.tradeix.concord.tests.unit.contracts.purchaseorders
 
 import com.tradeix.concord.shared.domain.contracts.PurchaseOrderContract
 import com.tradeix.concord.shared.domain.contracts.PurchaseOrderContract.Companion.PURCHASE_ORDER_CONTRACT_ID
+import com.tradeix.concord.shared.mockdata.MockIdentities.BUYER_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockStates.PURCHASE_ORDER_STATE
 import com.tradeix.concord.tests.unit.contracts.ContractTest
-import com.tradeix.concord.tests.utils.TestIdentities.BUYER_1
-import com.tradeix.concord.tests.utils.TestIdentities.CONDUCTOR_1
-import com.tradeix.concord.tests.utils.TestIdentities.SUPPLIER_1
-import com.tradeix.concord.tests.utils.TestStates.PURCHASE_ORDER_STATE
 import net.corda.testing.node.ledger
 import org.junit.Test
 
@@ -22,7 +21,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                 )
                 fails()
                 command(
-                        listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey, CONDUCTOR_1.publicKey),
+                        listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
                         PurchaseOrderContract.Commands.Cancel()
                 )
                 verifies()
@@ -44,7 +43,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                             PURCHASE_ORDER_STATE
                     )
                     command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey, CONDUCTOR_1.publicKey),
+                            listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
                             PurchaseOrderContract.Commands.Cancel()
                     )
                     verifies()
@@ -67,7 +66,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                             PURCHASE_ORDER_STATE
                     )
                     command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey, CONDUCTOR_1.publicKey),
+                            listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
                             PurchaseOrderContract.Commands.Cancel()
                     )
                     verifies()
@@ -83,10 +82,10 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
-                            PURCHASE_ORDER_STATE.copy(owner = SUPPLIER_1.party)
+                            PURCHASE_ORDER_STATE.copy(owner = SUPPLIER_1_IDENTITY.party)
                     )
                     command(
-                            listOf(BUYER_1.publicKey, SUPPLIER_1.publicKey, CONDUCTOR_1.publicKey),
+                            listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
                             PurchaseOrderContract.Commands.Cancel()
                     )
                     verifies()
@@ -105,7 +104,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                             PURCHASE_ORDER_STATE
                     )
                     command(
-                            listOf(SUPPLIER_1.publicKey, CONDUCTOR_1.publicKey),
+                            listOf(SUPPLIER_1_IDENTITY.publicKey),
                             PurchaseOrderContract.Commands.Cancel()
                     )
                     verifies()
@@ -124,7 +123,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                             PURCHASE_ORDER_STATE
                     )
                     command(
-                            listOf(BUYER_1.publicKey, CONDUCTOR_1.publicKey),
+                            listOf(BUYER_1_IDENTITY.publicKey),
                             PurchaseOrderContract.Commands.Cancel()
                     )
                     verifies()
