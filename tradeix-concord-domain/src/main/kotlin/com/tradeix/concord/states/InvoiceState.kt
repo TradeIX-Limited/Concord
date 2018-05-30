@@ -49,7 +49,7 @@ data class InvoiceState(
         val currency: Currency,
         val siteId: String?,
         val purchaseOrderNumber: String?,
-        val purchaseOrderId: String,
+        val purchaseOrderId: String?,
         val composerProgramId: Int
 ) : LinearState, OwnerState, QueryableState {
     override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, conductor)

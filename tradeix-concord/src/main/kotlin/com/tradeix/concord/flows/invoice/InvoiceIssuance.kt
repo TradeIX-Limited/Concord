@@ -106,7 +106,7 @@ object InvoiceIssuance {
                     currency = currency,
                     siteId = model.siteId,
                     purchaseOrderNumber = model.purchaseOrderNumber,
-                    purchaseOrderId = model.purchaseOrderId ?: "" /*TODO : HACK!*/,
+                    purchaseOrderId = model.purchaseOrderId,
                     composerProgramId = model.composerProgramId!!
             )
 
