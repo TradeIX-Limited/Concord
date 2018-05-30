@@ -1,48 +1,26 @@
-# Base image from (http://phusion.github.io/baseimage-docker)
 FROM openjdk:8u151-jre-alpine
-# This file and the feature is deprecated. Please refer config/kubeconfig
-# Override default value with 'docker build --build-arg BUILDTIME_CORDA_VERSION=version'
-# example: 'docker build --build-arg BUILDTIME_CORDA_VERSION=2.0.0 -t concord:2.0 .'
-ARG BUILDTIME_CORDA_VERSION=1.0.0
-ARG BUILDTIME_JAVA_OPTIONS
-
-ENV CORDA_VERSION=${BUILDTIME_CORDA_VERSION}
-ENV JAVA_OPTIONS=${BUILDTIME_JAVA_OPTIONS}
-
-MAINTAINER <support@tradeix.com>
-
-# Set image labels
-LABEL net.corda.version = ${CORDA_VERSION}
-LABEL vendor = "TradeIX"
 
 RUN apk upgrade --update && \
 	apk add --update --no-cache bash iputils && \
 	rm -rf /var/cache/apk/*
 
-# Create /opt/corda directory.
-RUN mkdir -p /opt/corda/plugins && \
+# Create /opt/corda directory
+RUN mkdir -p /opt/ && \
+    mkdir -p /opt/corda/ && \
+    mkdir -p /opt/corda/cordapps && \
     mkdir -p /opt/corda/logs
 
-# Copy corda jar
-ADD https://dl.bintray.com/r3/corda/net/corda/corda/${CORDA_VERSION}/corda-${CORDA_VERSION}.jar						/opt/corda/corda.jar
-ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/${CORDA_VERSION}/corda-webserver-${CORDA_VERSION}.jar	/opt/corda/corda-webserver.jar
-#Debugging ...just to save time
-#COPY tradeix-concord/build/nodes/TradeIX/corda.jar /opt/corda/corda.jar
-#COPY tradeix-concord/build/nodes/TradeIX/corda-webserver.jar /opt/corda/corda-webserver.jar
+# RUN mkdir -p /app/plugins
+COPY tradeix-concord/build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-domain/build/libs/*.jar /opt/corda/cordapps/
 
-COPY config/dockerconfig/nodes/run-corda.sh /run-corda.sh
-RUN chmod +x /run-corda.sh && sync
+ADD https://dl.bintray.com/r3/corda/net/corda/corda/3.1-corda/corda-3.1-corda.jar /opt/corda/corda.jar
+ADD https://dl.bintray.com/r3/corda/net/corda/corda-webserver/3.1-corda/corda-webserver-3.1-corda.jar /opt/corda/corda-webserver.jar
+#COPY cordajars/*.jar /opt/corda/
 
-RUN chmod 777 /opt/corda/logs
+COPY config/kubeConfig/build/entrypoint.sh /opt/corda/entrypoint.sh
+RUN chmod 777 /opt/corda/entrypoint.sh
 
-# Expose port for corda (default is 10002) and RPC
-EXPOSE 10002
-EXPOSE 10003
-EXPOSE 10004
-
-# Working directory for Corda
 WORKDIR /opt/corda
-ENV HOME=/opt/corda
 
-# Start it
-CMD ["/run-corda.sh"]
+ENTRYPOINT ["/bin/sh", "entrypoint.sh"]
