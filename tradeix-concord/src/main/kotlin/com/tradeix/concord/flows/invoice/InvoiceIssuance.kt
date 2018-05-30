@@ -102,10 +102,10 @@ object InvoiceIssuance {
                     cancelled = model.cancelled!!,
                     closeDate = model.closeDate!!,
                     originationNetwork = model.originationNetwork!!,
-                    hash = model.hash!!,
+                    hash = model.hash,
                     currency = currency,
                     siteId = model.siteId!!,
-                    purchaseOrderNumber = model.purchaseOrderNumber!!,
+                    purchaseOrderNumber = model.purchaseOrderNumber,
                     purchaseOrderId = model.purchaseOrderId ?: "" /*TODO : HACK!*/,
                     composerProgramId = model.composerProgramId!!
             )

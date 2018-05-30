@@ -45,10 +45,10 @@ data class InvoiceState(
         val cancelled: Boolean,
         val closeDate: Instant?,
         val originationNetwork: String,
-        val hash: String,
+        val hash: String?,
         val currency: Currency,
         val siteId: String,
-        val purchaseOrderNumber: String,
+        val purchaseOrderNumber: String?,
         val purchaseOrderId: String,
         val composerProgramId: Int
 ) : LinearState, OwnerState, QueryableState {
