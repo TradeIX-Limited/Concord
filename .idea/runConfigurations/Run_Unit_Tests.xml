@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Unit Tests" type="JUnit" factoryName="JUnit">
+    <shortenClasspath name="MANIFEST" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.example.flow.*" />

@@ -190,6 +190,98 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
 }
 
+task deployDevNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    directory "./build/nodes"
+    node {
+        name "O=Notary,L=London,C=GB"
+        notary = [validating : true]
+        p2pPort 10002
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+    }
+    node {
+        name "C=GB,L=London,O=TradeIX"
+        p2pPort 10005
+        rpcPort 10006
+        webPort 10007
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+    node {
+        name "C=GB,L=London,O=TradeIXFakeSupplier"
+        p2pPort 10008
+        rpcPort 10009
+        webPort 10010
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+
+    node {
+        name "C=GB,L=London,O=TradeIXTestSupplier"
+        p2pPort 10011
+        rpcPort 10012
+        webPort 10013
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+
+    node {
+        name "C=GB,L=London,O=TradeIXTestSupplier1"
+        p2pPort 10014
+        rpcPort 10015
+        webPort 10016
+        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+    node {
+        name "C=GB,L=London,O=TradeIXTestSupplier2"
+        p2pPort 10017
+        rpcPort 10018
+        webPort 10019
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+    node {
+        name "C=GB,L=London,O=TradeIXTestFunder"
+        p2pPort 10020
+        rpcPort 10021
+        webPort 10022
+        cordapps = ["$corda_release_distribution:corda-finance:$corda_release_version"]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+    node {
+        name "C=GB,L=London,O=TradeIXTestBuyer"
+        p2pPort 10023
+        rpcPort 10024
+        webPort 10025
+        cordapps = [
+                "$project.group:cordapp-contracts-states:$project.version",
+                "$project.group:cordapp:$project.version",
+                "$corda_release_distribution:corda-finance:$corda_release_version"
+        ]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+    }
+}
+
 // TODO: Make into gradle plugins without any references to Jython
 task installJythonDeps(dependsOn: ['build']) {
     project.copy {
