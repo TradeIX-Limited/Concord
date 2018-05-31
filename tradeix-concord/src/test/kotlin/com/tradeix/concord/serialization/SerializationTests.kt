@@ -6,9 +6,12 @@ import com.tradeix.concord.messages.rabbit.invoice.InvoiceIssuanceRequestMessage
 import com.tradeix.concord.messages.rabbit.purchaseorder.PurchaseOrderIssuanceRequestMessage
 import net.corda.core.identity.CordaX500Name
 import org.hamcrest.core.IsInstanceOf
+import org.joda.time.format.ISODateTimeFormat
 import org.junit.Assert.assertThat
 import org.junit.Test
 import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -56,6 +59,24 @@ class SerializationTests {
 
         val result = serializer.fromJson<DateTestMessage>(json, DateTestMessage::class.java)
         assertThat(result.theDate, IsInstanceOf.instanceOf(Instant::class.java))
+
+        assertEquals("2018-05-09T15:11:50.024Z", result.theDate.toString())
+    }
+
+    @Test
+    fun `TIX date string without milliseconds will deserialize to instant`() {
+        val json = "{\"theDate\":\"2018-05-09T15:11:50Z\"}"
+
+        val serializer = GsonBuilder()
+                .registerTypeAdapter(CordaX500Name::class.java, CordaX500NameSerializer())
+                .registerTypeAdapter(Instant::class.java, DateInstantSerializer())
+                .disableHtmlEscaping()
+                .create()
+
+        val result = serializer.fromJson<DateTestMessage>(json, DateTestMessage::class.java)
+        assertThat(result.theDate, IsInstanceOf.instanceOf(Instant::class.java))
+
+        assertEquals("2018-05-09T15:11:50Z", result.theDate.toString())
     }
 
     @Test
