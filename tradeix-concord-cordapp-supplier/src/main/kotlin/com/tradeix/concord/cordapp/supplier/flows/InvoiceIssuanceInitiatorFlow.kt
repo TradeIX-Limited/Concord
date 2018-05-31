@@ -57,10 +57,6 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
                 GatheringSignaturesStep.childProgressTracker())
         )
 
-        listOf(serviceHub.networkMapCache
-                .getPartyFromLegalNameOrThrow(CordaX500Name("TradeIX Mock Funder 1", "Madrid", "ES")))
-                .map { initiateFlow(it) }
-
         // Step 5 - Finalize Transaction
         progressTracker.currentStep = FinalizingTransactionStep
         return subFlow(FinalityFlow(fullySignedTransaction, FinalizingTransactionStep.childProgressTracker()))
