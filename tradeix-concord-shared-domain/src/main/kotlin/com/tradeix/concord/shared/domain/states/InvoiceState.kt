@@ -45,14 +45,7 @@ data class InvoiceState(
         val composerProgramId: Int?                             // TODO : Necessary?
 ) : LinearState, OwnableState {
 
-    override val participants: List<AbstractParty>
-        get() {
-            return if (buyer != null) {
-                listOf(owner, buyer, supplier)
-            } else {
-                listOf(owner, supplier)
-            }
-        }
+    override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer, supplier)
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
         return CommandAndState(InvoiceContract.Commands.ChangeOwner(), this.copy(owner = newOwner))
