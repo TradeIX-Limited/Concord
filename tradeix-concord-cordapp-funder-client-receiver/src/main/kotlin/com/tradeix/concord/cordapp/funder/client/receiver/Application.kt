@@ -1,4 +1,4 @@
-package com.tradeix.concord.cordapp.supplier.client.receiver
+package com.tradeix.concord.cordapp.funder.client.receiver
 
 import com.tradeix.concord.shared.cordapp.mapping.registerInvoiceMappers
 import com.tradeix.concord.shared.mapper.Mapper
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScans
 
 @ComponentScans(
         ComponentScan("com.tradeix.concord.shared.client.components"),
-        ComponentScan("com.tradeix.concord.cordapp.supplier.client.receiver.controllers"))
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.receiver.controllers"))
 @SpringBootApplication
 class Application
 

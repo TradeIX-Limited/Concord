@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Supplier Client (Responder)" type="JetRunConfigurationType" factoryName="Kotlin" folderName="Supplier">
-    <module name="tradeix-concord-cordapp-supplier-client-responder" />
+  <configuration default="false" name="Run Funder Client (Receiver)" type="JetRunConfigurationType" factoryName="Kotlin" folderName="Funder">
+    <module name="tradeix-concord-cordapp-funder-client-receiver" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.supplier.client.responder.Application" />
+    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.funder.client.receiver.ApplicationKt" />
     <option name="WORKING_DIRECTORY" value="" />
     <method />
   </configuration>

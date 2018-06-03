@@ -1,7 +1,7 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.client.receiver.RPCConnection
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(path = arrayOf("/invoices"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-class InvoiceController(private val rpc: RPCConnection) {
+class InvoiceController(private val rpc: RPCConnectionProvider) {
 
     private val repository = VaultRepository.fromCordaRPCOps<InvoiceState>(rpc.proxy)
 

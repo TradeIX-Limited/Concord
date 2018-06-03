@@ -1,4 +1,4 @@
-package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
+package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder

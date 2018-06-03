@@ -6,7 +6,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.funder.client.responder.ApplicationKt" />
+    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.funder.client.responder.Application" />
     <option name="WORKING_DIRECTORY" value="" />
     <method />
   </configuration>

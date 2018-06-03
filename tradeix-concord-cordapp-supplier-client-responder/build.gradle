@@ -60,6 +60,21 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-bootRepackage {
-    mainClass = 'com.tradeix.concord.cordapp.supplier.client.responder.Application'
+jar {
+    from {
+        String[] include = [
+                "kotlin-runtime-${kotlin_version}.jar",
+                "kotlin-stdlib-${kotlin_version}.jar"
+        ]
+
+        configurations.compile
+                .findAll { include.contains(it.name) }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.tradeix.concord.cordapp.supplier.client.receiver.ApplicationKt'
+        )
+    }
 }
