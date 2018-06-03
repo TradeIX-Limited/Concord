@@ -56,7 +56,7 @@ class InvoiceContract : Contract {
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -94,7 +94,7 @@ class InvoiceContract : Contract {
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -132,7 +132,7 @@ class InvoiceContract : Contract {
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -170,7 +170,7 @@ class InvoiceContract : Contract {
                 inputStateValidationBuilder
                         .property(InvoiceState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
     }

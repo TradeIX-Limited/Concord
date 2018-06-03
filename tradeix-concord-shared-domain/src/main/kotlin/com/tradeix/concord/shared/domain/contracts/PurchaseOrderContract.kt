@@ -69,7 +69,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -121,7 +121,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -165,7 +165,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -210,7 +210,7 @@ class PurchaseOrderContract : Contract {
                 inputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
     }

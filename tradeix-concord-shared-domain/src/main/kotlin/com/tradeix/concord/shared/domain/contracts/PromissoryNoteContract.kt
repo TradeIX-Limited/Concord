@@ -63,7 +63,7 @@ class PromissoryNoteContract : Contract {
                 outputStateValidationBuilder
                         .property(PromissoryNoteState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
     }
