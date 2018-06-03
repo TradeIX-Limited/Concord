@@ -45,13 +45,22 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                         .parseAs<RabbitMqConnectionConfiguration>()
                 val connectionFactory = ConnectionFactory()
 
+                log.info("The connectionConfig is " + connectionConfig)
                 connectionFactory.username = connectionConfig.userName
                 connectionFactory.password = connectionConfig.password
                 connectionFactory.host = connectionConfig.hostName
                 connectionFactory.virtualHost = connectionConfig.virtualHost
                 connectionFactory.port = connectionConfig.portNumber
 
+                log.info("The connectionFactory username is " + connectionFactory.username)
+                log.info("The connectionConfig.password is " + connectionConfig.password)
+                log.info("The connectionFactory host is " + connectionFactory.host)
+                log.info("The connectionFactory virtualHost is " + connectionFactory.virtualHost)
+                log.info("The connectionFactory port is " + connectionFactory.port)
+
                 val connectionProvider = RabbitMqConnectionProvider(connectionFactory)
+
+                log.info("Starting to connect now....")
 
                 listOf(
                         ::InvoiceIssuanceFlowQueuesSubscriber,
@@ -70,6 +79,8 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
                     it.invoke(cordaRpcService, defaultConfig, serializer)
                             .initialize(connectionProvider, currentConsumers)
                 }
+
+                log.info("Subscription connection successful")
 
                 log.info("Starting CordaTiXInvoicePublisher")
                 CordaTiXInvoicePublisher(defaultConfig, serializer)

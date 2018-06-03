@@ -114,7 +114,7 @@ azUploadTixIntegration() {
   if [ -a ${TIX_FILE} ]
   then
     echo "Upload for ${TIX_FILE}"
-    kubectl create configmap tix --from-file=tix.integration.conf
+    kubectl create configmap tix --from-file=${TIX_FILE}
   else
     echo "Unable to upload tix.integration.conf file"
   fi

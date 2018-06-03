@@ -12,7 +12,6 @@ azUploadTixIntegration
 azUploadSecrets
 kubectl apply -f services/
 kubectl apply -f deployments/
-kubectl apply -f networkpolicy/
 kubectl get all
 # REMEMBER TO CHANGE THE -g OPTION TO THE RESOURCE GROUP and THE -n TO THE NAME OF THE AKS NAME
 az aks browse -g rg-azureks -n cordacluster1
