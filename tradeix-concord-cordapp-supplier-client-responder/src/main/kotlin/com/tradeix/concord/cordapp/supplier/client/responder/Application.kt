@@ -15,9 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.ComponentScans
 
-@ComponentScans(
-        ComponentScan("com.tradeix.concord.shared.client.components"),
-        ComponentScan("com.tradeix.concord.cordapp.supplier.client.receiver.controllers"))
+@ComponentScan("com.tradeix.concord.shared.client.components")
 @SpringBootApplication
 class Application(address: Address, rpc: RPCConnectionProvider) {
 
