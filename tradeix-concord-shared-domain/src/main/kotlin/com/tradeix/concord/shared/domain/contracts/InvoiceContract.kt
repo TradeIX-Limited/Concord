@@ -35,7 +35,8 @@ class InvoiceContract : Contract {
                         "On invoice issuance, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -47,11 +48,8 @@ class InvoiceContract : Contract {
                         .hasSize(1, CONTRACT_RULE_OUTPUTS)
 
                 // State Validation
-                val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<InvoiceState>().single() }
-
                 val outputStateValidationBuilder = validationBuilder
-                        .validationBuilderFor { outputState }
+                        .validationBuilderFor { it.outputsOfType<InvoiceState>().single() }
 
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
@@ -73,7 +71,8 @@ class InvoiceContract : Contract {
                         "On invoice amendment, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -85,11 +84,8 @@ class InvoiceContract : Contract {
                         .hasSize(1, CONTRACT_RULE_OUTPUTS)
 
                 // State Validation
-                val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<InvoiceState>().single() }
-
                 val outputStateValidationBuilder = validationBuilder
-                        .validationBuilderFor { outputState }
+                        .validationBuilderFor { it.outputsOfType<InvoiceState>().single() }
 
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
@@ -111,7 +107,8 @@ class InvoiceContract : Contract {
                         "On invoice ownership change, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -123,11 +120,8 @@ class InvoiceContract : Contract {
                         .hasSize(1, CONTRACT_RULE_OUTPUTS)
 
                 // State Validation
-                val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<InvoiceState>().single() }
-
                 val outputStateValidationBuilder = validationBuilder
-                        .validationBuilderFor { outputState }
+                        .validationBuilderFor { it.outputsOfType<InvoiceState>().single() }
 
                 outputStateValidationBuilder
                         .property(InvoiceState::participants)
@@ -149,7 +143,8 @@ class InvoiceContract : Contract {
                         "On invoice cancellation, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -161,11 +156,8 @@ class InvoiceContract : Contract {
                         .isEmpty(CONTRACT_RULE_OUTPUTS)
 
                 // State Validation
-                val inputState = validationBuilder
-                        .getTransactionState { it.inputsOfType<InvoiceState>().single() }
-
                 val inputStateValidationBuilder = validationBuilder
-                        .validationBuilderFor { inputState }
+                        .validationBuilderFor { it.inputsOfType<InvoiceState>().single() }
 
                 inputStateValidationBuilder
                         .property(InvoiceState::participants)

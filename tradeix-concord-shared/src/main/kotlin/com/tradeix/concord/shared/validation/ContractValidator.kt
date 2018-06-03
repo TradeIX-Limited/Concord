@@ -17,7 +17,10 @@ abstract class ContractValidator : Validator(ValidationBehavior.THROW_EXCEPTION_
         }
     }
 
-    protected abstract fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>)
+    protected abstract fun onValidationBuilding(
+            validationBuilder: ValidationBuilder<LedgerTransaction>,
+            signers: List<PublicKey>
+    )
 
     private fun initializeValidation(
             validating: Boolean,
@@ -26,6 +29,6 @@ abstract class ContractValidator : Validator(ValidationBehavior.THROW_EXCEPTION_
 
         validationMessages.clear()
         this.validating = validating
-        onValidationBuilding(ContractValidationBuilder(this, transaction), signers)
+        onValidationBuilding(ValidationBuilder(this, transaction), signers)
     }
 }
