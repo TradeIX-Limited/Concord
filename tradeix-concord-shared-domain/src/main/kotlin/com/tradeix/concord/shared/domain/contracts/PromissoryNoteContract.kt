@@ -38,7 +38,8 @@ class PromissoryNoteContract : Contract {
                         "On promissory note issuance, all participants are required to sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -51,7 +52,7 @@ class PromissoryNoteContract : Contract {
 
                 // State Validation
                 val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<PromissoryNoteState>().single() }
+                        .select { it.outputsOfType<PromissoryNoteState>().single() }
 
                 val outputStateValidationBuilder = validationBuilder
                         .validationBuilderFor { outputState }
@@ -63,7 +64,7 @@ class PromissoryNoteContract : Contract {
                 outputStateValidationBuilder
                         .property(PromissoryNoteState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
     }

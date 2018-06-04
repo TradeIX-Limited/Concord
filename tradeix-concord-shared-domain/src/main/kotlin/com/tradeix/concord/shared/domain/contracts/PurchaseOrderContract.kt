@@ -41,7 +41,9 @@ class PurchaseOrderContract : Contract {
                         "On purchase order issuance, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
+
                 // Transaction Validation
                 validationBuilder
                         .property(LedgerTransaction::inputs)
@@ -53,7 +55,7 @@ class PurchaseOrderContract : Contract {
 
                 // State Validation
                 val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<PurchaseOrderState>().single() }
+                        .select { it.outputsOfType<PurchaseOrderState>().single() }
 
                 val outputStateValidationBuilder = validationBuilder
                         .validationBuilderFor { outputState }
@@ -69,7 +71,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -92,7 +94,8 @@ class PurchaseOrderContract : Contract {
                         "On purchase order amendment, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -105,7 +108,7 @@ class PurchaseOrderContract : Contract {
 
                 // State Validation
                 val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<PurchaseOrderState>().single() }
+                        .select { it.outputsOfType<PurchaseOrderState>().single() }
 
                 val outputStateValidationBuilder = validationBuilder
                         .validationBuilderFor { outputState }
@@ -121,7 +124,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -141,7 +144,9 @@ class PurchaseOrderContract : Contract {
                         "On purchase order ownership change, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
+
                 // Transaction Validation
                 validationBuilder
                         .property(LedgerTransaction::inputs)
@@ -153,7 +158,7 @@ class PurchaseOrderContract : Contract {
 
                 // State Validation
                 val outputState = validationBuilder
-                        .getTransactionState { it.outputsOfType<PurchaseOrderState>().single() }
+                        .select { it.outputsOfType<PurchaseOrderState>().single() }
 
                 val outputStateValidationBuilder = validationBuilder
                         .validationBuilderFor { outputState }
@@ -165,7 +170,7 @@ class PurchaseOrderContract : Contract {
                 outputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
 
@@ -185,7 +190,8 @@ class PurchaseOrderContract : Contract {
                         "On purchase order cancellation, all participants must sign the transaction."
             }
 
-            override fun onValidationBuilding(validationBuilder: ContractValidationBuilder, signers: List<PublicKey>) {
+            override fun onValidationBuilding(
+                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
 
                 // Transaction Validation
                 validationBuilder
@@ -198,7 +204,7 @@ class PurchaseOrderContract : Contract {
 
                 // State Validation
                 val inputState = validationBuilder
-                        .getTransactionState { it.inputsOfType<PurchaseOrderState>().single() }
+                        .select { it.inputsOfType<PurchaseOrderState>().single() }
 
                 val inputStateValidationBuilder = validationBuilder
                         .validationBuilderFor { inputState }
@@ -210,7 +216,7 @@ class PurchaseOrderContract : Contract {
                 inputStateValidationBuilder
                         .property(PurchaseOrderState::participants)
                         .map { it.owningKey }
-                        .containsAll(signers, CONTRACT_RULE_SIGNERS)
+                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
             }
         }
     }
