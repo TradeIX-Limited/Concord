@@ -79,10 +79,10 @@ object InvoiceOwnership {
 
             val command = Command(
                     value = InvoiceContract.Commands.ChangeOwner(),
-                    signers = outputStates.first()
-                            .participants
-                            .filter { it != outputStates.first().buyer }
-                            .map { it.owningKey })
+                    signers = outputStates
+                            .flatMap { it.participants }
+                            .map { it.owningKey }
+                            .distinct())
 
             val transactionBuilder = TransactionBuilder(notary)
 
@@ -104,10 +104,8 @@ object InvoiceOwnership {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val requiredSignatureFlowSessions = listOf(
-                    outputStates.first().owner,
-                    outputStates.first().supplier,
-                    outputStates.first().conductor)
+            val requiredSignatureFlowSessions = outputStates
+                    .flatMap { it.participants }
                     .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                     .distinct()
                     .map { initiateFlow(serviceHub.identityService.requireWellKnownPartyFromAnonymous(it)) }
