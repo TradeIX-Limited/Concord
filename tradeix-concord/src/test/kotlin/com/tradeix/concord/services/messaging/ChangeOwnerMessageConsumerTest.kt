@@ -19,10 +19,12 @@ import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.FlowProgressHandle
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.transactions.SignedTransaction
+import org.junit.Ignore
 import org.junit.Test
 import rx.Observable
 import java.time.Instant
 
+@Ignore
 class ChangeOwnerMessageConsumerTest {
 
     @Test

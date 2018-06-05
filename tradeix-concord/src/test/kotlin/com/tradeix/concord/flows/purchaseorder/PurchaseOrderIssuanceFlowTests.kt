@@ -24,7 +24,9 @@ import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.fail
+import org.junit.Ignore
 
+@Ignore
 class PurchaseOrderIssuanceFlowTests : AbstractFlowTest() {
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)
