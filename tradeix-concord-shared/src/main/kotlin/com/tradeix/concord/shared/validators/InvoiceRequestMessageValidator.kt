@@ -20,23 +20,7 @@ class InvoiceRequestMessageValidator : ObjectModelValidator<InvoiceRequestMessag
                 .isValidCordaX500Name()
 
         validationBuilder
-                .property(InvoiceRequestMessage::invoiceVersion)
-                .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::invoiceVersionDate)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::tixInvoiceVersion)
-                .isNotNull()
-
-        validationBuilder
                 .property(InvoiceRequestMessage::invoiceNumber)
-                .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::invoiceType)
                 .isNotNullEmptyOrBlank()
 
         validationBuilder
@@ -58,36 +42,11 @@ class InvoiceRequestMessageValidator : ObjectModelValidator<InvoiceRequestMessag
                 .isGreaterThanOrEqualTo(BigDecimal.ZERO)
 
         validationBuilder
-                .property(InvoiceRequestMessage::created)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::updated)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::expectedSettlementDate)
+                .property(InvoiceRequestMessage::settlementDate)
                 .isNotNull()
 
         validationBuilder
                 .property(InvoiceRequestMessage::invoiceDate)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::status)
-                .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::rejectionReason)
-                .isNotEmpty()
-                .isNotBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::eligibleValue)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::invoicePurchaseValue)
                 .isNotNull()
 
         validationBuilder
@@ -96,10 +55,6 @@ class InvoiceRequestMessageValidator : ObjectModelValidator<InvoiceRequestMessag
 
         validationBuilder
                 .property(InvoiceRequestMessage::invoiceDilutions)
-                .isNotNull()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::cancelled)
                 .isNotNull()
 
         validationBuilder
@@ -114,17 +69,5 @@ class InvoiceRequestMessageValidator : ObjectModelValidator<InvoiceRequestMessag
         validationBuilder
                 .property(InvoiceRequestMessage::siteId)
                 .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::purchaseOrderNumber)
-                .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::purchaseOrderId)
-                .isNotNullEmptyOrBlank()
-
-        validationBuilder
-                .property(InvoiceRequestMessage::composerProgramId)
-                .isNotNull()
     }
 }
