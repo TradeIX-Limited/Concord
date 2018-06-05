@@ -19,11 +19,13 @@ import com.tradeix.concord.flows.FlowTestHelper
 import com.tradeix.concord.flows.FlowTestHelper.changePurchaseOrderOwner
 import net.corda.core.transactions.SignedTransaction
 import net.corda.testing.node.StartedMockNode
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
+@Ignore
 class PurchaseOrderOwnershipFlowTests : AbstractFlowTest() {
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)
