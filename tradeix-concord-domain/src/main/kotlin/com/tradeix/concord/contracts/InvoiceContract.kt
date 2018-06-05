@@ -44,22 +44,23 @@ class InvoiceContract : Contract {
 
         class ChangeOwner : Commands {
             companion object {
-                val CONTRACT_RULE_INPUTS = "Only one input should be consumed when changing ownership of an invoice."
-                val CONTRACT_RULE_OUTPUTS = "Only one output should be created when changing ownership of an invoice."
-                val CONTRACT_RULE_SIGNERS = "All participants except the buyer are required to sign when changing ownership of an invoice."
+                val CONTRACT_RULE_INPUTS = "At least one input should be consumed when changing ownership of an invoice."
+                val CONTRACT_RULE_OUTPUTS = "At least one output should be created when changing ownership of an invoice."
+                val CONTRACT_RULE_SIGNERS = "All participants are required to sign when changing ownership of an invoice."
             }
 
             override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) {
                 // Transaction Rules
-                CONTRACT_RULE_INPUTS using (tx.inputs.size == 1)
-                CONTRACT_RULE_OUTPUTS using (tx.outputs.size == 1)
+                CONTRACT_RULE_INPUTS using (tx.inputs.isNotEmpty())
+                CONTRACT_RULE_OUTPUTS using (tx.outputs.isNotEmpty())
 
                 // State Rules
-                tx.outputsOfType<PurchaseOrderState>().forEach { state ->
-                    CONTRACT_RULE_SIGNERS using signers.containsAll(state.participants
-                            .filter { participant -> participant != state.buyer }
-                            .map { it.owningKey })
-                }
+                val keys = tx.outputsOfType<InvoiceState>()
+                        .flatMap { it.participants }
+                        .map { it.owningKey }
+                        .distinct()
+
+                CONTRACT_RULE_SIGNERS using signers.containsAll(keys)
             }
         }
 
