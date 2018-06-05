@@ -12,7 +12,6 @@ import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGEE_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGOR_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_1
-import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_2
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_3
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_2
@@ -42,38 +41,17 @@ object MockStates {
             owner = SUPPLIER_1_IDENTITY.party,
             buyer = BUYER_1_IDENTITY.party,
             supplier = SUPPLIER_1_IDENTITY.party,
-            invoiceVersion = "INVOICE VERSION",
-            invoiceVersionDate = LOCAL_DATE_TIME_PAST_1,
-            tixInvoiceVersion = 1,
             invoiceNumber = "INVOICE NUMBER",
-            invoiceType = "INVOICE TYPE",
             reference = "INVOICE REFERENCE",
             dueDate = LOCAL_DATE_TIME_FUTURE_1,
-            offerId = null,
             amount = ONE_POUNDS,
             totalOutstanding = ONE_POUNDS,
-            created = LOCAL_DATE_TIME_FUTURE_2,
-            updated = LOCAL_DATE_TIME_FUTURE_2,
-            expectedSettlementDate = LOCAL_DATE_TIME_FUTURE_3,
-            settlementDate = null,
-            mandatoryReconciliationDate = null,
-            invoiceDate = LOCAL_DATE_TIME_FUTURE_2,
-            status = "STATUS",
-            rejectionReason = "REJECTION REASON",
-            eligibleValue = ONE_POUNDS,
-            invoicePurchaseValue = ONE_POUNDS,
-            tradeDate = null,
-            tradePaymentDate = null,
+            settlementDate = LOCAL_DATE_TIME_FUTURE_3,
+            invoiceDate = LOCAL_DATE_TIME_PAST_2,
             invoicePayments = ZERO_POUNDS,
             invoiceDilutions = ZERO_POUNDS,
-            cancelled = false,
-            closeDate = null,
             originationNetwork = "ORIGINATION NETWORK",
-            currency = Currency.getInstance("GBP"),
-            siteId = "SITE ID",
-            purchaseOrderNumber = "PURCHASE ORDER NUMBER",
-            purchaseOrderId = "PURCHASE ORDER ID",
-            composerProgramId = 1
+            siteId = "SITE ID"
     )
 
     val PROMISSORY_NOTE_STATE = PromissoryNoteState(
