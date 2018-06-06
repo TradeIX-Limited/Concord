@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: funder4
+  name: funder4
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "p2p"
+    port: 10002
+    targetPort: 10002
+  - name: "web"
+    port: 10004
+    targetPort: 10004
+  selector:
+    app: funder4

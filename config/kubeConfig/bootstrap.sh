@@ -4,7 +4,7 @@ set -eu
 
 CONFIG_SRC=$1
 CONFIG_DEST=$2
-declare -a MODULES=("notary" "conductor" "buyer" "funder" "supplier1")
+declare -a MODULES=("notary" "conductor" "buyer" "supplier1" "funder" "funder0" "funder1" "funder2" "funder3" "funder4" "funder5" "funder6" "funder7" "funder8" "funder9" )
 CONDUCTOR="conductor"
 TIX_INTEGRATION="tix.integration.conf"
 
@@ -55,7 +55,6 @@ generateCustomFiles() {
   done
   echo "Generated custom files - complete"
 }
-
 positionTixIntegrationConfig() {
   if [ -d ${CONFIG_DEST}/${CONDUCTOR} ]
   then

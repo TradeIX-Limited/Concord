@@ -1,16 +1,16 @@
 apiVersion: "apps/v1beta1"
 kind: Deployment
 metadata:
-  name: supplier1
+  name: funder4
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: supplier1
+      app: funder4
   template:
     metadata:
       labels:
-        app: supplier1
+        app: funder4
     spec:
       containers:
       - name: node
@@ -31,11 +31,11 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: supplier1-certificates
+        - name: funder4-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
           #nodeInfoabc12 file from configMap/notary-nodeinfo notary-nodeinfo
-        - name: supplier1-nodeinfo
+        - name: funder4-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
           #This should be volume mounted using pvclaim - can be deferred
@@ -52,7 +52,10 @@ spec:
           subPath: persistence.mv.db
       - name: web
         image: tradeixdev.azurecr.io/abc12:1.0.0.0
-        args: ["web", "supplier1"]
+        args: ["web", "funder4"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
         ports:
         - containerPort: 10004
         volumeMounts:
@@ -65,11 +68,11 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: supplier1-certificates
+        - name: funder4-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
           #nodeInfoabc12 file from configMap/notary-nodeinfo notary-nodeinfo
-        - name: supplier1-nodeinfo
+        - name: funder4-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
           #This should be volume mounted using pvclaim - can be deferred
@@ -91,18 +94,18 @@ spec:
 #        configMap:
 #          name: tixintegration
       volumes:
-      - name: supplier1-nodeinfo
+      - name: funder4-nodeinfo
         secret:
-          secretName: supplier1-nodeinfo
+          secretName: funder4-nodeinfo
       - name: additional-node-infos
         secret:
           secretName: additional-node-infos
-      - name: supplier1-certificates
+      - name: funder4-certificates
         secret:
-          secretName: supplier1-certificates
+          secretName: funder4-certificates
       - name: logs
         emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
-          claimName: pvclaim-supplier1
+          claimName: pvclaim-funder4
           readOnly: false

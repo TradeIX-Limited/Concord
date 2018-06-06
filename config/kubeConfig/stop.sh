@@ -11,6 +11,5 @@ kubectl delete po --all
 azDeletePVCAll
 azDeleteSecrets
 kubectl delete -f storage/
-kubectl delete -f networkpolicy/
 kubectl delete secret acr-secret
 azDeleteTixIntegration

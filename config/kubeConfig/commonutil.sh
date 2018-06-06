@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-#REMEMBER TO CHANGE THE ACCOUNT NAME AND ACCOUNT KEY
+#REMEMBER TO CHANGE THE ACCOUNT VALUES
 ACCOUNT_NAME="cordastorage2"
-ACCOUNT_KEY="123456789"
+ACCOUNT_KEY="BNmXBdzIdGs2ZeIX0YY5uPdYXfQGT/ss5GBoWCRfJvXMvk3b0tk1VPQKqSKuYSHAMZshKuBe5AFEkb0PvohIIQ=="
 PREFIX='kubernetes-dynamic-'
-declare -a MODULES=("notary" "conductor" "buyer" "funder" "supplier1")
+declare -a MODULES=("notary" "conductor" "buyer" "supplier1" "funder" "funder0" "funder1" "funder2" "funder3" "funder4" "funder5" "funder6" "funder7" "funder8" "funder9" )
 PVC_NAMES=()
 AZURE_PVCS=()
 CONFIG_HOME=$1
@@ -12,14 +12,13 @@ CONDUCTOR="conductor"
 TIX_INTEGRATION="tix.integration.conf"
 
 genPVCNames() {
-  cnt=${#MODULES[@]}
+  local cnt=${#MODULES[@]}
   #echo ${cnt}
   for ((i=0;i<cnt;i++)); do
     PVC_NAMES+=("pvclaim-${MODULES[i]}")
     # echo ${PVC_NAMES}
   done
 }
-
 genAzurePVCs() {
   local PVC_NAMES_LOCAL=${PVC_NAMES[@]}
   local PREFIX_LOCAL=${PREFIX}
@@ -91,22 +90,15 @@ azUploadPVCAll() {
   done
 }
 
-
-#TODO refactor the function
 azUploadSecrets() {
   kubectl create secret docker-registry acr-secret --docker-server https://tradeixdev.azurecr.io/ --docker-username tradeixdev --docker-password j70/WPS6Di2apeuckZs83rFfz6pVBtYf --docker-email rajesh@tradeix.com
   kubectl create secret generic additional-node-infos --from-file=${CONFIG_HOME}/buyer/additional-node-infos
-  kubectl create secret generic buyer-certificates --from-file=${CONFIG_HOME}/buyer/certificates
-  kubectl create secret generic conductor-certificates --from-file=${CONFIG_HOME}/conductor/certificates
-  kubectl create secret generic funder-certificates --from-file=${CONFIG_HOME}/funder/certificates
-  kubectl create secret generic notary-certificates --from-file=${CONFIG_HOME}/notary/certificates
-  kubectl create secret generic supplier1-certificates --from-file=${CONFIG_HOME}/supplier1/certificates
 
-  kubectl create secret generic buyer-nodeinfo --from-file=${CONFIG_HOME}/buyer/node
-  kubectl create secret generic conductor-nodeinfo --from-file=${CONFIG_HOME}/conductor/node
-  kubectl create secret generic funder-nodeinfo --from-file=${CONFIG_HOME}/funder/node
-  kubectl create secret generic notary-nodeinfo --from-file=${CONFIG_HOME}/notary/node
-  kubectl create secret generic supplier1-nodeinfo --from-file=${CONFIG_HOME}/supplier1/node
+  local cnt=${#MODULES[@]}
+  for ((i=0;i<cnt;i++)); do
+    kubectl create secret generic ${MODULES[i]}-certificates --from-file=${CONFIG_HOME}/${MODULES[i]}/certificates
+    kubectl create secret generic ${MODULES[i]}-nodeinfo --from-file=${CONFIG_HOME}/${MODULES[i]}/node
+  done
 }
 
 azUploadTixIntegration() {
@@ -119,7 +111,6 @@ azUploadTixIntegration() {
     echo "Unable to upload tix.integration.conf file"
   fi
 }
-
 azDeleteTixIntegration() {
   kubectl delete configmap tix
 }
