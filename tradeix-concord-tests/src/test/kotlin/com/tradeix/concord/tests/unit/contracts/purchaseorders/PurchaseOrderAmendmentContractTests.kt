@@ -26,7 +26,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        PurchaseOrderContract.Commands.Amend()
+                        PurchaseOrderContract.Amend()
                 )
                 verifies()
             }
@@ -36,7 +36,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -52,7 +52,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }
@@ -63,7 +63,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment only one output state must be created`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -79,7 +79,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }
@@ -90,7 +90,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment the buyer and supplier must not be the same entity`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_ENTITIES) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_ENTITIES) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -102,7 +102,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }
@@ -113,7 +113,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment the buyer must be the owner`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_OWNER) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_OWNER) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -125,7 +125,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }
@@ -136,7 +136,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -148,7 +148,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }
@@ -159,7 +159,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
     @Test
     fun `On purchase order amendment all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.Amend.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -171,7 +171,7 @@ class PurchaseOrderAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Amend()
+                            PurchaseOrderContract.Amend()
                     )
                     verifies()
                 }

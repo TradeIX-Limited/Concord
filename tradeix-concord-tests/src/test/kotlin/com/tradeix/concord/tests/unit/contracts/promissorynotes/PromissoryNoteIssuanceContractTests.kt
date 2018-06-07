@@ -23,7 +23,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
-                        PromissoryNoteContract.Commands.Issue()
+                        PromissoryNoteContract.Issue()
                 )
                 verifies()
             }
@@ -33,7 +33,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
     @Test
     fun `On promissory note issuance zero input states must be consumed`() {
         services.ledger {
-            assertValidationFails(PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(PromissoryNoteContract.Issue.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             PROMISSORY_NOTE_CONTRACT_ID,
@@ -45,7 +45,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
-                            PromissoryNoteContract.Commands.Issue()
+                            PromissoryNoteContract.Issue()
                     )
                     verifies()
                 }
@@ -56,7 +56,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
     @Test
     fun `On promissory note issuance only one output state must be created`() {
         services.ledger {
-            assertValidationFails(PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(PromissoryNoteContract.Issue.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     output(
                             PROMISSORY_NOTE_CONTRACT_ID,
@@ -68,7 +68,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
-                            PromissoryNoteContract.Commands.Issue()
+                            PromissoryNoteContract.Issue()
                     )
                     verifies()
                 }
@@ -79,7 +79,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
     @Test
     fun `On promissory note issuance all participants must sign the transaction (obligor must sign)`() {
         services.ledger {
-            assertValidationFails(PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PromissoryNoteContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
                             PROMISSORY_NOTE_CONTRACT_ID,
@@ -87,7 +87,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(OBLIGEE_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
-                            PromissoryNoteContract.Commands.Issue()
+                            PromissoryNoteContract.Issue()
                     )
                     verifies()
                 }
@@ -98,7 +98,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
     @Test
     fun `On promissory note issuance all participants must sign the transaction (obligee must sign)`() {
         services.ledger {
-            assertValidationFails(PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PromissoryNoteContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
                             PROMISSORY_NOTE_CONTRACT_ID,
@@ -106,7 +106,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(OBLIGOR_1_IDENTITY.publicKey, GUARANTOR_1_IDENTITY.publicKey),
-                            PromissoryNoteContract.Commands.Issue()
+                            PromissoryNoteContract.Issue()
                     )
                     verifies()
                 }
@@ -117,7 +117,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
     @Test
     fun `On promissory note issuance all participants must sign the transaction (guarantor must sign)`() {
         services.ledger {
-            assertValidationFails(PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PromissoryNoteContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
                             PROMISSORY_NOTE_CONTRACT_ID,
@@ -125,7 +125,7 @@ class PromissoryNoteIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(OBLIGOR_1_IDENTITY.publicKey, OBLIGEE_1_IDENTITY.publicKey),
-                            PromissoryNoteContract.Commands.Issue()
+                            PromissoryNoteContract.Issue()
                     )
                     verifies()
                 }

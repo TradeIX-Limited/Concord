@@ -9,11 +9,11 @@ class InvoiceContractValidationTests {
 
     @Test
     fun `Issue command produces the expected validation responses`() {
-        val contractCommand = InvoiceContract.Commands.Issue()
+        val contractCommand = InvoiceContract.Issue()
         val expectedValidationMessages = listOf(
-                InvoiceContract.Commands.Issue.CONTRACT_RULE_INPUTS,
-                InvoiceContract.Commands.Issue.CONTRACT_RULE_OUTPUTS,
-                InvoiceContract.Commands.Issue.CONTRACT_RULE_SIGNERS
+                InvoiceContract.Issue.CONTRACT_RULE_INPUTS,
+                InvoiceContract.Issue.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Issue.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -27,11 +27,11 @@ class InvoiceContractValidationTests {
 
     @Test
     fun `Amend command produces the expected validation responses`() {
-        val contractCommand = InvoiceContract.Commands.Amend()
+        val contractCommand = InvoiceContract.Amend()
         val expectedValidationMessages = listOf(
-                InvoiceContract.Commands.Amend.CONTRACT_RULE_INPUTS,
-                InvoiceContract.Commands.Amend.CONTRACT_RULE_OUTPUTS,
-                InvoiceContract.Commands.Amend.CONTRACT_RULE_SIGNERS
+                InvoiceContract.Amend.CONTRACT_RULE_INPUTS,
+                InvoiceContract.Amend.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Amend.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -45,11 +45,11 @@ class InvoiceContractValidationTests {
 
     @Test
     fun `ChangeOwner command produces the expected validation responses`() {
-        val contractCommand = InvoiceContract.Commands.ChangeOwner()
+        val contractCommand = InvoiceContract.ChangeOwner()
         val expectedValidationMessages = listOf(
-                InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_INPUTS,
-                InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_OUTPUTS,
-                InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS
+                InvoiceContract.ChangeOwner.CONTRACT_RULE_INPUTS,
+                InvoiceContract.ChangeOwner.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.ChangeOwner.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -63,11 +63,11 @@ class InvoiceContractValidationTests {
 
     @Test
     fun `Cancel command produces the expected validation responses`() {
-        val contractCommand = InvoiceContract.Commands.Cancel()
+        val contractCommand = InvoiceContract.Cancel()
         val expectedValidationMessages = listOf(
-                InvoiceContract.Commands.Cancel.CONTRACT_RULE_INPUTS,
-                InvoiceContract.Commands.Cancel.CONTRACT_RULE_OUTPUTS,
-                InvoiceContract.Commands.Cancel.CONTRACT_RULE_SIGNERS
+                InvoiceContract.Cancel.CONTRACT_RULE_INPUTS,
+                InvoiceContract.Cancel.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Cancel.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 

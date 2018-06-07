@@ -22,7 +22,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        InvoiceContract.Commands.Issue()
+                        InvoiceContract.Issue()
                 )
                 verifies()
             }
@@ -32,7 +32,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
     @Test
     fun `On invoice issuance zero input states must be consumed`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Issue.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(InvoiceContract.Issue.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -44,7 +44,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Issue()
+                            InvoiceContract.Issue()
                     )
                     verifies()
                 }
@@ -53,24 +53,18 @@ class InvoiceIssuanceContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice issuance only one output state must be created`() {
+    fun `On invoice issuance at least one output state must be created`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Issue.CONTRACT_RULE_OUTPUTS) {
-                transaction {
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    command(
-                            listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Issue()
-                    )
-                    verifies()
-                }
+            transaction {
+                output(
+                        INVOICE_CONTRACT_ID,
+                        INVOICE_STATE
+                )
+                command(
+                        listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
+                        InvoiceContract.Issue()
+                )
+                verifies()
             }
         }
     }
@@ -78,7 +72,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
     @Test
     fun `On invoice issuance all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
                             INVOICE_CONTRACT_ID,
@@ -86,7 +80,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Issue()
+                            InvoiceContract.Issue()
                     )
                     verifies()
                 }
@@ -97,7 +91,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
     @Test
     fun `On invoice issuance all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Issue.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
                             INVOICE_CONTRACT_ID,
@@ -105,7 +99,7 @@ class InvoiceIssuanceContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Issue()
+                            InvoiceContract.Issue()
                     )
                     verifies()
                 }

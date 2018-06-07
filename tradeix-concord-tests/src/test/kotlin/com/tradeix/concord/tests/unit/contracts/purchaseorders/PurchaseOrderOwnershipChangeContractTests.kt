@@ -26,7 +26,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        PurchaseOrderContract.Commands.ChangeOwner()
+                        PurchaseOrderContract.ChangeOwner()
                 )
                 verifies()
             }
@@ -36,7 +36,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On purchase order ownership change only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -52,7 +52,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
+                            PurchaseOrderContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -63,7 +63,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On purchase order ownership change only one output state must be created`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -79,7 +79,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
+                            PurchaseOrderContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -90,7 +90,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On purchase order ownership change the supplier must be the new owner`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OWNER) {
+            assertValidationFails(PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_OWNER) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -102,7 +102,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
+                            PurchaseOrderContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -113,7 +113,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On purchase order ownership change all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -125,7 +125,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
+                            PurchaseOrderContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -136,7 +136,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On purchase order ownership change all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -148,7 +148,7 @@ class PurchaseOrderOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.ChangeOwner()
+                            PurchaseOrderContract.ChangeOwner()
                     )
                     verifies()
                 }

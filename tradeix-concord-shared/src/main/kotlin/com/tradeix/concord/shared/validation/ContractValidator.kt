@@ -3,32 +3,36 @@ package com.tradeix.concord.shared.validation
 import net.corda.core.transactions.LedgerTransaction
 import java.security.PublicKey
 
-abstract class ContractValidator : Validator(ValidationBehavior.THROW_EXCEPTION_ON_ERROR) {
+abstract class ContractValidator : Validator() {
+
+    override fun addValidationMessage(validationMessage: String) {
+        if(!emulating) {
+            throw ValidationException(listOf(validationMessage))
+        }
+        validationMessages.add(validationMessage)
+    }
 
     override fun getValidationMessages(): Iterable<String> {
-        initializeValidation(false)
+        emulating = true
+        validateInternal(ValidationContext(this, emulating, null), null, emptyList())
         return validationMessages
     }
 
     fun validate(transaction: LedgerTransaction, signers: List<PublicKey>) {
-        initializeValidation(true, transaction, signers)
+        emulating = false
+        validateInternal(ValidationContext(this, emulating, null), transaction, signers)
         if (validationMessages.isNotEmpty()) {
             throw ValidationException(validationMessages)
         }
     }
 
-    protected abstract fun onValidationBuilding(
-            validationBuilder: ValidationBuilder<LedgerTransaction>,
-            signers: List<PublicKey>
-    )
-
-    private fun initializeValidation(
-            validating: Boolean,
-            transaction: LedgerTransaction? = null,
-            signers: List<PublicKey> = listOf()) {
-
+    private fun validateInternal(
+            context: ValidationContext,
+            transaction: LedgerTransaction?,
+            signers: List<PublicKey> = emptyList()) {
         validationMessages.clear()
-        this.validating = validating
-        onValidationBuilding(ValidationBuilder(this, transaction), signers)
+        validate(ContractValidationBuilder(context, transaction, signers))
     }
+
+    protected abstract fun validate(validationBuilder: ContractValidationBuilder)
 }

@@ -26,7 +26,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        InvoiceContract.Commands.ChangeOwner()
+                        InvoiceContract.ChangeOwner()
                 )
                 verifies()
             }
@@ -36,7 +36,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On invoice ownership change only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -52,7 +52,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.ChangeOwner()
+                            InvoiceContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -63,7 +63,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On invoice ownership change only one output state must be created`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -79,7 +79,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.ChangeOwner()
+                            InvoiceContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -90,7 +90,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On invoice ownership change all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -102,7 +102,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.ChangeOwner()
+                            InvoiceContract.ChangeOwner()
                     )
                     verifies()
                 }
@@ -113,7 +113,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     @Test
     fun `On invoice ownership change all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -125,7 +125,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.ChangeOwner()
+                            InvoiceContract.ChangeOwner()
                     )
                     verifies()
                 }
