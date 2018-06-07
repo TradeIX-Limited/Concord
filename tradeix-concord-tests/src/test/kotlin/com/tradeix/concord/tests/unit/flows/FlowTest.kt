@@ -11,24 +11,30 @@ abstract class FlowTest {
 
     protected lateinit var buyer: MockIdentity
     protected lateinit var supplier: MockIdentity
-    protected lateinit var funder: MockIdentity
+    protected lateinit var funder1: MockIdentity
+    protected lateinit var funder2: MockIdentity
+    protected lateinit var funder3: MockIdentity
 
     @Before
     fun setup() {
         network = MockNetwork(
                 listOf(
+                        "com.tradeix.concord.shared.domain.contracts",
                         "com.tradeix.concord.shared.cordapp",
-                        "com.tradeix.concord.shared.domain.contracts"
+                        "com.tradeix.concord.cordapp.supplier",
+                        "com.tradeix.concord.cordapp.funder"
                 )
         )
 
-        val nodes = listOf(1, 2, 3).map { network.createPartyNode() }
+        val nodes = (1..5).toList().map { network.createPartyNode() }
 
         nodes.forEach { configureNode(it) }
 
         buyer = MockIdentity(nodes[0])
         supplier = MockIdentity(nodes[1])
-        funder = MockIdentity(nodes[2])
+        funder1 = MockIdentity(nodes[2])
+        funder2 = MockIdentity(nodes[3])
+        funder3 = MockIdentity(nodes[4])
 
         network.runNetwork()
     }

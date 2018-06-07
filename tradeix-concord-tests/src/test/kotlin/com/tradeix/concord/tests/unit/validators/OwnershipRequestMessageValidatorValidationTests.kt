@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators
 
-import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.OwnershipRequestMessageValidator
 import org.junit.Test
 import kotlin.test.assertEquals

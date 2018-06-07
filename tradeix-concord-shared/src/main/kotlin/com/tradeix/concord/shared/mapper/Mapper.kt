@@ -24,7 +24,6 @@ object Mapper {
                 .containsKey(Key(context, TSource::class.java, TTarget::class.java))
     }
 
-
     inline fun <reified TSource, reified TTarget> addConfiguration(
             context: String,
             configuration: MapperConfiguration<TSource, TTarget>) {
@@ -92,5 +91,18 @@ object Mapper {
             (serviceHubMapperConfigurations[key] as ServiceHubMapperConfiguration<TSource, TTarget>)
                     .map(source, serviceHub)
         }
+    }
+
+    inline fun <reified TSource, reified TTarget> mapMany(
+            context: String,
+            source: Iterable<TSource>): Iterable<TTarget> {
+        return source.map { map<TSource, TTarget>(context, it) }
+    }
+
+    inline fun <reified TSource, reified TTarget> mapMany(
+            context: String,
+            source: Iterable<TSource>,
+            serviceHub: ServiceHub): Iterable<TTarget> {
+        return source.map { map<TSource, TTarget>(context, it, serviceHub) }
     }
 }
