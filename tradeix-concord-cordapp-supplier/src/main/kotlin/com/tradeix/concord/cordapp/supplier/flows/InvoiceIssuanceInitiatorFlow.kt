@@ -2,41 +2,41 @@ package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.registerInvoiceMappers
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.Mapper
+import com.tradeix.concord.shared.messages.TransactionRequestMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
+import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.CollectSignaturesFlow
 import net.corda.core.flows.FinalityFlow
-import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
-import net.corda.core.identity.CordaX500Name
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 
-@InitiatingFlow
 @StartableByRPC
-class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssuanceInitiatorFlow(message) {
+class InvoiceIssuanceInitiatorFlow(
+        message: TransactionRequestMessage<InvoiceRequestMessage>
+) : InvoiceIssuanceInitiatorFlow(message) {
 
     override val progressTracker = getDefaultProgressTracker()
 
     @Suspendable
     override fun call(): SignedTransaction {
 
-        InvoiceRequestMessageValidator().validate(message)
+        InvoiceTransactionRequestMessageValidator().validate(message)
 
-        val invoiceOutputState: InvoiceState = Mapper.map("issuance", message, serviceHub)
+        val invoiceOutputStates: Iterable<InvoiceState> = Mapper
+                .mapMany("issuance", message.assets, serviceHub)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val command = Command(InvoiceContract.Issue(), invoiceOutputState.participants.toOwningKeys())
+        val command = Command(InvoiceContract.Issue(), invoiceOutputStates.getAllOwningKeys())
         val transactionBuilder = TransactionBuilder(serviceHub.networkMapCache.getNotaryParty())
-                .addOutputState(invoiceOutputState, INVOICE_CONTRACT_ID)
+                .addOutputStates(invoiceOutputStates, INVOICE_CONTRACT_ID)
                 .addCommand(command)
 
         // Step 2 - Validate Unsigned Transaction
@@ -51,7 +51,9 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
         progressTracker.currentStep = GatheringSignaturesStep
         val fullySignedTransaction = subFlow(CollectSignaturesFlow(
                 partiallySignedTransaction,
-                invoiceOutputState.participants.getFlowSessionsForCounterparties(this),
+                invoiceOutputStates
+                        .getAllParticipants()
+                        .getFlowSessionsForCounterparties(this),
                 GatheringSignaturesStep.childProgressTracker())
         )
 

@@ -7,8 +7,6 @@ import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_2_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_3_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.TRADEIX_NAME
-import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
-import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_ISSUANCE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockMessages.PURCHASE_ORDER_AMENDMENT_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockMessages.PURCHASE_ORDER_CANCELLATION_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockMessages.PURCHASE_ORDER_CHANGE_OWNER_REQUEST_MESSAGE
@@ -175,31 +173,33 @@ class ConcordPOCPostmanConfiguration : PostmanConfiguration("Concord-POC", "Trad
                     )
             )))
 
-            group.item.add(Endpoint("api/invoices/issue", Request(
-                    method = "POST",
-                    description = "Issues a new invoice and stores it in the participants' vaults",
-                    header = RequestHeader.APPLICATION_JSON,
-                    body = JsonRequestBody(INVOICE_ISSUANCE_REQUEST_MESSAGE),
-                    url = RequestUrl.from(
-                            protocol = "http",
-                            host = host,
-                            port = it.value,
-                            path = "api/invoices/issue"
-                    )
-            )))
+            TODO("Need to build the new postman configs based on ERP")
 
-            group.item.add(Endpoint("api/invoices/changeowner", Request(
-                    method = "PUT",
-                    description = "Changes ownership of an invoice and stores it in the participants' vaults",
-                    header = RequestHeader.APPLICATION_JSON,
-                    body = JsonRequestBody(INVOICE_CHANGE_OWNER_REQUEST_MESSAGE),
-                    url = RequestUrl.from(
-                            protocol = "http",
-                            host = host,
-                            port = it.value,
-                            path = "api/invoices/changeowner"
-                    )
-            )))
+//            group.item.add(Endpoint("api/invoices/issue", Request(
+//                    method = "POST",
+//                    description = "Issues a new invoice and stores it in the participants' vaults",
+//                    header = RequestHeader.APPLICATION_JSON,
+//                    body = JsonRequestBody(INVOICE_REQUEST_MESSAGE),
+//                    url = RequestUrl.from(
+//                            protocol = "http",
+//                            host = host,
+//                            port = it.value,
+//                            path = "api/invoices/issue"
+//                    )
+//            )))
+//
+//            group.item.add(Endpoint("api/invoices/changeowner", Request(
+//                    method = "PUT",
+//                    description = "Changes ownership of an invoice and stores it in the participants' vaults",
+//                    header = RequestHeader.APPLICATION_JSON,
+//                    body = JsonRequestBody(INVOICE_CHANGE_OWNER_REQUEST_MESSAGE),
+//                    url = RequestUrl.from(
+//                            protocol = "http",
+//                            host = host,
+//                            port = it.value,
+//                            path = "api/invoices/changeowner"
+//                    )
+//            )))
 
             collection.item.add(group)
         }

@@ -6,6 +6,7 @@ import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.mapper.Mapper
+import com.tradeix.concord.shared.messages.TransactionRequestMessage
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validation.ValidationException
@@ -98,12 +99,17 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
     }
 
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun issueInvoice(@RequestBody message: InvoiceRequestMessage): ResponseEntity<*> {
+    fun issueInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
-            ResponseBuilder.ok(TransactionResponseMessage(message.externalId!!, result.id.toString()))
+            ResponseBuilder.ok(
+                    TransactionResponseMessage(
+                            assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                            transactionId = result.tx.id.toString()
+                    )
+            )
         } catch (ex: Exception) {
             when (ex) {
                 is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)

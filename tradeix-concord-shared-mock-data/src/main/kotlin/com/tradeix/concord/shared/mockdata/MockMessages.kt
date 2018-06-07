@@ -15,32 +15,7 @@ import java.math.BigDecimal
 
 object MockMessages {
 
-    val INVOICE_ISSUANCE_REQUEST_MESSAGE = InvoiceRequestMessage(
-            externalId = "INVOICE_001",
-            buyer = BUYER_1_NAME.toString(),
-            supplier = SUPPLIER_1_NAME.toString(),
-            invoiceNumber = "001",
-            reference = "REF_INVOICE_001",
-            dueDate = LOCAL_DATE_TIME_FUTURE_1,
-            amount = BigDecimal.valueOf(123.45),
-            totalOutstanding = BigDecimal.valueOf(123.45),
-            settlementDate = LOCAL_DATE_TIME_FUTURE_1,
-            invoiceDate = LOCAL_DATE_TIME_PAST_1,
-            invoicePayments = BigDecimal.ZERO,
-            invoiceDilutions = BigDecimal.ZERO,
-            originationNetwork = "Mock Corda Network",
-            currency = "GBP",
-            siteId = "MOCK_CORDA_NETWORK"
-    )
 
-    val INVOICE_CHANGE_OWNER_REQUEST_MESSAGE = OwnershipRequestMessage(
-            externalId = "INVOICE_001",
-            owner = FUNDER_1_NAME.toString()
-    )
-
-    val INVOICE_CANCELLATION_REQUEST_MESSAGE = CancellationRequestMessage(
-            externalId = "INVOICE_001"
-    )
 
     val PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE = PurchaseOrderRequestMessage(
             externalId = "PURCHASE_ORDER_001",

@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
 import com.tradeix.concord.cordapp.funder.flows.InvoiceIssuanceAcceptorFlow
-import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_ISSUANCE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoices
 import com.tradeix.concord.tests.unit.flows.FlowTest
 import net.corda.testing.node.StartedMockNode
 import org.junit.Test
@@ -19,9 +19,11 @@ class InvoiceIssuanceFlowTests : FlowTest() {
         val transaction = InvoiceFlowTestHelper.issue(
                 network = network,
                 initiator = supplier.node,
-                message = INVOICE_ISSUANCE_REQUEST_MESSAGE.copy(
-                        supplier = supplier.toString(),
-                        buyer = null
+                message = createMockInvoices(
+                        count = 3,
+                        buyer = buyer.name,
+                        supplier = supplier.name,
+                        observers = listOf(funder1.name, funder2.name, funder3.name)
                 )
         )
 
@@ -33,9 +35,11 @@ class InvoiceIssuanceFlowTests : FlowTest() {
         val transaction = InvoiceFlowTestHelper.issue(
                 network = network,
                 initiator = supplier.node,
-                message = INVOICE_ISSUANCE_REQUEST_MESSAGE.copy(
-                        supplier = supplier.toString(),
-                        buyer = null
+                message = createMockInvoices(
+                        count = 3,
+                        buyer = buyer.name,
+                        supplier = supplier.name,
+                        observers = listOf(funder1.name, funder2.name, funder3.name)
                 )
         )
 
@@ -49,9 +53,11 @@ class InvoiceIssuanceFlowTests : FlowTest() {
         val transaction = InvoiceFlowTestHelper.issue(
                 network = network,
                 initiator = supplier.node,
-                message = INVOICE_ISSUANCE_REQUEST_MESSAGE.copy(
-                        supplier = supplier.toString(),
-                        buyer = null
+                message = createMockInvoices(
+                        count = 3,
+                        buyer = buyer.name,
+                        supplier = supplier.name,
+                        observers = listOf(funder1.name, funder2.name, funder3.name)
                 )
         )
 
