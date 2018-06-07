@@ -15,7 +15,12 @@ abstract class FlowTest {
 
     @Before
     fun setup() {
-        network = MockNetwork(listOf("com.tradeix.concord.shared.domain.contracts"))
+        network = MockNetwork(
+                listOf(
+                        "com.tradeix.concord.shared.cordapp",
+                        "com.tradeix.concord.shared.domain.contracts"
+                )
+        )
 
         val nodes = listOf(1, 2, 3).map { network.createPartyNode() }
 

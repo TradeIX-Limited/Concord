@@ -30,8 +30,6 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
 
         InvoiceRequestMessageValidator().validate(message)
 
-        // TODO : review logic here, this is configuration and shouldn't be in the flow...
-        Mapper.registerInvoiceMappers()
         val invoiceOutputState: InvoiceState = Mapper.map("issuance", message, serviceHub)
 
         // Step 1 - Generating Unsigned Transaction
