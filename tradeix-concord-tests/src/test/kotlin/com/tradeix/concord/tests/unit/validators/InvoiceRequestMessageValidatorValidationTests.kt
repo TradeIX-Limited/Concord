@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators
 
-import com.tradeix.concord.shared.mockdata.MockMessages.INVOICE_ISSUANCE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -43,7 +43,7 @@ class InvoiceRequestMessageValidatorValidationTests {
 
     @Test
     fun `InvoiceMessageValidator does not throw a ValidationException when the message state is valid`() {
-        val message = INVOICE_ISSUANCE_REQUEST_MESSAGE
+        val message = INVOICE_REQUEST_MESSAGE
         val validator = InvoiceRequestMessageValidator()
         validator.validate(message)
     }

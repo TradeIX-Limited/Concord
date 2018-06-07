@@ -7,9 +7,11 @@ open class ValidationBuilder<TObject>(private val context: ValidationContext, pr
     fun <TProperty> property(
             property: KProperty1<TObject, TProperty>,
             function: (PropertyValidator<TProperty>) -> Unit) {
-        function(PropertyValidator(
-                context.withMemberAccessor(property.name),
-                getScalarValueOrNull(property))
+        function(
+                PropertyValidator(
+                        context.withMemberAccessor(property.name),
+                        getScalarValueOrNull(property)
+                )
         )
     }
 
@@ -51,7 +53,8 @@ open class ValidationBuilder<TObject>(private val context: ValidationContext, pr
     }
 
     private fun <TProperty> getIterableValueOrSingle(
-            property: KProperty1<TObject, Iterable<TProperty>?>): Iterable<TProperty?> {
-        return if (obj != null) property.get(obj) as Iterable<TProperty?> else listOf(null)
+            property: KProperty1<TObject, Iterable<TProperty?>?>): Iterable<TProperty?> {
+        val result = obj?.let { property.get(it) }
+        return result ?: listOf(null)
     }
 }

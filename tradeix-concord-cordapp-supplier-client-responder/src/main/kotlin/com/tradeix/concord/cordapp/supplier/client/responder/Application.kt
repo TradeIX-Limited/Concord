@@ -34,7 +34,7 @@ class Application(address: Address, rpc: RPCConnectionProvider) {
     init {
         repository.observe {
             client.post("Invoice/Notify", serializer.toJson(TransactionResponseMessage(
-                    externalId = it.state.data.linearId.externalId.toString(),
+                    assetIds = listOf(it.state.data.linearId),
                     transactionId = it.ref.txhash.toString()
             )))
         }
