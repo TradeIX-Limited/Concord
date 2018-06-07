@@ -36,17 +36,11 @@ sourceSets {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile "org.apache.activemq:artemis-commons:2.0.0"
     compile "org.apache.activemq:artemis-core-client:2.0.0"
-
-    compile project(":tradeix-concord-shared")
-    compile project(":tradeix-concord-shared-client")
-    compile project(":tradeix-concord-cordapp-supplier")
-
-    cordaCompile "$corda_release_group:corda-core:$corda_release_version"
-
+    cordapp project(":tradeix-concord-shared-client")
+    cordapp project(":tradeix-concord-cordapp-supplier")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
 }
@@ -57,24 +51,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         apiVersion = "1.1"
         jvmTarget = "1.8"
         javaParameters = true
-    }
-}
-
-jar {
-    from {
-        String[] include = [
-                "kotlin-runtime-${kotlin_version}.jar",
-                "kotlin-stdlib-${kotlin_version}.jar"
-        ]
-
-        configurations.compile
-                .findAll { include.contains(it.name) }
-                .collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    manifest {
-        attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.tradeix.concord.cordapp.supplier.client.receiver.ApplicationKt'
-        )
     }
 }
