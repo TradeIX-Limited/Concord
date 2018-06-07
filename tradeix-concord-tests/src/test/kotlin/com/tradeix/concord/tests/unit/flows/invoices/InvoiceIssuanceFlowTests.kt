@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
-import com.tradeix.concord.cordapp.funder.flows.InvoiceIssuanceAcceptorFlow
+import com.tradeix.concord.shared.cordapp.flows.invoices.InvoiceIssuanceAcceptorFlow
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoices
 import com.tradeix.concord.tests.unit.flows.FlowTest
 import net.corda.testing.node.StartedMockNode
@@ -61,10 +61,10 @@ class InvoiceIssuanceFlowTests : FlowTest() {
                 )
         )
 
-        listOf(supplier.node).forEach {
+        listOf(supplier.node, buyer.node, funder1.node, funder2.node, funder3.node).forEach {
             val recordedTransaction = it.services.validatedTransactions.getTransaction(transaction.id) ?: fail()
             assertEquals(0, recordedTransaction.tx.inputs.size)
-            assertEquals(1, recordedTransaction.tx.outputs.size)
+            assertEquals(3, recordedTransaction.tx.outputs.size)
         }
     }
 }

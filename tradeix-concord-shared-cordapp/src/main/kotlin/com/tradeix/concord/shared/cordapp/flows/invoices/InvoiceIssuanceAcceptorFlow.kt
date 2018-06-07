@@ -1,13 +1,19 @@
 package com.tradeix.concord.shared.cordapp.flows.invoices
 
-import net.corda.core.flows.FlowLogic
-import net.corda.core.flows.FlowSession
-import net.corda.core.flows.InitiatingFlow
-import net.corda.core.flows.StartableByRPC
+import co.paralleluniverse.fibers.Suspendable
+import net.corda.core.flows.*
 import net.corda.core.transactions.SignedTransaction
 
-@InitiatingFlow
 @StartableByRPC
-abstract class InvoiceIssuanceAcceptorFlow(
-        protected val flowSession: FlowSession
-) : FlowLogic<SignedTransaction>()
+@InitiatedBy(InvoiceIssuanceInitiatorFlow::class)
+open class InvoiceIssuanceAcceptorFlow(protected val flowSession: FlowSession) : FlowLogic<SignedTransaction>() {
+
+    @Suspendable
+    override fun call(): SignedTransaction {
+        return subFlow(object : SignTransactionFlow(flowSession) {
+            override fun checkTransaction(stx: SignedTransaction) {
+                // TODO : Implement checks
+            }
+        })
+    }
+}
