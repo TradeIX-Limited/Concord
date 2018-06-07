@@ -10,6 +10,8 @@ object ValidatingTransactionStep : ProgressTracker.Step("Validating contract con
 
 object SigningTransactionStep : ProgressTracker.Step("Signing transaction with our private key.")
 
+object SendTransactionToObserversStep : ProgressTracker.Step("Sending transaction to observers.")
+
 object GatheringSignaturesStep : ProgressTracker.Step("Gathering counterparties' signatures.") {
     override fun childProgressTracker() = CollectSignaturesFlow.tracker()
 }
