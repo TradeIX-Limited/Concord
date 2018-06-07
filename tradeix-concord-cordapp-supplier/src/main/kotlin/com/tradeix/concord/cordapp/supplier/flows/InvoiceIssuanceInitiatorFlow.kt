@@ -13,16 +13,27 @@ import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageVal
 import net.corda.core.contracts.Command
 import net.corda.core.flows.CollectSignaturesFlow
 import net.corda.core.flows.FinalityFlow
+import net.corda.core.flows.SendTransactionFlow
 import net.corda.core.flows.StartableByRPC
+import net.corda.core.identity.CordaX500Name
+import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
+import net.corda.core.utilities.ProgressTracker
 
 @StartableByRPC
 class InvoiceIssuanceInitiatorFlow(
         message: TransactionRequestMessage<InvoiceRequestMessage>
 ) : InvoiceIssuanceInitiatorFlow(message) {
 
-    override val progressTracker = getDefaultProgressTracker()
+    override val progressTracker = ProgressTracker(
+            GeneratingTransactionStep,
+            ValidatingTransactionStep,
+            SigningTransactionStep,
+            GatheringSignaturesStep,
+            SendTransactionToObserversStep,
+            FinalizingTransactionStep
+    )
 
     @Suspendable
     override fun call(): SignedTransaction {
@@ -31,6 +42,10 @@ class InvoiceIssuanceInitiatorFlow(
 
         val invoiceOutputStates: Iterable<InvoiceState> = Mapper
                 .mapMany("issuance", message.assets, serviceHub)
+
+        val observers: Iterable<Party> = message.observers
+                .map { CordaX500Name.parse(it) }
+                .map { serviceHub.networkMapCache.getPartyFromLegalNameOrThrow(it) }
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
@@ -57,7 +72,11 @@ class InvoiceIssuanceInitiatorFlow(
                 GatheringSignaturesStep.childProgressTracker())
         )
 
-        // Step 5 - Finalize Transaction
+        // Step 5 - Send Transaction To Observers
+        progressTracker.currentStep = SendTransactionToObserversStep
+        observers.forEach { subFlow(SendTransactionFlow(initiateFlow(it), fullySignedTransaction)) }
+
+        // Step 6 - Finalize Transaction
         progressTracker.currentStep = FinalizingTransactionStep
         return subFlow(FinalityFlow(fullySignedTransaction, FinalizingTransactionStep.childProgressTracker()))
     }

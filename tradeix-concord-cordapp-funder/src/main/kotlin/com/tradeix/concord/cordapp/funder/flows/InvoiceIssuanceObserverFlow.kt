@@ -12,7 +12,7 @@ import net.corda.core.transactions.SignedTransaction
 
 @StartableByRPC
 @InitiatedBy(InvoiceIssuanceInitiatorFlow::class)
-class InvoiceIssuanceAcceptorFlow(flowSession: FlowSession) : InvoiceIssuanceAcceptorFlow(flowSession) {
+class InvoiceIssuanceObserverFlow(flowSession: FlowSession) : InvoiceIssuanceAcceptorFlow(flowSession) {
 
     @Suspendable
     override fun call(): SignedTransaction {
