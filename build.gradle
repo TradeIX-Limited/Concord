@@ -9,7 +9,6 @@ buildscript {
     ext.quasar_version = '0.7.9'
     ext.junit_version = '4.12'
     ext.gson_version = '2.8.2'
-    ext.rabbit_version = '5.0.0'
     ext.spring_boot_version = '1.5.4.RELEASE'
 
     repositories {
@@ -54,33 +53,21 @@ sourceSets {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    //compile 'org.springframework.boot:spring-boot-starter-web'
-    //compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-    // Corda integration dependencies
-    cordaCompile "$corda_release_group:corda-core:$corda_release_version"
-    cordaCompile "$corda_release_group:corda-finance:$corda_release_version"
-    cordaCompile "$corda_release_group:corda-jackson:$corda_release_version"
     cordaCompile "$corda_release_group:corda-rpc:$corda_release_version"
-    cordaCompile "$corda_release_group:corda-webserver-impl:$corda_release_version"
     cordaRuntime "$corda_release_group:corda:$corda_release_version"
     cordaRuntime "$corda_release_group:corda-webserver:$corda_release_version"
 
-    testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
-
     cordapp project(":tradeix-concord-shared")
     cordapp project(":tradeix-concord-shared-domain")
-    cordapp project(":tradeix-concord-shared-client")
-    cordapp project(":tradeix-concord-shared-cordapp")
+    //cordapp project(":tradeix-concord-shared-client")
 
     cordapp project(":tradeix-concord-cordapp-supplier")
     cordapp project(":tradeix-concord-cordapp-supplier-client-receiver")
-    cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
+    //cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
 
     cordapp project(":tradeix-concord-cordapp-funder")
-    cordapp project(":tradeix-concord-cordapp-funder-client-receiver")
-    cordapp project(":tradeix-concord-cordapp-funder-client-responder")
+    //cordapp project(":tradeix-concord-cordapp-funder-client-receiver")
+    //cordapp project(":tradeix-concord-cordapp-funder-client-responder")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -95,28 +82,26 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 def $supplierCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
-        "$project.group:tradeix-concord-shared-cordapp:$project.version",
         "$project.group:tradeix-concord-shared-client:$project.version",
         "$project.group:tradeix-concord-cordapp-supplier:$project.version",
         "$project.group:tradeix-concord-cordapp-supplier-client-receiver:$project.version",
-        "$project.group:tradeix-concord-cordapp-supplier-client-responder:$project.version"
+        //"$project.group:tradeix-concord-cordapp-supplier-client-responder:$project.version"
 ]
 
 def $funderCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
-        "$project.group:tradeix-concord-shared-cordapp:$project.version",
-        "$project.group:tradeix-concord-shared-client:$project.version",
+        //"$project.group:tradeix-concord-shared-client:$project.version",
         "$project.group:tradeix-concord-cordapp-funder:$project.version",
-        "$project.group:tradeix-concord-cordapp-funder-client-receiver:$project.version",
-        "$project.group:tradeix-concord-cordapp-funder-client-responder:$project.version"
+        //"$project.group:tradeix-concord-cordapp-funder-client-receiver:$project.version",
+        //"$project.group:tradeix-concord-cordapp-funder-client-responder:$project.version"
 ]
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     directory "./build/nodes"
     node {
         name "O=Notary,L=London,C=GB"
-        notary = [validating : true]
+        notary = [validating: true]
         p2pPort 10002
     }
     node {
@@ -128,7 +113,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         webPort 10007
         cordapps = $supplierCorDapp
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
     node {
         name "O=Test Funder 1,L=New York,C=US"
@@ -139,6 +124,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         webPort 10010
         cordapps = $funderCorDapp
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
 }

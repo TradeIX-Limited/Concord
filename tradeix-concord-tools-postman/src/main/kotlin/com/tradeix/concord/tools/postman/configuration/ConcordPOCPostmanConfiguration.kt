@@ -173,8 +173,6 @@ class ConcordPOCPostmanConfiguration : PostmanConfiguration("Concord-POC", "Trad
                     )
             )))
 
-            TODO("Need to build the new postman configs based on ERP")
-
 //            group.item.add(Endpoint("api/invoices/issue", Request(
 //                    method = "POST",
 //                    description = "Issues a new invoice and stores it in the participants' vaults",
