@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.contracts
 
-import com.tradeix.concord.shared.validation.PropertyValidationException
+import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.contracts.TransactionVerificationException
 import net.corda.testing.node.MockServices
 import kotlin.test.assertFailsWith
@@ -12,15 +12,14 @@ abstract class ContractTest {
 
         val exception = assertFailsWith(TransactionVerificationException::class, message, block)
 
-        if (exception.cause is PropertyValidationException) {
-            val validationException = exception.cause as PropertyValidationException
-            val exceptionMessage = validationException.message
-            if (exceptionMessage != message) {
-                throw AssertionError("Expected validation message was '$message' but got '$exceptionMessage'")
+        if (exception.cause is ValidationException) {
+            val validationException = exception.cause as ValidationException
+            if (!validationException.validationMessages.contains(message)) {
+                throw AssertionError("Expected validation exception to contain the message: '$message' but didn't.")
             }
         } else {
             throw AssertionError(
-                    "Cause of the transaction verification exception was not a validation exception."
+                    "Cause of the transaction verification exception was '${exception.javaClass.name}'."
             )
         }
     }

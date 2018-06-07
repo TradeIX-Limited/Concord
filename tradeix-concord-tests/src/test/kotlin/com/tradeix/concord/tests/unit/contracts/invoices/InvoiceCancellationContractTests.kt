@@ -22,7 +22,7 @@ class InvoiceCancellationContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        InvoiceContract.Commands.Cancel()
+                        InvoiceContract.Cancel()
                 )
                 verifies()
             }
@@ -32,7 +32,7 @@ class InvoiceCancellationContractTests : ContractTest() {
     @Test
     fun `On invoice cancellation only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Cancel.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(InvoiceContract.Cancel.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -44,7 +44,7 @@ class InvoiceCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Cancel()
+                            InvoiceContract.Cancel()
                     )
                     verifies()
                 }
@@ -55,7 +55,7 @@ class InvoiceCancellationContractTests : ContractTest() {
     @Test
     fun `On invoice cancellation zero output states must be created`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Cancel.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(InvoiceContract.Cancel.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -67,7 +67,7 @@ class InvoiceCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Cancel()
+                            InvoiceContract.Cancel()
                     )
                     verifies()
                 }
@@ -78,7 +78,7 @@ class InvoiceCancellationContractTests : ContractTest() {
     @Test
     fun `On invoice cancellation all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Cancel.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Cancel.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -86,7 +86,7 @@ class InvoiceCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Cancel()
+                            InvoiceContract.Cancel()
                     )
                     verifies()
                 }
@@ -97,7 +97,7 @@ class InvoiceCancellationContractTests : ContractTest() {
     @Test
     fun `On invoice cancellation all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Cancel.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Cancel.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -105,7 +105,7 @@ class InvoiceCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Cancel()
+                            InvoiceContract.Cancel()
                     )
                     verifies()
                 }

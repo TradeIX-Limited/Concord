@@ -34,7 +34,7 @@ class InvoiceIssuanceInitiatorFlow(message: InvoiceRequestMessage) : InvoiceIssu
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val command = Command(InvoiceContract.Commands.Issue(), invoiceOutputState.participants.toOwningKeys())
+        val command = Command(InvoiceContract.Issue(), invoiceOutputState.participants.toOwningKeys())
         val transactionBuilder = TransactionBuilder(serviceHub.networkMapCache.getNotaryParty())
                 .addOutputState(invoiceOutputState, INVOICE_CONTRACT_ID)
                 .addCommand(command)

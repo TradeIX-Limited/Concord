@@ -24,6 +24,6 @@ data class PurchaseOrderState(
     override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier)
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
-        return CommandAndState(PurchaseOrderContract.Commands.ChangeOwner(), this.copy(owner = newOwner))
+        return CommandAndState(PurchaseOrderContract.ChangeOwner(), this.copy(owner = newOwner))
     }
 }

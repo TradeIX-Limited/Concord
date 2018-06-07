@@ -27,6 +27,6 @@ data class InvoiceState(
     override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer, supplier)
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
-        return CommandAndState(InvoiceContract.Commands.ChangeOwner(), this.copy(owner = newOwner))
+        return CommandAndState(InvoiceContract.ChangeOwner(), this.copy(owner = newOwner))
     }
 }

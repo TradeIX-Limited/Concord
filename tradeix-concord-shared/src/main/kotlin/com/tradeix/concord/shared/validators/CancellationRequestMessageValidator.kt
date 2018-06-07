@@ -1,15 +1,16 @@
 package com.tradeix.concord.shared.validators
 
 import com.tradeix.concord.shared.messages.CancellationRequestMessage
-import com.tradeix.concord.shared.validation.ObjectModelValidator
+import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
-import com.tradeix.concord.shared.validation.isNotNullEmptyOrBlank
+import com.tradeix.concord.shared.validation.extensions.isNotNullEmptyOrBlank
 
-class CancellationRequestMessageValidator : ObjectModelValidator<CancellationRequestMessage>() {
+class CancellationRequestMessageValidator : ObjectValidator<CancellationRequestMessage>() {
 
-    override fun onValidationBuilding(validationBuilder: ValidationBuilder<CancellationRequestMessage>) {
-        validationBuilder
-                .property(CancellationRequestMessage::externalId)
-                .isNotNullEmptyOrBlank()
+    override fun validate(validationBuilder: ValidationBuilder<CancellationRequestMessage>) {
+
+        validationBuilder.property(CancellationRequestMessage::externalId, {
+            it.isNotNullEmptyOrBlank()
+        })
     }
 }

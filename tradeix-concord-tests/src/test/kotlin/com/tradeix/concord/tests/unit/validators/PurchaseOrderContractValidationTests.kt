@@ -9,13 +9,13 @@ class PurchaseOrderContractValidationTests {
 
     @Test
     fun `Issue command produces the expected validation responses`() {
-        val contractCommand = PurchaseOrderContract.Commands.Issue()
+        val contractCommand = PurchaseOrderContract.Issue()
         val expectedValidationMessages = listOf(
-                PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_INPUTS,
-                PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_OUTPUTS,
-                PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_ENTITIES,
-                PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_OWNER,
-                PurchaseOrderContract.Commands.Issue.CONTRACT_RULE_SIGNERS
+                PurchaseOrderContract.Issue.CONTRACT_RULE_INPUTS,
+                PurchaseOrderContract.Issue.CONTRACT_RULE_OUTPUTS,
+                PurchaseOrderContract.Issue.CONTRACT_RULE_ENTITIES,
+                PurchaseOrderContract.Issue.CONTRACT_RULE_OWNER,
+                PurchaseOrderContract.Issue.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -29,13 +29,13 @@ class PurchaseOrderContractValidationTests {
 
     @Test
     fun `Amend command produces the expected validation responses`() {
-        val contractCommand = PurchaseOrderContract.Commands.Amend()
+        val contractCommand = PurchaseOrderContract.Amend()
         val expectedValidationMessages = listOf(
-                PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_INPUTS,
-                PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_OUTPUTS,
-                PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_ENTITIES,
-                PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_OWNER,
-                PurchaseOrderContract.Commands.Amend.CONTRACT_RULE_SIGNERS
+                PurchaseOrderContract.Amend.CONTRACT_RULE_INPUTS,
+                PurchaseOrderContract.Amend.CONTRACT_RULE_OUTPUTS,
+                PurchaseOrderContract.Amend.CONTRACT_RULE_ENTITIES,
+                PurchaseOrderContract.Amend.CONTRACT_RULE_OWNER,
+                PurchaseOrderContract.Amend.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -49,12 +49,12 @@ class PurchaseOrderContractValidationTests {
 
     @Test
     fun `ChangeOwner command produces the expected validation responses`() {
-        val contractCommand = PurchaseOrderContract.Commands.ChangeOwner()
+        val contractCommand = PurchaseOrderContract.ChangeOwner()
         val expectedValidationMessages = listOf(
-                PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_INPUTS,
-                PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OUTPUTS,
-                PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_OWNER,
-                PurchaseOrderContract.Commands.ChangeOwner.CONTRACT_RULE_SIGNERS
+                PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_INPUTS,
+                PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_OUTPUTS,
+                PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_OWNER,
+                PurchaseOrderContract.ChangeOwner.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
@@ -68,12 +68,12 @@ class PurchaseOrderContractValidationTests {
 
     @Test
     fun `Cancel command produces the expected validation responses`() {
-        val contractCommand = PurchaseOrderContract.Commands.Cancel()
+        val contractCommand = PurchaseOrderContract.Cancel()
         val expectedValidationMessages = listOf(
-                PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_INPUTS,
-                PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_OUTPUTS,
-                PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_OWNER,
-                PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_SIGNERS
+                PurchaseOrderContract.Cancel.CONTRACT_RULE_INPUTS,
+                PurchaseOrderContract.Cancel.CONTRACT_RULE_OUTPUTS,
+                PurchaseOrderContract.Cancel.CONTRACT_RULE_OWNER,
+                PurchaseOrderContract.Cancel.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 

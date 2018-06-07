@@ -21,7 +21,7 @@ class HelpController {
                     mapOf(
                             "messageStructure" to InvoiceRequestMessage(),
                             "messageValidation" to InvoiceRequestMessageValidator().getValidationMessages(),
-                            "contractValidation" to InvoiceContract.Commands.Issue().getValidationMessages()
+                            "contractValidation" to InvoiceContract.Issue().getValidationMessages()
                     )
             )
         } catch (ex: Exception) {

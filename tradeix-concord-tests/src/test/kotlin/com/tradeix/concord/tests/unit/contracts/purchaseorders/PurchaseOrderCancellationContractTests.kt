@@ -22,7 +22,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        PurchaseOrderContract.Commands.Cancel()
+                        PurchaseOrderContract.Cancel()
                 )
                 verifies()
             }
@@ -32,7 +32,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
     @Test
     fun `On purchase order cancellation only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(PurchaseOrderContract.Cancel.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -44,7 +44,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Cancel()
+                            PurchaseOrderContract.Cancel()
                     )
                     verifies()
                 }
@@ -55,7 +55,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
     @Test
     fun `On purchase order cancellation zero output states must be created`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(PurchaseOrderContract.Cancel.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -67,7 +67,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Cancel()
+                            PurchaseOrderContract.Cancel()
                     )
                     verifies()
                 }
@@ -78,7 +78,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
     @Test
     fun `On purchase order cancellation the buyer must be the owner`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_OWNER) {
+            assertValidationFails(PurchaseOrderContract.Cancel.CONTRACT_RULE_OWNER) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -86,7 +86,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Cancel()
+                            PurchaseOrderContract.Cancel()
                     )
                     verifies()
                 }
@@ -97,7 +97,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
     @Test
     fun `On purchase order cancellation all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.Cancel.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -105,7 +105,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Cancel()
+                            PurchaseOrderContract.Cancel()
                     )
                     verifies()
                 }
@@ -116,7 +116,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
     @Test
     fun `On purchase order cancellation all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(PurchaseOrderContract.Commands.Cancel.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(PurchaseOrderContract.Cancel.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             PURCHASE_ORDER_CONTRACT_ID,
@@ -124,7 +124,7 @@ class PurchaseOrderCancellationContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            PurchaseOrderContract.Commands.Cancel()
+                            PurchaseOrderContract.Cancel()
                     )
                     verifies()
                 }

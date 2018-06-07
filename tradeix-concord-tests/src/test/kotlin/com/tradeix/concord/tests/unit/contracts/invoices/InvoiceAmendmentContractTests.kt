@@ -26,7 +26,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
                 fails()
                 command(
                         listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                        InvoiceContract.Commands.Amend()
+                        InvoiceContract.Amend()
                 )
                 verifies()
             }
@@ -36,7 +36,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
     @Test
     fun `On invoice amendment only one input state must be consumed`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Amend.CONTRACT_RULE_INPUTS) {
+            assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -52,7 +52,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Amend()
+                            InvoiceContract.Amend()
                     )
                     verifies()
                 }
@@ -63,7 +63,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
     @Test
     fun `On invoice amendment only one output state must be created`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Amend.CONTRACT_RULE_OUTPUTS) {
+            assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -79,7 +79,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Amend()
+                            InvoiceContract.Amend()
                     )
                     verifies()
                 }
@@ -90,7 +90,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
     @Test
     fun `On invoice amendment all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -102,7 +102,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Amend()
+                            InvoiceContract.Amend()
                     )
                     verifies()
                 }
@@ -113,7 +113,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
     @Test
     fun `On invoice amendment all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
-            assertValidationFails(InvoiceContract.Commands.Amend.CONTRACT_RULE_SIGNERS) {
+            assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
                             INVOICE_CONTRACT_ID,
@@ -125,7 +125,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
                     )
                     command(
                             listOf(BUYER_1_IDENTITY.publicKey),
-                            InvoiceContract.Commands.Amend()
+                            InvoiceContract.Amend()
                     )
                     verifies()
                 }

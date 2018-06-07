@@ -1,12 +1,14 @@
 package com.tradeix.concord.shared.domain.contracts
 
 import com.tradeix.concord.shared.domain.states.PromissoryNoteState
-import com.tradeix.concord.shared.validation.*
-import net.corda.core.contracts.CommandData
+import com.tradeix.concord.shared.extensions.toOwningKeys
+import com.tradeix.concord.shared.validation.ContractValidationBuilder
+import com.tradeix.concord.shared.validation.ValidatedCommand
+import com.tradeix.concord.shared.validation.extensions.hasSize
+import com.tradeix.concord.shared.validation.extensions.isEmpty
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.requireSingleCommand
 import net.corda.core.transactions.LedgerTransaction
-import java.security.PublicKey
 
 class PromissoryNoteContract : Contract {
 
@@ -16,56 +18,56 @@ class PromissoryNoteContract : Contract {
     }
 
     override fun verify(tx: LedgerTransaction) {
-        val command = tx.commands.requireSingleCommand<Commands>()
+        val command = tx.commands.requireSingleCommand<ValidatedCommand>()
         command.value.validate(tx, command.signers)
     }
 
-    abstract class Commands : ContractValidator(), CommandData {
+    class Issue : ValidatedCommand() {
 
-        class Issue : Commands() {
+        companion object {
+            const val CONTRACT_RULE_INPUTS =
+                    "On promissory note issuance, zero input states must be consumed."
 
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "On promissory note issuance, zero input states must be consumed."
+            const val CONTRACT_RULE_OUTPUTS =
+                    "On promissory note issuance, only one output state must be created."
 
-                const val CONTRACT_RULE_OUTPUTS =
-                        "On promissory note issuance, only one output state must be created."
+            const val CONTRACT_RULE_ENTITIES =
+                    "On promissory note issuance, the obligor and the obligee cannot be the same entity."
 
-                const val CONTRACT_RULE_ENTITIES =
-                        "On promissory note issuance, the obligor and the obligee cannot be the same entity."
+            const val CONTRACT_RULE_SIGNERS =
+                    "On promissory note issuance, all participants are required to sign the transaction."
+        }
 
-                const val CONTRACT_RULE_SIGNERS =
-                        "On promissory note issuance, all participants are required to sign the transaction."
-            }
+        override fun validate(validationBuilder: ContractValidationBuilder) {
 
-            override fun onValidationBuilding(
-                    validationBuilder: ValidationBuilder<LedgerTransaction>, signers: List<PublicKey>) {
+            // Transaction Validation
+            validationBuilder.property(LedgerTransaction::inputs, {
+                it.isEmpty(CONTRACT_RULE_INPUTS)
+            })
 
-                // Transaction Validation
-                validationBuilder
-                        .property(LedgerTransaction::inputs)
-                        .isEmpty(CONTRACT_RULE_INPUTS)
+            validationBuilder.property(LedgerTransaction::outputs, {
+                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
+            })
 
-                validationBuilder
-                        .property(LedgerTransaction::outputs)
-                        .hasSize(1, CONTRACT_RULE_OUTPUTS)
+            // State Validation
+            validationBuilder.validateWith(CONTRACT_RULE_ENTITIES, {
+                val outputState = it
+                        .outputsOfType<PromissoryNoteState>()
+                        .single()
 
-                // State Validation
-                val outputState = validationBuilder
-                        .select { it.outputsOfType<PromissoryNoteState>().single() }
+                outputState.obligee != outputState.obligor
+            })
 
-                val outputStateValidationBuilder = validationBuilder
-                        .validationBuilderFor { outputState }
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+                val keys = it
+                        .outputsOfType<PromissoryNoteState>()
+                        .single()
+                        .participants
+                        .toOwningKeys()
+                        .distinct()
 
-                outputStateValidationBuilder
-                        .property(PromissoryNoteState::obligee)
-                        .isNotEqualTo(outputState?.obligor, CONTRACT_RULE_ENTITIES)
-
-                outputStateValidationBuilder
-                        .property(PromissoryNoteState::participants)
-                        .map { it.owningKey }
-                        .inverseContainsAll(signers, CONTRACT_RULE_SIGNERS)
-            }
+                validationBuilder.signers.containsAll(keys)
+            })
         }
     }
 }

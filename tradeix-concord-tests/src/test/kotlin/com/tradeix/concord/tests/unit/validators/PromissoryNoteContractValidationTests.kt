@@ -9,12 +9,12 @@ class PromissoryNoteContractValidationTests {
 
     @Test
     fun `Issue command produces the expected validation responses`() {
-        val contractCommand = PromissoryNoteContract.Commands.Issue()
+        val contractCommand = PromissoryNoteContract.Issue()
         val expectedValidationMessages = listOf(
-                PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_INPUTS,
-                PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_OUTPUTS,
-                PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_ENTITIES,
-                PromissoryNoteContract.Commands.Issue.CONTRACT_RULE_SIGNERS
+                PromissoryNoteContract.Issue.CONTRACT_RULE_INPUTS,
+                PromissoryNoteContract.Issue.CONTRACT_RULE_OUTPUTS,
+                PromissoryNoteContract.Issue.CONTRACT_RULE_ENTITIES,
+                PromissoryNoteContract.Issue.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
