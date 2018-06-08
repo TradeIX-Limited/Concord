@@ -2,8 +2,11 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
+import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.TransactionRequestMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
+import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,8 +22,10 @@ class HelpController {
         return try {
             ResponseBuilder.ok(
                     mapOf(
-                            "messageStructure" to InvoiceRequestMessage(),
-                            "messageValidation" to InvoiceRequestMessageValidator().getValidationMessages(),
+                            "messageStructure" to InvoiceTransactionRequestMessage(
+                                    assets = listOf(InvoiceRequestMessage())
+                            ),
+                            "messageValidation" to InvoiceTransactionRequestMessageValidator().getValidationMessages(),
                             "contractValidation" to InvoiceContract.Issue().getValidationMessages()
                     )
             )

@@ -59,10 +59,12 @@ dependencies {
 
     cordapp project(":tradeix-concord-shared")
     cordapp project(":tradeix-concord-shared-domain")
+    cordapp project(":tradeix-concord-shared-cordapp")
+
     //cordapp project(":tradeix-concord-shared-client")
 
     cordapp project(":tradeix-concord-cordapp-supplier")
-    cordapp project(":tradeix-concord-cordapp-supplier-client-receiver")
+    //cordapp project(":tradeix-concord-cordapp-supplier-client-receiver")
     //cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
 
     cordapp project(":tradeix-concord-cordapp-funder")
@@ -82,17 +84,19 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 def $supplierCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
-        "$project.group:tradeix-concord-shared-client:$project.version",
+        "$project.group:tradeix-concord-shared-cordapp:$project.version",
         "$project.group:tradeix-concord-cordapp-supplier:$project.version",
-        "$project.group:tradeix-concord-cordapp-supplier-client-receiver:$project.version",
+        //"$project.group:tradeix-concord-shared-client:$project.version",
+        //"$project.group:tradeix-concord-cordapp-supplier-client-receiver:$project.version",
         //"$project.group:tradeix-concord-cordapp-supplier-client-responder:$project.version"
 ]
 
 def $funderCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
-        //"$project.group:tradeix-concord-shared-client:$project.version",
+        "$project.group:tradeix-concord-shared-cordapp:$project.version",
         "$project.group:tradeix-concord-cordapp-funder:$project.version",
+        //"$project.group:tradeix-concord-shared-client:$project.version",
         //"$project.group:tradeix-concord-cordapp-funder-client-receiver:$project.version",
         //"$project.group:tradeix-concord-cordapp-funder-client-responder:$project.version"
 ]

@@ -7,21 +7,13 @@ open class ValidationBuilder<TObject>(private val context: ValidationContext, pr
     fun <TProperty> property(
             property: KProperty1<TObject, TProperty>,
             function: (PropertyValidator<TProperty>) -> Unit) {
-        function(
-                PropertyValidator(
-                        context.withMemberAccessor(property.name),
-                        getScalarValueOrNull(property)
-                )
-        )
-    }
 
-    fun <TProperty> property(
-            property: KProperty1<TObject, TProperty>,
-            validator: ObjectValidator<TProperty>) {
-        validator.validateInternal(
+        val validator = PropertyValidator(
                 context.withMemberAccessor(property.name),
                 getScalarValueOrNull(property)
         )
+
+        function(validator)
     }
 
     fun <TProperty> collection(
@@ -29,14 +21,6 @@ open class ValidationBuilder<TObject>(private val context: ValidationContext, pr
             function: (PropertyValidator<TProperty?>) -> Unit) {
         getIterableValueOrSingle(property).forEach {
             function(PropertyValidator(context.withIndexAccessor(property.name), it))
-        }
-    }
-
-    fun <TProperty> collection(
-            property: KProperty1<TObject, Iterable<TProperty>?>,
-            validator: ObjectValidator<TProperty>) {
-        getIterableValueOrSingle(property).forEach {
-            validator.validateInternal(context.withIndexAccessor(property.name), it)
         }
     }
 
