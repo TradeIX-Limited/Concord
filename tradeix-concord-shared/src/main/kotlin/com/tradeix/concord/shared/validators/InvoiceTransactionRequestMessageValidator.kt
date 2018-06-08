@@ -3,9 +3,7 @@ package com.tradeix.concord.shared.validators
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
-import com.tradeix.concord.shared.validation.extensions.isNotEmpty
-import com.tradeix.concord.shared.validation.extensions.isValidSecureHash
-import com.tradeix.concord.shared.validation.extensions.isValidX500Name
+import com.tradeix.concord.shared.validation.extensions.*
 
 class InvoiceTransactionRequestMessageValidator : ObjectValidator<InvoiceTransactionRequestMessage>() {
 
@@ -15,6 +13,10 @@ class InvoiceTransactionRequestMessageValidator : ObjectValidator<InvoiceTransac
             it.isNotEmpty()
         })
 
+        validationBuilder.collection(InvoiceTransactionRequestMessage::assets, {
+            it.validateWith(InvoiceRequestMessageValidator())
+        })
+
         validationBuilder.collection(InvoiceTransactionRequestMessage::attachments, {
             it.isValidSecureHash()
         })
@@ -22,7 +24,5 @@ class InvoiceTransactionRequestMessageValidator : ObjectValidator<InvoiceTransac
         validationBuilder.collection(InvoiceTransactionRequestMessage::observers, {
             it.isValidX500Name()
         })
-
-        validationBuilder.collection(InvoiceTransactionRequestMessage::assets, InvoiceRequestMessageValidator())
     }
 }

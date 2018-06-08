@@ -14,7 +14,7 @@ fun <TValue> PropertyValidator<Iterable<TValue>?>.isEmpty(validationMessage: Str
 fun <TValue> PropertyValidator<Iterable<TValue>?>.isNotEmpty(validationMessage: String? = null) {
     if (context.emulating || value != null && value.count() == 0) {
         context.validator.addValidationMessage(
-                validationMessage ?: format("must contain at least one elements")
+                validationMessage ?: format("must contain at least one element")
         )
     }
 }
