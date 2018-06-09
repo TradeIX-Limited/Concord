@@ -1,6 +1,8 @@
 package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.shared.cordapp.flows.CollectSignatureInitiatorFlow
+import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
 import com.tradeix.concord.shared.cordapp.flows.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
@@ -11,10 +13,7 @@ import com.tradeix.concord.shared.messages.TransactionRequestMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
-import net.corda.core.flows.CollectSignaturesFlow
-import net.corda.core.flows.FinalityFlow
-import net.corda.core.flows.SendTransactionFlow
-import net.corda.core.flows.StartableByRPC
+import net.corda.core.flows.*
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
@@ -43,9 +42,10 @@ class InvoiceIssuanceInitiatorFlow(
         val invoiceOutputStates: Iterable<InvoiceState> = Mapper
                 .mapMany("issuance", message.assets, serviceHub)
 
-        val observers: Iterable<Party> = message.observers
+        val observerFlowSessions: Collection<FlowSession> = message.observers
                 .map { CordaX500Name.parse(it) }
                 .map { serviceHub.networkMapCache.getPartyFromLegalNameOrThrow(it) }
+                .map { initiateFlow(it) }
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
@@ -64,17 +64,19 @@ class InvoiceIssuanceInitiatorFlow(
 
         // Step 4 - Gather Counterparty Signatures
         progressTracker.currentStep = GatheringSignaturesStep
-        val fullySignedTransaction = subFlow(CollectSignaturesFlow(
-                partiallySignedTransaction,
-                invoiceOutputStates
-                        .getAllParticipants()
-                        .getFlowSessionsForCounterparties(this),
-                GatheringSignaturesStep.childProgressTracker())
+        val fullySignedTransaction = subFlow(
+                CollectSignatureInitiatorFlow(
+                        partiallySignedTransaction,
+                        invoiceOutputStates
+                                .getAllParticipants()
+                                .getFlowSessionsForCounterparties(this),
+                        GatheringSignaturesStep.childProgressTracker()
+                )
         )
 
         // Step 5 - Send Transaction To Observers
         progressTracker.currentStep = SendTransactionToObserversStep
-        observers.forEach { subFlow(SendTransactionFlow(initiateFlow(it), fullySignedTransaction)) }
+        subFlow(ObserveTransactionInitiatorFlow(fullySignedTransaction, observerFlowSessions))
 
         // Step 6 - Finalize Transaction
         progressTracker.currentStep = FinalizingTransactionStep

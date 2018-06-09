@@ -11,7 +11,9 @@ fun Iterable<AbstractParty>.toOwningKeys(): List<PublicKey> {
     return this.map { it.owningKey }
 }
 
-fun Iterable<AbstractParty>.getFlowSessionsForCounterparties(flow: FlowLogic<SignedTransaction>): Collection<FlowSession> {
+fun Iterable<AbstractParty>.getFlowSessionsForCounterparties(
+        flow: FlowLogic<SignedTransaction>): Collection<FlowSession> {
+
     return this
             .filter { !flow.serviceHub.myInfo.legalIdentities.contains(it) }
             .distinct()
