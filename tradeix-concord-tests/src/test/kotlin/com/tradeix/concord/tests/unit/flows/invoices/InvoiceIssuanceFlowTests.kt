@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
-import com.tradeix.concord.cordapp.funder.flows.InvoiceIssuanceObserverFlow
-import com.tradeix.concord.shared.cordapp.flows.invoices.InvoiceIssuanceAcceptorFlow
+import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesResponderFlow
+import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionResponderFlow
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoices
 import com.tradeix.concord.shared.mockdata.ParticipantType
 import com.tradeix.concord.tests.unit.flows.FlowTest
@@ -13,15 +13,13 @@ import kotlin.test.fail
 class InvoiceIssuanceFlowTests : FlowTest() {
 
     override fun configureNode(node: StartedMockNode, type: ParticipantType) {
-
-        if(type == ParticipantType.BUYER) {
-            node.registerInitiatedFlow(InvoiceIssuanceAcceptorFlow::class.java)
+        if (type == ParticipantType.BUYER) {
+            node.registerInitiatedFlow(CollectSignaturesResponderFlow::class.java)
         }
 
-        if(type == ParticipantType.FUNDER) {
-            node.registerInitiatedFlow(InvoiceIssuanceObserverFlow::class.java)
+        if (type == ParticipantType.FUNDER) {
+            node.registerInitiatedFlow(ObserveTransactionResponderFlow::class.java)
         }
-
     }
 
     @Test

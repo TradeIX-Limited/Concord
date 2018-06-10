@@ -12,10 +12,6 @@ class ObserveTransactionResponderFlow(private val flowSession: FlowSession) : Fl
 
     @Suspendable
     override fun call() {
-        val flow = ReceiveTransactionFlow(
-                otherSideSession = flowSession,
-                checkSufficientSignatures = true,
-                statesToRecord = StatesToRecord.ALL_VISIBLE
-        )
+        subFlow(ReceiveTransactionFlow(flowSession, true, StatesToRecord.ALL_VISIBLE))
     }
 }

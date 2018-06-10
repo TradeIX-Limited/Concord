@@ -15,6 +15,6 @@ class ObserveTransactionInitiatorFlow(
 
     @Suspendable
     override fun call() {
-        flowSessions.forEach { SendTransactionFlow(it, transaction) }
+        flowSessions.forEach { subFlow(SendTransactionFlow(it, transaction)) }
     }
 }

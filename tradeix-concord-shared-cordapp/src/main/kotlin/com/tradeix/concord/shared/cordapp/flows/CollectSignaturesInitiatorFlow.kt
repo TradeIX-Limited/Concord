@@ -9,7 +9,7 @@ import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.ProgressTracker
 
 @InitiatingFlow
-class CollectSignatureInitiatorFlow(
+class CollectSignaturesInitiatorFlow(
         private val transaction: SignedTransaction,
         private val flowSessions: Collection<FlowSession>,
         private val tracker: ProgressTracker
@@ -17,10 +17,6 @@ class CollectSignatureInitiatorFlow(
 
     @Suspendable
     override fun call(): SignedTransaction {
-        return subFlow(CollectSignaturesFlow(
-                transaction,
-                flowSessions,
-                tracker
-        ))
+        return subFlow(CollectSignaturesFlow(transaction, flowSessions, tracker))
     }
 }

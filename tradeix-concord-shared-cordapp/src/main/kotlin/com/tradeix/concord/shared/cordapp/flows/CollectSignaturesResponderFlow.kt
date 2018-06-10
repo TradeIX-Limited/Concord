@@ -7,10 +7,8 @@ import net.corda.core.flows.InitiatedBy
 import net.corda.core.flows.SignTransactionFlow
 import net.corda.core.transactions.SignedTransaction
 
-@InitiatedBy(CollectSignatureInitiatorFlow::class)
-class CollectSignatureResponderFlow(
-        private val flowSession: FlowSession
-) : FlowLogic<SignedTransaction>() {
+@InitiatedBy(CollectSignaturesInitiatorFlow::class)
+class CollectSignaturesResponderFlow(private val flowSession: FlowSession) : FlowLogic<SignedTransaction>() {
 
     @Suspendable
     override fun call(): SignedTransaction {
