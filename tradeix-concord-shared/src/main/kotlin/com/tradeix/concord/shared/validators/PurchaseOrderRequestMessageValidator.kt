@@ -1,63 +1,63 @@
 package com.tradeix.concord.shared.validators
 
-import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderRequestMessage
+import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
 import com.tradeix.concord.shared.validation.extensions.*
 import java.math.BigDecimal
 
-class PurchaseOrderRequestMessageValidator : ObjectValidator<PurchaseOrderRequestMessage>() {
+class PurchaseOrderRequestMessageValidator : ObjectValidator<PurchaseOrderMessage>() {
 
-    override fun validate(validationBuilder: ValidationBuilder<PurchaseOrderRequestMessage>) {
+    override fun validate(validationBuilder: ValidationBuilder<PurchaseOrderMessage>) {
 
-        validationBuilder.property(PurchaseOrderRequestMessage::externalId, {
+        validationBuilder.property(PurchaseOrderMessage::externalId, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::buyer, {
+        validationBuilder.property(PurchaseOrderMessage::buyer, {
             it.isValidX500Name()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::supplier, {
+        validationBuilder.property(PurchaseOrderMessage::supplier, {
             it.isNotNullEmptyOrBlank()
             it.isValidX500Name()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::reference, {
+        validationBuilder.property(PurchaseOrderMessage::reference, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::value, {
+        validationBuilder.property(PurchaseOrderMessage::value, {
             it.isNotNull()
             it.isGreaterThan(BigDecimal.ZERO)
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::currency, {
+        validationBuilder.property(PurchaseOrderMessage::currency, {
             it.isNotNullEmptyOrBlank()
             it.isValidCurrencyCode()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::created, {
+        validationBuilder.property(PurchaseOrderMessage::created, {
             it.isNotNull()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::earliestShipment, {
+        validationBuilder.property(PurchaseOrderMessage::earliestShipment, {
             it.isNotNull()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::latestShipment, {
+        validationBuilder.property(PurchaseOrderMessage::latestShipment, {
             it.isNotNull()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::portOfShipment, {
+        validationBuilder.property(PurchaseOrderMessage::portOfShipment, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::descriptionOfGoods, {
+        validationBuilder.property(PurchaseOrderMessage::descriptionOfGoods, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(PurchaseOrderRequestMessage::deliveryTerms, {
+        validationBuilder.property(PurchaseOrderMessage::deliveryTerms, {
             it.isNotNullEmptyOrBlank()
         })
     }

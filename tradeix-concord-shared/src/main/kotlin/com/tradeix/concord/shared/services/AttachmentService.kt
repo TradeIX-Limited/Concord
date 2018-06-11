@@ -1,19 +1,19 @@
-package com.tradeix.concord.shared.data
+package com.tradeix.concord.shared.services
 
 import net.corda.core.crypto.SecureHash
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.node.ServiceHub
 import java.io.InputStream
 
-class AttachmentRepository(private val attachmentAdapter: AttachmentAdapter) {
+class AttachmentService(private val attachmentAdapter: AttachmentAdapter) {
 
     companion object {
-        fun fromServiceHub(serviceHub: ServiceHub): AttachmentRepository {
-            return AttachmentRepository(AttachmentAdapter.fromServiceHub(serviceHub))
+        fun fromServiceHub(serviceHub: ServiceHub): AttachmentService {
+            return AttachmentService(AttachmentAdapter.fromServiceHub(serviceHub))
         }
 
-        fun fromCordaRPCOps(rpcOps: CordaRPCOps): AttachmentRepository {
-            return AttachmentRepository(AttachmentAdapter.fromCordaRPCOps(rpcOps))
+        fun fromCordaRPCOps(rpcOps: CordaRPCOps): AttachmentService {
+            return AttachmentService(AttachmentAdapter.fromCordaRPCOps(rpcOps))
         }
     }
 

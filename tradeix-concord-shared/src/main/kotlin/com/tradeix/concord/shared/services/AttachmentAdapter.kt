@@ -1,4 +1,4 @@
-package com.tradeix.concord.shared.data
+package com.tradeix.concord.shared.services
 
 import net.corda.core.crypto.SecureHash
 import net.corda.core.messaging.CordaRPCOps

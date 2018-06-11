@@ -1,6 +1,7 @@
 package com.tradeix.concord.shared.cordapp.flows
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.shared.extensions.flowSessionsFor
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.SendTransactionFlow
@@ -15,6 +16,7 @@ class ObserveTransactionInitiatorFlow(
 
     @Suspendable
     override fun call() {
-        counterparties.forEach { subFlow(SendTransactionFlow(initiateFlow(it), transaction)) }
+        val flowSessions = flowSessionsFor(counterparties)
+        flowSessions.forEach { subFlow(SendTransactionFlow(it, transaction)) }
     }
 }

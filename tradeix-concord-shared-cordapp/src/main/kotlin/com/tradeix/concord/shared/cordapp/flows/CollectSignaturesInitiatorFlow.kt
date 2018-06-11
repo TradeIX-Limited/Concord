@@ -1,9 +1,9 @@
 package com.tradeix.concord.shared.cordapp.flows
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.shared.extensions.flowSessionsFor
 import net.corda.core.flows.CollectSignaturesFlow
 import net.corda.core.flows.FlowLogic
-import net.corda.core.flows.FlowSession
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
@@ -18,8 +18,6 @@ class CollectSignaturesInitiatorFlow(
 
     @Suspendable
     override fun call(): SignedTransaction {
-        val flowSessions = mutableListOf<FlowSession>()
-        counterparties.forEach { flowSessions.add(initiateFlow(it)) }
-        return subFlow(CollectSignaturesFlow(transaction, flowSessions, tracker))
+        return subFlow(CollectSignaturesFlow(transaction, flowSessionsFor(counterparties), tracker))
     }
 }

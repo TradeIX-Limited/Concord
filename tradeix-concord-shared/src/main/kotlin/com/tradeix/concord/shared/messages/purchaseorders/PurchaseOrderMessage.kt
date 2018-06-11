@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @CordaSerializable
-data class PurchaseOrderRequestMessage(
+data class PurchaseOrderMessage(
         val externalId: String? = null,
         val buyer: String? = null,
         val supplier: String? = null,
