@@ -9,6 +9,7 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
@@ -18,7 +19,6 @@ import net.corda.core.flows.StartableByRPC
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
-import net.corda.core.utilities.ProgressTracker
 
 @StartableByRPC
 @InitiatingFlow
@@ -26,26 +26,25 @@ class InvoiceIssuanceInitiatorFlow(
         private val message: InvoiceTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
-    override val progressTracker = ProgressTracker(
-            GeneratingTransactionStep,
-            ValidatingTransactionStep,
-            SigningTransactionStep,
-            GatheringSignaturesStep,
-            SendTransactionToObserversStep,
-            FinalizingTransactionStep
-    )
+    override val progressTracker = getProgressTrackerWithObservationStep()
 
     @Suspendable
     override fun call(): SignedTransaction {
 
         InvoiceTransactionRequestMessageValidator().validate(message)
 
+        val identityService = IdentityService(serviceHub)
+
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
         val invoiceOutputStates: Iterable<InvoiceState> = Mapper
                 .mapMany("issuance", message.assets, serviceHub)
-        val command = Command(InvoiceContract.Issue(), invoiceOutputStates.getAllOwningKeys())
-        val transactionBuilder = TransactionBuilder(serviceHub.networkMapCache.getNotaryParty())
+
+        val command = Command(
+                InvoiceContract.Issue(),
+                identityService.getParticipants(invoiceOutputStates).toOwningKeys())
+
+        val transactionBuilder = TransactionBuilder(identityService.getNotary())
                 .addOutputStates(invoiceOutputStates, INVOICE_CONTRACT_ID)
                 .addCommand(command)
 
@@ -62,7 +61,7 @@ class InvoiceIssuanceInitiatorFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        invoiceOutputStates.getAllWellKnownParticipantsExceptMe(serviceHub),
+                        identityService.getWellKnownParticipantsExceptMe(invoiceOutputStates),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )
@@ -72,9 +71,7 @@ class InvoiceIssuanceInitiatorFlow(
         subFlow(
                 ObserveTransactionInitiatorFlow(
                         fullySignedTransaction,
-                        message.observers
-                                .map { CordaX500Name.parse(it) }
-                                .map { serviceHub.networkMapCache.getPartyFromLegalNameOrThrow(it) }
+                        message.observers.map { identityService.getPartyFromLegalNameOrThrow(CordaX500Name.parse(it)) }
                 )
         )
 

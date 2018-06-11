@@ -1,13 +1,12 @@
 package com.tradeix.concord.shared.cordapp.mapping.invoices
 
-import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.fromValueAndCurrency
-import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrMe
-import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrNull
 import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
+import com.tradeix.concord.shared.services.IdentityService
+import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.contracts.Amount
 import net.corda.core.flows.FlowException
 import net.corda.core.identity.CordaX500Name
@@ -15,13 +14,14 @@ import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
 class InvoiceAmendmentMapperConfiguration
-    : ServiceHubMapperConfiguration<InvoiceRequestMessage, InvoiceState>() {
+    : ServiceHubMapperConfiguration<InvoiceMessage, InvoiceState>() {
 
-    override fun map(source: InvoiceRequestMessage, serviceHub: ServiceHub): InvoiceState {
+    override fun map(source: InvoiceMessage, serviceHub: ServiceHub): InvoiceState {
 
-        val repository = VaultRepository.fromServiceHub<InvoiceState>(serviceHub)
+        val vaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
+        val identityService = IdentityService(serviceHub)
 
-        val inputState = repository
+        val inputState = vaultService
                 .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
@@ -29,14 +29,8 @@ class InvoiceAmendmentMapperConfiguration
             throw FlowException("InvoiceState with externalId '${source.externalId}' does not exist.")
         } else {
 
-            val buyer = serviceHub.networkMapCache.getPartyFromLegalNameOrNull(
-                    CordaX500Name.tryParse(source.buyer)
-            )
-
-            val supplier = serviceHub.networkMapCache.getPartyFromLegalNameOrMe(
-                    serviceHub,
-                    CordaX500Name.tryParse(source.supplier)
-            )
+            val buyer = identityService.getPartyFromLegalNameOrNull(CordaX500Name.tryParse(source.buyer))
+            val supplier = identityService.getPartyFromLegalNameOrMe(CordaX500Name.tryParse(source.supplier))
 
             return inputState.state.data.copy(
                     owner = supplier,

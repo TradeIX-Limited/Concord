@@ -1,5 +1,5 @@
 package com.tradeix.concord.shared.messages
 
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
 
-typealias InvoiceTransactionRequestMessage = TransactionRequestMessage<InvoiceRequestMessage>
+typealias InvoiceTransactionRequestMessage = TransactionRequestMessage<InvoiceMessage>

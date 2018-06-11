@@ -29,3 +29,14 @@ fun getDefaultProgressTracker(): ProgressTracker {
             FinalizingTransactionStep
     )
 }
+
+fun getProgressTrackerWithObservationStep(): ProgressTracker {
+    return ProgressTracker(
+            GeneratingTransactionStep,
+            ValidatingTransactionStep,
+            SigningTransactionStep,
+            GatheringSignaturesStep,
+            SendTransactionToObserversStep,
+            FinalizingTransactionStep
+    )
+}

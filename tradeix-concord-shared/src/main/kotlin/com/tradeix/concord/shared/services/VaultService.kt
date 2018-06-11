@@ -1,4 +1,4 @@
-package com.tradeix.concord.shared.data
+package com.tradeix.concord.shared.services
 
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
@@ -10,21 +10,21 @@ import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 
-class VaultRepository<TState : ContractState>(private val vaultAdapter: VaultAdapter<TState>) {
+class VaultService<TState : ContractState>(private val vaultAdapter: VaultAdapter<TState>) {
 
     companion object {
         private val MAX_PAGING = PageSpecification(1, Int.MAX_VALUE)
 
-        inline fun <reified TState : ContractState> fromServiceHub(serviceHub: ServiceHub): VaultRepository<TState> {
-            return VaultRepository(VaultAdapter.fromServiceHub(serviceHub))
+        inline fun <reified TState : ContractState> fromServiceHub(serviceHub: ServiceHub): VaultService<TState> {
+            return VaultService(VaultAdapter.fromServiceHub(serviceHub))
         }
 
-        inline fun <reified TState : ContractState> fromCordaRPCOps(rpcOps: CordaRPCOps): VaultRepository<TState> {
-            return VaultRepository(VaultAdapter.fromCordaRPCOps(rpcOps))
+        inline fun <reified TState : ContractState> fromCordaRPCOps(rpcOps: CordaRPCOps): VaultService<TState> {
+            return VaultService(VaultAdapter.fromCordaRPCOps(rpcOps))
         }
     }
 
-    private val log: Logger = loggerFor<VaultRepository<TState>>()
+    private val log: Logger = loggerFor<VaultService<TState>>()
 
     fun getPagedItems(
             pageNumber: Int = 1,

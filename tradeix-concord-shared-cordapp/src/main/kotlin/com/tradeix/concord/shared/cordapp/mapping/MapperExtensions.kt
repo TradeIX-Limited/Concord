@@ -4,31 +4,19 @@ import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceAmendmentMappe
 import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceIssuanceMapperConfiguration
 import com.tradeix.concord.shared.cordapp.mapping.purchaseorders.PurchaseOrderAmendmentMapperConfiguration
 import com.tradeix.concord.shared.cordapp.mapping.purchaseorders.PurchaseOrderIssuanceMapperConfiguration
-import com.tradeix.concord.shared.data.VaultRepository
 import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.extensions.fromValueAndCurrency
-import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrMe
-import com.tradeix.concord.shared.extensions.getPartyFromLegalNameOrNull
-import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.mapper.MapperConfiguration
-import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-import net.corda.core.contracts.Amount
-import net.corda.core.contracts.UniqueIdentifier
-import net.corda.core.flows.FlowException
-import net.corda.core.identity.CordaX500Name
-import net.corda.core.node.ServiceHub
-import net.corda.core.node.services.Vault
+import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
 
 fun Mapper.registerInvoiceMappers() {
 
     this.addConfiguration("issuance", InvoiceIssuanceMapperConfiguration())
     this.addConfiguration("amendment", InvoiceAmendmentMapperConfiguration())
 
-    this.addConfiguration("response", object : MapperConfiguration<InvoiceState, InvoiceRequestMessage>() {
-        override fun map(source: InvoiceState): InvoiceRequestMessage {
-            return InvoiceRequestMessage(
+    this.addConfiguration("response", object : MapperConfiguration<InvoiceState, InvoiceMessage>() {
+        override fun map(source: InvoiceState): InvoiceMessage {
+            return InvoiceMessage(
                     externalId = source.linearId.externalId,
                     buyer = source.buyer?.nameOrNull()?.toString(),
                     supplier = source.supplier.nameOrNull()?.toString(),

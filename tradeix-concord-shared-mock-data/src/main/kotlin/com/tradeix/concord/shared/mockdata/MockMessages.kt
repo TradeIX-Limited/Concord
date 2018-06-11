@@ -2,12 +2,10 @@ package com.tradeix.concord.shared.mockdata
 
 import com.tradeix.concord.shared.messages.CancellationRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderRequestMessage
+import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
-import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_2
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_3
@@ -17,7 +15,7 @@ object MockMessages {
 
 
 
-    val PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE = PurchaseOrderRequestMessage(
+    val PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE = PurchaseOrderMessage(
             externalId = "PURCHASE_ORDER_001",
             buyer = BUYER_1_NAME.toString(),
             supplier = SUPPLIER_1_NAME.toString(),
@@ -32,7 +30,7 @@ object MockMessages {
             deliveryTerms = "Subject to contract"
     )
 
-    val PURCHASE_ORDER_AMENDMENT_REQUEST_MESSAGE = PurchaseOrderRequestMessage(
+    val PURCHASE_ORDER_AMENDMENT_REQUEST_MESSAGE = PurchaseOrderMessage(
             externalId = "PURCHASE_ORDER_001",
             buyer = BUYER_1_NAME.toString(),
             supplier = SUPPLIER_1_NAME.toString(),

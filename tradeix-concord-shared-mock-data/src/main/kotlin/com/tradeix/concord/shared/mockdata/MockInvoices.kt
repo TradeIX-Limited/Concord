@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.mockdata
 import com.tradeix.concord.shared.messages.CancellationRequestMessage
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
@@ -35,7 +35,7 @@ object MockInvoices {
         )
     }
 
-    val INVOICE_REQUEST_MESSAGE = InvoiceRequestMessage(
+    val INVOICE_REQUEST_MESSAGE = InvoiceMessage(
             externalId = "INVOICE_001",
             buyer = BUYER_1_NAME.toString(),
             supplier = SUPPLIER_1_NAME.toString(),
