@@ -62,9 +62,7 @@ class InvoiceIssuanceInitiatorFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        invoiceOutputStates
-                                .getAllParticipants()
-                                .getFlowSessionsForCounterparties(this),
+                        invoiceOutputStates.getAllWellKnownParticipantsExceptMe(serviceHub),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )
@@ -77,7 +75,6 @@ class InvoiceIssuanceInitiatorFlow(
                         message.observers
                                 .map { CordaX500Name.parse(it) }
                                 .map { serviceHub.networkMapCache.getPartyFromLegalNameOrThrow(it) }
-                                .map { initiateFlow(it) }
                 )
         )
 

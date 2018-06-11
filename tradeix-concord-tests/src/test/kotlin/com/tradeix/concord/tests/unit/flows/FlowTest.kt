@@ -34,10 +34,9 @@ abstract class FlowTest {
     @Before
     fun setup() {
         val cordapps = listOf(
-                "com.tradeix.concord.shared.domain.contracts",
+                "com.tradeix.concord.shared.domain",
                 "com.tradeix.concord.shared.cordapp",
-                "com.tradeix.concord.cordapp.supplier1",
-                "com.tradeix.concord.cordapp.funder"
+                "com.tradeix.concord.cordapp.supplier"
         )
 
         network = MockNetwork(cordapps)
