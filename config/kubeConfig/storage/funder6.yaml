@@ -1,0 +1,15 @@
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-funder6
+  labels:
+    owner: funder6
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile

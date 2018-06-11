@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-#REMEMBER TO CHANGE THE ACCOUNT VALUES
-ACCOUNT_NAME="cordastorage2"
-ACCOUNT_KEY="BNmXBdzIdGs2ZeIX0YY5uPdYXfQGT/ss5GBoWCRfJvXMvk3b0tk1VPQKqSKuYSHAMZshKuBe5AFEkb0PvohIIQ=="
-PREFIX='kubernetes-dynamic-'
-declare -a MODULES=("notary" "conductor" "buyer" "supplier1" "funder" "funder0" "funder1" "funder2" "funder3" "funder4" "funder5" "funder6" "funder7" "funder8" "funder9" )
+source config.sh
+
 PVC_NAMES=()
 AZURE_PVCS=()
 CONFIG_HOME=$1
@@ -15,8 +12,9 @@ genPVCNames() {
   local cnt=${#MODULES[@]}
   #echo ${cnt}
   for ((i=0;i<cnt;i++)); do
+    #echo ${MODULES[i]}
     PVC_NAMES+=("pvclaim-${MODULES[i]}")
-    # echo ${PVC_NAMES}
+    #echo ${PVC_NAMES}
   done
 }
 genAzurePVCs() {
@@ -34,8 +32,8 @@ genAzurePVCs() {
     #echo ${AZURE_NAME}
     AZURE_PVCS+=(${AZURE_NAME})
   done
+  #echo $AZURE_PVCS
 }
-
 azDeletePVCAll() {
   read -p "Are you sure to delete all the content from the PVC  ? (Y/N) " PROMPT
   echo "Answer is ${PROMPT} "
@@ -84,6 +82,8 @@ azUploadPVCAll() {
   do
     echo "Upload to ${AZURE_PVCS[${COUNT}]} for ${j}"
     azUploadPVC ${AZURE_PVCS[${COUNT}]} ${j}
+    sleep ${MEDIUM_DELAY}
+    echo "Upload to ${AZURE_PVCS[${COUNT}]} for ${j} Complete"
   done
   echo "Upload to ${AZURE_PVCS[${COUNT}]} Complete"
   ((COUNT++))
@@ -97,7 +97,9 @@ azUploadSecrets() {
   local cnt=${#MODULES[@]}
   for ((i=0;i<cnt;i++)); do
     kubectl create secret generic ${MODULES[i]}-certificates --from-file=${CONFIG_HOME}/${MODULES[i]}/certificates
+    sleep ${SHORT_DELAY}
     kubectl create secret generic ${MODULES[i]}-nodeinfo --from-file=${CONFIG_HOME}/${MODULES[i]}/node
+    sleep ${SHORT_DELAY}
   done
 }
 

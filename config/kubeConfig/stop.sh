@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source commonutil.sh
+source config.sh
 
 
 genPVCNames

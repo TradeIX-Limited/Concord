@@ -1,0 +1,111 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: funder11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: funder11
+  template:
+    metadata:
+      labels:
+        app: funder11
+    spec:
+      containers:
+      - name: node
+        image: tradeixdev.azurecr.io/abc12:1.0.0.0
+        args: ["notary"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+          #node.conf file from configMap/additional-node-infos additional-node-infos
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: funder11-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #nodeInfoabc12 file from configMap/notary-nodeinfo notary-nodeinfo
+        - name: funder11-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+          #network-parameters file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+          #persistence.mv.db file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
+      - name: web
+        image: tradeixdev.azurecr.io/abc12:1.0.0.0
+        args: ["web", "funder11"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 10004
+        volumeMounts:
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+          #node.conf file from configMap/additional-node-infos additional-node-infos
+        - name: additional-node-infos
+          mountPath: "/opt/corda/additional-node-infos/"
+          readOnly: true
+        - name: funder11-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #nodeInfoabc12 file from configMap/notary-nodeinfo notary-nodeinfo
+        - name: funder11-nodeinfo
+          mountPath: /opt/corda/nodeInfo
+          subPath: nodeInfo
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+          #network-parameters file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/network-parameters
+          subPath: network-parameters
+          #persistence.mv.db file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
+      imagePullSecrets:
+      - name: acr-secret
+#      volumes:
+#      - name: tixintegration
+#        configMap:
+#          name: tixintegration
+      volumes:
+      - name: funder11-nodeinfo
+        secret:
+          secretName: funder11-nodeinfo
+      - name: additional-node-infos
+        secret:
+          secretName: additional-node-infos
+      - name: funder11-certificates
+        secret:
+          secretName: funder11-certificates
+      - name: logs
+        emptyDir: {}
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-funder11
+          readOnly: false

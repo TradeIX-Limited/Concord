@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvclaim-supplier1
+  labels:
+    owner: supplier1
+spec:
+  accessModes:
+    - ReadWriteOnce
+#  volumeName: pv01
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: azurefile
