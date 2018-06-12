@@ -4,6 +4,7 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.fromValueAndCurrency
 import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
+import com.tradeix.concord.shared.mapper.InputAndOutput
 import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
@@ -14,9 +15,9 @@ import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
 class InvoiceAmendmentMapperConfiguration
-    : ServiceHubMapperConfiguration<InvoiceMessage, InvoiceState>() {
+    : ServiceHubMapperConfiguration<InvoiceMessage, InputAndOutput<InvoiceState>>() {
 
-    override fun map(source: InvoiceMessage, serviceHub: ServiceHub): InvoiceState {
+    override fun map(source: InvoiceMessage, serviceHub: ServiceHub): InputAndOutput<InvoiceState> {
 
         val vaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
         val identityService = IdentityService(serviceHub)
@@ -32,7 +33,7 @@ class InvoiceAmendmentMapperConfiguration
             val buyer = identityService.getPartyFromLegalNameOrNull(CordaX500Name.tryParse(source.buyer))
             val supplier = identityService.getPartyFromLegalNameOrMe(CordaX500Name.tryParse(source.supplier))
 
-            return inputState.state.data.copy(
+            val outputState = inputState.state.data.copy(
                     owner = supplier,
                     buyer = buyer,
                     supplier = supplier,
@@ -48,6 +49,8 @@ class InvoiceAmendmentMapperConfiguration
                     originationNetwork = source.originationNetwork!!,
                     siteId = source.siteId!!
             )
+
+            return InputAndOutput(inputState, outputState)
         }
     }
 }
