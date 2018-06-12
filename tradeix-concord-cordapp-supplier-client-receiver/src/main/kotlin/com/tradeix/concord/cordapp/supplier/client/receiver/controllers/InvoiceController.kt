@@ -3,11 +3,11 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
+import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceResponseMapper
 import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.TransactionRequestMessage
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*
 class InvoiceController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<InvoiceState>(rpc.proxy)
+    private val invoiceResponseMapper = InvoiceResponseMapper()
 
     @GetMapping()
     fun getInvoiceStates(
@@ -37,13 +38,13 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
             if (externalId.isNullOrBlank()) {
                 val invoices = vaultService
                         .getPagedItems(pageNumber, pageSize, stateStatus)
-                        .map { Mapper.map<InvoiceState, InvoiceMessage>("response", it.state.data) }
+                        .map { invoiceResponseMapper.map(it.state.data) }
 
                 ResponseBuilder.ok(invoices)
             } else {
                 val invoices = vaultService
                         .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
-                        .map { Mapper.map<InvoiceState, InvoiceMessage>("response", it.state.data) }
+                        .map { invoiceResponseMapper.map(it.state.data) }
 
                 ResponseBuilder.ok(invoices)
             }
@@ -60,7 +61,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
         return try {
             val invoice = vaultService
                     .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
-                    .map { Mapper.map<InvoiceState, InvoiceMessage>("response", it.state.data) }
+                    .map { invoiceResponseMapper.map(it.state.data) }
                     .single()
 
             ResponseBuilder.ok(invoice)
@@ -91,7 +92,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
     }
 
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun issueInvoice(@RequestBody message: TransactionRequestMessage<InvoiceMessage>): ResponseEntity<*> {
+    fun issueInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
             future.progress.subscribe { println(it) }

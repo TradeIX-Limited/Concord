@@ -2,10 +2,10 @@ package com.tradeix.concord.shared.domain.mapping
 
 import com.tradeix.concord.shared.domain.schemas.PurchaseOrderSchemaV1
 import com.tradeix.concord.shared.domain.states.PurchaseOrderState
-import com.tradeix.concord.shared.mapper.MapperConfiguration
+import com.tradeix.concord.shared.mapper.Mapper
 
 class PurchaseOrderSchemaV1Mapper
-    : MapperConfiguration<PurchaseOrderState, PurchaseOrderSchemaV1.PersistentPurchaseOrderSchemaV1>() {
+    : Mapper<PurchaseOrderState, PurchaseOrderSchemaV1.PersistentPurchaseOrderSchemaV1>() {
 
     override fun map(source: PurchaseOrderState): PurchaseOrderSchemaV1.PersistentPurchaseOrderSchemaV1 {
         return PurchaseOrderSchemaV1.PersistentPurchaseOrderSchemaV1(

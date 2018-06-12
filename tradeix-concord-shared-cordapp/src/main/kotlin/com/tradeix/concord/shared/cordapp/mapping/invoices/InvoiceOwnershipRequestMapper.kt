@@ -2,8 +2,8 @@ package com.tradeix.concord.shared.cordapp.mapping.invoices
 
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.tryParse
-import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
 import com.tradeix.concord.shared.mapper.InputAndOutput
+import com.tradeix.concord.shared.mapper.ServiceHubMapper
 import com.tradeix.concord.shared.messages.OwnershipRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
@@ -12,8 +12,7 @@ import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
-class InvoiceOwnershipMapperConfiguration
-    : ServiceHubMapperConfiguration<OwnershipRequestMessage, InputAndOutput<InvoiceState>>() {
+class InvoiceOwnershipRequestMapper : ServiceHubMapper<OwnershipRequestMessage, InputAndOutput<InvoiceState>>() {
 
     override fun map(source: OwnershipRequestMessage, serviceHub: ServiceHub): InputAndOutput<InvoiceState> {
 
@@ -24,7 +23,7 @@ class InvoiceOwnershipMapperConfiguration
                 .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
-        if(inputState == null) {
+        if (inputState == null) {
             throw FlowException("InvoiceState with externalId '${source.externalId}' does not exist.")
         } else {
 

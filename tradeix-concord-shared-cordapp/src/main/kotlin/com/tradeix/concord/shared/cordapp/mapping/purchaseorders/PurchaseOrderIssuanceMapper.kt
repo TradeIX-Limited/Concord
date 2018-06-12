@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.cordapp.mapping.purchaseorders
 import com.tradeix.concord.shared.domain.states.PurchaseOrderState
 import com.tradeix.concord.shared.extensions.fromValueAndCurrency
 import com.tradeix.concord.shared.extensions.tryParse
-import com.tradeix.concord.shared.mapper.ServiceHubMapperConfiguration
+import com.tradeix.concord.shared.mapper.ServiceHubMapper
 import com.tradeix.concord.shared.messages.purchaseorders.PurchaseOrderMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
@@ -14,8 +14,8 @@ import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
-class PurchaseOrderIssuanceMapperConfiguration
-    : ServiceHubMapperConfiguration<PurchaseOrderMessage, PurchaseOrderState>() {
+class PurchaseOrderIssuanceMapper
+    : ServiceHubMapper<PurchaseOrderMessage, PurchaseOrderState>() {
 
     override fun map(source: PurchaseOrderMessage, serviceHub: ServiceHub): PurchaseOrderState {
 

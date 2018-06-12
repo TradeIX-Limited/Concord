@@ -2,10 +2,10 @@ package com.tradeix.concord.shared.domain.mapping
 
 import com.tradeix.concord.shared.domain.schemas.InvoiceEligibilitySchemaV1
 import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
-import com.tradeix.concord.shared.mapper.MapperConfiguration
+import com.tradeix.concord.shared.mapper.Mapper
 
-class InvoiceEligibilityV1MapperConfiguration
-    : MapperConfiguration<InvoiceEligibilityState, InvoiceEligibilitySchemaV1.PersistentInvoiceEligibilitySchemaV1>() {
+class InvoiceEligibilitySchemaV1Mapper
+    : Mapper<InvoiceEligibilityState, InvoiceEligibilitySchemaV1.PersistentInvoiceEligibilitySchemaV1>() {
 
     override fun map(source: InvoiceEligibilityState): InvoiceEligibilitySchemaV1.PersistentInvoiceEligibilitySchemaV1 {
         return InvoiceEligibilitySchemaV1.PersistentInvoiceEligibilitySchemaV1(

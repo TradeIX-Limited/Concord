@@ -3,11 +3,11 @@ package com.tradeix.concord.cordapp.supplier.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
+import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceAmendmentRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
-import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.mapper.InputAndOutput
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
@@ -32,14 +32,15 @@ class InvoiceAmendmentInitiatorFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        InvoiceTransactionRequestMessageValidator().validate(message)
-
+        val validator = InvoiceTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
+        val mapper = InvoiceAmendmentRequestMapper()
+
+        validator.validate(message)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val states: Iterable<InputAndOutput<InvoiceState>> = Mapper
-                .mapMany("amendment", message.assets, serviceHub)
+        val states: Iterable<InputAndOutput<InvoiceState>> = mapper.mapMany(message.assets, serviceHub)
 
         val invoiceInputStates = states.map { it.input }
         val invoiceOutputStates = states.map { it.output }

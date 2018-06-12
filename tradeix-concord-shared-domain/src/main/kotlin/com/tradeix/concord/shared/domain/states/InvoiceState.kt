@@ -1,7 +1,7 @@
 package com.tradeix.concord.shared.domain.states
 
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
-import com.tradeix.concord.shared.domain.mapping.InvoiceSchemaV1MapperConfiguration
+import com.tradeix.concord.shared.domain.mapping.InvoiceSchemaV1Mapper
 import com.tradeix.concord.shared.domain.schemas.InvoiceSchemaV1
 import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
@@ -37,7 +37,7 @@ data class InvoiceState(
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         return when (schema) {
-            is InvoiceSchemaV1 -> InvoiceSchemaV1MapperConfiguration().map(this)
+            is InvoiceSchemaV1 -> InvoiceSchemaV1Mapper().map(this)
             else -> throw IllegalArgumentException("Unrecognised schemas $schema")
         }
     }
