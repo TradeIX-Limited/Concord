@@ -28,7 +28,6 @@ object MockStates {
             supplier = SUPPLIER_1_IDENTITY.party,
             reference = "PURCHASE ORDER REFERENCE",
             amount = ONE_POUNDS,
-            created = LOCAL_DATE_TIME_PAST_1,
             earliestShipment = LOCAL_DATE_TIME_PAST_2,
             latestShipment = LOCAL_DATE_TIME_PAST_3,
             portOfShipment = "PORT OF SHIPMENT",

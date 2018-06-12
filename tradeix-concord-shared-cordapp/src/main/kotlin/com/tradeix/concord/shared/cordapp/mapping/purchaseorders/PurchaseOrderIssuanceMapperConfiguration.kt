@@ -40,7 +40,6 @@ class PurchaseOrderIssuanceMapperConfiguration
                 supplier = supplier,
                 reference = source.reference!!,
                 amount = Amount.fromValueAndCurrency(source.value!!, source.currency!!),
-                created = source.created!!,
                 earliestShipment = source.earliestShipment!!,
                 latestShipment = source.latestShipment!!,
                 portOfShipment = source.portOfShipment!!,

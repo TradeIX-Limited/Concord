@@ -38,7 +38,7 @@ class InvoiceContract : Contract {
 
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
-            //Transaction
+            //Transaction Validation
             validationBuilder.property(LedgerTransaction::inputs, {
                 it.isEmpty(CONTRACT_RULE_INPUTS)
             })
