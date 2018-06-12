@@ -1,5 +1,6 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceAmendmentInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
@@ -95,6 +96,26 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
     fun issueInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
+            future.progress.subscribe { println(it) }
+            val result = future.returnValue.getOrThrow()
+            val response = TransactionResponseMessage(
+                    assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                    transactionId = result.tx.id.toString()
+            )
+
+            ResponseBuilder.ok(response)
+        } catch (ex: Exception) {
+            when (ex) {
+                is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
+                else -> ResponseBuilder.internalServerError(ex.message)
+            }
+        }
+    }
+
+    @PutMapping(path = arrayOf("/amend"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun amendInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
+        return try {
+            val future = rpc.proxy.startTrackedFlow(::InvoiceAmendmentInitiatorFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             val response = TransactionResponseMessage(
