@@ -13,7 +13,7 @@ object InvoiceEligibilitySchema
 object InvoiceEligibilitySchemaV1 : MappedSchema(
         schemaFamily = InvoiceEligibilitySchema.javaClass,
         version = 1,
-        mappedTypes = listOf(InvoiceEligibilitySchema::class.java)) {
+        mappedTypes = listOf(PersistentInvoiceEligibilitySchemaV1::class.java)) {
 
     @Entity
     @Table(name = "invoice_eligibility_states")
@@ -23,9 +23,6 @@ object InvoiceEligibilitySchemaV1 : MappedSchema(
 
             @Column(name = "linear_external_id")
             val linearExternalId: String,
-
-            @Column(name = "invoice_id")
-            val invoiceId: UUID,
 
             @Column(name = "invoice_external_id")
             val invoiceExternalId: String,

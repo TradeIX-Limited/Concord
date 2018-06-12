@@ -11,6 +11,7 @@ class InvoiceRequestMessageValidatorValidationTests {
     @Test
     fun `InvoiceMessageValidator produces the expected validation messages`() {
         val validator = InvoiceRequestMessageValidator()
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'buyer' must be a valid X500 name.",
@@ -31,7 +32,6 @@ class InvoiceRequestMessageValidatorValidationTests {
                 "Property 'currency' must be a valid currency code.",
                 "Property 'siteId' must not be null, empty or blank."
         )
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

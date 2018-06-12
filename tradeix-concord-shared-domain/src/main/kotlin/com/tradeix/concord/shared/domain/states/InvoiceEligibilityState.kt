@@ -11,7 +11,7 @@ import net.corda.core.schemas.QueryableState
 
 data class InvoiceEligibilityState(
         override val linearId: UniqueIdentifier,
-        val invoiceId: UniqueIdentifier,
+        val invoiceExternalId: String,
         val supplier: AbstractParty,
         val funder: AbstractParty,
         val eligible: Boolean

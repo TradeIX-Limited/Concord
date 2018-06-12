@@ -15,7 +15,7 @@ object PurchaseOrderSchema
 object PurchaseOrderSchemaV1 : MappedSchema(
         schemaFamily = PurchaseOrderSchema.javaClass,
         version = 1,
-        mappedTypes = listOf(PurchaseOrderSchemaV1::class.java)) {
+        mappedTypes = listOf(PersistentPurchaseOrderSchemaV1::class.java)) {
 
     @Entity
     @Table(name = "purchase_order_states")

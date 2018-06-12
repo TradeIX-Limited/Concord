@@ -11,6 +11,7 @@ class PurchaseOrderMessageValidatorValidationTests {
     @Test
     fun `PurchaseOrderMessageValidator produces the expected validation messages`() {
         val validator = PurchaseOrderRequestMessageValidator()
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'buyer' must be a valid X500 name.",
@@ -21,14 +22,12 @@ class PurchaseOrderMessageValidatorValidationTests {
                 "Property 'value' must be greater than the specified value.",
                 "Property 'currency' must not be null, empty or blank.",
                 "Property 'currency' must be a valid currency code.",
-                "Property 'created' must not be null.",
                 "Property 'earliestShipment' must not be null.",
                 "Property 'latestShipment' must not be null.",
                 "Property 'portOfShipment' must not be null, empty or blank.",
                 "Property 'descriptionOfGoods' must not be null, empty or blank.",
                 "Property 'deliveryTerms' must not be null, empty or blank."
         )
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

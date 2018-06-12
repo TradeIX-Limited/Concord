@@ -26,7 +26,7 @@ class InvoiceIssuanceRequestMapper : ServiceHubMapper<InvoiceRequestMessage, Inv
                 .singleOrNull()
 
         if (state != null) {
-            throw FlowException("An InvoiceState with '${source.externalId}' already exists.")
+            throw FlowException("An InvoiceState with externalId '${source.externalId}' already exists.")
         }
 
         val buyer = identityService.getPartyFromLegalNameOrNull(CordaX500Name.tryParse(source.buyer))

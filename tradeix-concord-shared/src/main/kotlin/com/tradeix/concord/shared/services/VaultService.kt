@@ -68,8 +68,16 @@ class VaultService<TState : QueryableState>(private val vaultAdapter: VaultAdapt
                 status = status
         )
 
+        return findByCriteria(criteria, pageNumber, pageSize)
+    }
+
+    fun findByCriteria(
+            queryCriteria: QueryCriteria,
+            pageNumber: Int = 1,
+            pageSize: Int = 50): Iterable<StateAndRef<TState>> {
+
         return vaultAdapter.vaultQueryBy(
-                criteria = criteria,
+                criteria = queryCriteria,
                 paging = PageSpecification(pageNumber, pageSize)
         ).states
     }

@@ -10,12 +10,12 @@ class InvoiceContractValidationTests {
     @Test
     fun `Issue command produces the expected validation responses`() {
         val contractCommand = InvoiceContract.Issue()
+        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
         val expectedValidationMessages = listOf(
                 InvoiceContract.Issue.CONTRACT_RULE_INPUTS,
                 InvoiceContract.Issue.CONTRACT_RULE_OUTPUTS,
                 InvoiceContract.Issue.CONTRACT_RULE_SIGNERS
         )
-        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

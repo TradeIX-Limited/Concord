@@ -10,6 +10,7 @@ class PurchaseOrderContractValidationTests {
     @Test
     fun `Issue command produces the expected validation responses`() {
         val contractCommand = PurchaseOrderContract.Issue()
+        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
         val expectedValidationMessages = listOf(
                 PurchaseOrderContract.Issue.CONTRACT_RULE_INPUTS,
                 PurchaseOrderContract.Issue.CONTRACT_RULE_OUTPUTS,
@@ -17,7 +18,6 @@ class PurchaseOrderContractValidationTests {
                 PurchaseOrderContract.Issue.CONTRACT_RULE_OWNER,
                 PurchaseOrderContract.Issue.CONTRACT_RULE_SIGNERS
         )
-        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

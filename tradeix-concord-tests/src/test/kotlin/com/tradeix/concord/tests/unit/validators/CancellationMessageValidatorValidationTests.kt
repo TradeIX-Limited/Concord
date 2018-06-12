@@ -11,10 +11,10 @@ class CancellationMessageValidatorValidationTests {
     @Test
     fun `CancellationMessageValidator produces the expected validation messages`() {
         val validator = CancellationRequestMessageValidator()
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank."
         )
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

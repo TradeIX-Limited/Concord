@@ -15,7 +15,7 @@ object InvoiceSchema
 object InvoiceSchemaV1 : MappedSchema(
         schemaFamily = InvoiceSchema.javaClass,
         version = 1,
-        mappedTypes = listOf(InvoiceSchemaV1::class.java)) {
+        mappedTypes = listOf(PersistentInvoiceSchemaV1::class.java)) {
 
     @Entity
     @Table(name = "invoice_states")
