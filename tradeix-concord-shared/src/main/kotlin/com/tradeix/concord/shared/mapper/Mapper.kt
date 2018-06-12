@@ -2,26 +2,24 @@ package com.tradeix.concord.shared.mapper
 
 import net.corda.core.node.ServiceHub
 
-typealias Key = Triple<String, Class<*>, Class<*>>
-
 object Mapper {
 
     @PublishedApi
     internal val standardMapperConfigurations =
-            mutableMapOf<Key, MapperConfiguration<*, *>>()
+            mutableMapOf<MapperConfigurationKey, MapperConfiguration<*, *>>()
 
     @PublishedApi
     internal val serviceHubMapperConfigurations =
-            mutableMapOf<Key, ServiceHubMapperConfiguration<*, *>>()
+            mutableMapOf<MapperConfigurationKey, ServiceHubMapperConfiguration<*, *>>()
 
     inline fun <reified TSource, reified TTarget> hasStandardMapperConfiguration(context: String): Boolean {
         return standardMapperConfigurations
-                .containsKey(Key(context, TSource::class.java, TTarget::class.java))
+                .containsKey(MapperConfigurationKey(context, TSource::class.java, TTarget::class.java))
     }
 
     inline fun <reified TSource, reified TTarget> hasServiceHubMapperConfiguration(context: String): Boolean {
         return serviceHubMapperConfigurations
-                .containsKey(Key(context, TSource::class.java, TTarget::class.java))
+                .containsKey(MapperConfigurationKey(context, TSource::class.java, TTarget::class.java))
     }
 
     inline fun <reified TSource, reified TTarget> addConfiguration(
@@ -32,12 +30,10 @@ object Mapper {
         val targetClass = TTarget::class.java
 
         if (hasStandardMapperConfiguration<TSource, TTarget>(context)) {
-            // TODO : review logic here...
-            // throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' already exists.")
-            return
+            throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' already exists.")
         }
 
-        standardMapperConfigurations[Key(context, sourceClass, targetClass)] = configuration
+        standardMapperConfigurations[MapperConfigurationKey(context, sourceClass, targetClass)] = configuration
     }
 
     inline fun <reified TSource, reified TTarget> addConfiguration(
@@ -48,12 +44,10 @@ object Mapper {
         val targetClass = TTarget::class.java
 
         if (hasServiceHubMapperConfiguration<TSource, TTarget>(context)) {
-            // TODO : review logic here...
-            // throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' already exists.")
-            return
+            throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' already exists.")
         }
 
-        serviceHubMapperConfigurations[Key(context, sourceClass, targetClass)] = configuration
+        serviceHubMapperConfigurations[MapperConfigurationKey(context, sourceClass, targetClass)] = configuration
     }
 
     inline fun <reified TSource, reified TTarget> map(
@@ -63,7 +57,7 @@ object Mapper {
         val sourceClass = TSource::class.java
         val targetClass = TTarget::class.java
 
-        val key = Key(context, sourceClass, targetClass)
+        val key = MapperConfigurationKey(context, sourceClass, targetClass)
 
         return if (!standardMapperConfigurations.containsKey(key)) {
             throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' doesn't exist.")
@@ -82,7 +76,7 @@ object Mapper {
         val sourceClass = TSource::class.java
         val targetClass = TTarget::class.java
 
-        val key = Key(context, sourceClass, targetClass)
+        val key = MapperConfigurationKey(context, sourceClass, targetClass)
 
         return if (!serviceHubMapperConfigurations.containsKey(key)) {
             throw MapperException("Mapping from '${sourceClass.name}' to '${targetClass.name}' doesn't exist.")
