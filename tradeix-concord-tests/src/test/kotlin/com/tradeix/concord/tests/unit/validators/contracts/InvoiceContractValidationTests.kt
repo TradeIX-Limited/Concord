@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.contracts
 
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import org.junit.Test
@@ -19,9 +19,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -37,9 +35,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -55,9 +51,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -73,9 +67,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 }

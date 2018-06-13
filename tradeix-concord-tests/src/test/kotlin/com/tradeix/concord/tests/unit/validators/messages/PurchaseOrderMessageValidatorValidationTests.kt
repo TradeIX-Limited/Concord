@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.messages
 
 import com.tradeix.concord.shared.mockdata.MockMessages.PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.PurchaseOrderRequestMessageValidator

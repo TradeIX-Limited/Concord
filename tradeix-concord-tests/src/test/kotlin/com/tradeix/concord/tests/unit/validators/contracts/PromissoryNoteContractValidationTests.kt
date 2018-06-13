@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.contracts
 
 import com.tradeix.concord.shared.domain.contracts.PromissoryNoteContract
 import org.junit.Test
@@ -20,9 +20,7 @@ class PromissoryNoteContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 }

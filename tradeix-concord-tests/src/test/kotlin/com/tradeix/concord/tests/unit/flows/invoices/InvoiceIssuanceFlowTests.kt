@@ -51,13 +51,13 @@ class InvoiceIssuanceFlowTests : FlowTest() {
                 )
         )
 
-        listOf(supplier1.node).forEach {
+        listOf(supplier1.node, buyer1.node, funder1.node, funder2.node, funder3.node).forEach {
             assertEquals(transaction, it.services.validatedTransactions.getTransaction(transaction.id))
         }
     }
 
     @Test
-    fun `Invoice issuance flow has zero inputs and a single output`() {
+    fun `Invoice issuance flow has zero inputs and more than one output`() {
         val transaction = InvoiceFlowTestHelper.issue(
                 network = network,
                 initiator = supplier1.node,

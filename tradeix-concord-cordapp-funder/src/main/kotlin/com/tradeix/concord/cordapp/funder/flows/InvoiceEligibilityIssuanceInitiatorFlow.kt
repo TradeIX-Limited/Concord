@@ -1,5 +1,6 @@
 package com.tradeix.concord.cordapp.funder.flows
 
+import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.cordapp.mapping.eligibility.InvoiceEligibilityIssuanceRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceEligibilityContract
@@ -25,6 +26,7 @@ class InvoiceEligibilityIssuanceInitiatorFlow(
 
     override val progressTracker = getDefaultProgressTracker()
 
+    @Suspendable
     override fun call(): SignedTransaction {
 
         val validator = InvoiceEligibilityTransactionRequestMessageValidator()
@@ -59,7 +61,7 @@ class InvoiceEligibilityIssuanceInitiatorFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        identityService.getWellKnownParticipants(invoiceEligibilityOutputStates),
+                        identityService.getWellKnownParticipantsExceptMe(invoiceEligibilityOutputStates),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )
