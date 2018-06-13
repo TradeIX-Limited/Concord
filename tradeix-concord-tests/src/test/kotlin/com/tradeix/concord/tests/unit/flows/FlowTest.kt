@@ -68,6 +68,8 @@ abstract class FlowTest {
         ).forEach { configureNode(it.node, it.type) }
 
         network.runNetwork()
+
+        initialize()
     }
 
     @After
@@ -76,4 +78,7 @@ abstract class FlowTest {
     }
 
     protected abstract fun configureNode(node: StartedMockNode, type: ParticipantType)
+
+    protected open fun initialize() {
+    }
 }

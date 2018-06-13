@@ -34,18 +34,10 @@ class InvoiceAmendmentContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice amendment only one input state must be consumed`() {
+    fun `On invoice amendment at least one input state must be consumed`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_INPUTS) {
                 transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
                     output(
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
@@ -61,7 +53,7 @@ class InvoiceAmendmentContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice amendment only one output state must be created`() {
+    fun `On invoice amendment at least one output state must be created`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_OUTPUTS) {
                 transaction {
@@ -69,7 +61,26 @@ class InvoiceAmendmentContractTests : ContractTest() {
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
                     )
-                    output(
+                    command(
+                            listOf(BUYER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
+                            InvoiceContract.Amend()
+                    )
+                    verifies()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `On invoice amendment the number of input and output states must be equal`() {
+        services.ledger {
+            assertValidationFails(InvoiceContract.Amend.CONTRACT_RULE_INPUTS_OUTPUTS) {
+                transaction {
+                    input(
+                            INVOICE_CONTRACT_ID,
+                            INVOICE_STATE
+                    )
+                    input(
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
                     )

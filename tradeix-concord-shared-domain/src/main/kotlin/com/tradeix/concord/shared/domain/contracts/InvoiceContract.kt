@@ -64,10 +64,13 @@ class InvoiceContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On invoice amendment, only one input state must be consumed."
+                    "On invoice amendment, at least one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On invoice amendment, only one output state must be created."
+                    "On invoice amendment, at least one output state must be created."
+
+            const val CONTRACT_RULE_INPUTS_OUTPUTS =
+                    "On invoice amendment, the number of inputs and outputs must be equal."
 
             const val CONTRACT_RULE_SIGNERS =
                     "On invoice amendment, all participants must sign the transaction."
@@ -77,19 +80,22 @@ class InvoiceContract : Contract {
 
             // Transaction Validation
             validationBuilder.property(LedgerTransaction::inputs, {
-                it.hasSize(1, CONTRACT_RULE_INPUTS)
+                it.isNotEmpty(CONTRACT_RULE_INPUTS)
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
+                it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
+            })
+
+            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
+                it.inputs.size == it.outputs.size
             })
 
             // State Validation
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .outputsOfType<InvoiceState>()
-                        .single()
-                        .participants
+                        .flatMap { it.participants }
                         .toOwningKeys()
                         .distinct()
 

@@ -29,6 +29,7 @@ class InvoiceContractValidationTests {
         val expectedValidationMessages = listOf(
                 InvoiceContract.Amend.CONTRACT_RULE_INPUTS,
                 InvoiceContract.Amend.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Amend.CONTRACT_RULE_INPUTS_OUTPUTS,
                 InvoiceContract.Amend.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
