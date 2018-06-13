@@ -1,22 +1,71 @@
 package com.tradeix.concord.cordapp.funder.flows
 
+import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
+import com.tradeix.concord.shared.cordapp.mapping.eligibility.InvoiceEligibilityIssuanceRequestMapper
+import com.tradeix.concord.shared.domain.contracts.InvoiceEligibilityContract
+import com.tradeix.concord.shared.domain.contracts.InvoiceEligibilityContract.Companion.INVOICE_ELIGIBILITY_CONTRACT_ID
+import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
+import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.messages.InvoiceEligibilityTransactionRequestMessage
-import com.tradeix.concord.shared.validation.ObjectValidator
-import com.tradeix.concord.shared.validation.ValidationBuilder
-import com.tradeix.concord.shared.validation.extensions.isNotEmpty
-import com.tradeix.concord.shared.validation.extensions.validateWith
-import com.tradeix.concord.shared.validators.InvoiceEligibilityMessageValidator
+import com.tradeix.concord.shared.services.IdentityService
+import com.tradeix.concord.shared.validators.InvoiceEligibilityTransactionRequestMessageValidator
+import net.corda.core.contracts.Command
+import net.corda.core.flows.FinalityFlow
+import net.corda.core.flows.FlowLogic
+import net.corda.core.flows.InitiatingFlow
+import net.corda.core.flows.StartableByRPC
+import net.corda.core.transactions.SignedTransaction
+import net.corda.core.transactions.TransactionBuilder
 
-class InvoiceEligibilityIssuanceInitiatorFlow : ObjectValidator<InvoiceEligibilityTransactionRequestMessage>() {
+@StartableByRPC
+@InitiatingFlow
+class InvoiceEligibilityIssuanceInitiatorFlow(
+        private val message: InvoiceEligibilityTransactionRequestMessage
+) : FlowLogic<SignedTransaction>() {
 
-    override fun validate(validationBuilder: ValidationBuilder<InvoiceEligibilityTransactionRequestMessage>) {
+    override val progressTracker = getDefaultProgressTracker()
 
-        validationBuilder.property(InvoiceEligibilityTransactionRequestMessage::assets, {
-            it.isNotEmpty()
-        })
+    override fun call(): SignedTransaction {
 
-        validationBuilder.collection(InvoiceEligibilityTransactionRequestMessage::assets, {
-            it.validateWith(InvoiceEligibilityMessageValidator())
-        })
+        val validator = InvoiceEligibilityTransactionRequestMessageValidator()
+        val identityService = IdentityService(serviceHub)
+        val mapper = InvoiceEligibilityIssuanceRequestMapper()
+
+        validator.validate(message)
+
+        // Step 1 - Generating Unsigned Transaction
+        progressTracker.currentStep = GeneratingTransactionStep
+        val invoiceEligibilityOutputStates: Iterable<InvoiceEligibilityState> = mapper
+                .mapMany(message.assets, serviceHub)
+
+        val command = Command(
+                InvoiceEligibilityContract.Issue(),
+                identityService.getParticipants(invoiceEligibilityOutputStates).toOwningKeys())
+
+        val transactionBuilder = TransactionBuilder(identityService.getNotary())
+                .addOutputStates(invoiceEligibilityOutputStates, INVOICE_ELIGIBILITY_CONTRACT_ID)
+                .addCommand(command)
+
+        // Step 2 - Validating Unsigned Transaction
+        progressTracker.currentStep = ValidatingTransactionStep
+        transactionBuilder.verify(serviceHub)
+
+        // Step 3 - Sign Unsigned Transaction
+        progressTracker.currentStep = SigningTransactionStep
+        val partiallySignedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
+
+        // Step 4 - Gather Counterparty Signatures
+        progressTracker.currentStep = GatheringSignaturesStep
+        val fullySignedTransaction = subFlow(
+                CollectSignaturesInitiatorFlow(
+                        partiallySignedTransaction,
+                        identityService.getWellKnownParticipants(invoiceEligibilityOutputStates),
+                        GatheringSignaturesStep.childProgressTracker()
+                )
+        )
+
+        // Step 5 - Finalize Transaction
+        progressTracker.currentStep = FinalizingTransactionStep
+        return subFlow(FinalityFlow(fullySignedTransaction, FinalizingTransactionStep.childProgressTracker()))
     }
 }
