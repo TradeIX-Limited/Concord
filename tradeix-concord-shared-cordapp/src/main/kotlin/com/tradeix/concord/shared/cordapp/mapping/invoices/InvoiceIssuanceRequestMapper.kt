@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.cordapp.mapping.invoices
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.fromValueAndCurrency
 import com.tradeix.concord.shared.extensions.tryParse
-import com.tradeix.concord.shared.mapper.ServiceHubMapper
+import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
@@ -14,9 +14,10 @@ import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
-class InvoiceIssuanceRequestMapper : ServiceHubMapper<InvoiceRequestMessage, InvoiceState>() {
+class InvoiceIssuanceRequestMapper(private val serviceHub: ServiceHub)
+    : Mapper<InvoiceRequestMessage, InvoiceState>() {
 
-    override fun map(source: InvoiceRequestMessage, serviceHub: ServiceHub): InvoiceState {
+    override fun map(source: InvoiceRequestMessage): InvoiceState {
 
         val vaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
         val identityService = IdentityService(serviceHub)

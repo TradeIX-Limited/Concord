@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.cordapp.mapping.eligibility
 import com.tradeix.concord.shared.domain.schemas.InvoiceEligibilitySchemaV1.PersistentInvoiceEligibilitySchemaV1
 import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
 import com.tradeix.concord.shared.extensions.tryParse
-import com.tradeix.concord.shared.mapper.ServiceHubMapper
+import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.InvoiceEligibilityRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
@@ -15,10 +15,10 @@ import net.corda.core.node.services.Vault
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.node.services.vault.builder
 
-class InvoiceEligibilityIssuanceRequestMapper
-    : ServiceHubMapper<InvoiceEligibilityRequestMessage, InvoiceEligibilityState>() {
+class InvoiceEligibilityIssuanceRequestMapper(private val serviceHub: ServiceHub)
+    : Mapper<InvoiceEligibilityRequestMessage, InvoiceEligibilityState>() {
 
-    override fun map(source: InvoiceEligibilityRequestMessage, serviceHub: ServiceHub): InvoiceEligibilityState {
+    override fun map(source: InvoiceEligibilityRequestMessage): InvoiceEligibilityState {
 
         val vaultService = VaultService.fromServiceHub<InvoiceEligibilityState>(serviceHub)
         val identityService = IdentityService(serviceHub)

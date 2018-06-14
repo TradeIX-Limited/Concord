@@ -34,13 +34,13 @@ class InvoiceAmendmentInitiatorFlow(
 
         val validator = InvoiceTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceAmendmentRequestMapper()
+        val mapper = InvoiceAmendmentRequestMapper(serviceHub)
 
         validator.validate(message)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val states: Iterable<InputAndOutput<InvoiceState>> = mapper.mapMany(message.assets, serviceHub)
+        val states: Iterable<InputAndOutput<InvoiceState>> = mapper.mapMany(message.assets)
 
         val invoiceInputStates = states.map { it.input }
         val invoiceOutputStates = states.map { it.output }
