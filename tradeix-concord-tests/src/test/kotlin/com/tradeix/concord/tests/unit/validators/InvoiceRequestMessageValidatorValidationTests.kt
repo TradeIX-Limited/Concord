@@ -6,7 +6,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class InvoiceMessageValidatorValidationTests {
+class InvoiceRequestMessageValidatorValidationTests {
 
     @Test
     fun `InvoiceMessageValidator produces the expected validation messages`() {
