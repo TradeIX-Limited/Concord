@@ -37,10 +37,6 @@ class PurchaseOrderRequestMessageValidator : ObjectValidator<PurchaseOrderMessag
             it.isValidCurrencyCode()
         })
 
-        validationBuilder.property(PurchaseOrderMessage::created, {
-            it.isNotNull()
-        })
-
         validationBuilder.property(PurchaseOrderMessage::earliestShipment, {
             it.isNotNull()
         })

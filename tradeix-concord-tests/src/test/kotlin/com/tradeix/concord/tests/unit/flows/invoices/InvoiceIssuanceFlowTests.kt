@@ -35,7 +35,23 @@ class InvoiceIssuanceFlowTests : FlowTest() {
                 )
         )
 
-        transaction.verifyRequiredSignatures()
+        transaction.verifySignaturesExcept(buyer1.publicKey)
+    }
+
+    @Test
+    fun `Invoice issuance flow should be signed by the acceptor`() {
+        val transaction = InvoiceFlowTestHelper.issue(
+                network = network,
+                initiator = supplier1.node,
+                message = createMockInvoices(
+                        count = 3,
+                        buyer = buyer1.name,
+                        supplier = supplier1.name,
+                        observers = listOf(funder1.name, funder2.name, funder3.name)
+                )
+        )
+
+        transaction.verifySignaturesExcept(supplier1.publicKey)
     }
 
     @Test
@@ -51,13 +67,13 @@ class InvoiceIssuanceFlowTests : FlowTest() {
                 )
         )
 
-        listOf(supplier1.node).forEach {
+        listOf(supplier1.node, buyer1.node, funder1.node, funder2.node, funder3.node).forEach {
             assertEquals(transaction, it.services.validatedTransactions.getTransaction(transaction.id))
         }
     }
 
     @Test
-    fun `Invoice issuance flow has zero inputs and a single output`() {
+    fun `Invoice issuance flow has zero inputs and more than one output`() {
         val transaction = InvoiceFlowTestHelper.issue(
                 network = network,
                 initiator = supplier1.node,

@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.contracts
 
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import org.junit.Test
@@ -10,18 +10,16 @@ class InvoiceContractValidationTests {
     @Test
     fun `Issue command produces the expected validation responses`() {
         val contractCommand = InvoiceContract.Issue()
+        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
         val expectedValidationMessages = listOf(
                 InvoiceContract.Issue.CONTRACT_RULE_INPUTS,
                 InvoiceContract.Issue.CONTRACT_RULE_OUTPUTS,
                 InvoiceContract.Issue.CONTRACT_RULE_SIGNERS
         )
-        val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -31,15 +29,14 @@ class InvoiceContractValidationTests {
         val expectedValidationMessages = listOf(
                 InvoiceContract.Amend.CONTRACT_RULE_INPUTS,
                 InvoiceContract.Amend.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Amend.CONTRACT_RULE_INPUTS_OUTPUTS,
                 InvoiceContract.Amend.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -55,9 +52,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 
@@ -73,9 +68,7 @@ class InvoiceContractValidationTests {
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
-            assertTrue {
-                actualValidationMessages.contains(it)
-            }
+            assertTrue { actualValidationMessages.contains(it) }
         }
     }
 }

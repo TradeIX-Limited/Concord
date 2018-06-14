@@ -1,25 +1,25 @@
 package com.tradeix.concord.shared.services
 
-import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 import net.corda.core.node.services.vault.PageSpecification
 import net.corda.core.node.services.vault.QueryCriteria
+import net.corda.core.schemas.QueryableState
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 
-class VaultService<TState : ContractState>(private val vaultAdapter: VaultAdapter<TState>) {
+class VaultService<TState : QueryableState>(private val vaultAdapter: VaultAdapter<TState>) {
 
     companion object {
         private val MAX_PAGING = PageSpecification(1, Int.MAX_VALUE)
 
-        inline fun <reified TState : ContractState> fromServiceHub(serviceHub: ServiceHub): VaultService<TState> {
+        inline fun <reified TState : QueryableState> fromServiceHub(serviceHub: ServiceHub): VaultService<TState> {
             return VaultService(VaultAdapter.fromServiceHub(serviceHub))
         }
 
-        inline fun <reified TState : ContractState> fromCordaRPCOps(rpcOps: CordaRPCOps): VaultService<TState> {
+        inline fun <reified TState : QueryableState> fromCordaRPCOps(rpcOps: CordaRPCOps): VaultService<TState> {
             return VaultService(VaultAdapter.fromCordaRPCOps(rpcOps))
         }
     }
@@ -68,8 +68,16 @@ class VaultService<TState : ContractState>(private val vaultAdapter: VaultAdapte
                 status = status
         )
 
+        return findByCriteria(criteria, pageNumber, pageSize)
+    }
+
+    fun findByCriteria(
+            queryCriteria: QueryCriteria,
+            pageNumber: Int = 1,
+            pageSize: Int = 50): Iterable<StateAndRef<TState>> {
+
         return vaultAdapter.vaultQueryBy(
-                criteria = criteria,
+                criteria = queryCriteria,
                 paging = PageSpecification(pageNumber, pageSize)
         ).states
     }

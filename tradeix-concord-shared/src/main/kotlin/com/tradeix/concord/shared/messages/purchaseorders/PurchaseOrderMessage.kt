@@ -12,7 +12,6 @@ data class PurchaseOrderMessage(
         val reference: String? = null,
         val value: BigDecimal? = null,
         val currency: String? = null,
-        val created: LocalDateTime? = null,
         val earliestShipment: LocalDateTime? = null,
         val latestShipment: LocalDateTime? = null,
         val portOfShipment: String? = null,

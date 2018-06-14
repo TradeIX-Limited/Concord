@@ -1,5 +1,6 @@
 package com.tradeix.concord.shared.mockdata
 
+import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.domain.states.PromissoryNoteState
 import com.tradeix.concord.shared.domain.states.PurchaseOrderState
@@ -7,6 +8,7 @@ import com.tradeix.concord.shared.mockdata.MockAddresses.BANK_OF_ENGLAND
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockAmounts.ZERO_POUNDS
 import com.tradeix.concord.shared.mockdata.MockIdentities.BUYER_1_IDENTITY
+import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.GUARANTOR_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGEE_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGOR_1_IDENTITY
@@ -22,13 +24,15 @@ import java.util.*
 object MockStates {
 
     val PURCHASE_ORDER_STATE = PurchaseOrderState(
-            linearId = UniqueIdentifier("PO_EXTERNAL_ID", UUID.fromString("EECBB2AB-8640-49F5-B80C-2DEC95C0F1E4")),
+            linearId = UniqueIdentifier(
+                    "PURCHASE_ORDER_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000001")
+            ),
             owner = BUYER_1_IDENTITY.party,
             buyer = BUYER_1_IDENTITY.party,
             supplier = SUPPLIER_1_IDENTITY.party,
             reference = "PURCHASE ORDER REFERENCE",
             amount = ONE_POUNDS,
-            created = LOCAL_DATE_TIME_PAST_1,
             earliestShipment = LOCAL_DATE_TIME_PAST_2,
             latestShipment = LOCAL_DATE_TIME_PAST_3,
             portOfShipment = "PORT OF SHIPMENT",
@@ -37,7 +41,10 @@ object MockStates {
     )
 
     val INVOICE_STATE = InvoiceState(
-            linearId = UniqueIdentifier("INV_EXTERNAL_ID", UUID.fromString("B7EA4592-CA47-4F8E-93C3-5FB30F569458")),
+            linearId = UniqueIdentifier(
+                    "INVOICE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000002")
+            ),
             owner = SUPPLIER_1_IDENTITY.party,
             buyer = BUYER_1_IDENTITY.party,
             supplier = SUPPLIER_1_IDENTITY.party,
@@ -54,8 +61,22 @@ object MockStates {
             siteId = "SITE ID"
     )
 
+    val INVOICE_ELIGIBILITY_STATE = InvoiceEligibilityState(
+            linearId = UniqueIdentifier(
+                    "INVOICE_ELIGIBILITY_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000003")
+            ),
+            invoiceExternalId = "INVOICE_EXTERNAL_ID",
+            supplier = SUPPLIER_1_IDENTITY.party,
+            funder = FUNDER_1_IDENTITY.party,
+            eligible = true
+    )
+
     val PROMISSORY_NOTE_STATE = PromissoryNoteState(
-            linearId = UniqueIdentifier("PN_EXTERNAL_ID", UUID.fromString("5B62807C-72BA-402C-A701-94713181660B")),
+            linearId = UniqueIdentifier(
+                    "PROMISSORY_NOTE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000004")
+            ),
             owner = OBLIGEE_1_IDENTITY.party,
             obligor = OBLIGOR_1_IDENTITY.party,
             obligee = OBLIGEE_1_IDENTITY.party,
@@ -65,5 +86,4 @@ object MockStates {
             dateOfIssue = LOCAL_DATE_TIME_PAST_1,
             dateOfMaturity = LOCAL_DATE_TIME_FUTURE_1
     )
-
 }

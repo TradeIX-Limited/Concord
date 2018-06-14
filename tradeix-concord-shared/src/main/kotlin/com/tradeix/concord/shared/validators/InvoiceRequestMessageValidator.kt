@@ -1,75 +1,75 @@
 package com.tradeix.concord.shared.validators
 
-import com.tradeix.concord.shared.messages.invoices.InvoiceMessage
+import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
 import com.tradeix.concord.shared.validation.extensions.*
 import java.math.BigDecimal
 
-class InvoiceRequestMessageValidator : ObjectValidator<InvoiceMessage>() {
+class InvoiceRequestMessageValidator : ObjectValidator<InvoiceRequestMessage>() {
 
-    override fun validate(validationBuilder: ValidationBuilder<InvoiceMessage>) {
+    override fun validate(validationBuilder: ValidationBuilder<InvoiceRequestMessage>) {
 
-        validationBuilder.property(InvoiceMessage::externalId, {
+        validationBuilder.property(InvoiceRequestMessage::externalId, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(InvoiceMessage::buyer, {
+        validationBuilder.property(InvoiceRequestMessage::buyer, {
             it.isValidX500Name()
         })
 
-        validationBuilder.property(InvoiceMessage::supplier, {
+        validationBuilder.property(InvoiceRequestMessage::supplier, {
             it.isValidX500Name()
         })
 
-        validationBuilder.property(InvoiceMessage::invoiceNumber, {
+        validationBuilder.property(InvoiceRequestMessage::invoiceNumber, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(InvoiceMessage::reference, {
+        validationBuilder.property(InvoiceRequestMessage::reference, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(InvoiceMessage::dueDate, {
+        validationBuilder.property(InvoiceRequestMessage::dueDate, {
             it.isNotNull()
         })
 
-        validationBuilder.property(InvoiceMessage::amount, {
+        validationBuilder.property(InvoiceRequestMessage::amount, {
             it.isNotNull()
             it.isGreaterThan(BigDecimal.ZERO)
         })
 
-        validationBuilder.property(InvoiceMessage::totalOutstanding, {
+        validationBuilder.property(InvoiceRequestMessage::totalOutstanding, {
             it.isNotNull()
             it.isGreaterThanOrEqualTo(BigDecimal.ZERO)
         })
 
-        validationBuilder.property(InvoiceMessage::settlementDate, {
+        validationBuilder.property(InvoiceRequestMessage::settlementDate, {
             it.isNotNull()
         })
 
-        validationBuilder.property(InvoiceMessage::invoiceDate, {
+        validationBuilder.property(InvoiceRequestMessage::invoiceDate, {
             it.isNotNull()
         })
 
-        validationBuilder.property(InvoiceMessage::invoicePayments, {
+        validationBuilder.property(InvoiceRequestMessage::invoicePayments, {
             it.isNotNull()
         })
 
-        validationBuilder.property(InvoiceMessage::invoiceDilutions, {
+        validationBuilder.property(InvoiceRequestMessage::invoiceDilutions, {
             it.isNotNull()
         })
 
-        validationBuilder.property(InvoiceMessage::originationNetwork, {
+        validationBuilder.property(InvoiceRequestMessage::originationNetwork, {
             it.isNotNullEmptyOrBlank()
         })
 
-        validationBuilder.property(InvoiceMessage::currency, {
+        validationBuilder.property(InvoiceRequestMessage::currency, {
             it.isNotNull()
             it.isValidCurrencyCode()
         })
 
-        validationBuilder.property(InvoiceMessage::siteId, {
+        validationBuilder.property(InvoiceRequestMessage::siteId, {
             it.isNotNullEmptyOrBlank()
         })
     }

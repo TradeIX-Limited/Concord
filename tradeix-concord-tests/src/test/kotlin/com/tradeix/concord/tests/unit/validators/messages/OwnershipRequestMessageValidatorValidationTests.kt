@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.messages
 
 import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.OwnershipRequestMessageValidator
@@ -11,12 +11,12 @@ class OwnershipRequestMessageValidatorValidationTests {
     @Test
     fun `OwnershipMessageValidator produces the expected validation messages`() {
         val validator = OwnershipRequestMessageValidator()
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'owner' must not be null, empty or blank.",
                 "Property 'owner' must be a valid X500 name."
         )
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {

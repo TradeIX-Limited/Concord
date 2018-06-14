@@ -1,4 +1,4 @@
-package com.tradeix.concord.tests.unit.validators
+package com.tradeix.concord.tests.unit.validators.messages
 
 import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
@@ -6,11 +6,12 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class InvoiceMessageValidatorValidationTests {
+class InvoiceRequestMessageValidatorValidationTests {
 
     @Test
     fun `InvoiceMessageValidator produces the expected validation messages`() {
         val validator = InvoiceRequestMessageValidator()
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'buyer' must be a valid X500 name.",
@@ -31,7 +32,6 @@ class InvoiceMessageValidatorValidationTests {
                 "Property 'currency' must be a valid currency code.",
                 "Property 'siteId' must not be null, empty or blank."
         )
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
