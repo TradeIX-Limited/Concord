@@ -1,9 +1,7 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
-import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.domain.states.PromissoryNoteState
-import com.tradeix.concord.shared.domain.states.PurchaseOrderState
+import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
+import com.tradeix.concord.shared.domain.states.*
 import com.tradeix.concord.shared.mockdata.MockAddresses.BANK_OF_ENGLAND
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockAmounts.ZERO_POUNDS
@@ -18,7 +16,9 @@ import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FU
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_2
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_3
+import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.identity.AbstractParty
 import java.util.*
 
 object MockStates {
@@ -85,5 +85,38 @@ object MockStates {
             placeOfIssue = BANK_OF_ENGLAND,
             dateOfIssue = LOCAL_DATE_TIME_PAST_1,
             dateOfMaturity = LOCAL_DATE_TIME_FUTURE_1
+    )
+    val FUNDING_RESPONSE_STATE_PENDING = FundingResponseState(
+            linearId = UniqueIdentifier(
+                    "FUNDING_RESPONSE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000004")
+            ),
+            invoiceNumber = "INVOICE_EXTERNAL_ID",
+            supplier = SUPPLIER_1_IDENTITY.party,
+            funder = FUNDER_1_IDENTITY.party,
+            purchaseValue = ONE_POUNDS,
+            status = FundingResponseStatus.PENDING
+    )
+    val FUNDING_RESPONSE_STATE_ACCEPTED = FundingResponseState(
+            linearId = UniqueIdentifier(
+                    "FUNDING_RESPONSE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000004")
+            ),
+            invoiceNumber = "INVOICE_EXTERNAL_ID",
+            supplier = SUPPLIER_1_IDENTITY.party,
+            funder = FUNDER_1_IDENTITY.party,
+            purchaseValue = ONE_POUNDS,
+            status = FundingResponseStatus.ACCEPTED
+    )
+    val FUNDING_RESPONSE_STATE_REJECTED = FundingResponseState(
+            linearId = UniqueIdentifier(
+                    "FUNDING_RESPONSE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000004")
+            ),
+            invoiceNumber = "INVOICE_EXTERNAL_ID",
+            supplier = SUPPLIER_1_IDENTITY.party,
+            funder = FUNDER_1_IDENTITY.party,
+            purchaseValue = ONE_POUNDS,
+            status = FundingResponseStatus.REJECTED
     )
 }
