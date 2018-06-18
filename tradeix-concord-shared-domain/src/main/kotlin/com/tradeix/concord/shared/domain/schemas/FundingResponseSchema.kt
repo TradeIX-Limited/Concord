@@ -23,7 +23,7 @@ object FundingResponseSchemaV1 : MappedSchema(
             val linearId: UUID,
 
             @Column(name = "linear_external_id")
-            val linearExternalId: String,
+            val linearExternalId: String, //TODO : This could be removed
 
             @Column(name = "supplier")
             val supplier: AbstractParty,
@@ -34,8 +34,8 @@ object FundingResponseSchemaV1 : MappedSchema(
             @Column(name = "purchaseValue")
             val purchaseValue : BigDecimal,
 
-            @Column(name = "invoice_number")
-            val funder : AbstractParty?,
+            @Column(name = "funder")
+            val funder : AbstractParty,
 
             @Enumerated(EnumType.STRING)
             val status: FundingResponseStatus
