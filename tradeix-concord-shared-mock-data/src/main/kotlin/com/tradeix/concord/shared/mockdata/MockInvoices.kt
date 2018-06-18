@@ -1,6 +1,7 @@
 package com.tradeix.concord.shared.mockdata
 
 import com.tradeix.concord.shared.messages.CancellationRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipRequestMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
@@ -32,6 +33,15 @@ object MockInvoices {
                 },
                 observers = observers?.map { it.toString() } ?: emptyList(),
                 attachments = emptyList()
+        )
+    }
+
+    fun createMockInvoiceCancellations(
+            count: Int,
+            observers: Iterable<CordaX500Name>?): CancellationTransactionRequestMessage {
+        return CancellationTransactionRequestMessage(
+                assets = (1..count).toList().map { CancellationRequestMessage("INVOICE_$it") },
+                observers = observers?.map { it.toString() } ?: emptyList()
         )
     }
 

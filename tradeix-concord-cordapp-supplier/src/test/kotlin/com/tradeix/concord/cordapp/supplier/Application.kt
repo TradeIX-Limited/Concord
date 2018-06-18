@@ -25,7 +25,7 @@ class Application {
                 // Start the test supplier node
                 startNode(
                         providedName = SUPPLIER_1_NAME,
-                        rpcUsers = listOf(User("user1", "test", permissions = setOf("ALL")))
+                        rpcUsers = listOf(User("guest", "letmein", permissions = setOf("ALL")))
                 ).getOrThrow()
             }
         }

@@ -4,7 +4,6 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.toOwningKeys
 import com.tradeix.concord.shared.validation.ContractValidationBuilder
 import com.tradeix.concord.shared.validation.ValidatedCommand
-import com.tradeix.concord.shared.validation.extensions.hasSize
 import com.tradeix.concord.shared.validation.extensions.isEmpty
 import com.tradeix.concord.shared.validation.extensions.isNotEmpty
 import net.corda.core.contracts.Contract
@@ -108,10 +107,13 @@ class InvoiceContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On invoice ownership change, only one input state must be consumed."
+                    "On invoice ownership change, at least one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On invoice ownership change, only one output state must be created."
+                    "On invoice ownership change, at least one output state must be created."
+
+            const val CONTRACT_RULE_INPUTS_OUTPUTS =
+                    "On invoice ownership change, the number of inputs and outputs must be equal."
 
             const val CONTRACT_RULE_SIGNERS =
                     "On invoice ownership change, all participants must sign the transaction."
@@ -121,19 +123,22 @@ class InvoiceContract : Contract {
 
             // Transaction Validation
             validationBuilder.property(LedgerTransaction::inputs, {
-                it.hasSize(1, CONTRACT_RULE_INPUTS)
+                it.isNotEmpty(CONTRACT_RULE_INPUTS)
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
+                it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
+            })
+
+            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
+                it.inputs.size == it.outputs.size
             })
 
             // State Validation
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .outputsOfType<InvoiceState>()
-                        .single()
-                        .participants
+                        .flatMap { it.participants }
                         .toOwningKeys()
                         .distinct()
 
@@ -146,7 +151,7 @@ class InvoiceContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On invoice cancellation, only one input state must be consumed."
+                    "On invoice cancellation, at least one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
                     "On invoice cancellation, zero output states must be created."
@@ -159,7 +164,7 @@ class InvoiceContract : Contract {
 
             // Transaction Validation
             validationBuilder.property(LedgerTransaction::inputs, {
-                it.hasSize(1, CONTRACT_RULE_INPUTS)
+                it.isNotEmpty(CONTRACT_RULE_INPUTS)
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
@@ -170,8 +175,7 @@ class InvoiceContract : Contract {
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .inputsOfType<InvoiceState>()
-                        .single()
-                        .participants
+                        .flatMap { it.participants }
                         .toOwningKeys()
                         .distinct()
 

@@ -25,7 +25,7 @@ class Application {
                 // Start the test funder node
                 startNode(
                         providedName = FUNDER_1_NAME,
-                        rpcUsers = listOf(User("user1", "test", permissions = setOf("ALL")))
+                        rpcUsers = listOf(User("guest", "letmein", permissions = setOf("ALL")))
                 ).getOrThrow()
             }
         }
