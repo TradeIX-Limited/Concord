@@ -14,7 +14,7 @@ import java.util.*
 
 data class FundingResponseState(
         override val linearId: UniqueIdentifier,
-        val fundingRequestId: UniqueIdentifier? = null, // optional
+        val fundingRequestId: UniqueIdentifier? = null, // optional //TODO: Is this required ?
         val invoiceNumber: String, //TODO : List of Invoices
         val supplier: AbstractParty,
         val funder: AbstractParty,

@@ -34,6 +34,8 @@ class FundingResponseContract : Contract {
 
             const val CONTRACT_RULE_SIGNERS =
                     "On Funding Response issuance, all participants must sign the transaction."
+            const val CONTRACT_RULE_STATUS =
+                    "On Funding Response issuance, status has to be pending."
         }
 
         override fun validate(validationBuilder: ContractValidationBuilder) {
@@ -57,6 +59,9 @@ class FundingResponseContract : Contract {
 
                 validationBuilder.signers.containsAll(keys)
             })
+
+            //TO DO : Status has to be Pending
+
         }
     }
 
@@ -64,10 +69,10 @@ class FundingResponseContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On Funding Response Acceptance, at least one input state must be consumed."
+                    "On Funding Response Acceptance, only one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On Funding Response Acceptance, at least one output state must be created."
+                    "On Funding Response Acceptance, only one output state must be created."
 
             const val CONTRACT_RULE_INPUTS_OUTPUTS =
                     "On Funding Response Acceptance, the number of inputs and outputs must be equal."
@@ -80,11 +85,11 @@ class FundingResponseContract : Contract {
 
             // Transaction Validation
             validationBuilder.property(LedgerTransaction::inputs, {
-                it.isNotEmpty(CONTRACT_RULE_INPUTS)
+                it.hasSize(1, CONTRACT_RULE_INPUTS)
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
+                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
             })
 
             validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
@@ -95,12 +100,15 @@ class FundingResponseContract : Contract {
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .outputsOfType<FundingResponseState>()
-                        .flatMap { it.participants }
+                        .single()
+                        .participants
                         .toOwningKeys()
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
             })
+
+            //TO DO : Status has to be Accepted
         }
     }
 
@@ -139,6 +147,8 @@ class FundingResponseContract : Contract {
 
                 validationBuilder.signers.containsAll(keys)
             })
+
+            //TO DO : Status has to be Rejected
         }
     }
 
