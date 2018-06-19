@@ -14,14 +14,15 @@ import java.util.*
 
 data class FundingResponseState(
         override val linearId: UniqueIdentifier,
-        val fundingRequestId: UniqueIdentifier? = null, // optional //TODO: Is this required ?
-        val invoiceNumber: String, //TODO : List of Invoices
+        val fundingRequestId: UniqueIdentifier?,
+        val invoiceLinearIds: Collection<UniqueIdentifier>,
         val supplier: AbstractParty,
         val funder: AbstractParty,
-        val purchaseValue: Amount<Currency>,//Price
+        val purchaseValue: Amount<Currency>,
         val status: FundingResponseStatus
 ) : LinearState, QueryableState {
 
+    override val participants: List<AbstractParty> get() = listOf(supplier, funder)
 
     override fun supportedSchemas(): Iterable<MappedSchema> {
         return listOf(FundingResponseSchemaV1)
@@ -31,8 +32,14 @@ data class FundingResponseState(
         return when (schema) {
             is FundingResponseSchemaV1 -> FundingResponseSchemaV1Mapper().map(this)
             else -> throw IllegalArgumentException("Unrecognised schemas $schema")
-        }    }
+        }
+    }
 
-    override val participants: List<AbstractParty> get() = listOf(supplier, funder)
+    fun accept(): FundingResponseState {
+        return this.copy(status = FundingResponseStatus.ACCEPTED)
+    }
 
+    fun reject(): FundingResponseState {
+        return this.copy(status = FundingResponseStatus.REJECTED)
+    }
 }

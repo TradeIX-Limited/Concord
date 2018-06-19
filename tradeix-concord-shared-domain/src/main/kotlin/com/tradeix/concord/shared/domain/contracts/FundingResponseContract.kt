@@ -1,12 +1,13 @@
 package com.tradeix.concord.shared.domain.contracts
 
+import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
 import com.tradeix.concord.shared.domain.states.FundingResponseState
+import com.tradeix.concord.shared.extensions.isNotEmpty
 import com.tradeix.concord.shared.extensions.toOwningKeys
 import com.tradeix.concord.shared.validation.ContractValidationBuilder
 import com.tradeix.concord.shared.validation.ValidatedCommand
 import com.tradeix.concord.shared.validation.extensions.hasSize
 import com.tradeix.concord.shared.validation.extensions.isEmpty
-import com.tradeix.concord.shared.validation.extensions.isNotEmpty
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.requireSingleCommand
 import net.corda.core.transactions.LedgerTransaction
@@ -27,15 +28,19 @@ class FundingResponseContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On FundingResponse issuance, zero input states must be consumed."
+                    "On funding response issuance, zero input states must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On Funding Response issuance, at least one output state must be created."
+                    "On funding response issuance, only one output state must be created."
+
+            const val CONTRACT_RULE_STATUS =
+                    "On funding response issuance, the status should be set to PENDING."
+
+            const val CONTRACT_RULE_INVOICE_COUNT =
+                    "On funding response issuance, there must be at least one referenced invoice."
 
             const val CONTRACT_RULE_SIGNERS =
-                    "On Funding Response issuance, all participants must sign the transaction."
-            const val CONTRACT_RULE_STATUS =
-                    "On Funding Response issuance, status has to be pending."
+                    "On funding response issuance, all participants must sign the transaction."
         }
 
         override fun validate(validationBuilder: ContractValidationBuilder) {
@@ -46,22 +51,38 @@ class FundingResponseContract : Contract {
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
+                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
             })
 
             // State Validation
+            validationBuilder.validateWith(CONTRACT_RULE_STATUS, {
+                val status = it
+                        .outputsOfType<FundingResponseState>()
+                        .single()
+                        .status
+
+                status == FundingResponseStatus.PENDING
+            })
+
+            validationBuilder.validateWith(CONTRACT_RULE_INVOICE_COUNT, {
+                val invoiceLinearIds = it
+                        .outputsOfType<FundingResponseState>()
+                        .single()
+                        .invoiceLinearIds
+
+                invoiceLinearIds.isNotEmpty()
+            })
+
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .outputsOfType<FundingResponseState>()
-                        .flatMap { it.participants }
+                        .single()
+                        .participants
                         .toOwningKeys()
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
             })
-
-            //TO DO : Status has to be Pending
-
         }
     }
 
@@ -69,16 +90,19 @@ class FundingResponseContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On Funding Response Acceptance, only one input state must be consumed."
+                    "On funding response acceptance, only one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On Funding Response Acceptance, only one output state must be created."
+                    "On funding response acceptance, only one output state must be created."
 
-            const val CONTRACT_RULE_INPUTS_OUTPUTS =
-                    "On Funding Response Acceptance, the number of inputs and outputs must be equal."
+            const val CONTRACT_RULE_INPUT_STATUS =
+                    "On funding response acceptance, the input state status should be set to PENDING."
+
+            const val CONTRACT_RULE_OUTPUT_STATUS =
+                    "On funding response acceptance, the output state status should be set to ACCEPTED."
 
             const val CONTRACT_RULE_SIGNERS =
-                    "On Funding Response Acceptance, all participants must sign the transaction."
+                    "On funding response acceptance, all participants must sign the transaction."
         }
 
         override fun validate(validationBuilder: ContractValidationBuilder) {
@@ -92,11 +116,25 @@ class FundingResponseContract : Contract {
                 it.hasSize(1, CONTRACT_RULE_OUTPUTS)
             })
 
-            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
-                it.inputs.size == it.outputs.size
+            // State Validation
+            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS, {
+                val status = it
+                        .inputsOfType<FundingResponseState>()
+                        .single()
+                        .status
+
+                status == FundingResponseStatus.PENDING
             })
 
-            // State Validation
+            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS, {
+                val status = it
+                        .outputsOfType<FundingResponseState>()
+                        .single()
+                        .status
+
+                status == FundingResponseStatus.ACCEPTED
+            })
+
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
                         .outputsOfType<FundingResponseState>()
@@ -107,8 +145,6 @@ class FundingResponseContract : Contract {
 
                 validationBuilder.signers.containsAll(keys)
             })
-
-            //TO DO : Status has to be Accepted
         }
     }
 
@@ -116,13 +152,19 @@ class FundingResponseContract : Contract {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On Funding Response rejection, only one input state must be consumed."
+                    "On funding response rejection, only one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On Funding Response rejection, zero output states must be created."
+                    "On funding response rejection, only one output state must be created."
+
+            const val CONTRACT_RULE_INPUT_STATUS =
+                    "On funding response rejection, the status should be set to PENDING."
+
+            const val CONTRACT_RULE_OUTPUT_STATUS =
+                    "On funding response rejection, the status should be set to REJECTED."
 
             const val CONTRACT_RULE_SIGNERS =
-                    "On Funding Response rejection, all participants must sign the transaction."
+                    "On funding response rejection, all participants must sign the transaction."
         }
 
         override fun validate(validationBuilder: ContractValidationBuilder) {
@@ -133,13 +175,31 @@ class FundingResponseContract : Contract {
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.isEmpty(CONTRACT_RULE_OUTPUTS)
+                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
             })
 
             // State Validation
+            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS, {
+                val status = it
+                        .inputsOfType<FundingResponseState>()
+                        .single()
+                        .status
+
+                status == FundingResponseStatus.PENDING
+            })
+
+            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS, {
+                val status = it
+                        .outputsOfType<FundingResponseState>()
+                        .single()
+                        .status
+
+                status == FundingResponseStatus.REJECTED
+            })
+
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
-                        .inputsOfType<FundingResponseState>()
+                        .outputsOfType<FundingResponseState>()
                         .single()
                         .participants
                         .toOwningKeys()
@@ -147,9 +207,6 @@ class FundingResponseContract : Contract {
 
                 validationBuilder.signers.containsAll(keys)
             })
-
-            //TO DO : Status has to be Rejected
         }
     }
-
 }

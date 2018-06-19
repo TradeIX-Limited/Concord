@@ -14,6 +14,8 @@ class FundingResponseContractValidationTests {
         val expectedValidationMessages = listOf(
                 FundingResponseContract.Issue.CONTRACT_RULE_INPUTS,
                 FundingResponseContract.Issue.CONTRACT_RULE_OUTPUTS,
+                FundingResponseContract.Issue.CONTRACT_RULE_STATUS,
+                FundingResponseContract.Issue.CONTRACT_RULE_INVOICE_COUNT,
                 FundingResponseContract.Issue.CONTRACT_RULE_SIGNERS
         )
 
@@ -29,7 +31,8 @@ class FundingResponseContractValidationTests {
         val expectedValidationMessages = listOf(
                 FundingResponseContract.Accept.CONTRACT_RULE_INPUTS,
                 FundingResponseContract.Accept.CONTRACT_RULE_OUTPUTS,
-                FundingResponseContract.Accept.CONTRACT_RULE_INPUTS_OUTPUTS,
+                FundingResponseContract.Accept.CONTRACT_RULE_INPUT_STATUS,
+                FundingResponseContract.Accept.CONTRACT_RULE_OUTPUT_STATUS,
                 FundingResponseContract.Accept.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
@@ -47,6 +50,8 @@ class FundingResponseContractValidationTests {
         val expectedValidationMessages = listOf(
                 FundingResponseContract.Reject.CONTRACT_RULE_INPUTS,
                 FundingResponseContract.Reject.CONTRACT_RULE_OUTPUTS,
+                FundingResponseContract.Reject.CONTRACT_RULE_INPUT_STATUS,
+                FundingResponseContract.Reject.CONTRACT_RULE_OUTPUT_STATUS,
                 FundingResponseContract.Reject.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()

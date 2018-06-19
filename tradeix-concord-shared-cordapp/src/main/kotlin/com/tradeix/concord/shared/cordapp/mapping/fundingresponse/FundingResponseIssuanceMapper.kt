@@ -1,0 +1,61 @@
+package com.tradeix.concord.shared.cordapp.mapping.fundingresponse
+
+import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
+import com.tradeix.concord.shared.domain.states.FundingResponseState
+import com.tradeix.concord.shared.domain.states.InvoiceState
+import com.tradeix.concord.shared.extensions.fromValueAndCurrency
+import com.tradeix.concord.shared.extensions.tryParse
+import com.tradeix.concord.shared.mapper.Mapper
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
+import com.tradeix.concord.shared.services.IdentityService
+import com.tradeix.concord.shared.services.VaultService
+import net.corda.core.contracts.Amount
+import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.flows.FlowException
+import net.corda.core.identity.CordaX500Name
+import net.corda.core.node.ServiceHub
+import net.corda.core.node.services.Vault
+
+class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
+    : Mapper<FundingResponseRequestMessage, FundingResponseState>() {
+
+    override fun map(source: FundingResponseRequestMessage): FundingResponseState {
+
+        val invoiceVaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
+        val fundingResponseVaultService = VaultService.fromServiceHub<FundingResponseState>(serviceHub)
+        val identityService = IdentityService(serviceHub)
+
+        val state = fundingResponseVaultService
+                .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
+                .singleOrNull()
+
+        if (state != null) {
+            throw FlowException("An FundingResponseState with externalId '${source.externalId}' already exists.")
+        }
+
+        // TODO : Add checks to find existing funding request.
+
+        val invoiceIds: MutableCollection<UniqueIdentifier> = mutableListOf()
+
+        source.invoiceExternalIds!!.forEach {
+            val invoiceStateAndRef = invoiceVaultService
+                    .findByExternalId(it, status = Vault.StateStatus.UNCONSUMED)
+                    .singleOrNull() ?: throw FlowException("Could not find an InvoiceState with externalId '$it'.")
+
+            invoiceIds.add(invoiceStateAndRef.state.data.linearId)
+        }
+
+        val supplier = identityService.getPartyFromLegalNameOrThrow(CordaX500Name.tryParse(source.supplier))
+        val funder = identityService.getPartyFromLegalNameOrMe(CordaX500Name.tryParse(source.funder))
+
+        return FundingResponseState(
+                linearId = UniqueIdentifier(source.externalId!!),
+                fundingRequestId = null, // TODO : Use ID of vault lookup state (see above)
+                invoiceLinearIds = invoiceIds,
+                supplier = supplier,
+                funder = funder,
+                purchaseValue = Amount.fromValueAndCurrency(source.purchaseValue!!, source.currency!!),
+                status = FundingResponseStatus.PENDING
+        )
+    }
+}

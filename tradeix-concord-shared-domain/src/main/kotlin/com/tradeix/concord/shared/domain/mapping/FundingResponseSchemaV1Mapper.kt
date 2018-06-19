@@ -10,12 +10,13 @@ class FundingResponseSchemaV1Mapper
     override fun map(source: FundingResponseState): FundingResponseSchemaV1.PersistentFundingResponseSchemaV1 {
         return FundingResponseSchemaV1.PersistentFundingResponseSchemaV1(
                 linearId = source.linearId.id,
-                linearExternalId = source.linearId.externalId.toString(),
+                linearExternalId = source.linearId.toString(),
+                invoiceLinearIds = source.invoiceLinearIds,
                 supplier = source.supplier,
-                invoiceNumber = source.invoiceNumber,
-                status = source.status,
                 funder = source.funder,
-                purchaseValue = source.purchaseValue.toDecimal()
+                purchaseValue = source.purchaseValue.toDecimal(),
+                currency = source.purchaseValue.token.currencyCode,
+                status = source.status
         )
     }
 }

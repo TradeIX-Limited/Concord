@@ -1,11 +1,11 @@
 package com.tradeix.concord.shared.domain.schemas
 
 import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -17,26 +17,31 @@ object FundingResponseSchemaV1 : MappedSchema(
         mappedTypes = listOf(PersistentFundingResponseSchemaV1::class.java)) {
 
     @Entity
-    @Table(name = "invoice_states")
+    @Table(name = "funding_response_states")
     class PersistentFundingResponseSchemaV1(
             @Column(name = "linear_id")
             val linearId: UUID,
 
             @Column(name = "linear_external_id")
-            val linearExternalId: String, //TODO : This could be removed
+            val linearExternalId: String,
+
+            @ElementCollection
+            @Column(name = "invoice_linear_ids")
+            val invoiceLinearIds: Iterable<UniqueIdentifier>?,
 
             @Column(name = "supplier")
             val supplier: AbstractParty,
 
-            @Column(name = "invoice_number")
-            val invoiceNumber: String,
+            @Column(name = "funder")
+            val funder: AbstractParty,
 
             @Column(name = "purchaseValue")
-            val purchaseValue : BigDecimal,
+            val purchaseValue: BigDecimal,
 
-            @Column(name = "funder")
-            val funder : AbstractParty,
+            @Column(name = "currency")
+            val currency: String,
 
+            @Column(name = "status")
             @Enumerated(EnumType.STRING)
             val status: FundingResponseStatus
     ) : PersistentState()
