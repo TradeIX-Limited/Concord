@@ -5,11 +5,11 @@ import java.math.BigDecimal
 
 @CordaSerializable
 data class FundingResponseRequestMessage(
-        val externalId: String?,
-        val fundingRequestExternalId: String?,
-        val invoiceExternalIds: Iterable<String>?,
-        val supplier: String?,
-        val funder: String?,
-        val purchaseValue: BigDecimal?,
-        val currency: String?
+        val externalId: String? = null,
+        val fundingRequestExternalId: String? = null,
+        val invoiceExternalIds: Iterable<String>? = emptyList(),
+        val supplier: String? = null,
+        val funder: String? = null,
+        val purchaseValue: BigDecimal? = null,
+        val currency: String? = null
 )

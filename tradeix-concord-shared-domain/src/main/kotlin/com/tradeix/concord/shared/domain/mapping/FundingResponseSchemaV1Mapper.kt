@@ -8,10 +8,16 @@ class FundingResponseSchemaV1Mapper
     : Mapper<FundingResponseState, FundingResponseSchemaV1.PersistentFundingResponseSchemaV1>() {
 
     override fun map(source: FundingResponseState): FundingResponseSchemaV1.PersistentFundingResponseSchemaV1 {
+        val invoiceIds: MutableCollection<String> = mutableListOf()
+
+        source.invoiceLinearIds.forEach {
+            invoiceIds.add(it.externalId!!.toString())
+        }
+
         return FundingResponseSchemaV1.PersistentFundingResponseSchemaV1(
                 linearId = source.linearId.id,
                 linearExternalId = source.linearId.toString(),
-                invoiceLinearIds = source.invoiceLinearIds,
+                invoiceLinearIds = invoiceIds,
                 supplier = source.supplier,
                 funder = source.funder,
                 purchaseValue = source.purchaseValue.toDecimal(),

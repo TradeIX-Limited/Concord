@@ -26,8 +26,8 @@ object FundingResponseSchemaV1 : MappedSchema(
             val linearExternalId: String,
 
             @ElementCollection
-            @Column(name = "invoice_linear_ids")
-            val invoiceLinearIds: Iterable<UniqueIdentifier>?,
+            @Column(name = "invoice_linear_ids") // TODO : This is a short term solution till Matt comes up with another thought
+            val invoiceLinearIds: Collection<String>,
 
             @Column(name = "supplier")
             val supplier: AbstractParty,
