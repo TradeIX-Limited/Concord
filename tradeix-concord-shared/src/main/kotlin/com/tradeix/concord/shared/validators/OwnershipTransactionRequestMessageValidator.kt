@@ -17,7 +17,7 @@ class OwnershipTransactionRequestMessageValidator
         })
 
         validationBuilder.collection(OwnershipTransactionRequestMessage::assets, {
-            it.validateWith(InvoiceRequestMessageValidator())
+            it.validateWith(OwnershipRequestMessageValidator())
         })
 
         validationBuilder.collection(OwnershipTransactionRequestMessage::attachments, {

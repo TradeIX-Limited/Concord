@@ -2,12 +2,11 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
-import com.tradeix.concord.shared.messages.CancellationRequestMessage
-import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.*
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.validators.CancellationTransactionRequestMessageValidator
 import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
+import com.tradeix.concord.shared.validators.OwnershipTransactionRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -67,6 +66,25 @@ class HelpController {
                             "messageValidation" to CancellationTransactionRequestMessageValidator()
                                     .getValidationMessages(),
                             "contractValidation" to InvoiceContract.Cancel()
+                                    .getValidationMessages()
+                    )
+            )
+        } catch (ex: Exception) {
+            ResponseBuilder.internalServerError(ex.message)
+        }
+    }
+
+    @GetMapping(path = arrayOf("/invoices/changeowner"))
+    fun getInvoiceOwnershipChangeHelp(): ResponseEntity<*> {
+        return try {
+            ResponseBuilder.ok(
+                    mapOf(
+                            "messageStructure" to OwnershipTransactionRequestMessage(
+                                    assets = listOf(OwnershipRequestMessage())
+                            ),
+                            "messageValidation" to OwnershipTransactionRequestMessageValidator()
+                                    .getValidationMessages(),
+                            "contractValidation" to InvoiceContract.ChangeOwner()
                                     .getValidationMessages()
                     )
             )

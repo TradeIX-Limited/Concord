@@ -19,7 +19,7 @@ class InvoiceEligibilityIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice eligibility issuance flow should be signed by the funder`() {
-        val transaction = InvoiceEligibilityTestFlowHelper.issue(
+        val transaction = InvoiceEligibilityFlows.issue(
                 network = network,
                 initiator = funder1.node,
                 message = createMockInvoiceEligibility(
@@ -33,7 +33,7 @@ class InvoiceEligibilityIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice eligibility issuance flow should be signed by the supplier`() {
-        val transaction = InvoiceEligibilityTestFlowHelper.issue(
+        val transaction = InvoiceEligibilityFlows.issue(
                 network = network,
                 initiator = funder1.node,
                 message = createMockInvoiceEligibility(
@@ -47,7 +47,7 @@ class InvoiceEligibilityIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice eligibility issuance flow records a transaction in all counter-party vaults`() {
-        val transaction = InvoiceEligibilityTestFlowHelper.issue(
+        val transaction = InvoiceEligibilityFlows.issue(
                 network = network,
                 initiator = funder1.node,
                 message = createMockInvoiceEligibility(
@@ -63,7 +63,7 @@ class InvoiceEligibilityIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice eligibility issuance flow has zero inputs and more than one output`() {
-        val transaction = InvoiceEligibilityTestFlowHelper.issue(
+        val transaction = InvoiceEligibilityFlows.issue(
                 network = network,
                 initiator = funder1.node,
                 message = createMockInvoiceEligibility(

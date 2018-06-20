@@ -24,7 +24,7 @@ class InvoiceIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice issuance flow should be signed by the initiator`() {
-        val transaction = InvoiceFlowTestHelper.issue(
+        val transaction = InvoiceFlows.issue(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoices(
@@ -40,7 +40,7 @@ class InvoiceIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice issuance flow should be signed by the acceptor`() {
-        val transaction = InvoiceFlowTestHelper.issue(
+        val transaction = InvoiceFlows.issue(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoices(
@@ -56,7 +56,7 @@ class InvoiceIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice issuance flow records a transaction in all counter-party vaults`() {
-        val transaction = InvoiceFlowTestHelper.issue(
+        val transaction = InvoiceFlows.issue(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoices(
@@ -74,7 +74,7 @@ class InvoiceIssuanceFlowTests : FlowTest() {
 
     @Test
     fun `Invoice issuance flow has zero inputs and more than one output`() {
-        val transaction = InvoiceFlowTestHelper.issue(
+        val transaction = InvoiceFlows.issue(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoices(

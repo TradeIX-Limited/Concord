@@ -24,7 +24,7 @@ class InvoiceCancellationFlowTests : FlowTest() {
     }
 
     override fun initialize() {
-        InvoiceFlowTestHelper.issue(
+        InvoiceFlows.issue(
                 network = network,
                 initiator = supplier1.node, message = createMockInvoices(
                 count = 3,
@@ -36,7 +36,7 @@ class InvoiceCancellationFlowTests : FlowTest() {
 
     @Test
     fun `Invoice cancellation flow should be signed by the initiator`() {
-        val transaction = InvoiceFlowTestHelper.cancel(
+        val transaction = InvoiceFlows.cancel(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoiceCancellations(
@@ -50,7 +50,7 @@ class InvoiceCancellationFlowTests : FlowTest() {
 
     @Test
     fun `Invoice cancellation flow should be signed by the acceptor`() {
-        val transaction = InvoiceFlowTestHelper.cancel(
+        val transaction = InvoiceFlows.cancel(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoiceCancellations(
@@ -64,7 +64,7 @@ class InvoiceCancellationFlowTests : FlowTest() {
 
     @Test
     fun `Invoice cancellation flow records a transaction in all counter-party vaults`() {
-        val transaction = InvoiceFlowTestHelper.cancel(
+        val transaction = InvoiceFlows.cancel(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoiceCancellations(
@@ -80,7 +80,7 @@ class InvoiceCancellationFlowTests : FlowTest() {
 
     @Test
     fun `Invoice cancellation flow has one or more inputs and zero outputs`() {
-        val transaction = InvoiceFlowTestHelper.cancel(
+        val transaction = InvoiceFlows.cancel(
                 network = network,
                 initiator = supplier1.node,
                 message = createMockInvoiceCancellations(
