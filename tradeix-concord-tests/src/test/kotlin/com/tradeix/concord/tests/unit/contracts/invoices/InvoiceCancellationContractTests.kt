@@ -34,11 +34,7 @@ class InvoiceCancellationContractTests : ContractTest() {
         services.ledger {
             assertValidationFails(InvoiceContract.Cancel.CONTRACT_RULE_INPUTS) {
                 transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    input(
+                    output(
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
                     )

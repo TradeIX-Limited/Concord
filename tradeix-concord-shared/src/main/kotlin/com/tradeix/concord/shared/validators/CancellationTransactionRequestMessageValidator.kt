@@ -18,7 +18,7 @@ class CancellationTransactionRequestMessageValidator
         })
 
         validationBuilder.collection(CancellationTransactionRequestMessage::assets, {
-            it.validateWith(InvoiceRequestMessageValidator())
+            it.validateWith(CancellationRequestMessageValidator())
         })
 
         validationBuilder.collection(CancellationTransactionRequestMessage::attachments, {
