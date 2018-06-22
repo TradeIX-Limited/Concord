@@ -18,7 +18,7 @@ class FundingResponseRequestMapper : Mapper<FundingResponseState, FundingRespons
                 externalId = source.linearId.externalId.toString(),
                 funder = source.funder.nameOrNull().toString(),
                 supplier = source.supplier.nameOrNull().toString(),
-                fundingRequestExternalId = source.fundingRequestId?.externalId,
+                fundingRequestExternalId = source.fundingRequestLinearId?.externalId,
                 invoiceExternalIds = invoiceIds,
                 purchaseValue = source.purchaseValue.toDecimal(),
                 currency = source.purchaseValue.token.currencyCode

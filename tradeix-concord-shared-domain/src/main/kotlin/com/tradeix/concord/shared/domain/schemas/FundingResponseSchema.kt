@@ -3,6 +3,7 @@ package com.tradeix.concord.shared.domain.schemas
 import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal
@@ -17,32 +18,38 @@ object FundingResponseSchemaV1 : MappedSchema(
         mappedTypes = listOf(PersistentFundingResponseSchemaV1::class.java)) {
 
     @Entity
-    @Table(name = "funding_response_states")
+    @Table(name = "funding_response_state")
     class PersistentFundingResponseSchemaV1(
             @Column(name = "linear_id")
-            val linearId: UUID,
+            val linearId: UUID? = null, //linear ID of UniqueIdentifier
 
             @Column(name = "linear_external_id")
-            val linearExternalId: String,
+            val linearExternalId: String? = null, //externalid of UniqueIdentifier
+
+            @Column(name = "funding_request_linear_id")
+            val fundingRequestLinearID: UUID? = null, //linear ID of UniqueIdentifier
+
+            @Column(name = "funding_request_linear_external_id")
+            val fundingRequestExternalID: String? = null, //externalid of UniqueIdentifier
 
             @ElementCollection
             @Column(name = "invoice_linear_ids") // TODO : This is a short term solution till Matt comes up with another thought
-            val invoiceLinearIds: Collection<String>,
+            val invoiceLinearIds: Collection<String>? = null,
 
             @Column(name = "supplier")
-            val supplier: AbstractParty,
+            val supplier: AbstractParty? = null,
 
             @Column(name = "funder")
-            val funder: AbstractParty,
+            val funder: AbstractParty? = null,
 
             @Column(name = "purchaseValue")
-            val purchaseValue: BigDecimal,
+            val purchaseValue: BigDecimal? =null,
 
             @Column(name = "currency")
-            val currency: String,
+            val currency: String? = null,
 
             @Column(name = "status")
             @Enumerated(EnumType.STRING)
-            val status: FundingResponseStatus
-    ) : PersistentState()
+            val status: FundingResponseStatus? = null
+    ): PersistentState()
 }

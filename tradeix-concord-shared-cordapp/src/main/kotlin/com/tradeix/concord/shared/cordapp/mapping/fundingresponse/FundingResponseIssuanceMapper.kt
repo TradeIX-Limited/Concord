@@ -50,7 +50,7 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
 
         return FundingResponseState(
                 linearId = UniqueIdentifier(source.externalId!!),
-                fundingRequestId = null, // TODO : Use ID of vault lookup state (see above)
+                fundingRequestLinearId = source.fundingRequestExternalId?.let { UniqueIdentifier(source.fundingRequestExternalId) }, // TODO : Use ID of vault lookup state (see above)
                 invoiceLinearIds = invoiceIds,
                 supplier = supplier,
                 funder = funder,

@@ -1,9 +1,14 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
+import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectMessage
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.validators.FundingResponseAcceptMessageValidator
+import com.tradeix.concord.shared.validators.FundingResponseRejectMessageValidator
 import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -25,6 +30,34 @@ class HelpController {
                             ),
                             "messageValidation" to InvoiceTransactionRequestMessageValidator().getValidationMessages(),
                             "contractValidation" to InvoiceContract.Issue().getValidationMessages()
+                    )
+            )
+        } catch (ex: Exception) {
+            ResponseBuilder.internalServerError(ex.message)
+        }
+    }
+    @GetMapping(path = arrayOf("/fundingresponse/accept"))
+    fun getFundingResponseAcceptHelp(): ResponseEntity<*> {
+        return try {
+            ResponseBuilder.ok(
+                    mapOf(
+                            "messageStructure" to FundingResponseAcceptMessage(),
+                            "messageValidation" to FundingResponseAcceptMessageValidator().getValidationMessages(),
+                            "contractValidation" to FundingResponseContract.Accept().getValidationMessages()
+                    )
+            )
+        } catch (ex: Exception) {
+            ResponseBuilder.internalServerError(ex.message)
+        }
+    }
+    @GetMapping(path = arrayOf("/fundingresponse/reject"))
+    fun getFundingResponseRejectHelp(): ResponseEntity<*> {
+        return try {
+            ResponseBuilder.ok(
+                    mapOf(
+                            "messageStructure" to FundingResponseRejectMessage(),
+                            "messageValidation" to FundingResponseRejectMessageValidator().getValidationMessages(),
+                            "contractValidation" to FundingResponseContract.Reject().getValidationMessages()
                     )
             )
         } catch (ex: Exception) {

@@ -155,13 +155,10 @@ class FundingResponseContract : Contract {
                     "On funding response rejection, only one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On funding response rejection, only one output state must be created."
+                    "On funding response rejection, no output state must be created."
 
             const val CONTRACT_RULE_INPUT_STATUS =
                     "On funding response rejection, the status should be set to PENDING."
-
-            const val CONTRACT_RULE_OUTPUT_STATUS =
-                    "On funding response rejection, the status should be set to REJECTED."
 
             const val CONTRACT_RULE_SIGNERS =
                     "On funding response rejection, all participants must sign the transaction."
@@ -175,7 +172,7 @@ class FundingResponseContract : Contract {
             })
 
             validationBuilder.property(LedgerTransaction::outputs, {
-                it.hasSize(1, CONTRACT_RULE_OUTPUTS)
+                it.hasSize(0, CONTRACT_RULE_OUTPUTS)
             })
 
             // State Validation
@@ -188,18 +185,9 @@ class FundingResponseContract : Contract {
                 status == FundingResponseStatus.PENDING
             })
 
-            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS, {
-                val status = it
-                        .outputsOfType<FundingResponseState>()
-                        .single()
-                        .status
-
-                status == FundingResponseStatus.REJECTED
-            })
-
             validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
                 val keys = it
-                        .outputsOfType<FundingResponseState>()
+                        .inputsOfType<FundingResponseState>()
                         .single()
                         .participants
                         .toOwningKeys()

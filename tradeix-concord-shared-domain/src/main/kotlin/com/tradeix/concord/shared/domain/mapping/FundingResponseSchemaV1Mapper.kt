@@ -16,7 +16,9 @@ class FundingResponseSchemaV1Mapper
 
         return FundingResponseSchemaV1.PersistentFundingResponseSchemaV1(
                 linearId = source.linearId.id,
-                linearExternalId = source.linearId.toString(),
+                linearExternalId = source.linearId.externalId!!,
+                fundingRequestLinearID = source.fundingRequestLinearId?.id,
+                fundingRequestExternalID = source.fundingRequestLinearId?.let { source.fundingRequestLinearId.externalId },
                 invoiceLinearIds = invoiceIds,
                 supplier = source.supplier,
                 funder = source.funder,
