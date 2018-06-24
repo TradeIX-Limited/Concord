@@ -24,14 +24,32 @@ class IdentityService(private val serviceHub: ServiceHub) {
                 .distinct()
     }
 
+    fun getParticipantsExceptMe(state: ContractState): Iterable<AbstractParty> {
+        return state
+                .participants
+                .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
+                .distinct()
+    }
+
     fun getParticipantsExceptMe(states: Iterable<ContractState>): Iterable<AbstractParty> {
         return getParticipants(states)
                 .filter { !serviceHub.myInfo.legalIdentities.contains(it) }
                 .distinct()
     }
 
+    fun getWellKnownParticipants(state: ContractState): Iterable<Party> {
+        return state
+                .participants
+                .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
+    }
+
     fun getWellKnownParticipants(states: Iterable<ContractState>): Iterable<Party> {
         return getParticipants(states)
+                .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
+    }
+
+    fun getWellKnownParticipantsExceptMe(state: ContractState): Iterable<Party> {
+        return getParticipantsExceptMe(state)
                 .map { serviceHub.identityService.requireWellKnownPartyFromAnonymous(it) }
     }
 
@@ -55,5 +73,4 @@ class IdentityService(private val serviceHub: ServiceHub) {
                 legalName ?: throw FlowException(EX_CANNOT_GET_PARTY_FROM_NULL_LEGAL_NAME)
         ) ?: throw FlowException("$EX_FAILED_TO_GET_PARTY '$legalName'.")
     }
-
 }

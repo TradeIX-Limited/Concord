@@ -1,6 +1,6 @@
 package com.tradeix.concord.shared.validation.extensions
 
-import com.tradeix.concord.shared.extensions.isParsable
+import com.tradeix.concord.shared.extensions.canParse
 import com.tradeix.concord.shared.validation.PropertyValidator
 import net.corda.core.crypto.SecureHash
 import net.corda.core.identity.CordaX500Name
@@ -96,7 +96,7 @@ fun PropertyValidator<String?>.isValidCurrencyCode(validationMessage: String? = 
 }
 
 fun PropertyValidator<String?>.isValidX500Name(validationMessage: String? = null) {
-    if (context.emulating || value != null && !CordaX500Name.isParsable(value)) {
+    if (context.emulating || value != null && !CordaX500Name.canParse(value)) {
         context.validator.addValidationMessage(
                 validationMessage ?: format("must be a valid X500 name")
         )
@@ -104,7 +104,7 @@ fun PropertyValidator<String?>.isValidX500Name(validationMessage: String? = null
 }
 
 fun PropertyValidator<String?>.isValidSecureHash(validationMessage: String? = null) {
-    if (context.emulating || value != null && !SecureHash.isParsable(value)) {
+    if (context.emulating || value != null && !SecureHash.canParse(value)) {
         context.validator.addValidationMessage(
                 validationMessage ?: format("must be a valid secure hash")
         )

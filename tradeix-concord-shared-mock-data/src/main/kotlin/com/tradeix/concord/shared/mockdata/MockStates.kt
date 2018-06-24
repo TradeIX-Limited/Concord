@@ -1,9 +1,7 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.domain.states.InvoiceEligibilityState
-import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.domain.states.PromissoryNoteState
-import com.tradeix.concord.shared.domain.states.PurchaseOrderState
+import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
+import com.tradeix.concord.shared.domain.states.*
 import com.tradeix.concord.shared.mockdata.MockAddresses.BANK_OF_ENGLAND
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockAmounts.ZERO_POUNDS
@@ -85,5 +83,21 @@ object MockStates {
             placeOfIssue = BANK_OF_ENGLAND,
             dateOfIssue = LOCAL_DATE_TIME_PAST_1,
             dateOfMaturity = LOCAL_DATE_TIME_FUTURE_1
+    )
+
+    val FUNDING_RESPONSE_STATE = FundingResponseState(
+            linearId = UniqueIdentifier(
+                    "FUNDING_RESPONSE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000005")
+            ),
+            fundingRequestLinearId = null,
+            invoiceLinearIds = listOf(UniqueIdentifier(
+                    "INVOICE_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000002")
+            )),
+            supplier = SUPPLIER_1_IDENTITY.party,
+            funder = FUNDER_1_IDENTITY.party,
+            purchaseValue = ONE_POUNDS,
+            status = FundingResponseStatus.PENDING
     )
 }
