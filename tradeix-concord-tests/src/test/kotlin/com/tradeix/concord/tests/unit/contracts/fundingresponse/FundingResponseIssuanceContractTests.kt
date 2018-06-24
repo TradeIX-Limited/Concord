@@ -1,7 +1,7 @@
-package com.tradeix.concord.tests.unit.contracts.fundingResponse
+package com.tradeix.concord.tests.unit.contracts.fundingresponse
 
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
-import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FundingResponse_CONTRACT_ID
+import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
 import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockStates.FUNDING_RESPONSE_STATE
@@ -16,7 +16,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
         services.ledger {
             transaction {
                 output(
-                        FundingResponse_CONTRACT_ID,
+                        FUNDING_RESPONSE_CONTRACT_ID,
                         FUNDING_RESPONSE_STATE
                 )
                 fails()
@@ -35,11 +35,11 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(
@@ -58,11 +58,11 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(
@@ -81,7 +81,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_STATUS) {
                 transaction {
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     command(
@@ -100,7 +100,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_INVOICE_COUNT) {
                 transaction {
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.copy(invoiceLinearIds = emptyList())
                     )
                     command(
@@ -119,7 +119,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(
@@ -138,7 +138,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Issue.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(

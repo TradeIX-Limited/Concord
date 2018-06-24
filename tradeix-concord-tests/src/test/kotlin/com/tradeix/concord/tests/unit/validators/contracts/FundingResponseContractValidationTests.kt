@@ -51,6 +51,7 @@ class FundingResponseContractValidationTests {
                 FundingResponseContract.Reject.CONTRACT_RULE_INPUTS,
                 FundingResponseContract.Reject.CONTRACT_RULE_OUTPUTS,
                 FundingResponseContract.Reject.CONTRACT_RULE_INPUT_STATUS,
+                FundingResponseContract.Reject.CONTRACT_RULE_OUTPUT_STATUS,
                 FundingResponseContract.Reject.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()

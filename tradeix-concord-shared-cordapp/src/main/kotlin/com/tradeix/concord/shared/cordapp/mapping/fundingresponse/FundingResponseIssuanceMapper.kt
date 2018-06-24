@@ -30,19 +30,19 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
                 .singleOrNull()
 
         if (state != null) {
-            throw FlowException("An FundingResponseState with externalId '${source.externalId}' already exists.")
+            throw FlowException("A FundingResponseState with externalId '${source.externalId}' already exists.")
         }
 
         // TODO : Add checks to find existing funding request.
 
-        val invoiceIds: MutableCollection<UniqueIdentifier> = mutableListOf()
+        val invoiceLinearIds: MutableCollection<UniqueIdentifier> = mutableListOf()
 
         source.invoiceExternalIds!!.forEach {
             val invoiceStateAndRef = invoiceVaultService
                     .findByExternalId(it, status = Vault.StateStatus.UNCONSUMED)
                     .singleOrNull() ?: throw FlowException("Could not find an InvoiceState with externalId '$it'.")
 
-            invoiceIds.add(invoiceStateAndRef.state.data.linearId)
+            invoiceLinearIds.add(invoiceStateAndRef.state.data.linearId)
         }
 
         val supplier = identityService.getPartyFromLegalNameOrThrow(CordaX500Name.tryParse(source.supplier))
@@ -50,8 +50,8 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
 
         return FundingResponseState(
                 linearId = UniqueIdentifier(source.externalId!!),
-                fundingRequestLinearId = source.fundingRequestExternalId?.let { UniqueIdentifier(source.fundingRequestExternalId) }, // TODO : Use ID of vault lookup state (see above)
-                invoiceLinearIds = invoiceIds,
+                fundingRequestLinearId = null, // TODO : See above and use this when implemented
+                invoiceLinearIds = invoiceLinearIds,
                 supplier = supplier,
                 funder = funder,
                 purchaseValue = Amount.fromValueAndCurrency(source.purchaseValue!!, source.currency!!),

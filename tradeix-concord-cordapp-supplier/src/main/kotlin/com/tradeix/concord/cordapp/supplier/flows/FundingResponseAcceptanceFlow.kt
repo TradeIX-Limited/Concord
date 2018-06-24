@@ -2,14 +2,15 @@ package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRejectMapper
+import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseAcceptanceMapper
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
+import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.InputAndOutput
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.FundingResponseRejectMessageValidator
+import com.tradeix.concord.shared.validators.FundingResponseAcceptMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -17,38 +18,39 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
-import java.util.Arrays.asList
 
 @StartableByRPC
 @InitiatingFlow
-class FundingResonseRejectFlow(
-        private val message: FundingResponseRejectMessage
+class FundingResponseAcceptanceFlow(
+        private val message: FundingResponseAcceptanceRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
-    override val progressTracker = getProgressTrackerWithObservationStep()
+    override val progressTracker = getDefaultProgressTracker()
 
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = FundingResponseRejectMessageValidator()
+        val validator = FundingResponseAcceptMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = FundingResponseRejectMapper(serviceHub)
+        val mapper = FundingResponseAcceptanceMapper(serviceHub)
 
         validator.validate(message)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val states: InputAndOutput<FundingResponseState> = mapper.map(message)
+        val inputAndOutput: InputAndOutput<FundingResponseState> = mapper.map(message)
 
-        val fundingResponseState= states.input
+        val fundingResponseInputState = inputAndOutput.input
+        val fundingResponseOutputState = inputAndOutput.output
 
         val command = Command(
-                FundingResponseContract.Reject(),
-                identityService.getParticipants(asList(fundingResponseState.state.data)).toOwningKeys())
+                FundingResponseContract.Accept(),
+                fundingResponseOutputState.participants.toOwningKeys()
+        )
 
-        //TODO: Ross and Grant review - The output state should be present
         val transactionBuilder = TransactionBuilder(identityService.getNotary())
-                .addInputState(fundingResponseState)
+                .addInputState(fundingResponseInputState)
+                .addOutputState(fundingResponseOutputState, FUNDING_RESPONSE_CONTRACT_ID)
                 .addCommand(command)
 
         // Step 2 - Validate Unsigned Transaction
@@ -64,7 +66,7 @@ class FundingResonseRejectFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        identityService.getWellKnownParticipantsExceptMe(asList(fundingResponseState.state.data)),
+                        identityService.getWellKnownParticipantsExceptMe(fundingResponseOutputState),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )

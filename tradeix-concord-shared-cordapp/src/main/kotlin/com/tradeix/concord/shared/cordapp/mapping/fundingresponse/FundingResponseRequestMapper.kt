@@ -7,19 +7,12 @@ import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseReques
 class FundingResponseRequestMapper : Mapper<FundingResponseState, FundingResponseRequestMessage>() {
 
     override fun map(source: FundingResponseState): FundingResponseRequestMessage {
-        val invoiceIds: MutableCollection<String> = mutableListOf()
-
-        source.invoiceLinearIds.forEach {
-            invoiceIds.add(it.externalId!!)
-        }
-
-
         return FundingResponseRequestMessage(
                 externalId = source.linearId.externalId.toString(),
                 funder = source.funder.nameOrNull().toString(),
                 supplier = source.supplier.nameOrNull().toString(),
                 fundingRequestExternalId = source.fundingRequestLinearId?.externalId,
-                invoiceExternalIds = invoiceIds,
+                invoiceExternalIds = source.invoiceLinearIds.map { it.externalId!! },
                 purchaseValue = source.purchaseValue.toDecimal(),
                 currency = source.purchaseValue.token.currencyCode
         )

@@ -1,22 +1,17 @@
 package com.tradeix.concord.shared.validators
 
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
-import com.tradeix.concord.shared.validation.extensions.*
+import com.tradeix.concord.shared.validation.extensions.isNotNullEmptyOrBlank
 
 class FundingResponseAcceptMessageValidator
-    : ObjectValidator<FundingResponseAcceptMessage>() {
+    : ObjectValidator<FundingResponseAcceptanceRequestMessage>() {
 
-    override fun validate(validationBuilder: ValidationBuilder<FundingResponseAcceptMessage>) {
+    override fun validate(validationBuilder: ValidationBuilder<FundingResponseAcceptanceRequestMessage>) {
 
-        validationBuilder.property(FundingResponseAcceptMessage::externalId, {
+        validationBuilder.property(FundingResponseAcceptanceRequestMessage::externalId, {
             it.isNotNullEmptyOrBlank()
         })
-
-        validationBuilder.property(FundingResponseAcceptMessage::fundingResponseExternalId, {
-            it.isNotNullEmptyOrBlank()
-        })
-
     }
 }

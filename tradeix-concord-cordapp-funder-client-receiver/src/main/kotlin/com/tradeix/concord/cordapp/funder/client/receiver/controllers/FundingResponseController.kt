@@ -1,6 +1,6 @@
 package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.funder.flows.FundingResponseFlow
+import com.tradeix.concord.cordapp.funder.flows.FundingResponseIssuanceInitiatorFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRequestMapper
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(path = arrayOf("/fundingresponse"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-class FundingResponseRequestController(private val rpc: RPCConnectionProvider) {
+class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpc.proxy)
     private val fundingResonseRequestMapper = FundingResponseRequestMapper()
@@ -94,7 +94,7 @@ class FundingResponseRequestController(private val rpc: RPCConnectionProvider) {
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun issueFundingResponse(@RequestBody message: FundingResponseRequestMessage): ResponseEntity<*> {
         return try {
-            val future = rpc.proxy.startTrackedFlow(::FundingResponseFlow, message)
+            val future = rpc.proxy.startTrackedFlow(::FundingResponseIssuanceInitiatorFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             val response = TransactionResponseMessage(
@@ -110,6 +110,4 @@ class FundingResponseRequestController(private val rpc: RPCConnectionProvider) {
             }
         }
     }
-
-
 }

@@ -35,11 +35,7 @@ data class FundingResponseState(
         }
     }
 
-    fun accept(): FundingResponseState {
-        return this.copy(status = FundingResponseStatus.ACCEPTED)
-    }
+    fun accept() = copy(status = FundingResponseStatus.ACCEPTED)
 
-    fun reject(): FundingResponseState {
-        return this.copy(status = FundingResponseStatus.REJECTED)
-    }
+    fun reject() = copy(status = FundingResponseStatus.REJECTED)
 }

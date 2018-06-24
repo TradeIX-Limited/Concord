@@ -1,15 +1,16 @@
-package com.tradeix.concord.cordapp.funder.flows
+package com.tradeix.concord.cordapp.supplier.flows
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseIssuanceMapper
+import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRejectionMapper
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
-import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FundingResponse_CONTRACT_ID
+import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.extensions.*
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
+import com.tradeix.concord.shared.mapper.InputAndOutput
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.FundingResponseRequestMessageValidator
+import com.tradeix.concord.shared.validators.FundingResponseRejectMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -17,12 +18,11 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
-import java.util.Arrays.asList
 
 @StartableByRPC
 @InitiatingFlow
-class FundingResponseFlow(
-        private val message: FundingResponseRequestMessage
+class FundingResponseRejectionFlow(
+        private val message: FundingResponseRejectionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
     override val progressTracker = getDefaultProgressTracker()
@@ -30,25 +30,30 @@ class FundingResponseFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = FundingResponseRequestMessageValidator()
+        val validator = FundingResponseRejectMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = FundingResponseIssuanceMapper(serviceHub)
+        val mapper = FundingResponseRejectionMapper(serviceHub)
 
         validator.validate(message)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val fundingResponseState: FundingResponseState = mapper.map(message)
+        val inputAndOutput: InputAndOutput<FundingResponseState> = mapper.map(message)
+
+        val fundingResponseInputState = inputAndOutput.input
+        val fundingResponseOutputState = inputAndOutput.output
 
         val command = Command(
-                FundingResponseContract.Issue(),
-                identityService.getParticipants(asList(fundingResponseState)).toOwningKeys())
+                FundingResponseContract.Reject(),
+                fundingResponseOutputState.participants.toOwningKeys()
+        )
 
         val transactionBuilder = TransactionBuilder(identityService.getNotary())
-                .addOutputState(fundingResponseState, FundingResponse_CONTRACT_ID)
+                .addInputState(fundingResponseInputState)
+                .addOutputState(fundingResponseOutputState, FUNDING_RESPONSE_CONTRACT_ID)
                 .addCommand(command)
 
-        // Step 2 - Validating Unsigned Transaction
+        // Step 2 - Validate Unsigned Transaction
         progressTracker.currentStep = ValidatingTransactionStep
         transactionBuilder.verify(serviceHub)
 
@@ -61,7 +66,7 @@ class FundingResponseFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        identityService.getWellKnownParticipantsExceptMe(asList(fundingResponseState)),
+                        identityService.getWellKnownParticipantsExceptMe(fundingResponseOutputState),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )

@@ -1,7 +1,7 @@
-package com.tradeix.concord.tests.unit.contracts.fundingResponse
+package com.tradeix.concord.tests.unit.contracts.fundingresponse
 
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
-import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FundingResponse_CONTRACT_ID
+import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
 import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockStates.FUNDING_RESPONSE_STATE
@@ -16,11 +16,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
         services.ledger {
             transaction {
                 input(
-                        FundingResponse_CONTRACT_ID,
+                        FUNDING_RESPONSE_CONTRACT_ID,
                         FUNDING_RESPONSE_STATE
                 )
                 output(
-                        FundingResponse_CONTRACT_ID,
+                        FUNDING_RESPONSE_CONTRACT_ID,
                         FUNDING_RESPONSE_STATE.accept()
                 )
                 fails()
@@ -39,15 +39,15 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_INPUTS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     command(
@@ -66,7 +66,7 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(
@@ -85,11 +85,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_INPUT_STATUS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     command(
@@ -108,11 +108,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_OUTPUT_STATUS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     command(
@@ -131,11 +131,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     command(
@@ -154,11 +154,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
             assertValidationFails(FundingResponseContract.Accept.CONTRACT_RULE_SIGNERS) {
                 transaction {
                     input(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE
                     )
                     output(
-                            FundingResponse_CONTRACT_ID,
+                            FUNDING_RESPONSE_CONTRACT_ID,
                             FUNDING_RESPONSE_STATE.accept()
                     )
                     command(

@@ -11,10 +11,6 @@ import org.springframework.context.annotation.ComponentScans
         ComponentScan("com.tradeix.concord.cordapp.supplier.client.receiver.controllers")
 )
 @SpringBootApplication
-@ComponentScans(
-                ComponentScan("com.tradeix.concord.shared.client.components"),
-                ComponentScan("com.tradeix.concord.cordapp.supplier.client.receiver.controllers")
-                )
 class Application
 
 fun main(args: Array<String>) {

@@ -1,14 +1,14 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.flows.FundingResonseAcceptFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResonseRejectFlow
+import com.tradeix.concord.cordapp.supplier.flows.FundingResponseAcceptanceFlow
+import com.tradeix.concord.cordapp.supplier.flows.FundingResponseRejectionFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRequestMapper
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
+import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -93,9 +93,9 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
     }
 
     @PostMapping(path = arrayOf("/accept"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun accept(@RequestBody message: FundingResponseAcceptMessage): ResponseEntity<*> {
+    fun acceptFundingResponse(@RequestBody message: FundingResponseAcceptanceRequestMessage): ResponseEntity<*> {
         return try {
-            val future = rpc.proxy.startTrackedFlow(::FundingResonseAcceptFlow, message)
+            val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             val response = TransactionResponseMessage(
@@ -113,9 +113,9 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
     }
 
     @PostMapping(path = arrayOf("/reject"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun reject(@RequestBody message: FundingResponseRejectMessage): ResponseEntity<*> {
+    fun rejectFundingResponse(@RequestBody message: FundingResponseRejectionRequestMessage): ResponseEntity<*> {
         return try {
-            val future = rpc.proxy.startTrackedFlow(::FundingResonseRejectFlow, message)
+            val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             val response = TransactionResponseMessage(
