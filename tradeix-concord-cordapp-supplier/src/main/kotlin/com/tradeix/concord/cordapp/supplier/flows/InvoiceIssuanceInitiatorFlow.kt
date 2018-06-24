@@ -67,7 +67,16 @@ class InvoiceIssuanceInitiatorFlow(
                 )
         )
 
-        // Step 5 - Send Transaction To Observers
+        // Step 5 - Finalize Transaction
+        progressTracker.currentStep = FinalizingTransactionStep
+        val finalizedTransaction = subFlow(
+                FinalityFlow(
+                        fullySignedTransaction,
+                        FinalizingTransactionStep.childProgressTracker()
+                )
+        )
+
+        // Step 6 - Send Transaction To Observers
         progressTracker.currentStep = SendTransactionToObserversStep
         subFlow(
                 ObserveTransactionInitiatorFlow(
@@ -76,8 +85,6 @@ class InvoiceIssuanceInitiatorFlow(
                 )
         )
 
-        // Step 6 - Finalize Transaction
-        progressTracker.currentStep = FinalizingTransactionStep
-        return subFlow(FinalityFlow(fullySignedTransaction, FinalizingTransactionStep.childProgressTracker()))
+        return finalizedTransaction
     }
 }

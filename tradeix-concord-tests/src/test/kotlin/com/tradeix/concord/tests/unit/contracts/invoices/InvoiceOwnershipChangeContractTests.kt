@@ -38,14 +38,6 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
         services.ledger {
             assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_INPUTS) {
                 transaction {
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
                     output(
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
@@ -66,14 +58,6 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
             assertValidationFails(InvoiceContract.ChangeOwner.CONTRACT_RULE_OUTPUTS) {
                 transaction {
                     input(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    output(
-                            INVOICE_CONTRACT_ID,
-                            INVOICE_STATE
-                    )
-                    output(
                             INVOICE_CONTRACT_ID,
                             INVOICE_STATE
                     )

@@ -4,7 +4,7 @@ import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
 data class TransactionRequestMessage<out TAsset>(
-        val assets: Iterable<TAsset> = emptyList(),
-        val observers: Iterable<String> = emptyList(),
-        val attachments: Iterable<String> = emptyList()
+        val assets: Collection<TAsset> = emptyList(),
+        val observers: Collection<String> = emptyList(),
+        val attachments: Collection<String> = emptyList()
 )
