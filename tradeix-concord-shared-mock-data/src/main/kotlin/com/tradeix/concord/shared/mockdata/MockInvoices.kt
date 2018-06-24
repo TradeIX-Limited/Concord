@@ -1,8 +1,6 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.messages.CancellationRequestMessage
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
-import com.tradeix.concord.shared.messages.OwnershipRequestMessage
+import com.tradeix.concord.shared.messages.*
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
@@ -32,6 +30,36 @@ object MockInvoices {
                 },
                 observers = observers?.map { it.toString() } ?: emptyList(),
                 attachments = emptyList()
+        )
+    }
+
+    fun createMockInvoiceAmendments(
+            count: Int,
+            buyer: CordaX500Name?,
+            supplier: CordaX500Name?,
+            observers: Iterable<CordaX500Name>?): InvoiceTransactionRequestMessage {
+
+        val message =  createMockInvoices(count, buyer, supplier, observers)
+
+        return InvoiceTransactionRequestMessage(
+                assets = message.assets.map { it.copy(reference = it.reference + "_AMENDED") },
+                observers = message.observers,
+                attachments = message.attachments
+        )
+    }
+
+    fun createMockInvoiceCancellations(
+            count: Int,
+            observers: Iterable<CordaX500Name>?): CancellationTransactionRequestMessage {
+        return CancellationTransactionRequestMessage(
+                assets = (1..count).toList().map { CancellationRequestMessage("INVOICE_$it") },
+                observers = observers?.map { it.toString() } ?: emptyList()
+        )
+    }
+
+    fun createMockInvoiceOwnershipChanges(count: Int, owner: CordaX500Name): OwnershipTransactionRequestMessage {
+        return OwnershipTransactionRequestMessage(
+                assets = (1..count).toList().map { OwnershipRequestMessage("INVOICE_$it", owner.toString()) }
         )
     }
 

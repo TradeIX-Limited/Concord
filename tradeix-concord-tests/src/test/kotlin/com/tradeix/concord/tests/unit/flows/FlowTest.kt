@@ -1,5 +1,14 @@
 package com.tradeix.concord.tests.unit.flows
 
+import com.tradeix.concord.cordapp.funder.flows.InvoiceEligibilityIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceAmendmentInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceCancellationInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
+import com.tradeix.concord.shared.messages.InvoiceEligibilityTransactionRequestMessage
+import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_2_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_3_NAME
@@ -10,12 +19,66 @@ import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_2_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_3_NAME
 import com.tradeix.concord.shared.mockdata.ParticipantType
+import net.corda.core.transactions.SignedTransaction
+import net.corda.core.utilities.getOrThrow
 import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.StartedMockNode
 import org.junit.After
 import org.junit.Before
 
 abstract class FlowTest {
+
+    companion object {
+
+        object InvoiceFlows {
+            fun issue(
+                    network: MockNetwork,
+                    initiator: StartedMockNode,
+                    message: InvoiceTransactionRequestMessage): SignedTransaction {
+                val future = initiator.startFlow(InvoiceIssuanceInitiatorFlow(message))
+                network.runNetwork()
+                return future.getOrThrow()
+            }
+
+            fun amend(
+                    network: MockNetwork,
+                    initiator: StartedMockNode,
+                    message: InvoiceTransactionRequestMessage): SignedTransaction {
+                val future = initiator.startFlow(InvoiceAmendmentInitiatorFlow(message))
+                network.runNetwork()
+                return future.getOrThrow()
+            }
+
+            fun cancel(
+                    network: MockNetwork,
+                    initiator: StartedMockNode,
+                    message: CancellationTransactionRequestMessage): SignedTransaction {
+                val future = initiator.startFlow(InvoiceCancellationInitiatorFlow(message))
+                network.runNetwork()
+                return future.getOrThrow()
+            }
+
+            fun changeOwner(
+                    network: MockNetwork,
+                    initiator: StartedMockNode,
+                    message: OwnershipTransactionRequestMessage): SignedTransaction {
+                val future = initiator.startFlow(InvoiceOwnershipChangeInitiatorFlow(message))
+                network.runNetwork()
+                return future.getOrThrow()
+            }
+        }
+
+        object InvoiceEligibilityFlows {
+            fun issue(
+                    network: MockNetwork,
+                    initiator: StartedMockNode,
+                    message: InvoiceEligibilityTransactionRequestMessage): SignedTransaction {
+                val future = initiator.startFlow(InvoiceEligibilityIssuanceInitiatorFlow(message))
+                network.runNetwork()
+                return future.getOrThrow()
+            }
+        }
+    }
 
     protected lateinit var network: MockNetwork
 

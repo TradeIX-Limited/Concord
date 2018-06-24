@@ -1,14 +1,17 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceAmendmentInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.InvoiceOwnershipChangeInitiatorFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceResponseMapper
 import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.messages.TransactionRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
+import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -41,13 +44,13 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                         .getPagedItems(pageNumber, pageSize, stateStatus)
                         .map { invoiceResponseMapper.map(it.state.data) }
 
-                ResponseBuilder.ok(invoices)
+                ResponseBuilder.ok(mapOf("invoices" to invoices))
             } else {
                 val invoices = vaultService
                         .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
                         .map { invoiceResponseMapper.map(it.state.data) }
 
-                ResponseBuilder.ok(invoices)
+                ResponseBuilder.ok(mapOf("invoices" to invoices))
             }
         } catch (ex: Exception) {
             when (ex) {
@@ -63,9 +66,9 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
             val invoice = vaultService
                     .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
                     .map { invoiceResponseMapper.map(it.state.data) }
-                    .single()
+                    .singleOrNull()
 
-            ResponseBuilder.ok(invoice)
+            ResponseBuilder.ok(mapOf("invoice" to invoice))
         } catch (ex: Exception) {
             when (ex) {
                 is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
@@ -93,7 +96,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
     }
 
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun issueInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
+    fun issueInvoice(@RequestBody message: InvoiceTransactionRequestMessage): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
             future.progress.subscribe { println(it) }
@@ -113,13 +116,53 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
     }
 
     @PutMapping(path = arrayOf("/amend"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun amendInvoice(@RequestBody message: TransactionRequestMessage<InvoiceRequestMessage>): ResponseEntity<*> {
+    fun amendInvoice(@RequestBody message: InvoiceTransactionRequestMessage): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::InvoiceAmendmentInitiatorFlow, message)
             future.progress.subscribe { println(it) }
             val result = future.returnValue.getOrThrow()
             val response = TransactionResponseMessage(
                     assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                    transactionId = result.tx.id.toString()
+            )
+
+            ResponseBuilder.ok(response)
+        } catch (ex: Exception) {
+            when (ex) {
+                is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
+                else -> ResponseBuilder.internalServerError(ex.message)
+            }
+        }
+    }
+
+    @PutMapping(path = arrayOf("/changeowner"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun changeInvoiceOwner(@RequestBody message: OwnershipTransactionRequestMessage): ResponseEntity<*> {
+        return try {
+            val future = rpc.proxy.startTrackedFlow(::InvoiceOwnershipChangeInitiatorFlow, message)
+            future.progress.subscribe { println(it) }
+            val result = future.returnValue.getOrThrow()
+            val response = TransactionResponseMessage(
+                    assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                    transactionId = result.tx.id.toString()
+            )
+
+            ResponseBuilder.ok(response)
+        } catch (ex: Exception) {
+            when (ex) {
+                is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
+                else -> ResponseBuilder.internalServerError(ex.message)
+            }
+        }
+    }
+
+    @DeleteMapping(path = arrayOf("/cancel"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun cancelInvoice(@RequestBody message: CancellationTransactionRequestMessage): ResponseEntity<*> {
+        return try {
+            val future = rpc.proxy.startTrackedFlow(::InvoiceCancellationInitiatorFlow, message)
+            future.progress.subscribe { println(it) }
+            val result = future.returnValue.getOrThrow()
+            val response = TransactionResponseMessage(
+                    assetIds = emptyList(),
                     transactionId = result.tx.id.toString()
             )
 
