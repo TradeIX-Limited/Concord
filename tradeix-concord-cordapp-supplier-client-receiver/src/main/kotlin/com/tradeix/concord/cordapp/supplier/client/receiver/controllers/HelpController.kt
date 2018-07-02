@@ -94,7 +94,7 @@ class HelpController {
         }
     }
 
-    @GetMapping(path = arrayOf("/fundingresponse/accept"))
+    @GetMapping(path = arrayOf("/fundingresponses/accept"))
     fun getFundingResponseAcceptHelp(): ResponseEntity<*> {
         return try {
             ResponseBuilder.ok(
@@ -109,7 +109,7 @@ class HelpController {
         }
     }
 
-    @GetMapping(path = arrayOf("/fundingresponse/reject"))
+    @GetMapping(path = arrayOf("/fundingresponses/reject"))
     fun getFundingResponseRejectHelp(): ResponseEntity<*> {
         return try {
             ResponseBuilder.ok(

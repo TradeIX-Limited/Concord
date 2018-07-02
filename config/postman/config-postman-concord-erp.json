@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "57e9043d-3c08-418f-b9fb-d0814bcc32c6",
+    "_postman_id": "cda8826f-bf1a-453b-a226-1cdf04d36d33",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -155,6 +155,50 @@
                 "help",
                 "invoices",
                 "cancel"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/accept",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/accept endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "help",
+                "fundingresponses",
+                "accept"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/reject",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/reject endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "help",
+                "fundingresponses",
+                "reject"
               ]
             }
           }
@@ -357,6 +401,147 @@
               ]
             }
           }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for funding response states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/{externalId}",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for the latest funding response state by externalId.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses",
+                "FUNDING_RESPONSE_1"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/count",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to count the total number of unconsumed funding response states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/hash",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to get the last known funding response state hash.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/accept",
+          "request": {
+            "method": "PUT",
+            "description": "Accepts an existing funding response.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\"\n}",
+              "mode": "raw"
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses",
+                "accept"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/reject",
+          "request": {
+            "method": "PUT",
+            "description": "Rejects an existing funding response.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\"\n}",
+              "mode": "raw"
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8086",
+              "path": [
+                "fundingresponses",
+                "reject"
+              ]
+            }
+          }
         }
       ],
       "name": "TradeIX Mock Supplier 1",
@@ -423,6 +608,140 @@
               "path": [
                 "nodes",
                 "local"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/issue",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/issue endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "help",
+                "fundingresponses",
+                "issue"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for funding response states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/{externalId}",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for the latest funding response state by externalId.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "fundingresponses",
+                "FUNDING_RESPONSE_1"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/count",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to count the total number of unconsumed funding response states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "fundingresponses",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/hash",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to get the last known funding response state hash.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "fundingresponses",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "fundingresponses/issue",
+          "request": {
+            "method": "POST",
+            "description": "Creates a new funding response.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": null,\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=TradeIX Mock Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=TradeIX Mock Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\"\n}",
+              "mode": "raw"
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "fundingresponses",
+                "accept"
               ]
             }
           }

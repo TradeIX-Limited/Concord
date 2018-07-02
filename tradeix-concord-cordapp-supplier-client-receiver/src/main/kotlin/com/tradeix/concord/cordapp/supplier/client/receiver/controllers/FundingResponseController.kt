@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(path = arrayOf("/fundingresponse"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+@RequestMapping(path = arrayOf("/fundingresponses"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
 class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpc.proxy)
@@ -92,7 +92,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
         }
     }
 
-    @PostMapping(path = arrayOf("/accept"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @PutMapping(path = arrayOf("/accept"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun acceptFundingResponse(@RequestBody message: FundingResponseAcceptanceRequestMessage): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
@@ -112,7 +112,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
         }
     }
 
-    @PostMapping(path = arrayOf("/reject"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @PutMapping(path = arrayOf("/reject"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun rejectFundingResponse(@RequestBody message: FundingResponseRejectionRequestMessage): ResponseEntity<*> {
         return try {
             val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)

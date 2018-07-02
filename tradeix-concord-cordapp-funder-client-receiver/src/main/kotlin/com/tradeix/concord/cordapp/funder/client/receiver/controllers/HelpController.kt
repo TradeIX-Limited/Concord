@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(path = arrayOf("/help"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
 class HelpController {
 
-    @GetMapping(path = arrayOf("/fundingresponse/issue"))
+    @GetMapping(path = arrayOf("/fundingresponses/issue"))
     fun getInvoiceValidationHelp(): ResponseEntity<*> {
         return try {
             ResponseBuilder.ok(

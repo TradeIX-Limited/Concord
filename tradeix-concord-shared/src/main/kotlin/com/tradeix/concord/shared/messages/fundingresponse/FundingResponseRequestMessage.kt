@@ -7,7 +7,7 @@ import java.math.BigDecimal
 data class FundingResponseRequestMessage(
         val externalId: String? = null,
         val fundingRequestExternalId: String? = null,
-        val invoiceExternalIds: Iterable<String>? = emptyList(),
+        val invoiceExternalIds: Collection<String>? = null,
         val supplier: String? = null,
         val funder: String? = null,
         val purchaseValue: BigDecimal? = null,

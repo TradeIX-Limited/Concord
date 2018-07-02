@@ -161,7 +161,7 @@ class FundingResponseContract : Contract {
                     "On funding response rejection, the input state status should be set to PENDING."
 
             const val CONTRACT_RULE_OUTPUT_STATUS =
-                    "On funding response rejection, the output state status should be set to ACCEPTED."
+                    "On funding response rejection, the output state status should be set to REJECTED."
 
             const val CONTRACT_RULE_SIGNERS =
                     "On funding response rejection, all participants must sign the transaction."

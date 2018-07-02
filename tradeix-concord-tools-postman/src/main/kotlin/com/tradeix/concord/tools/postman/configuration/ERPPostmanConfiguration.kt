@@ -2,6 +2,9 @@ package com.tradeix.concord.tools.postman.configuration
 
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceAmendments
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceCancellations
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceOwnershipChanges
@@ -82,6 +85,32 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/invoices/cancel"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/accept", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/accept endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/accept"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/reject", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/reject endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/reject"
                 )
         )))
 
@@ -188,10 +217,164 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         path = "invoices/cancel"
                 )
         )))
+
+        group.item.add(Endpoint("fundingresponses", Request(
+                method = "GET",
+                description = "Performs a vault query for funding response states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/{externalId}", Request(
+                method = "GET",
+                description = "Performs a vault query for the latest funding response state by externalId.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/FUNDING_RESPONSE_1"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/count", Request(
+                method = "GET",
+                description = "Performs a vault query to count the total number of unconsumed funding response states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/count"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/hash", Request(
+                method = "GET",
+                description = "Performs a vault query to get the last known funding response state hash.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/hash"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/accept", Request(
+                method = "PUT",
+                description = "Accepts an existing funding response.",
+                header = RequestHeader.APPLICATION_JSON,
+                body = JsonRequestBody(FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE),
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/accept"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/reject", Request(
+                method = "PUT",
+                description = "Rejects an existing funding response.",
+                header = RequestHeader.APPLICATION_JSON,
+                body = JsonRequestBody(FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE),
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/reject"
+                )
+        )))
     }
 
     private fun configureFunderNode(node: Node, group: EndpointGroup) {
+        group.item.add(Endpoint("help/fundingresponses/issue", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/issue endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/issue"
+                )
+        )))
 
+        group.item.add(Endpoint("fundingresponses", Request(
+                method = "GET",
+                description = "Performs a vault query for funding response states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/{externalId}", Request(
+                method = "GET",
+                description = "Performs a vault query for the latest funding response state by externalId.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/FUNDING_RESPONSE_1"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/count", Request(
+                method = "GET",
+                description = "Performs a vault query to count the total number of unconsumed funding response states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/count"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/hash", Request(
+                method = "GET",
+                description = "Performs a vault query to get the last known funding response state hash.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/hash"
+                )
+        )))
+
+        group.item.add(Endpoint("fundingresponses/issue", Request(
+                method = "POST",
+                description = "Creates a new funding response.",
+                header = RequestHeader.APPLICATION_JSON,
+                body = JsonRequestBody(FUNDING_RESPONSE_REQUEST_MESSAGE),
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "fundingresponses/accept"
+                )
+        )))
     }
 
     private fun configureCommon(node: Node, group: EndpointGroup) {
