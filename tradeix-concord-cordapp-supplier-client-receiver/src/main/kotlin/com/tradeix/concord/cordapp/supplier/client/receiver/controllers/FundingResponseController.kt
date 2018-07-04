@@ -17,6 +17,7 @@ import net.corda.core.utilities.getOrThrow
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.concurrent.Callable
 
 @RestController
 @RequestMapping(path = arrayOf("/fundingresponses"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
@@ -31,103 +32,120 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
             @RequestParam(name = "status", required = false, defaultValue = "unconsumed") status: String,
             @RequestParam(name = "pageNumber", required = false, defaultValue = "1") pageNumber: Int,
             @RequestParam(name = "pageSize", required = false, defaultValue = "50") pageSize: Int
-    ): ResponseEntity<*> {
+    ): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val stateStatus = Vault.StateStatus.valueOf(status.toUpperCase())
 
-        return try {
-            val stateStatus = Vault.StateStatus.valueOf(status.toUpperCase())
+                if (externalId.isNullOrBlank()) {
+                    val fundingResponseStates = vaultService
+                            .getPagedItems(pageNumber, pageSize, stateStatus)
+                            .map { fundingResonseRequestMapper.map(it.state.data) }
 
-            if (externalId.isNullOrBlank()) {
-                val fundingResponseStates = vaultService
-                        .getPagedItems(pageNumber, pageSize, stateStatus)
-                        .map { fundingResonseRequestMapper.map(it.state.data) }
+                    ResponseBuilder.ok(fundingResponseStates)
+                } else {
+                    val fundingResponseStates = vaultService
+                            .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
+                            .map { fundingResonseRequestMapper.map(it.state.data) }
 
-                ResponseBuilder.ok(fundingResponseStates)
-            } else {
-                val fundingResponseStates = vaultService
-                        .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
-                        .map { fundingResonseRequestMapper.map(it.state.data) }
-
-                ResponseBuilder.ok(fundingResponseStates)
-            }
-        } catch (ex: Exception) {
-            when (ex) {
-                is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
-                else -> ResponseBuilder.internalServerError(ex.message)
+                    ResponseBuilder.ok(fundingResponseStates)
+                }
+            } catch (ex: Exception) {
+                when (ex) {
+                    is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
+                    else -> ResponseBuilder.internalServerError(ex.message)
+                }
             }
         }
     }
 
     @GetMapping(path = arrayOf("{externalId}"))
-    fun getUnconsumedFundingResponseStateByExternalId(@PathVariable externalId: String): ResponseEntity<*> {
-        return try {
-            val invoice = vaultService
-                    .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
-                    .map { fundingResonseRequestMapper.map(it.state.data) }
-                    .single()
+    fun getUnconsumedFundingResponseStateByExternalId(
+            @PathVariable externalId: String
+    ): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val invoice = vaultService
+                        .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
+                        .map { fundingResonseRequestMapper.map(it.state.data) }
+                        .single()
 
-            ResponseBuilder.ok(invoice)
-        } catch (ex: Exception) {
-            when (ex) {
-                is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
-                else -> ResponseBuilder.internalServerError(ex.message)
+                ResponseBuilder.ok(invoice)
+            } catch (ex: Exception) {
+                when (ex) {
+                    is IllegalArgumentException -> ResponseBuilder.badRequest(ex.message)
+                    else -> ResponseBuilder.internalServerError(ex.message)
+                }
             }
         }
     }
 
     @GetMapping(path = arrayOf("/count"))
-    fun getUniqueFundingResponseStateCount(): ResponseEntity<*> {
-        return try {
-            ResponseBuilder.ok(mapOf("count" to vaultService.getCount()))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+    fun getUniqueFundingResponseStateCount(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                ResponseBuilder.ok(mapOf("count" to vaultService.getCount()))
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 
     @GetMapping(path = arrayOf("/hash"))
-    fun getMostRecentFundingResponseHash(): ResponseEntity<*> {
-        return try {
-            ResponseBuilder.ok(mapOf("hash" to vaultService.getLatestHash()))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+    fun getMostRecentFundingResponseHash(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                ResponseBuilder.ok(mapOf("hash" to vaultService.getLatestHash()))
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 
     @PutMapping(path = arrayOf("/accept"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun acceptFundingResponse(@RequestBody message: FundingResponseAcceptanceRequestMessage): ResponseEntity<*> {
-        return try {
-            val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
-            future.progress.subscribe { println(it) }
-            val result = future.returnValue.getOrThrow()
-            val response = TransactionResponseMessage(
-                    assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
-                    transactionId = result.tx.id.toString()
-            )
+    fun acceptFundingResponse(
+            @RequestBody message: FundingResponseAcceptanceRequestMessage
+    ): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
+                future.progress.subscribe { println(it) }
+                val result = future.returnValue.getOrThrow()
+                val response = TransactionResponseMessage(
+                        assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
+                        transactionId = result.tx.id.toString()
+                )
 
-            ResponseBuilder.ok(response)
-        } catch (ex: Exception) {
-            when (ex) {
-                is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
-                else -> ResponseBuilder.internalServerError(ex.message)
+                ResponseBuilder.ok(response)
+            } catch (ex: Exception) {
+                when (ex) {
+                    is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
+                    else -> ResponseBuilder.internalServerError(ex.message)
+                }
             }
         }
     }
 
     @PutMapping(path = arrayOf("/reject"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun rejectFundingResponse(@RequestBody message: FundingResponseRejectionRequestMessage): ResponseEntity<*> {
-        return try {
-            val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)
-            future.progress.subscribe { println(it) }
-            val result = future.returnValue.getOrThrow()
-            val response = TransactionResponseMessage(
-                    assetIds = emptyList(),
-                    transactionId = result.tx.id.toString()
-            )
+    fun rejectFundingResponse(
+            @RequestBody message: FundingResponseRejectionRequestMessage
+    ): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)
+                future.progress.subscribe { println(it) }
+                val result = future.returnValue.getOrThrow()
+                val response = TransactionResponseMessage(
+                        assetIds = emptyList(),
+                        transactionId = result.tx.id.toString()
+                )
 
-            ResponseBuilder.ok(response)
-        } catch (ex: Exception) {
-            when (ex) {
-                is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
-                else -> ResponseBuilder.internalServerError(ex.message)
+                ResponseBuilder.ok(response)
+            } catch (ex: Exception) {
+                when (ex) {
+                    is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
+                    else -> ResponseBuilder.internalServerError(ex.message)
+                }
             }
         }
     }

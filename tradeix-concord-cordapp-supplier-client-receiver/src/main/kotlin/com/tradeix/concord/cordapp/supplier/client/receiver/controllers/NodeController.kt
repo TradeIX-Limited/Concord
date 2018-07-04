@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.Callable
 
 @RestController
 @RequestMapping(path = arrayOf("/nodes"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
@@ -19,38 +20,44 @@ class NodeController(private val rpc: RPCConnectionProvider) {
     }
 
     @GetMapping(path = arrayOf("/all"))
-    fun getAllNodes(): ResponseEntity<*> {
-        return try {
-            val nodes = rpc.proxy
-                    .networkMapSnapshot()
-                    .map { it.legalIdentities.first().name.toString() }
-            ResponseBuilder.ok(NodesResponseMessage(nodes))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+    fun getAllNodes(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val nodes = rpc.proxy
+                        .networkMapSnapshot()
+                        .map { it.legalIdentities.first().name.toString() }
+                ResponseBuilder.ok(NodesResponseMessage(nodes))
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 
     @GetMapping(path = arrayOf("/peers"))
-    fun getPeerNodes(): ResponseEntity<*> {
-        return try {
-            val nodes = rpc.proxy
-                    .networkMapSnapshot()
-                    .map { it.legalIdentities.first().name }
-                    .filter { it != rpc.proxy.nodeInfo().legalIdentities.first().name }
-                    .filter { !KNOWN_NETWORK_NAMES.contains(it.organisation) }
-                    .map { it.toString() }
-            ResponseBuilder.ok(NodesResponseMessage(nodes))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+    fun getPeerNodes(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                val nodes = rpc.proxy
+                        .networkMapSnapshot()
+                        .map { it.legalIdentities.first().name }
+                        .filter { it != rpc.proxy.nodeInfo().legalIdentities.first().name }
+                        .filter { !KNOWN_NETWORK_NAMES.contains(it.organisation) }
+                        .map { it.toString() }
+                ResponseBuilder.ok(NodesResponseMessage(nodes))
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 
     @GetMapping(path = arrayOf("/local"))
-    fun getLocalNode(): ResponseEntity<*> {
-        return try {
-            ResponseBuilder.ok(NodeResponseMessage(rpc.proxy.nodeInfo().legalIdentities.first().name.toString()))
-        } catch (ex: Exception) {
-            ResponseBuilder.internalServerError(ex.message)
+    fun getLocalNode(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                ResponseBuilder.ok(NodeResponseMessage(rpc.proxy.nodeInfo().legalIdentities.first().name.toString()))
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
         }
     }
 }
