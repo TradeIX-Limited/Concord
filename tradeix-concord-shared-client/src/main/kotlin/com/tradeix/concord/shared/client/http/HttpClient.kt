@@ -1,22 +1,27 @@
 package com.tradeix.concord.shared.client.http
 
+import com.tradeix.concord.shared.client.components.OAuthAccessTokenProvider
+import org.springframework.http.*
 import org.springframework.web.client.RestTemplate
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 
 
-class HttpClient(private val server: String) {
+class HttpClient(private val server: String, private val tokenProvider: OAuthAccessTokenProvider) {
 
-    private val rest = RestTemplate()
-    private val headers = HttpHeaders()
+    private val client = RestTemplate()
 
-    init {
-        headers.add("Content-Type", "application/json")
-        headers.add("Accept", "*/*")
-    }
+    private val headers: HttpHeaders
+        get() {
+            val headers = HttpHeaders()
 
-    fun post(uri: String, json: String) {
-        val requestEntity = HttpEntity<String>(json, headers)
-        rest.postForEntity(server + uri, requestEntity, Unit::class.java)
+            headers.contentType = MediaType.APPLICATION_JSON
+
+            headers.add("Accept", "*/*")
+            headers.add("Authorization", "bearer ${tokenProvider.accessToken}")
+
+            return headers
+        }
+
+    fun <T> post(url: String, json: String, returnType: Class<T>): ResponseEntity<T> {
+        return client.exchange(server + url, HttpMethod.POST, HttpEntity(json, headers), returnType)
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
 @SpringBootApplication
-class Application(address: Address, rpc: RPCConnectionProvider) {
+class Application(private val address: Address, rpc: RPCConnectionProvider) {
 
     companion object {
         @JvmStatic
@@ -29,7 +29,7 @@ class Application(address: Address, rpc: RPCConnectionProvider) {
 
     init {
         repository.observe {
-            client.post("Invoice/Notify", serializer.toJson(invoiceResponseMapper.map(it.state.data)))
+            client.post<Unit>("Invoice/Notify", serializer.toJson(invoiceResponseMapper.map(it.state.data)))
         }
     }
 }
