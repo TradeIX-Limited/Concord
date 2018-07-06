@@ -1,13 +1,13 @@
 package com.tradeix.concord.cordapp.supplier.client.responder
 
-import com.tradeix.concord.shared.client.observers.InvoiceObserver
 import com.tradeix.concord.shared.client.components.Address
 import com.tradeix.concord.shared.client.components.OAuthAccessTokenProvider
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.client.observers.InvoiceObserver
 import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 
-@SpringBootApplication
+@EnableAutoConfiguration
 class Application(address: Address, rpc: RPCConnectionProvider, tokenProvider: OAuthAccessTokenProvider) {
 
     companion object {
