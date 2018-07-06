@@ -8,11 +8,15 @@ import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
+import org.springframework.context.annotation.PropertySources
 import org.springframework.stereotype.Component
 
 @Component
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySources(
+        PropertySource("classpath:receiver.properties", ignoreResourceNotFound = true),
+        PropertySource("classpath:responder.properties", ignoreResourceNotFound = true)
+)
 class RPCConnectionProvider(
         @Value("\${config.rpc.username}") private val username: String,
         @Value("\${config.rpc.password}") private val password: String,

@@ -10,9 +10,9 @@ import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.ComponentScan
 
-
+@ComponentScan("com.tradeix.concord.shared.client.components")
 @EnableAutoConfiguration
 class Application(address: Address, rpc: RPCConnectionProvider) {
 
