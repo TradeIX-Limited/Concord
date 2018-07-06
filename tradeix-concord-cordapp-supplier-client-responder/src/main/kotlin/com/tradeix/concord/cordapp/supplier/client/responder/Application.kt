@@ -6,7 +6,13 @@ import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.observers.InvoiceObserver
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.ComponentScans
 
+@ComponentScans(
+        ComponentScan("com.tradeix.concord.shared.client.components"),
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.receiver.controllers")
+)
 @EnableAutoConfiguration
 class Application(address: Address, rpc: RPCConnectionProvider, tokenProvider: OAuthAccessTokenProvider) {
 
