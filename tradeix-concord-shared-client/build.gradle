@@ -37,6 +37,7 @@ sourceSets {
 
 dependencies {
     compile project(":tradeix-concord-shared")
+    compile project(":tradeix-concord-shared-domain")
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
