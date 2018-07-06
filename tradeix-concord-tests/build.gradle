@@ -45,3 +45,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         javaParameters = true
     }
 }
+
+test.jvmArgs = ["-ea", "-javaagent:../lib/quasar.jar"]

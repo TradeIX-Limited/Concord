@@ -5,11 +5,14 @@ buildscript {
     ext.kotlin_version = '1.1.60'
     ext.corda_release_group = 'net.corda'
     ext.corda_release_version = '3.1-corda'
-    ext.corda_gradle_plugins_version = '3.1.0'
+    ext.corda_gradle_plugins_version = '3.2.1'
     ext.quasar_version = '0.7.9'
     ext.junit_version = '4.12'
-    ext.gson_version = '2.8.2'
+    ext.gson_version = '2.8.0'
     ext.spring_boot_version = '1.5.4.RELEASE'
+    ext.active_mq_version = "2.2.0"
+    ext.jackson_version = "2.9.2"
+    ext.guava_version = "21.0"
 
     repositories {
         mavenLocal()
@@ -36,8 +39,7 @@ repositories {
 }
 
 apply plugin: 'kotlin'
-apply plugin: "kotlin-spring"
-apply plugin: 'org.springframework.boot'
+apply plugin: 'kotlin-spring'
 apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
@@ -61,15 +63,8 @@ dependencies {
     cordapp project(":tradeix-concord-shared-domain")
     cordapp project(":tradeix-concord-shared-cordapp")
 
-    //cordapp project(":tradeix-concord-shared-client")
-
     cordapp project(":tradeix-concord-cordapp-supplier")
-    //cordapp project(":tradeix-concord-cordapp-supplier-client-receiver")
-    //cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
-
     cordapp project(":tradeix-concord-cordapp-funder")
-    //cordapp project(":tradeix-concord-cordapp-funder-client-receiver")
-    //cordapp project(":tradeix-concord-cordapp-funder-client-responder")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -85,20 +80,14 @@ def $supplierCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
         "$project.group:tradeix-concord-shared-cordapp:$project.version",
-        "$project.group:tradeix-concord-cordapp-supplier:$project.version",
-        //"$project.group:tradeix-concord-shared-client:$project.version",
-        //"$project.group:tradeix-concord-cordapp-supplier-client-receiver:$project.version",
-        //"$project.group:tradeix-concord-cordapp-supplier-client-responder:$project.version"
+        "$project.group:tradeix-concord-cordapp-supplier:$project.version"
 ]
 
 def $funderCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
         "$project.group:tradeix-concord-shared-cordapp:$project.version",
-        "$project.group:tradeix-concord-cordapp-funder:$project.version",
-        //"$project.group:tradeix-concord-shared-client:$project.version",
-        //"$project.group:tradeix-concord-cordapp-funder-client-receiver:$project.version",
-        //"$project.group:tradeix-concord-cordapp-funder-client-responder:$project.version"
+        "$project.group:tradeix-concord-cordapp-funder:$project.version"
 ]
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
