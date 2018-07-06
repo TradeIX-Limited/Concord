@@ -4,7 +4,7 @@ set -eu
 
 CONFIG_SRC=$1
 CONFIG_DEST=$2
-declare -a MODULES=("notary" "conductor" "buyer" "funder" "supplier1")
+declare -a MODULES=("notary" "funder" "supplier1")
 CONDUCTOR="conductor"
 TIX_INTEGRATION="tix.integration.conf"
 

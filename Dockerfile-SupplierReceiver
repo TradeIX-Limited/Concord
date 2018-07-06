@@ -1,0 +1,16 @@
+FROM openjdk:8u151-jre-alpine
+MAINTAINER support@tradeix.com
+RUN apk upgrade --update && \
+	apk add --update --no-cache bash iputils && \
+	rm -rf /var/cache/apk/*
+
+# Create /opt/corda directory
+RUN mkdir -p /opt/ && \
+    mkdir -p /opt/corda/ && \
+    mkdir -p /opt/corda/logs
+
+COPY build/tradeix-concord-cordapp-supplier-client-receiver-1.0/* /opt/corda/
+
+WORKDIR /opt/corda
+
+ENTRYPOINT ["/opt/corda/bin/", "tradeix-concord-cordapp-supplier-client-receiver-1.0.sh"]
