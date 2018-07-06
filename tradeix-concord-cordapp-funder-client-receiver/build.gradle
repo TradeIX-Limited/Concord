@@ -41,6 +41,8 @@ dependencies {
     cordapp project(":tradeix-concord-shared-client")
     cordapp project(":tradeix-concord-cordapp-funder")
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
+    compile "org.apache.activemq:artemis-commons:$active_mq_version"
+    compile "org.apache.activemq:artemis-core-client:$active_mq_version"
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
 }

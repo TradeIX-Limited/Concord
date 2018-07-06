@@ -40,10 +40,9 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:${jackson_version}"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jackson_version"
-    compile "org.apache.activemq:artemis-commons:$active_mq_version"
-    compile "org.apache.activemq:artemis-core-client:$active_mq_version"
     compile "com.google.guava:guava:$guava_version"
     compile project(":tradeix-concord-shared")
+    cordaCompile "net.corda:corda-rpc:$corda_release_version"
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
