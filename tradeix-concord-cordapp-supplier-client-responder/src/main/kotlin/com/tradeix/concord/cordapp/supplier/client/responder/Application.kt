@@ -9,9 +9,10 @@ import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.services.VaultService
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
-@SpringBootApplication
+@EnableAutoConfiguration
 class Application(address: Address, rpc: RPCConnectionProvider) {
 
     companion object {
