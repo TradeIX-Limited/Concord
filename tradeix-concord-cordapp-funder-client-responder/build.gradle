@@ -76,7 +76,7 @@ distributions {
         contents {
             baseName = project.name
             into('bin') {
-                from('src/main/resources/application.properties')
+                from('src/main/resources/responder.properties')
             }
         }
     }
