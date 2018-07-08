@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component
         PropertySource("classpath:responder.properties", ignoreResourceNotFound = true)
 )
 class Address(
-        @Value("\${config.erp.host}") val host: String,
-        @Value("\${config.erp.port}") val port: Int
+        @Value("\${config.tix.host}") val host: String,
+        @Value("\${config.tix.port}") val port: Int
 )
