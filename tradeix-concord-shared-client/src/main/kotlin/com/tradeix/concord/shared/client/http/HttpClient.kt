@@ -16,7 +16,7 @@ class HttpClient(private val server: String, private val tokenProvider: OAuthAcc
             headers.contentType = MediaType.APPLICATION_JSON
 
             headers.add("Accept", "*/*")
-            headers.add("Authorization", "bearer ${tokenProvider.accessToken}")
+            headers.add("Authorization", "bearer ${tokenProvider.accessToken.accessToken}")
 
             return headers
         }
