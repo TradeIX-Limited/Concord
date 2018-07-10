@@ -29,11 +29,17 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "owner")
             val owner: AbstractParty,
 
-            @Column(name = "buyer")
-            val buyer: AbstractParty?,
+            @Column(name = "buyer_identity")
+            val buyerIdentity: AbstractParty?,
 
-            @Column(name = "supplier")
-            val supplier: AbstractParty,
+            @Column(name = "buyer_company_name")
+            val buyerCompanyName: String?,
+
+            @Column(name = "supplier_identity")
+            val supplierIdentity: AbstractParty?,
+
+            @Column(name = "supplier_company_name")
+            val supplierCompanyName: String?,
 
             @Column(name = "invoice_number")
             val invoiceNumber: String,
@@ -69,6 +75,12 @@ object InvoiceSchemaV1 : MappedSchema(
             val originationNetwork: String,
 
             @Column(name = "site_id")
-            val siteId: String
+            val siteId: String,
+
+            @Column(name = "trade_date")
+            val tradeDate: LocalDateTime?,
+
+            @Column(name = "trade_payment_date")
+            val tradePaymentDate: LocalDateTime?
     ) : PersistentState()
 }

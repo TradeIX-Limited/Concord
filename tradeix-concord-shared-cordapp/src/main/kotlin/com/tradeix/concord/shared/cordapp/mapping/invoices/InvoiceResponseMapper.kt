@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
 
     override fun map(source: InvoiceState): InvoiceResponseMessage {
-        return InvoiceResponseMessage(
+                return InvoiceResponseMessage(
                 networkInvoiceUId = source.linearId.externalId.toString(),
                 invoiceVersion = "", // TODO : NOT MAPPED!
                 invoiceVersionDate = LocalDateTime.now(), // TODO : REVIEW MAPPING

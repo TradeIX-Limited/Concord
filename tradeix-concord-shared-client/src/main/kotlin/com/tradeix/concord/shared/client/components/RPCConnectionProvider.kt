@@ -8,15 +8,11 @@ import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.annotation.PropertySources
 import org.springframework.stereotype.Component
 
 @Component
 @Configuration
-@PropertySources(
-        PropertySource("classpath:receiver.properties", ignoreResourceNotFound = true),
-        PropertySource("classpath:responder.properties", ignoreResourceNotFound = true)
-)
+@PropertySource("file:application.properties", ignoreResourceNotFound = true)
 class RPCConnectionProvider(
         @Value("\${config.rpc.username}") private val username: String,
         @Value("\${config.rpc.password}") private val password: String,
@@ -33,6 +29,7 @@ class RPCConnectionProvider(
         get() {
             while (safeProxy == null) {
                 try {
+                    logger.info("Establishing RPC connection to $host:$port.")
                     val networkHostAndPort = NetworkHostAndPort(host, port)
                     val cordaRPCClient = CordaRPCClient(networkHostAndPort)
                     safeProxy = cordaRPCClient.start(username, password).proxy
@@ -41,7 +38,7 @@ class RPCConnectionProvider(
                     Thread.sleep(1000)
                 }
             }
-            logger.info("Successfully created RPC connection.")
+            logger.info("Successfully created RPC connection to $host:$port.")
             return safeProxy!!
         }
 }

@@ -5,6 +5,7 @@ import com.tradeix.concord.shared.extensions.fromValueAndCurrency
 import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.shared.models.Participant
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.contracts.Amount
@@ -36,8 +37,8 @@ class InvoiceIssuanceRequestMapper(private val serviceHub: ServiceHub)
         return InvoiceState(
                 linearId = UniqueIdentifier(source.externalId!!),
                 owner = supplier,
-                buyer = buyer,
-                supplier = supplier,
+                buyer = Participant(buyer, source.buyerCompanyName),
+                supplier = Participant(supplier, null),
                 invoiceNumber = source.invoiceNumber!!,
                 reference = source.reference!!,
                 dueDate = source.dueDate!!,
@@ -48,7 +49,9 @@ class InvoiceIssuanceRequestMapper(private val serviceHub: ServiceHub)
                 invoicePayments = Amount.fromValueAndCurrency(source.invoicePayments!!, source.currency!!),
                 invoiceDilutions = Amount.fromValueAndCurrency(source.invoiceDilutions!!, source.currency!!),
                 originationNetwork = source.originationNetwork!!,
-                siteId = source.siteId!!
+                siteId = source.siteId!!,
+                tradeDate = source.tradeDate,
+                tradePaymentDate = source.tradePaymentDate
         )
     }
 }

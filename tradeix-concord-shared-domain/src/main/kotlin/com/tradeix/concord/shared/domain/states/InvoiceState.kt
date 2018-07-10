@@ -3,6 +3,7 @@ package com.tradeix.concord.shared.domain.states
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.mapping.InvoiceSchemaV1Mapper
 import com.tradeix.concord.shared.domain.schemas.InvoiceSchemaV1
+import com.tradeix.concord.shared.models.Participant
 import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
@@ -14,8 +15,8 @@ import java.util.*
 data class InvoiceState(
         override val linearId: UniqueIdentifier,
         override val owner: AbstractParty,
-        val buyer: AbstractParty?,
-        val supplier: AbstractParty,
+        val buyer: Participant,
+        val supplier: Participant,
         val invoiceNumber: String,
         val reference: String,
         val dueDate: LocalDateTime,
@@ -26,10 +27,12 @@ data class InvoiceState(
         val invoicePayments: Amount<Currency>,
         val invoiceDilutions: Amount<Currency>,
         val originationNetwork: String,
-        val siteId: String
+        val siteId: String,
+        val tradeDate: LocalDateTime?,              // TODO : Should this be optional?
+        val tradePaymentDate: LocalDateTime?        // TODO : Should this be optional?
 ) : LinearState, OwnableState, QueryableState {
 
-    override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer, supplier)
+    override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer.party, supplier.party)
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
         return CommandAndState(InvoiceContract.ChangeOwner(), this.copy(owner = newOwner))

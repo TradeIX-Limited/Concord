@@ -72,5 +72,9 @@ class InvoiceRequestMessageValidator : ObjectValidator<InvoiceRequestMessage>() 
         validationBuilder.property(InvoiceRequestMessage::siteId, {
             it.isNotNullEmptyOrBlank()
         })
+
+        validationBuilder.property(InvoiceRequestMessage::buyerCompanyName, {
+            it.isNotNullEmptyOrBlank()
+        })
     }
 }

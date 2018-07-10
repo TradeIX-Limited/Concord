@@ -30,7 +30,7 @@ repositories {
 sourceSets {
     main.kotlin.srcDirs = ['src/main/kotlin']
     main.java.srcDirs = []
-    main.resources.srcDirs = ['src/main/resources']
+    main.resources.srcDirs = []
     test.kotlin.srcDirs = []
     test.java.srcDirs = []
     test.resources.srcDirs = []
@@ -74,9 +74,6 @@ distributions {
     main {
         contents {
             baseName = project.name
-            into('bin') {
-                from('src/main/resources/receiver.properties')
-            }
         }
     }
 }
