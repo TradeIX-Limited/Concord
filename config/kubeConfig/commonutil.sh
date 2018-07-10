@@ -116,10 +116,10 @@ azUploadReceiverResponderProperties() {
     local RESPONDER_FILE=${CONFIG_HOME}/${MODULES[i]}/${RESPONDER_REF}/${APPLICATION_PROPERTIES}
     local CONFIGMAP_FILE_RECEIVER=${MODULES[i]}"-"${RECEIVER_REF}
     local CONFIGMAP_FILE_RESPONDER=${MODULES[i]}"-"${RESPONDER_REF}
-    if [ "$i" != "${NOTARY}" ]
-    then
-      continue
-    fi
+#    if [ "$i" != "${NOTARY}" ]
+#    then
+#      continue
+#    fi
     if [ -a ${RECEIVER_FILE} ]
     then
       kubectl create configmap ${CONFIGMAP_FILE_RECEIVER} --from-file=${RECEIVER_FILE}
