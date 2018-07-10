@@ -29,7 +29,8 @@ class InvoiceRequestMessageValidatorValidationTests {
                 "Property 'originationNetwork' must not be null, empty or blank.",
                 "Property 'currency' must not be null.",
                 "Property 'currency' must be a valid currency code.",
-                "Property 'siteId' must not be null, empty or blank."
+                "Property 'siteId' must not be null, empty or blank.",
+                "Property 'buyerCompanyName' must not be null, empty or blank."
         )
         val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 

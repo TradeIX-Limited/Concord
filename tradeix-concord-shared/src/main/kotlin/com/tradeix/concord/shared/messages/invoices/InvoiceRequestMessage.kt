@@ -20,5 +20,8 @@ data class InvoiceRequestMessage(
         val invoiceDilutions: BigDecimal? = null,
         val originationNetwork: String? = null,
         val currency: String? = null,
-        val siteId: String? = null
+        val siteId: String? = null,
+        val tradeDate: LocalDateTime? = null,
+        val tradePaymentDate: LocalDateTime? = null,
+        val buyerCompanyName: String? = null
 )
