@@ -133,7 +133,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -168,7 +168,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -202,7 +202,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -236,7 +236,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -270,7 +270,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -304,7 +304,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 
@@ -338,7 +338,7 @@ useHTTPS : false
 devMode : true
 
 networkMapService {
-    address="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
+    idServerAddress="$CONTROLLER_CORDA_HOST:$CORDA_PORT_P2P"
     legalName="$CONTROLLER_CORDA_LEGAL_NAME"
 }
 

@@ -9,7 +9,9 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @Component
-class OAuthAccessTokenProvider(private val configuration: OAuthConfiguration) {
+class OAuthAccessTokenProvider(
+        private val tixConfiguration: TIXConfiguration,
+        private val configuration: OAuthConfiguration) {
 
     private val client = RestTemplate()
     private var token = getOAuthAccessToken()
@@ -28,6 +30,7 @@ class OAuthAccessTokenProvider(private val configuration: OAuthConfiguration) {
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
 
         val map = LinkedMultiValueMap<String, String>()
+
         map.add("grant_type", configuration.grantType)
         map.add("username", configuration.username)
         map.add("password", configuration.password)
@@ -36,6 +39,10 @@ class OAuthAccessTokenProvider(private val configuration: OAuthConfiguration) {
         map.add("client_secret", configuration.clientSecret)
 
         val request = HttpEntity<MultiValueMap<String, String>>(map, headers)
-        return client.postForEntity(configuration.endpoint, request, OAuthAccessToken::class.java).body
+        return client.postForEntity(
+                tixConfiguration.idServerUrl + "connect/token",
+                request,
+                OAuthAccessToken::class.java
+        ).body
     }
 }

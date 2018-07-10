@@ -1,16 +1,14 @@
 package com.tradeix.concord.shared.client.components
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.annotation.PropertySources
 import org.springframework.stereotype.Component
 
 @Component
 @Configuration
 @PropertySource("file:application.properties", ignoreResourceNotFound = true)
-class Address(
-        @Value("\${config.tix.host}") val host: String,
-        @Value("\${config.tix.port}") val port: Int
+class TIXConfiguration(
+        @Value("\${config.tix.idserver.url}") val idServerUrl: String,
+        @Value("\${config.tix.webapi.url}") val webApiUrl: String
 )

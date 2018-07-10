@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class OAuthConfiguration(
-        @Value("\${config.oauth.endpoint}") val endpoint: String,
         @Value("\${config.oauth.grant_type}") val grantType: String,
         @Value("\${config.oauth.username}") val username: String,
         @Value("\${config.oauth.password}") val password: String,
