@@ -69,6 +69,15 @@ object InvoiceSchemaV1 : MappedSchema(
             val originationNetwork: String,
 
             @Column(name = "site_id")
-            val siteId: String
+            val siteId: String,
+
+            @Column(name = "tradeDate")
+            val tradeDate: LocalDateTime,
+
+            @Column(name = "tradePaymentDate")
+            val tradePaymentDate: LocalDateTime,
+
+            @Column(name= "buyerCompanyName")
+            val buyerCompanyName: String
     ) : PersistentState()
 }

@@ -25,7 +25,10 @@ class InvoiceSchemaV1Mapper
                 invoicePayments = source.invoicePayments.toDecimal(),
                 invoiceDilutions = source.invoiceDilutions.toDecimal(),
                 originationNetwork = source.originationNetwork,
-                siteId = source.siteId
+                siteId = source.siteId,
+                tradeDate = source.tradeDate,
+                tradePaymentDate = source.tradePaymentDate,
+                buyerCompanyName = source.buyerCompanyName
         )
     }
 }

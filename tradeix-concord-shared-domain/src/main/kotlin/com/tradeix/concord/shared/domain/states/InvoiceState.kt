@@ -26,7 +26,10 @@ data class InvoiceState(
         val invoicePayments: Amount<Currency>,
         val invoiceDilutions: Amount<Currency>,
         val originationNetwork: String,
-        val siteId: String
+        val siteId: String,
+        val tradeDate: LocalDateTime,
+        val tradePaymentDate: LocalDateTime,
+        val buyerCompanyName: String
 ) : LinearState, OwnableState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer, supplier)
