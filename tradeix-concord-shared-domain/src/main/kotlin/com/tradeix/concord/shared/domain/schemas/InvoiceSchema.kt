@@ -39,7 +39,7 @@ object InvoiceSchemaV1 : MappedSchema(
             val supplierIdentity: AbstractParty?,
 
             @Column(name = "supplier_company_name")
-            val suppierCompanyName: String?,
+            val supplierCompanyName: String?,
 
             @Column(name = "invoice_number")
             val invoiceNumber: String,

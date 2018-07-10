@@ -15,7 +15,7 @@ class InvoiceSchemaV1Mapper
                 buyerIdentity = source.buyer.party,
                 buyerCompanyName = source.buyer.companyName,
                 supplierIdentity = source.supplier.party,
-                suppierCompanyName = source.supplier.companyName,
+                supplierCompanyName = source.supplier.companyName,
                 invoiceNumber = source.invoiceNumber,
                 reference = source.reference,
                 dueDate = source.dueDate,
