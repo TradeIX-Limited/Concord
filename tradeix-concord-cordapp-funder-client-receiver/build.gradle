@@ -73,9 +73,6 @@ distributions {
     main {
         contents {
             baseName = project.name
-            into('bin') {
-                from('../config/spring/application.properties')
-            }
         }
     }
 }
