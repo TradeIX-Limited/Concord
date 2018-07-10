@@ -106,7 +106,7 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         webPort 10007
         cordapps = $supplierCorDapp
-        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "guest", "password": "letmein", "permissions": ["ALL"]]]
     }
     node {
         name "O=Test Funder 1,L=New York,C=US"
@@ -117,130 +117,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         webPort 10010
         cordapps = $funderCorDapp
-        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "guest", "password": "letmein", "permissions": ["ALL"]]]
     }
-}
-
-task deployMockNetwork(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-    directory "./build/mockNetwork"
-
-    node {
-        name "O=Notary,L=London,C=GB"
-        notary = [validating: true]
-        p2pPort 10002
-    }
-
-    node {
-        name "O=TradeIX Mock Buyer 1, L=Edinburgh, C=GB"
-        p2pPort 10010
-        rpcSettings {
-            address("localhost:10011")
-            adminAddress("localhost10012")
-        }
-        webPort 10013
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Buyer 2, L=Nice, C=FR"
-        p2pPort 10020
-        rpcSettings {
-            address("localhost:10021")
-            adminAddress("localhost10022")
-        }
-        webPort 10023
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Buyer 3, L=Los Angeles, C=US"
-        p2pPort 10030
-        rpcSettings {
-            address("localhost:10031")
-            adminAddress("localhost10032")
-        }
-        webPort 10033
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Supplier 1, L=London, C=GB"
-        p2pPort 10040
-        rpcSettings {
-            address("localhost:10041")
-            adminAddress("localhost10042")
-        }
-        webPort 10043
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Supplier 2, L=Paris, C=FR"
-        p2pPort 10050
-        rpcSettings {
-            address("localhost:10051")
-            adminAddress("localhost10052")
-        }
-        webPort 10053
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Supplier 3, L=New York, C=US"
-        p2pPort 10060
-        rpcSettings {
-            address("localhost:10061")
-            adminAddress("localhost10062")
-        }
-        webPort 10063
-        cordapps = $supplierCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Funder1, L=Madris, C=ES"
-        p2pPort 10070
-        rpcSettings {
-            address("localhost:10071")
-            adminAddress("localhost10072")
-        }
-        webPort 10073
-        cordapps = $funderCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Funder2, L=Tokyo, C=JP"
-        p2pPort 10080
-        rpcSettings {
-            address("localhost:10081")
-            adminAddress("localhost10082")
-        }
-        webPort 10083
-        cordapps = $funderCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-
-    node {
-        name "O=TradeIX Mock Funder3, L=Cape Town, C=SA"
-        p2pPort 10090
-        rpcSettings {
-            address("localhost:10091")
-            adminAddress("localhost10092")
-        }
-        webPort 10093
-        cordapps = $funderCorDapp
-        rpcUsers = [[user: "guest", password: "letmein", permissions: ["ALL"]]]
-    }
-}
-
-task createDemoBenchProfile(type: Zip, dependsOn: ['deployMockNetwork']) {
-    from 'build/mockNetwork'
-    archiveName 'demobench-erp.zip'
-    destinationDir(file('/build/demobench/'))
 }
