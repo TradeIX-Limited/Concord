@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Configuration
-@PropertySources(
-        PropertySource("classpath:receiver.properties", ignoreResourceNotFound = true),
-        PropertySource("classpath:responder.properties", ignoreResourceNotFound = true)
-)
+@PropertySource("file:application.properties", ignoreResourceNotFound = true)
 class Address(
         @Value("\${config.erp.host}") val host: String,
         @Value("\${config.erp.port}") val port: Int
