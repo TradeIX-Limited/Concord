@@ -1,21 +1,21 @@
 apiVersion: "apps/v1beta1"
 kind: Deployment
 metadata:
-  name: funder
+  name: supplier0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: funder
+      app: supplier0
   template:
     metadata:
       labels:
-        app: funder
+        app: supplier0
     spec:
       containers:
       - name: node
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        image: tradeixdev.azurecr.io/supplier:1.0
+        imagePullPolicy: Always
         args: ["notary"]
         ports:
         - containerPort: 10002
@@ -27,10 +27,10 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: funder-certificates
+        - name: supplier0-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
-        - name: funder-nodeinfo
+        - name: supplier0-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
         - name: pvclaim
@@ -42,50 +42,45 @@ spec:
         - name: pvclaim
           mountPath: /opt/corda/persistence.mv.db
           subPath: persistence.mv.db
-      - name: web
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
-        args: ["web", "funder"]
+      - name: receiver
+        image: tradeixdev.azurecr.io/supplier_receiver:1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 10004
         volumeMounts:
-        - name: pvclaim
-          mountPath: /opt/corda/node.conf
-          subPath: node.conf
+        - name: receiverconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
           readOnly: true
-        - name: additional-node-infos
-          mountPath: "/opt/corda/additional-node-infos/"
+      - name: responder
+        image: tradeixdev.azurecr.io/supplier_responder:1.0
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: responderconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
           readOnly: true
-        - name: funder-certificates
-          mountPath: "/opt/corda/certificates/"
-          readOnly: true
-        - name: funder-nodeinfo
-          mountPath: /opt/corda/nodeInfo
-          subPath: nodeInfo
-        - name: pvclaim
-          mountPath: /opt/corda/logs
-          subPath: logs
-        - name: pvclaim
-          mountPath: /opt/corda/network-parameters
-          subPath: network-parameters
-        - name: pvclaim
-          mountPath: /opt/corda/persistence.mv.db
-          subPath: persistence.mv.db
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: funder-nodeinfo
+      - name: supplier0-nodeinfo
         secret:
-          secretName: funder-nodeinfo
+          secretName: supplier0-nodeinfo
       - name: additional-node-infos
         secret:
           secretName: additional-node-infos
-      - name: funder-certificates
+      - name: supplier0-certificates
         secret:
-          secretName: funder-certificates
+          secretName: supplier0-certificates
+      - name: receiverconfig
+        configMap:
+          name: supplier0-receiver
+      - name: responderconfig
+        configMap:
+          name: supplier0-responder
       - name: logs
         emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
-          claimName: pvclaim-funder
+          claimName: pvclaim-supplier0
           readOnly: false

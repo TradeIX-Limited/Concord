@@ -2,11 +2,11 @@
 
 set -eu
 
+source config.sh
+
 CONFIG_SRC=$1
 CONFIG_DEST=$2
-declare -a MODULES=("notary" "funder" "supplier1")
-CONDUCTOR="conductor"
-TIX_INTEGRATION="tix.integration.conf"
+CONFIG_CLIENTS=$3
 
 downloadBootstrapperjar() {
   if [ ! -e network-bootstrapper-corda-3.0.jar ]
@@ -35,6 +35,16 @@ validateConfigDestinationDirectory() {
   fi
 }
 
+validateClientsDirectory() {
+  if [ \( \( -a ${CONFIG_CLIENTS} \) -a \( -d ${CONFIG_CLIENTS} \) \) -o \( -z "$(ls -A ${CONFIG_CLIENTS} )" \) ]
+  then
+    echo "${CONFIG_CLIENTS} is valid"
+  else
+    echo "${CONFIG_CLIENTS} is invalid. Bootstrapping requires a CONFIG_CLIENTS config directory"
+    exit 1
+  fi
+}
+
 copyToConfigDestination() {
   cp -r ${CONFIG_SRC} ${CONFIG_DEST}
 }
@@ -46,30 +56,21 @@ generateCustomFiles() {
   echo "Generating custom files"
   local NODE_DIR="node"
   local ID_DIR="id"
+  local NOTARY="notary"
   for i in ${MODULES[@]}
   do
     mkdir ${CONFIG_DEST}/$i/${ID_DIR}
     touch ${CONFIG_DEST}/$i/${ID_DIR}/${i}.id
     mkdir ${CONFIG_DEST}/$i/${NODE_DIR}
     cp ${CONFIG_DEST}/$i/nodeInfo* ${CONFIG_DEST}/$i/${NODE_DIR}/nodeInfo
+    if [ "$i" != "${NOTARY}" ]
+    then
+     cp -a ${CONFIG_CLIENTS}/$i/* ${CONFIG_DEST}/$i/
+    fi
   done
   echo "Generated custom files - complete"
 }
 
-positionTixIntegrationConfig() {
-  if [ -d ${CONFIG_DEST}/${CONDUCTOR} ]
-  then
-    if [ -e ${TIX_INTEGRATION} ]
-    then
-      cp ${TIX_INTEGRATION} ${CONFIG_DEST}/${CONDUCTOR}/
-      echo "${TIX_INTEGRATION} is positioned for azure upload"
-    else
-      echo "${TIX_INTEGRATION} does not exist. So not positioning the file for upload"
-    fi
-  else
-    echo "You have decided not to deploy conductor. So not positioning ${TIX_INTEGRATION}"
-  fi
-}
 
 downloadBootstrapperjar
 validateConfigSourceDirectory
@@ -77,4 +78,3 @@ validateConfigDestinationDirectory
 copyToConfigDestination
 generateBootstrapFiles
 generateCustomFiles
-positionTixIntegrationConfig

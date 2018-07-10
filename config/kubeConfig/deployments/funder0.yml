@@ -1,22 +1,25 @@
 apiVersion: "apps/v1beta1"
 kind: Deployment
 metadata:
-  name: supplier1
+  name: funder0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: supplier1
+      app: funder0
   template:
     metadata:
       labels:
-        app: supplier1
+        app: funder0
     spec:
       containers:
       - name: node
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        image: tradeixdev.azurecr.io/funder:1.0
+        imagePullPolicy: Always
         args: ["notary"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
         ports:
         - containerPort: 10002
         volumeMounts:
@@ -27,10 +30,10 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: supplier1-certificates
+        - name: funder0-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
-        - name: supplier1-nodeinfo
+        - name: funder0-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
         - name: pvclaim
@@ -42,50 +45,45 @@ spec:
         - name: pvclaim
           mountPath: /opt/corda/persistence.mv.db
           subPath: persistence.mv.db
-      - name: web
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
-        args: ["web", "supplier1"]
+      - name: receiver
+        image: tradeixdev.azurecr.io/funder_receiver:1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 10004
         volumeMounts:
-        - name: pvclaim
-          mountPath: /opt/corda/node.conf
-          subPath: node.conf
+        - name: receiverconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
           readOnly: true
-        - name: additional-node-infos
-          mountPath: "/opt/corda/additional-node-infos/"
+      - name: responder
+        image: tradeixdev.azurecr.io/funder_responder:1.0
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: responderconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
           readOnly: true
-        - name: supplier1-certificates
-          mountPath: "/opt/corda/certificates/"
-          readOnly: true
-        - name: supplier1-nodeinfo
-          mountPath: /opt/corda/nodeInfo
-          subPath: nodeInfo
-        - name: pvclaim
-          mountPath: /opt/corda/logs
-          subPath: logs
-        - name: pvclaim
-          mountPath: /opt/corda/network-parameters
-          subPath: network-parameters
-        - name: pvclaim
-          mountPath: /opt/corda/persistence.mv.db
-          subPath: persistence.mv.db
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: supplier1-nodeinfo
+      - name: funder0-nodeinfo
         secret:
-          secretName: supplier1-nodeinfo
+          secretName: funder0-nodeinfo
       - name: additional-node-infos
         secret:
           secretName: additional-node-infos
-      - name: supplier1-certificates
+      - name: funder0-certificates
         secret:
-          secretName: supplier1-certificates
+          secretName: funder0-certificates
+      - name: receiverconfig
+        configMap:
+          name: funder0-receiver
+      - name: responderconfig
+        configMap:
+          name: funder0-responder
       - name: logs
         emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
-          claimName: pvclaim-supplier1
+          claimName: pvclaim-funder0
           readOnly: false

@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: node
-# Remember to edit the image as required
-        image: tradeixdev.azurecr.io/abc4:1.0.0.0
+        image: tradeixdev.azurecr.io/notary:1.0
+        imagePullPolicy: Always
         args: ["none"]
         ports:
         - containerPort: 10002

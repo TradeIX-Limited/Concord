@@ -4,13 +4,19 @@ RUN apk upgrade --update && \
 	apk add --update --no-cache bash iputils && \
 	rm -rf /var/cache/apk/*
 
-# Create /opt/corda directory
+# Create /o/corda directory
 RUN mkdir -p /opt/ && \
     mkdir -p /opt/corda/ && \
-    mkdir -p /opt/corda/logs
+    mkdir -p /opt/corda/logs/ && \
+    mkdir -p /opt/corda/bin/ && \
+    mkdir -p /opt/corda/lib/
 
-COPY build/tradeix-concord-cordapp-funder-client-responder-1.0/* /opt/corda/
+RUN chmod -R 777 /opt/corda/
+COPY build/tradeix-concord-cordapp-funder-client-responder-1.0/bin/* /opt/corda/bin/
+COPY build/tradeix-concord-cordapp-funder-client-responder-1.0/lib/* /opt/corda/lib/
+RUN chmod -R 777 /opt/corda/
+RUN chmod 777 /opt/corda/bin/
 
-WORKDIR /opt/corda
+WORKDIR /opt/corda/bin/
 
-ENTRYPOINT ["/opt/corda/bin/", "tradeix-concord-cordapp-funder-client-responder-1.0.sh"]
+ENTRYPOINT ["/bin/sh", "tradeix-concord-cordapp-funder-client-responder"]

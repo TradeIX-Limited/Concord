@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
 
-#REMEMBER TO CHANGE THE ACCOUNT NAME AND ACCOUNT KEY
-ACCOUNT_NAME="cordastorage2"
-ACCOUNT_KEY="123456789"
-PREFIX='kubernetes-dynamic-'
-declare -a MODULES=("notary" "conductor" "buyer" "funder" "supplier1")
+source config.sh
+
 PVC_NAMES=()
 AZURE_PVCS=()
 CONFIG_HOME=$1
-CONDUCTOR="conductor"
-TIX_INTEGRATION="tix.integration.conf"
+APPLICATION_PROPERTIES="application.properties"
 
 genPVCNames() {
-  cnt=${#MODULES[@]}
+  local cnt=${#MODULES[@]}
   #echo ${cnt}
   for ((i=0;i<cnt;i++)); do
+    #echo ${MODULES[i]}
     PVC_NAMES+=("pvclaim-${MODULES[i]}")
-    # echo ${PVC_NAMES}
+    #echo ${PVC_NAMES}
   done
 }
-
 genAzurePVCs() {
   local PVC_NAMES_LOCAL=${PVC_NAMES[@]}
   local PREFIX_LOCAL=${PREFIX}
@@ -35,8 +31,8 @@ genAzurePVCs() {
     #echo ${AZURE_NAME}
     AZURE_PVCS+=(${AZURE_NAME})
   done
+  #echo $AZURE_PVCS
 }
-
 azDeletePVCAll() {
   read -p "Are you sure to delete all the content from the PVC  ? (Y/N) " PROMPT
   echo "Answer is ${PROMPT} "
@@ -85,41 +81,62 @@ azUploadPVCAll() {
   do
     echo "Upload to ${AZURE_PVCS[${COUNT}]} for ${j}"
     azUploadPVC ${AZURE_PVCS[${COUNT}]} ${j}
+    sleep ${MEDIUM_DELAY}
+    echo "Upload to ${AZURE_PVCS[${COUNT}]} for ${j} Complete"
   done
   echo "Upload to ${AZURE_PVCS[${COUNT}]} Complete"
   ((COUNT++))
   done
 }
 
-
-#TODO refactor the function
 azUploadSecrets() {
   kubectl create secret docker-registry acr-secret --docker-server https://tradeixdev.azurecr.io/ --docker-username tradeixdev --docker-password j70/WPS6Di2apeuckZs83rFfz6pVBtYf --docker-email rajesh@tradeix.com
-  kubectl create secret generic additional-node-infos --from-file=${CONFIG_HOME}/buyer/additional-node-infos
-  kubectl create secret generic buyer-certificates --from-file=${CONFIG_HOME}/buyer/certificates
-  kubectl create secret generic conductor-certificates --from-file=${CONFIG_HOME}/conductor/certificates
-  kubectl create secret generic funder-certificates --from-file=${CONFIG_HOME}/funder/certificates
-  kubectl create secret generic notary-certificates --from-file=${CONFIG_HOME}/notary/certificates
-  kubectl create secret generic supplier1-certificates --from-file=${CONFIG_HOME}/supplier1/certificates
+  kubectl create secret generic additional-node-infos --from-file=${CONFIG_HOME}/${MODULES[0]}/additional-node-infos
 
-  kubectl create secret generic buyer-nodeinfo --from-file=${CONFIG_HOME}/buyer/node
-  kubectl create secret generic conductor-nodeinfo --from-file=${CONFIG_HOME}/conductor/node
-  kubectl create secret generic funder-nodeinfo --from-file=${CONFIG_HOME}/funder/node
-  kubectl create secret generic notary-nodeinfo --from-file=${CONFIG_HOME}/notary/node
-  kubectl create secret generic supplier1-nodeinfo --from-file=${CONFIG_HOME}/supplier1/node
+  local cnt=${#MODULES[@]}
+  #echo ${cnt}
+  for ((i=0;i<cnt;i++)); do
+    #PVC_NAMES+=("pvclaim-${MODULES[i]}")
+    kubectl create secret generic ${MODULES[i]}-certificates --from-file=${CONFIG_HOME}/${MODULES[i]}/certificates
+    sleep ${SHORT_DELAY}
+    kubectl create secret generic ${MODULES[i]}-nodeinfo --from-file=${CONFIG_HOME}/${MODULES[i]}/node
+    sleep ${SHORT_DELAY}
+    # echo ${MODULES[i]}
+  done
 }
 
-azUploadTixIntegration() {
-  local TIX_FILE=${CONFIG_HOME}/${CONDUCTOR}/${TIX_INTEGRATION}
-  if [ -a ${TIX_FILE} ]
-  then
-    echo "Upload for ${TIX_FILE}"
-    kubectl create configmap tix --from-file=tix.integration.conf
-  else
-    echo "Unable to upload tix.integration.conf file"
-  fi
+azUploadReceiverResponderProperties() {
+  local cnt=${#MODULES[@]}
+  local RECEIVER_REF="receiver"
+  local RESPONDER_REF="responder"
+  local NOTARY="notary"
+  #echo ${cnt}
+  for ((i=0;i<cnt;i++)); do
+    local RECEIVER_FILE=${CONFIG_HOME}/${MODULES[i]}/${RECEIVER_REF}/${APPLICATION_PROPERTIES}
+    local RESPONDER_FILE=${CONFIG_HOME}/${MODULES[i]}/${RESPONDER_REF}/${APPLICATION_PROPERTIES}
+    local CONFIGMAP_FILE_RECEIVER=${MODULES[i]}"-"${RECEIVER_REF}
+    local CONFIGMAP_FILE_RESPONDER=${MODULES[i]}"-"${RESPONDER_REF}
+    if [ "$i" != "${NOTARY}" ]
+    then
+      continue
+    fi
+    if [ -a ${RECEIVER_FILE} ]
+    then
+      kubectl create configmap ${CONFIGMAP_FILE_RECEIVER} --from-file=${RECEIVER_FILE}
+      sleep ${SHORT_DELAY}
+    else
+      echo "Unable to upload ${APPLICATION_PROPERTIES} file for ${RECEIVER_REF}"
+    fi
+    if [ -a ${RESPONDER_FILE} ]
+    then
+      kubectl create configmap ${CONFIGMAP_FILE_RESPONDER} --from-file=${RESPONDER_FILE}
+      sleep ${SHORT_DELAY}
+    else
+      echo "Unable to upload ${APPLICATION_PROPERTIES} file for ${RESPONDER_REF}"
+    fi
+    echo ${MODULES[i]}
+  done
 }
-
-azDeleteTixIntegration() {
-  kubectl delete configmap tix
+azDeleteReceiverResponderProperties() {
+  kubectl delete configmap --all
 }
