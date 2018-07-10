@@ -6,6 +6,7 @@ import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_1
+import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_2
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_1
 import net.corda.core.identity.CordaX500Name
 import java.math.BigDecimal
@@ -78,7 +79,10 @@ object MockInvoices {
             invoiceDilutions = BigDecimal.ZERO,
             originationNetwork = "Mock Corda Network",
             currency = "GBP",
-            siteId = "MOCK_CORDA_NETWORK"
+            siteId = "MOCK_CORDA_NETWORK",
+            buyerCompanyName = "Buyer 1",
+            tradePaymentDate = LOCAL_DATE_TIME_FUTURE_2,
+            tradeDate = LOCAL_DATE_TIME_FUTURE_1
     )
 
     val INVOICE_CHANGE_OWNER_REQUEST_MESSAGE = OwnershipRequestMessage(

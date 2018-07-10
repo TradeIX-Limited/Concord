@@ -21,7 +21,6 @@ data class InvoiceResponseMessage(
         val originationNetwork: String,
         val currency: String,
         val siteId: String,
-        val tradeDate: LocalDateTime,
-        val tradePaymentDate: LocalDateTime,
-        val buyerCompanyName: String
+        val tradeDate: LocalDateTime?,
+        val tradePaymentDate: LocalDateTime?
 )

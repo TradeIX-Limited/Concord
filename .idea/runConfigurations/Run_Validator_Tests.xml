@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Contract Tests" type="JUnit" factoryName="JUnit" folderName="Tests">
+  <configuration default="false" name="Run Validator Tests" type="JUnit" factoryName="JUnit" folderName="Tests">
     <module name="tradeix-concord-tests" />
     <shortenClasspath name="MANIFEST" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="PACKAGE_NAME" value="com.tradeix.concord.tests.unit.contracts" />
+    <option name="PACKAGE_NAME" value="com.tradeix.concord.tests.unit.validators" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="package" />

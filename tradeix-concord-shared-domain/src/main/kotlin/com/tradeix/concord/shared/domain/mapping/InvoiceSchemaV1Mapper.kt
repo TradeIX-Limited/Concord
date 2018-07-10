@@ -12,8 +12,10 @@ class InvoiceSchemaV1Mapper
                 linearId = source.linearId.id,
                 linearExternalId = source.linearId.externalId.toString(),
                 owner = source.owner,
-                buyer = source.buyer,
-                supplier = source.supplier,
+                buyerIdentity = source.buyer.party,
+                buyerCompanyName = source.buyer.companyName,
+                supplierIdentity = source.supplier.party,
+                suppierCompanyName = source.supplier.companyName,
                 invoiceNumber = source.invoiceNumber,
                 reference = source.reference,
                 dueDate = source.dueDate,
@@ -27,8 +29,7 @@ class InvoiceSchemaV1Mapper
                 originationNetwork = source.originationNetwork,
                 siteId = source.siteId,
                 tradeDate = source.tradeDate,
-                tradePaymentDate = source.tradePaymentDate,
-                buyerCompanyName = source.buyerCompanyName
+                tradePaymentDate = source.tradePaymentDate
         )
     }
 }

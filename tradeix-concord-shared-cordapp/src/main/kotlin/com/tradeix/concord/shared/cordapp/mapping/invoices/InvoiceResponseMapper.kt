@@ -9,8 +9,8 @@ class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
     override fun map(source: InvoiceState): InvoiceResponseMessage {
         return InvoiceResponseMessage(
                 externalId = source.linearId.externalId.toString(),
-                buyer = source.buyer?.nameOrNull().toString(),
-                supplier = source.supplier.nameOrNull().toString(),
+                buyer = source.buyer.party.toString(),
+                supplier = source.supplier.party.toString(),
                 invoiceNumber = source.invoiceNumber,
                 reference = source.reference,
                 dueDate = source.dueDate,
@@ -22,7 +22,9 @@ class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
                 invoiceDilutions = source.invoiceDilutions.toDecimal(),
                 originationNetwork = source.originationNetwork,
                 currency = source.amount.token.currencyCode,
-                siteId = source.siteId
+                siteId = source.siteId,
+                tradeDate = source.tradeDate,
+                tradePaymentDate = source.tradePaymentDate
         )
     }
 }
