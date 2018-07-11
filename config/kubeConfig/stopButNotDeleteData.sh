@@ -9,8 +9,8 @@ genAzurePVCs ${PVC_NAMES}
 kubectl delete -f services/
 kubectl delete -f deployments/
 kubectl delete po --all
-azDeletePVCAll
+#azDeletePVCAll
 azDeleteSecrets
 azDeleteReceiverResponderProperties
-kubectl delete -f storage/
+#kubectl delete -f storage/
 kubectl delete secret acr-secret

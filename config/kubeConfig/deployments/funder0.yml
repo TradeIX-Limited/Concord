@@ -1,22 +1,25 @@
 apiVersion: "apps/v1beta1"
 kind: Deployment
 metadata:
-  name: notary
+  name: funder0
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: notary
+      app: funder0
   template:
     metadata:
       labels:
-        app: notary
+        app: funder0
     spec:
       containers:
       - name: node
-        image: tradeixdev.azurecr.io/notary:1.0
+        image: tradeixdev.azurecr.io/funder:1.0
         imagePullPolicy: Always
-        args: ["none"]
+        args: ["notary"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
         ports:
         - containerPort: 10002
         volumeMounts:
@@ -27,10 +30,10 @@ spec:
         - name: additional-node-infos
           mountPath: "/opt/corda/additional-node-infos/"
           readOnly: true
-        - name: notary-certificates
+        - name: funder0-certificates
           mountPath: "/opt/corda/certificates/"
           readOnly: true
-        - name: notary-nodeinfo
+        - name: funder0-nodeinfo
           mountPath: /opt/corda/nodeInfo
           subPath: nodeInfo
         - name: pvclaim
@@ -42,24 +45,45 @@ spec:
         - name: pvclaim
           mountPath: /opt/corda/persistence.mv.db
           subPath: persistence.mv.db
-        - name: pvclaim
-          mountPath: /opt/corda/whitelist.txt
-          subPath: whitelist.txt
+      - name: receiver
+        image: tradeixdev.azurecr.io/funder_receiver:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 10004
+        volumeMounts:
+        - name: receiverconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
+          readOnly: true
+      - name: responder
+        image: tradeixdev.azurecr.io/funder_responder:1.0
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: responderconfig
+          mountPath: /opt/corda/bin/application.properties
+          subPath: application.properties
+          readOnly: true
       imagePullSecrets:
       - name: acr-secret
       volumes:
-      - name: notary-nodeinfo
+      - name: funder0-nodeinfo
         secret:
-          secretName: notary-nodeinfo
+          secretName: funder0-nodeinfo
       - name: additional-node-infos
         secret:
           secretName: additional-node-infos
-      - name: notary-certificates
+      - name: funder0-certificates
         secret:
-          secretName: notary-certificates
+          secretName: funder0-certificates
+      - name: receiverconfig
+        configMap:
+          name: funder0-receiver
+      - name: responderconfig
+        configMap:
+          name: funder0-responder
       - name: logs
         emptyDir: {}
       - name: pvclaim
         persistentVolumeClaim:
-          claimName: pvclaim-notary
+          claimName: pvclaim-funder0
           readOnly: false
