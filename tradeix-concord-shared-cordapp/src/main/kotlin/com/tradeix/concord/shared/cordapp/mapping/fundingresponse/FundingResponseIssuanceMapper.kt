@@ -55,7 +55,11 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
                 supplier = supplier,
                 funder = funder,
                 purchaseValue = Amount.fromValueAndCurrency(source.purchaseValue!!, source.currency!!),
-                status = FundingResponseStatus.PENDING
+                status = FundingResponseStatus.PENDING,
+                advanceInvoiceValue = Amount.fromValueAndCurrency(source.advanceInvoiceValue!!, source.currency!!),
+                discountValue = Amount.fromValueAndCurrency(source.discountValue!!, source.currency!!),
+                baseRate = source.baseRate!!
+
         )
     }
 }

@@ -16,7 +16,10 @@ object MockFundingResponses {
             supplier = SUPPLIER_1_NAME.toString(),
             funder = FUNDER_1_NAME.toString(),
             purchaseValue = ONE_POUNDS.toDecimal(),
-            currency = ONE_POUNDS.token.currencyCode
+            currency = ONE_POUNDS.token.currencyCode,
+            advanceInvoiceValue = ONE_POUNDS.toDecimal(),
+            discountValue = ONE_POUNDS.toDecimal(),
+            baseRate = ONE_POUNDS.toDecimal()
     )
 
     val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseAcceptanceRequestMessage(

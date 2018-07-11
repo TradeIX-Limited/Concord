@@ -120,3 +120,16 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         rpcUsers = [[user: "guest", "password": "letmein", "permissions": ["ALL"]]]
     }
 }
+
+
+task extractTar<< {
+    def module = arg
+    def fileName = module.toString().concat("/build/distributions/").concat(module.toString()).concat("-1.0.zip")
+    def zipFile = file(fileName)
+    def outputDir = file("${buildDir}")
+    copy {
+        from zipTree(zipFile)
+        into outputDir
+    }
+}
+

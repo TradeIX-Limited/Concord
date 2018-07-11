@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "6ae1c2e9-4cdd-4c68-96a3-804d3d84c454",
+    "_postman_id": "9ce11675-e65a-42cf-80ac-30251bcf827e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -730,7 +730,7 @@
               }
             ],
             "body": {
-              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": null,\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=TradeIX Mock Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=TradeIX Mock Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\"\n}",
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": null,\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=TradeIX Mock Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=TradeIX Mock Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\",\n  \"advanceInvoiceValue\": 1.00,\n  \"discountValue\": 1.00,\n  \"baseRate\": 1.00\n}",
               "mode": "raw"
             },
             "url": {

@@ -1,0 +1,27 @@
+FROM openjdk:8u151-jre-alpine
+MAINTAINER support@tradeix.com
+RUN apk upgrade --update && \
+	apk add --update --no-cache bash iputils && \
+	rm -rf /var/cache/apk/*
+
+# Create /opt/corda directory
+RUN mkdir -p /opt/ && \
+    mkdir -p /opt/corda/ && \
+    mkdir -p /opt/corda/cordapps && \
+    mkdir -p /opt/corda/logs
+
+ADD https://dl.bintray.com/r3/corda/net/corda/corda/3.1-corda/corda-3.1-corda.jar /opt/corda/corda.jar
+#COPY build/nodes/Notary/corda.jar /opt/corda/
+COPY build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-shared/build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-shared-client/build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-shared-cordapp/build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-shared-domain/build/libs/*.jar /opt/corda/cordapps/
+COPY tradeix-concord-cordapp-funder/build/libs/*.jar /opt/corda/cordapps/
+
+COPY config/kubeConfig/build/entrypoint.sh /opt/corda/entrypoint.sh
+RUN chmod 777 /opt/corda/entrypoint.sh
+
+WORKDIR /opt/corda
+
+ENTRYPOINT ["/bin/sh", "entrypoint.sh"]
