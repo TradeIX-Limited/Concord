@@ -10,6 +10,7 @@ import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import net.corda.core.schemas.QueryableState
+import java.math.BigDecimal
 import java.util.*
 
 data class FundingResponseState(
@@ -19,7 +20,10 @@ data class FundingResponseState(
         val supplier: AbstractParty,
         val funder: AbstractParty,
         val purchaseValue: Amount<Currency>,
-        val status: FundingResponseStatus
+        val status: FundingResponseStatus,
+        val advanceInvoiceValue: Amount<Currency>,
+        val discountValue: Amount<Currency>,
+        val baseRate: BigDecimal
 ) : LinearState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOf(supplier, funder)

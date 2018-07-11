@@ -40,7 +40,7 @@ object FundingResponseSchemaV1 : MappedSchema(
             @Column(name = "funder")
             val funder: AbstractParty,
 
-            @Column(name = "purchaseValue")
+            @Column(name = "purchase_value")
             val purchaseValue: BigDecimal,
 
             @Column(name = "currency")
@@ -48,6 +48,15 @@ object FundingResponseSchemaV1 : MappedSchema(
 
             @Column(name = "status")
             @Enumerated(EnumType.STRING)
-            val status: FundingResponseStatus
+            val status: FundingResponseStatus,
+
+            @Column(name = "advance_invoice_value")
+            val advanceInvoiceValue: BigDecimal,
+
+            @Column(name = "discount_value")
+            val discountValue: BigDecimal,
+
+            @Column(name = "base_rate")
+            val baseRate: BigDecimal
     ) : PersistentState()
 }
