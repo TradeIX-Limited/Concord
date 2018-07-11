@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate
 @Component
 class OAuthAccessTokenProvider(
         private val tixConfiguration: TIXConfiguration,
-        private val configuration: OAuthConfiguration) {
+        private val oauthConfiguration: OAuthConfiguration) {
 
     private val client = RestTemplate()
     private var token = getOAuthAccessToken()
@@ -31,12 +31,12 @@ class OAuthAccessTokenProvider(
 
         val map = LinkedMultiValueMap<String, String>()
 
-        map.add("grant_type", configuration.grantType)
-        map.add("username", configuration.username)
-        map.add("password", configuration.password)
-        map.add("scope", configuration.scope)
-        map.add("client_id", configuration.clientId)
-        map.add("client_secret", configuration.clientSecret)
+        map.add("grant_type", oauthConfiguration.grantType)
+        map.add("username", oauthConfiguration.username)
+        map.add("password", oauthConfiguration.password)
+        map.add("scope", oauthConfiguration.scope)
+        map.add("client_id", oauthConfiguration.clientId)
+        map.add("client_secret", oauthConfiguration.clientSecret)
 
         val request = HttpEntity<MultiValueMap<String, String>>(map, headers)
         return client.postForEntity(
