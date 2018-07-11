@@ -104,6 +104,9 @@ object MockStates {
             supplier = SUPPLIER_1_IDENTITY.party,
             funder = FUNDER_1_IDENTITY.party,
             purchaseValue = ONE_POUNDS,
-            status = FundingResponseStatus.PENDING
+            status = FundingResponseStatus.PENDING,
+            advanceInvoiceValue = ONE_POUNDS.toDecimal(), //NEW
+            discountValue = ONE_POUNDS.toDecimal(),
+            baseRate = ONE_POUNDS.toDecimal()
     )
 }

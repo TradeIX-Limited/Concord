@@ -11,5 +11,8 @@ data class FundingResponseRequestMessage(
         val supplier: String? = null,
         val funder: String? = null,
         val purchaseValue: BigDecimal? = null,
-        val currency: String? = null
+        val currency: String? = null,
+        val advanceInvoiceValue: BigDecimal? = null, //NEW
+        val discountValue: BigDecimal? = null,
+        val baseRate: BigDecimal? = null
 )

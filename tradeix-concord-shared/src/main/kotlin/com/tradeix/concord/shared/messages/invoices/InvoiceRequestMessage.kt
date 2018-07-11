@@ -23,5 +23,5 @@ data class InvoiceRequestMessage(
         val siteId: String? = null,
         val tradeDate: LocalDateTime? = null,
         val tradePaymentDate: LocalDateTime? = null,
-        val buyerCompanyName: String? = null
+        val buyerCompanyName: String? = null        // TODO : Why we keep this variable here? and
 )
