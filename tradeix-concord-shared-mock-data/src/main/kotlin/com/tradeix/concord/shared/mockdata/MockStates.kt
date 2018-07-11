@@ -105,8 +105,8 @@ object MockStates {
             funder = FUNDER_1_IDENTITY.party,
             purchaseValue = ONE_POUNDS,
             status = FundingResponseStatus.PENDING,
-            advanceInvoiceValue = ONE_POUNDS.toDecimal(), //NEW
-            discountValue = ONE_POUNDS.toDecimal(),
+            advanceInvoiceValue = ONE_POUNDS,
+            discountValue = ONE_POUNDS,
             baseRate = ONE_POUNDS.toDecimal()
     )
 }

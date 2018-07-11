@@ -56,8 +56,8 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
                 funder = funder,
                 purchaseValue = Amount.fromValueAndCurrency(source.purchaseValue!!, source.currency!!),
                 status = FundingResponseStatus.PENDING,
-                advanceInvoiceValue = source.advanceInvoiceValue!!,     // TODO : Do not understand why
-                discountValue = source.discountValue!!,
+                advanceInvoiceValue = Amount.fromValueAndCurrency(source.advanceInvoiceValue!!, source.currency!!),
+                discountValue = Amount.fromValueAndCurrency(source.discountValue!!, source.currency!!),
                 baseRate = source.baseRate!!
 
         )

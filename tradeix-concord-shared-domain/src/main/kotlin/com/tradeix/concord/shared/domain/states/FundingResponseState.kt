@@ -21,8 +21,8 @@ data class FundingResponseState(
         val funder: AbstractParty,
         val purchaseValue: Amount<Currency>,
         val status: FundingResponseStatus,
-        val advanceInvoiceValue: BigDecimal,      // TODO : Should this be type BigDecimal
-        val discountValue: BigDecimal,
+        val advanceInvoiceValue: Amount<Currency>,
+        val discountValue: Amount<Currency>,
         val baseRate: BigDecimal
 ) : LinearState, QueryableState {
 

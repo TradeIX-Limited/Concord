@@ -19,8 +19,8 @@ class FundingResponseSchemaV1Mapper
                 purchaseValue = source.purchaseValue.toDecimal(),
                 currency = source.purchaseValue.token.currencyCode,
                 status = source.status,
-                advanceInvoiceValue = source.advanceInvoiceValue,   //NEW
-                discountValue = source.discountValue,
+                advanceInvoiceValue = source.advanceInvoiceValue.toDecimal(),
+                discountValue = source.discountValue.toDecimal(),
                 baseRate = source.baseRate
         )
     }

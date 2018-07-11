@@ -31,7 +31,7 @@ object FundingResponseSchemaV1 : MappedSchema(
             val fundingRequestExternalID: String?,
 
             @ElementCollection
-            @Column(name = "invoice_linear_ids") // TODO : Collection<UniqueIdentifier> //I think this is done
+            @Column(name = "invoice_linear_ids") // TODO : Collection<UniqueIdentifier>
             val invoiceLinearIds: Collection<String>,
 
             @Column(name = "supplier")
@@ -50,7 +50,7 @@ object FundingResponseSchemaV1 : MappedSchema(
             @Enumerated(EnumType.STRING)
             val status: FundingResponseStatus,
 
-            @Column(name = "advance_invoice_value")     //NEW
+            @Column(name = "advance_invoice_value")
             val advanceInvoiceValue: BigDecimal,
 
             @Column(name = "discount_value")

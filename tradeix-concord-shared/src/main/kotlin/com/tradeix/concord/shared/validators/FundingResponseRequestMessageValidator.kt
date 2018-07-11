@@ -43,7 +43,7 @@ class FundingResponseRequestMessageValidator
             it.isValidCurrencyCode()
         })
 
-        validationBuilder.property(FundingResponseRequestMessage::advanceInvoiceValue, {    //NEW
+        validationBuilder.property(FundingResponseRequestMessage::advanceInvoiceValue, {
             it.isNotNull()
             it.isGreaterThan(BigDecimal.ZERO)
         })
