@@ -32,10 +32,9 @@ pipeline {
 			}
 
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
+                timeout(time: 50, unit: 'MINUTES') {
                     sh '''
-						export docker_tag=$(echo $GIT_BRANCH | awk -F"/" '{print $NF}')
-						Deployment/4-publish.sh
+						Deployment/3-publish.sh
 					'''
                 }
             }
