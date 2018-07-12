@@ -1,17 +1,16 @@
 package com.tradeix.concord.tests.unit.validators.messages
 
-import com.tradeix.concord.shared.mockdata.MockMessages.PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockMessages
 import com.tradeix.concord.shared.validators.PurchaseOrderRequestMessageValidator
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PurchaseOrderMessageValidatorValidationTests {
+class PurchaseOrderRequestMessageValidatorValidationTests {
 
     @Test
-    fun `PurchaseOrderMessageValidator produces the expected validation messages`() {
+    fun `PurchaseOrderRequestMessageValidator produces the expected validation messages`(){
         val validator = PurchaseOrderRequestMessageValidator()
-        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'buyer' must be a valid X500 name.",
@@ -28,6 +27,7 @@ class PurchaseOrderMessageValidatorValidationTests {
                 "Property 'descriptionOfGoods' must not be null, empty or blank.",
                 "Property 'deliveryTerms' must not be null, empty or blank."
         )
+        val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())
         expectedValidationMessages.forEach {
@@ -38,8 +38,8 @@ class PurchaseOrderMessageValidatorValidationTests {
     }
 
     @Test
-    fun `PurchaseOrderMessageValidator does not throw a ValidationException when the message state is valid`() {
-        val message = PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE
+    fun `PurchaseOrderRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
+        val message = MockMessages.PURCHASE_ORDER_ISSUANCE_REQUEST_MESSAGE
         val validator = PurchaseOrderRequestMessageValidator()
         validator.validate(message)
     }
