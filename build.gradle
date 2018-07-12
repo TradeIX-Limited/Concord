@@ -152,11 +152,11 @@ task createDemobenchProfile(type: Zip, dependsOn: ['deployNodes']) {
     for(item in (1..3)) {
         from ("./build/nodes/Test Funder 1") {
             include "/cordapps/**"
-            into "funder $item/"
+            into "funder$item/"
         }
         from("./config/nodes/") {
             include "funder${item}.node.conf"
-            into "funder $item/"
+            into "funder$item/"
             rename "funder${item}.node.conf", "node.conf"
         }
     }
@@ -164,11 +164,11 @@ task createDemobenchProfile(type: Zip, dependsOn: ['deployNodes']) {
     for(item in (1..3)) {
         from ("./build/nodes/Test Buyer 1") {
             include "/cordapps/**"
-            into "buyer $item/"
+            into "buyer$item/"
         }
         from("./config/nodes/") {
             include "buyer${item}.node.conf"
-            into "buyer $item/"
+            into "buyer$item/"
             rename "buyer${item}.node.conf", "node.conf"
         }
     }
@@ -176,11 +176,11 @@ task createDemobenchProfile(type: Zip, dependsOn: ['deployNodes']) {
     for(item in (1..3)) {
         from ("./build/nodes/Test Supplier 1") {
             include "/cordapps/**"
-            into "supplier $item/"
+            into "supplier$item/"
         }
         from("./config/nodes/") {
             include "supplier${item}.node.conf"
-            into "supplier $item/"
+            into "supplier$item/"
             rename "supplier${item}.node.conf", "node.conf"
         }
     }
