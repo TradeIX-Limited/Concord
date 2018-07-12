@@ -26,6 +26,8 @@ class TixHttpClient(
 
             headers.add("Accept", "*/*")
             headers.add("Authorization", "bearer ${tokenProvider.accessToken.accessToken}")
+            headers.add("TradeIX-ComposerProgramIdentifier", tixConfiguration.composerProgramId)
+            headers.add("TradeIX-OnBehalfOf", tixConfiguration.onBehalfOf)
 
             return headers
         }

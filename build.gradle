@@ -76,6 +76,12 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
+def $buyerCorDapp = [
+        "$project.group:tradeix-concord-shared:$project.version",
+        "$project.group:tradeix-concord-shared-domain:$project.version",
+        "$project.group:tradeix-concord-shared-cordapp:$project.version"
+]
+
 def $supplierCorDapp = [
         "$project.group:tradeix-concord-shared:$project.version",
         "$project.group:tradeix-concord-shared-domain:$project.version",
@@ -119,8 +125,69 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = $funderCorDapp
         rpcUsers = [[user: "guest", "password": "letmein", "permissions": ["ALL"]]]
     }
+    node {
+        name "O=Test Buyer 1,L=Paris,C=FR"
+        p2pPort 10011
+        rpcSettings {
+            address("localhost:10012")
+            adminAddress("localhost:10052")
+        }
+        webPort 10013
+        cordapps = $buyerCorDapp
+        rpcUsers = [[user: "guest", "password": "letmein", "permissions": ["ALL"]]]
+    }
 }
 
+task createDemobenchProfile(type: Zip, dependsOn: ['deployNodes']) {
+    from ("./build/nodes/Notary") {
+        include "/cordapps/**"
+        into "notary/"
+    }
+    from("./config/nodes/") {
+        include "notary.node.conf"
+        into "notary/"
+        rename "notary.node.conf", "node.conf"
+    }
+
+    for(item in (1..3)) {
+        from ("./build/nodes/Test Funder 1") {
+            include "/cordapps/**"
+            into "funder $item/"
+        }
+        from("./config/nodes/") {
+            include "funder${item}.node.conf"
+            into "funder $item/"
+            rename "funder${item}.node.conf", "node.conf"
+        }
+    }
+
+    for(item in (1..3)) {
+        from ("./build/nodes/Test Buyer 1") {
+            include "/cordapps/**"
+            into "buyer $item/"
+        }
+        from("./config/nodes/") {
+            include "buyer${item}.node.conf"
+            into "buyer $item/"
+            rename "buyer${item}.node.conf", "node.conf"
+        }
+    }
+
+    for(item in (1..3)) {
+        from ("./build/nodes/Test Supplier 1") {
+            include "/cordapps/**"
+            into "supplier $item/"
+        }
+        from("./config/nodes/") {
+            include "supplier${item}.node.conf"
+            into "supplier $item/"
+            rename "supplier${item}.node.conf", "node.conf"
+        }
+    }
+
+    archiveName "erp.profile"
+    destinationDir(file("./build/demobench/"))
+}
 
 task extractTar<< {
     def module = arg

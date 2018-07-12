@@ -23,7 +23,7 @@ class RPCConnectionProvider(
         private val logger: Logger = loggerFor<RPCConnectionProvider>()
     }
 
-    var safeProxy: CordaRPCOps? = null
+    private var safeProxy: CordaRPCOps? = null
 
     val proxy: CordaRPCOps
         get() {
