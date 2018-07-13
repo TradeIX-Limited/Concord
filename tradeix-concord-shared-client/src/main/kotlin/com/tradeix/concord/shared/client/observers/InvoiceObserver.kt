@@ -39,12 +39,13 @@ class InvoiceObserver(
 
             invoices.add(mapper.map(it.state.data))
 
-            tmr = timer(period = 20000, action = {
+            tmr = timer(period = tixConfiguration.vaultObserverTimeout, action = {
                 try {
                     val json = serializer.toJson(InvoiceBatchUploadResponseMessage(invoices))
 
                     logger.info(json)
-                    client.post("v1/import/invoices", json, Unit::class.java)
+                    val response = client.post("v1/import/invoices", json, Any::class.java)
+                    logger.info("Response was: ${serializer.toJson(response)}")
                 } catch (ex: Exception) {
                     logger.error(ex.message)
                 } finally {

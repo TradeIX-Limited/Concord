@@ -45,6 +45,13 @@ class VaultService<TState : QueryableState>(private val vaultAdapter: VaultAdapt
         ).statesMetadata.size
     }
 
+    fun getCount(externalId: String): Int {
+        return vaultAdapter.vaultQueryBy(
+                paging = MAX_PAGING,
+                criteria = QueryCriteria.LinearStateQueryCriteria(externalId = listOf(externalId))
+        ).statesMetadata.size
+    }
+
     fun getLatestHash(): String {
         return vaultAdapter.vaultQueryBy(
                 paging = MAX_PAGING

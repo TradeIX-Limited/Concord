@@ -11,11 +11,11 @@ class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
     override fun map(source: InvoiceState): InvoiceResponseMessage {
         return InvoiceResponseMessage(
                 networkInvoiceUId = source.linearId.externalId.toString(),
-                invoiceVersion = "", // TODO : NOT MAPPED!
+                invoiceVersion = source.invoiceVersion,
                 invoiceVersionDate = LocalDateTime.now(), // TODO : REVIEW MAPPING
-                buyerRef = source.buyer.toString(),
-                supplierRef = source.supplier.toString(),
-                invoiceNumber = "", // TODO : NOT MAPPED!
+                buyerRef = source.buyer.companyReference!!,
+                supplierRef = source.supplier.companyReference!!,
+                invoiceNumber = source.invoiceNumber,
                 invoiceCurrency = source.amount.token.currencyCode,
                 invoiceDate = source.invoiceDate,
                 invoiceDueDate = source.dueDate,
@@ -24,10 +24,10 @@ class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
                 totalOutstanding = source.totalOutstanding.toDecimal(),
                 reference = source.reference,
                 expectedSettlementDate = source.settlementDate, // TODO : REVIEW MAPPING
-                invoicePaidDate = LocalDateTime.now(), // TODO : NOT MAPPED!
+                invoicePaidDate = null, // TODO : NOT MAPPED!
                 siteId = source.siteId,
-                cancelled = false.toString(), // TODO : NOT MAPPED!
-                closeDate = LocalDateTime.now(), // TODO : NOT MAPPED!
+                cancelled = "N", // TODO : NOT MAPPED!
+                closeDate = null, // TODO : NOT MAPPED!
                 hash = source.hash().toString(),
                 shippingCompanyId = "", // TODO : NOT MAPPED!
                 trackingNumber = "", // TODO : NOT MAPPED!

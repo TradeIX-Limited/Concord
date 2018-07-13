@@ -1,31 +1,32 @@
 package com.tradeix.concord.shared.messages.invoices
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import net.corda.core.serialization.CordaSerializable
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @CordaSerializable
 data class InvoiceResponseMessage(
-        val networkInvoiceUId: String,
-        val invoiceVersion: String,
-        val invoiceVersionDate: LocalDateTime?,
-        val buyerRef: String,
-        val supplierRef: String,
-        val invoiceNumber: String,
-        val invoiceCurrency: String,
-        val invoiceDate: LocalDateTime?,
-        val invoiceDueDate: LocalDateTime?,
-        val invoiceAmount: BigDecimal?,
-        val cashPaidToDate: BigDecimal,
-        val totalOutstanding: BigDecimal,
-        val reference: String,
-        val expectedSettlementDate: LocalDateTime?,
-        val invoicePaidDate: LocalDateTime?,
-        val siteId: String,
-        val cancelled: String,
-        val closeDate: LocalDateTime?,
-        val hash: String,
-        val shippingCompanyId: String,
-        val trackingNumber: String,
-        val purchaseOrderNumber: String
+        @JsonProperty("NetworkInvoiceUID") val networkInvoiceUId: String,
+        @JsonProperty("InvoiceVersion") val invoiceVersion: String,
+        @JsonProperty("InvoiceVersionDate") val invoiceVersionDate: LocalDateTime?,
+        @JsonProperty("BuyerRef") val buyerRef: String,
+        @JsonProperty("SupplierRef") val supplierRef: String,
+        @JsonProperty("InvoiceNumber") val invoiceNumber: String,
+        @JsonProperty("InvoiceCurrency") val invoiceCurrency: String,
+        @JsonProperty("InvoiceDate") val invoiceDate: LocalDateTime?,
+        @JsonProperty("InvoiceDueDate") val invoiceDueDate: LocalDateTime?,
+        @JsonProperty("InvoiceAmount") val invoiceAmount: BigDecimal?,
+        @JsonProperty("CashPaidToDate") val cashPaidToDate: BigDecimal,
+        @JsonProperty("TotalOutstanding") val totalOutstanding: BigDecimal,
+        @JsonProperty("Reference") val reference: String,
+        @JsonProperty("ExpectedSettlementDate") val expectedSettlementDate: LocalDateTime?,
+        @JsonProperty("InvoicePaidDate") val invoicePaidDate: LocalDateTime?,
+        @JsonProperty("SiteId") val siteId: String,
+        @JsonProperty("Cancelled") val cancelled: String,
+        @JsonProperty("CloseDate") val closeDate: LocalDateTime?,
+        @JsonProperty("Hash") val hash: String,
+        @JsonProperty("ShippingCompanyId") val shippingCompanyId: String,
+        @JsonProperty("TrackingNumber") val trackingNumber: String,
+        @JsonProperty("PONumber") val purchaseOrderNumber: String
 )

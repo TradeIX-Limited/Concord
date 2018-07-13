@@ -23,8 +23,9 @@ class TixHttpClient(
             val headers = HttpHeaders()
 
             headers.contentType = MediaType.APPLICATION_JSON
+            headers.accept = listOf(MediaType.APPLICATION_JSON)
+            headers.cacheControl = CacheControl.noCache().headerValue
 
-            headers.add("Accept", "*/*")
             headers.add("Authorization", "bearer ${tokenProvider.accessToken.accessToken}")
             headers.add("TradeIX-ComposerProgramIdentifier", tixConfiguration.composerProgramId)
             headers.add("TradeIX-OnBehalfOf", tixConfiguration.onBehalfOf)

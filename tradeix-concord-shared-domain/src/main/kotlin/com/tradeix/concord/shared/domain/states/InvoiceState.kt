@@ -18,6 +18,8 @@ data class InvoiceState(
         val buyer: Participant,
         val supplier: Participant,
         val invoiceNumber: String,
+        val invoiceVersion: String,
+        val submitted: LocalDateTime,
         val reference: String,
         val dueDate: LocalDateTime,
         val amount: Amount<Currency>,
