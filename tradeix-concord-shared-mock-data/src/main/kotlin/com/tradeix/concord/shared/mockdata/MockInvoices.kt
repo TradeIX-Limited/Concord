@@ -67,8 +67,10 @@ object MockInvoices {
     val INVOICE_REQUEST_MESSAGE = InvoiceRequestMessage(
             externalId = "INVOICE_001",
             buyer = BUYER_1_NAME.toString(),
+            buyerCompanyReference = "Albertsons (B1)", // TODO : Fix!
             supplier = SUPPLIER_1_NAME.toString(),
-            invoiceNumber = "001",
+            supplierCompanyReference = "Nike", // TODO : Fix!
+            invoiceNumber = "INVOICE_NUMBER_001",
             reference = "REF_INVOICE_001",
             dueDate = LOCAL_DATE_TIME_FUTURE_1,
             amount = BigDecimal.valueOf(123.45),
@@ -80,7 +82,6 @@ object MockInvoices {
             originationNetwork = "Mock Corda Network",
             currency = "GBP",
             siteId = "MOCK_CORDA_NETWORK",
-            buyerCompanyName = "Buyer 1",
             tradePaymentDate = LOCAL_DATE_TIME_FUTURE_2,
             tradeDate = LOCAL_DATE_TIME_FUTURE_1
     )

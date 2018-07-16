@@ -23,18 +23,18 @@ class RPCConnectionProvider(
         private val logger: Logger = loggerFor<RPCConnectionProvider>()
     }
 
-    var safeProxy: CordaRPCOps? = null
+    private var safeProxy: CordaRPCOps? = null
 
     val proxy: CordaRPCOps
         get() {
             while (safeProxy == null) {
                 try {
-                    logger.info("Establishing RPC connection to $host:$port.")
+                    logger.info("Establishing RPC connection to $host:$port....")
                     val networkHostAndPort = NetworkHostAndPort(host, port)
                     val cordaRPCClient = CordaRPCClient(networkHostAndPort)
                     safeProxy = cordaRPCClient.start(username, password).proxy
                 } catch (ex: Exception) {
-                    logger.warn("Failed to create RPC connection. Retrying in 1 second.")
+                    logger.error("Failed to create RPC connection. Retrying in 1 second. ${ex.message}")
                     Thread.sleep(1000)
                 }
             }

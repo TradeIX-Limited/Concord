@@ -14,6 +14,7 @@ import net.corda.core.flows.FlowException
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
+import java.time.LocalDateTime
 
 class InvoiceIssuanceRequestMapper(private val serviceHub: ServiceHub)
     : Mapper<InvoiceRequestMessage, InvoiceState>() {
@@ -37,9 +38,11 @@ class InvoiceIssuanceRequestMapper(private val serviceHub: ServiceHub)
         return InvoiceState(
                 linearId = UniqueIdentifier(source.externalId!!),
                 owner = supplier,
-                buyer = Participant(buyer, source.buyerCompanyName),
-                supplier = Participant(supplier, null),
+                buyer = Participant(buyer, source.buyerCompanyReference),
+                supplier = Participant(supplier, source.supplierCompanyReference),
                 invoiceNumber = source.invoiceNumber!!,
+                invoiceVersion = "1.0",
+                submitted = LocalDateTime.now(),
                 reference = source.reference!!,
                 dueDate = source.dueDate!!,
                 amount = Amount.fromValueAndCurrency(source.amount!!, source.currency!!),

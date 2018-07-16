@@ -8,7 +8,9 @@ import java.time.LocalDateTime
 data class InvoiceRequestMessage(
         val externalId: String? = null,
         val buyer: String? = null,
+        val buyerCompanyReference: String? = null,
         val supplier: String? = null,
+        val supplierCompanyReference: String? = null,
         val invoiceNumber: String? = null,
         val reference: String? = null,
         val dueDate: LocalDateTime? = null,
@@ -22,6 +24,5 @@ data class InvoiceRequestMessage(
         val currency: String? = null,
         val siteId: String? = null,
         val tradeDate: LocalDateTime? = null,
-        val tradePaymentDate: LocalDateTime? = null,
-        val buyerCompanyName: String? = null
+        val tradePaymentDate: LocalDateTime? = null
 )

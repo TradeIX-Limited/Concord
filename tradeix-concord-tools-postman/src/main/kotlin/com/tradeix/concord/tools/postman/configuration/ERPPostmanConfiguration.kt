@@ -15,8 +15,8 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
 
     private val host = "localhost"
 
-    private val supplierNodes = listOf(Node(SUPPLIER_1_NAME.organisation, "8086"))
-    private val funderNodes = listOf(Node(FUNDER_1_NAME.organisation, "8091"))
+    private val supplierNodes = listOf(Node(SUPPLIER_1_NAME.organisation, "8000"))
+    private val funderNodes = listOf(Node(FUNDER_1_NAME.organisation, "8050"))
 
     override fun configureCollection(collection: EndpointCollection) {
         supplierNodes.forEach {

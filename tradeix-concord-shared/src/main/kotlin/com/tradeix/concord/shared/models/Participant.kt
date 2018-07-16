@@ -4,7 +4,7 @@ import net.corda.core.identity.AbstractParty
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-data class Participant(
-        val party: AbstractParty?,
-        val companyName: String?
-)
+data class Participant(val party: AbstractParty?, val companyReference: String?) {
+
+    override fun toString(): String = party.toString()
+}

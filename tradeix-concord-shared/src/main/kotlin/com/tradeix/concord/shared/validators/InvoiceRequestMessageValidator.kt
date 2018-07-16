@@ -18,8 +18,16 @@ class InvoiceRequestMessageValidator : ObjectValidator<InvoiceRequestMessage>() 
             it.isValidX500Name()
         })
 
+        validationBuilder.property(InvoiceRequestMessage::buyerCompanyReference, {
+            it.isNotNullEmptyOrBlank()
+        })
+
         validationBuilder.property(InvoiceRequestMessage::supplier, {
             it.isValidX500Name()
+        })
+
+        validationBuilder.property(InvoiceRequestMessage::supplierCompanyReference, {
+            it.isNotNullEmptyOrBlank()
         })
 
         validationBuilder.property(InvoiceRequestMessage::invoiceNumber, {
@@ -70,10 +78,6 @@ class InvoiceRequestMessageValidator : ObjectValidator<InvoiceRequestMessage>() 
         })
 
         validationBuilder.property(InvoiceRequestMessage::siteId, {
-            it.isNotNullEmptyOrBlank()
-        })
-
-        validationBuilder.property(InvoiceRequestMessage::buyerCompanyName, {
             it.isNotNullEmptyOrBlank()
         })
     }

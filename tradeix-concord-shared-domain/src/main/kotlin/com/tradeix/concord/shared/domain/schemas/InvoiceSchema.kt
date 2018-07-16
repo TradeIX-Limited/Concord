@@ -44,6 +44,12 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "invoice_number")
             val invoiceNumber: String,
 
+            @Column(name = "invoice_version")
+            val invoiceVersion: String,
+
+            @Column(name = "submitted")
+            val submitted: LocalDateTime,
+
             @Column(name = "reference")
             val reference: String,
 

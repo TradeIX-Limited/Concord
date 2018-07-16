@@ -15,7 +15,9 @@ class InvoiceRequestMessageValidatorValidationTests {
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'buyer' must be a valid X500 name.",
+                "Property 'buyerCompanyReference' must not be null, empty or blank.",
                 "Property 'supplier' must be a valid X500 name.",
+                "Property 'supplierCompanyReference' must not be null, empty or blank.",
                 "Property 'invoiceNumber' must not be null, empty or blank.",
                 "Property 'reference' must not be null, empty or blank.",
                 "Property 'dueDate' must not be null.",
@@ -30,8 +32,7 @@ class InvoiceRequestMessageValidatorValidationTests {
                 "Property 'originationNetwork' must not be null, empty or blank.",
                 "Property 'currency' must not be null.",
                 "Property 'currency' must be a valid currency code.",
-                "Property 'siteId' must not be null, empty or blank.",
-                "Property 'buyerCompanyName' must not be null, empty or blank."
+                "Property 'siteId' must not be null, empty or blank."
         )
 
         assertEquals(expectedValidationMessages.count(), actualValidationMessages.count())

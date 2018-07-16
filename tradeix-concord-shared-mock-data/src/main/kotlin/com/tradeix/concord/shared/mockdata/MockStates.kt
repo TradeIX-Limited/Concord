@@ -21,6 +21,7 @@ import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PA
 import com.tradeix.concord.shared.mockdata.MockParticipants.BUYER_1_PARTICIPANT
 import com.tradeix.concord.shared.mockdata.MockParticipants.SUPPLIER_1_PARTICIPANT
 import net.corda.core.contracts.UniqueIdentifier
+import java.time.LocalDateTime
 import java.util.*
 
 object MockStates {
@@ -51,6 +52,8 @@ object MockStates {
             buyer = BUYER_1_PARTICIPANT,
             supplier = SUPPLIER_1_PARTICIPANT,
             invoiceNumber = "INVOICE NUMBER",
+            invoiceVersion = "1.0",
+            submitted = LocalDateTime.now(),
             reference = "INVOICE REFERENCE",
             dueDate = LOCAL_DATE_TIME_FUTURE_1,
             amount = ONE_POUNDS,

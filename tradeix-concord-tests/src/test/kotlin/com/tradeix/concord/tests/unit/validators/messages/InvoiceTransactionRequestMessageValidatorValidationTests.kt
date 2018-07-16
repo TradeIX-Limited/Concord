@@ -16,7 +16,9 @@ class InvoiceTransactionRequestMessageValidatorValidationTests {
                 "Property 'assets' must contain at least one element.",
                 "Property 'assets[index].externalId' must not be null, empty or blank.",
                 "Property 'assets[index].buyer' must be a valid X500 name.",
+                "Property 'assets[index].buyerCompanyReference' must not be null, empty or blank.",
                 "Property 'assets[index].supplier' must be a valid X500 name.",
+                "Property 'assets[index].supplierCompanyReference' must not be null, empty or blank.",
                 "Property 'assets[index].invoiceNumber' must not be null, empty or blank.",
                 "Property 'assets[index].reference' must not be null, empty or blank.",
                 "Property 'assets[index].dueDate' must not be null.",
@@ -32,7 +34,6 @@ class InvoiceTransactionRequestMessageValidatorValidationTests {
                 "Property 'assets[index].currency' must not be null.",
                 "Property 'assets[index].currency' must be a valid currency code.",
                 "Property 'assets[index].siteId' must not be null, empty or blank.",
-                "Property 'assets[index].buyerCompanyName' must not be null, empty or blank.",
                 "Property 'attachments[index]' must be a valid secure hash.",
                 "Property 'observers[index]' must be a valid X500 name."
         )
