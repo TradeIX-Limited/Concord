@@ -3,7 +3,7 @@ package com.tradeix.concord.shared.client.observers
 import com.google.gson.GsonBuilder
 import com.tradeix.concord.shared.client.components.OAuthAccessTokenProvider
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
-import com.tradeix.concord.shared.client.components.TIXConfiguration
+import com.tradeix.concord.shared.client.components.TixConfiguration
 import com.tradeix.concord.shared.client.http.TixHttpClient
 import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceResponseMapper
 import com.tradeix.concord.shared.domain.states.InvoiceState
@@ -17,7 +17,7 @@ import java.util.*
 import kotlin.concurrent.timer
 
 class InvoiceObserver(
-        private val tixConfiguration: TIXConfiguration,
+        private val tixConfiguration: TixConfiguration,
         rpc: RPCConnectionProvider,
         tokenProvider: OAuthAccessTokenProvider) {
 

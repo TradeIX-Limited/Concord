@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class OAuthAccessTokenProvider(
-        private val tixConfiguration: TIXConfiguration,
+        private val tixConfiguration: TixConfiguration,
         private val oauthConfiguration: OAuthConfiguration) {
 
     private val client = RestTemplate()

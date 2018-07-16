@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 @Configuration
 @PropertySource("file:application.properties", ignoreResourceNotFound = true)
-class TIXConfiguration(
+class TixConfiguration(
         @Value("\${config.tix.idserver.url}") val idServerUrl: String,
         @Value("\${config.tix.webapi.url}") val webApiUrl: String,
         @Value("\${config.tix.webapi.composer_program_id}") val composerProgramId: String,

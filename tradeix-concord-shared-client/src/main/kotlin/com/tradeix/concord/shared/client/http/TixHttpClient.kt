@@ -1,7 +1,7 @@
 package com.tradeix.concord.shared.client.http
 
 import com.tradeix.concord.shared.client.components.OAuthAccessTokenProvider
-import com.tradeix.concord.shared.client.components.TIXConfiguration
+import com.tradeix.concord.shared.client.components.TixConfiguration
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
 import org.springframework.http.*
@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate
 
 
 class TixHttpClient(
-        private val tixConfiguration: TIXConfiguration,
+        private val tixConfiguration: TixConfiguration,
         private val tokenProvider: OAuthAccessTokenProvider) {
 
     companion object {
