@@ -1,7 +1,4 @@
 package com.tradeix.concord.shared.messages
 
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-
-typealias InvoiceTransactionRequestMessage = TransactionRequestMessage<InvoiceRequestMessage>
 typealias CancellationTransactionRequestMessage = TransactionRequestMessage<CancellationRequestMessage>
 typealias OwnershipTransactionRequestMessage = TransactionRequestMessage<OwnershipRequestMessage>

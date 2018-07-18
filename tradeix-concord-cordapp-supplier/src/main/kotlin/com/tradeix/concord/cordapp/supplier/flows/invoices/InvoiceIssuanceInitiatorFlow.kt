@@ -1,16 +1,16 @@
 package com.tradeix.concord.cordapp.supplier.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.cordapp.supplier.mappers.invoices.InvoiceIssuanceMapper
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransactionRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceIssuanceRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -33,7 +33,7 @@ class InvoiceIssuanceInitiatorFlow(
 
         val validator = InvoiceTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceIssuanceRequestMapper(serviceHub)
+        val mapper = InvoiceIssuanceMapper(serviceHub)
 
         validator.validate(message)
 

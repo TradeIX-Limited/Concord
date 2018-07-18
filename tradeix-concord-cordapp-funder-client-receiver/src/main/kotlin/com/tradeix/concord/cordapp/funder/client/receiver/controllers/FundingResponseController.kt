@@ -1,12 +1,12 @@
 package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.funder.flows.FundingResponseIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.funder.flows.fundingresponses.FundingResponseIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.client.mappers.FundingResponseResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
-import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRequestMapper
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.*
 import java.util.concurrent.Callable
 
 @RestController
-@RequestMapping(path = arrayOf("/fundingresponse"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+@RequestMapping(path = arrayOf("/fundingresponses"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
 class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpc.proxy)
-    private val fundingResonseRequestMapper = FundingResponseRequestMapper()
+    private val fundingResponseResponseMapper = FundingResponseResponseMapper()
 
     @GetMapping()
     fun getFundingResponseStates(
@@ -39,13 +39,13 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 if (externalId.isNullOrBlank()) {
                     val fundingResponses = vaultService
                             .getPagedItems(pageNumber, pageSize, stateStatus)
-                            .map { fundingResonseRequestMapper.map(it.state.data) }
+                            .map { fundingResponseResponseMapper.map(it.state.data) }
 
                     ResponseBuilder.ok(fundingResponses)
                 } else {
                     val fundingResponses = vaultService
                             .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
-                            .map { fundingResonseRequestMapper.map(it.state.data) }
+                            .map { fundingResponseResponseMapper.map(it.state.data) }
 
                     ResponseBuilder.ok(fundingResponses)
                 }
@@ -68,7 +68,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
             try {
                 val fundingResponseRequestMessage = vaultService
                         .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
-                        .map { fundingResonseRequestMapper.map(it.state.data) }
+                        .map { fundingResponseResponseMapper.map(it.state.data) }
                         .single()
 
                 ResponseBuilder.ok(fundingResponseRequestMessage)
@@ -105,7 +105,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun issueFundingResponse(
-            @RequestBody message: FundingResponseRequestMessage
+            @RequestBody message: FundingResponseIssuanceRequestMessage
     ): Callable<ResponseEntity<*>> {
 
         return Callable {

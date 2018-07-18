@@ -1,16 +1,16 @@
 package com.tradeix.concord.cordapp.supplier.flows.fundingresponses
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.cordapp.supplier.mappers.fundingresponses.FundingResponseRejectionMapper
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRejectionMapper
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.InputAndOutput
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.FundingResponseRejectMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -22,7 +22,7 @@ import net.corda.core.transactions.TransactionBuilder
 @StartableByRPC
 @InitiatingFlow
 class FundingResponseRejectionFlow(
-        private val message: FundingResponseRejectionRequestMessage
+        private val message: FundingResponseConfirmationRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
     override val progressTracker = getDefaultProgressTracker()
@@ -30,7 +30,7 @@ class FundingResponseRejectionFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = FundingResponseRejectMessageValidator()
+        val validator = FundingResponseConfirmationRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
         val mapper = FundingResponseRejectionMapper(serviceHub)
 

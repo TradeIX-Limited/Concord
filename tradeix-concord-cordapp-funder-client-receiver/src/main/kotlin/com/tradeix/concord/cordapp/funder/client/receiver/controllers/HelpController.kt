@@ -1,9 +1,9 @@
 package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequstMessageValidator
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
-import com.tradeix.concord.shared.validators.FundingResponseRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,8 +22,8 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "messageStructure" to FundingResponseRequestMessage(),
-                                "messageValidation" to FundingResponseRequestMessageValidator()
+                                "messageStructure" to FundingResponseIssuanceRequestMessage(),
+                                "messageValidation" to FundingResponseIssuanceRequstMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Issue()
                                         .getValidationMessages()

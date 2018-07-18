@@ -4,12 +4,12 @@ import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentIniti
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.client.mappers.InvoiceResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceResponseMapper
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.services.VaultService
