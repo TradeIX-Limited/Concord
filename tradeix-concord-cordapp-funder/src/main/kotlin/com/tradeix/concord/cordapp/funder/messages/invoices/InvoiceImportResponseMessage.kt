@@ -4,4 +4,4 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-data class InvoiceImportResponseMessage(@JsonProperty("BatchUploadId") val batchUploadId: String)
+data class InvoiceImportResponseMessage(val batchUploadId: String)

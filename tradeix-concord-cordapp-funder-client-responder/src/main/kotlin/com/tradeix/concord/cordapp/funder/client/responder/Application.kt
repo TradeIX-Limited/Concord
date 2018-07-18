@@ -4,8 +4,13 @@ import com.tradeix.concord.cordapp.funder.client.responder.services.InvoiceObser
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.ComponentScans
 
-@ComponentScan("com.tradeix.concord.shared.client.components")
+@ComponentScans(
+        ComponentScan("com.tradeix.concord.shared.client.components"),
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.responder.components"),
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.responder.services")
+)
 @EnableAutoConfiguration
 class Application(invoiceObserverService: InvoiceObserverService) {
 

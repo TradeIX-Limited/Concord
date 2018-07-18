@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 
 @Component
 @Configuration
-@PropertySource("file:application.properties")
-class OAuthConfiguration(
+@PropertySource("file:application.properties", ignoreResourceNotFound = true)
+open class OAuthConfiguration(
         @Value("\${config.oauth.token_url}") val url: String,
         @Value("\${config.oauth.grant_type}") val grantType: String,
         @Value("\${config.oauth.username}") val username: String,
