@@ -1,7 +1,7 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseAcceptanceFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseRejectionFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRequestMapper

@@ -26,23 +26,6 @@ import java.util.*
 
 object MockStates {
 
-    val PURCHASE_ORDER_STATE = PurchaseOrderState(
-            linearId = UniqueIdentifier(
-                    "PURCHASE_ORDER_EXTERNAL_ID",
-                    UUID.fromString("00000000-0000-4000-0000-000000000001")
-            ),
-            owner = BUYER_1_IDENTITY.party,
-            buyer = BUYER_1_IDENTITY.party,
-            supplier = SUPPLIER_1_IDENTITY.party,
-            reference = "PURCHASE ORDER REFERENCE",
-            amount = ONE_POUNDS,
-            earliestShipment = LOCAL_DATE_TIME_PAST_2,
-            latestShipment = LOCAL_DATE_TIME_PAST_3,
-            portOfShipment = "PORT OF SHIPMENT",
-            descriptionOfGoods = "DESCRIPTION OF GOODS",
-            deliveryTerms = "DELIVERY TERMS"
-    )
-
     val INVOICE_STATE = InvoiceState(
             linearId = UniqueIdentifier(
                     "INVOICE_EXTERNAL_ID",
@@ -66,32 +49,6 @@ object MockStates {
             siteId = "SITE ID",
             tradeDate = LOCAL_DATE_TIME_FUTURE_4,
             tradePaymentDate = LOCAL_DATE_TIME_FUTURE_5
-    )
-
-    val INVOICE_ELIGIBILITY_STATE = InvoiceEligibilityState(
-            linearId = UniqueIdentifier(
-                    "INVOICE_ELIGIBILITY_EXTERNAL_ID",
-                    UUID.fromString("00000000-0000-4000-0000-000000000003")
-            ),
-            invoiceExternalId = "INVOICE_EXTERNAL_ID",
-            supplier = SUPPLIER_1_IDENTITY.party,
-            funder = FUNDER_1_IDENTITY.party,
-            eligible = true
-    )
-
-    val PROMISSORY_NOTE_STATE = PromissoryNoteState(
-            linearId = UniqueIdentifier(
-                    "PROMISSORY_NOTE_EXTERNAL_ID",
-                    UUID.fromString("00000000-0000-4000-0000-000000000004")
-            ),
-            owner = OBLIGEE_1_IDENTITY.party,
-            obligor = OBLIGOR_1_IDENTITY.party,
-            obligee = OBLIGEE_1_IDENTITY.party,
-            guarantor = GUARANTOR_1_IDENTITY.party,
-            amount = ONE_POUNDS,
-            placeOfIssue = BANK_OF_ENGLAND,
-            dateOfIssue = LOCAL_DATE_TIME_PAST_1,
-            dateOfMaturity = LOCAL_DATE_TIME_FUTURE_1
     )
 
     val FUNDING_RESPONSE_STATE = FundingResponseState(

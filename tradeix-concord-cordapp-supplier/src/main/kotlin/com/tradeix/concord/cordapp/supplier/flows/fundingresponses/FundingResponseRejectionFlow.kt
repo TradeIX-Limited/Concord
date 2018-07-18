@@ -1,4 +1,4 @@
-package com.tradeix.concord.cordapp.supplier.flows
+package com.tradeix.concord.cordapp.supplier.flows.fundingresponses
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow

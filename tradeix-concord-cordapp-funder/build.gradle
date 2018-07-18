@@ -25,7 +25,6 @@ dependencies {
     cordapp project(":tradeix-concord-shared-cordapp")
     cordapp project(":tradeix-concord-shared-domain")
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
-    testCompile project(":tradeix-concord-shared-mock-data")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

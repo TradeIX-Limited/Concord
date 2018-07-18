@@ -1,8 +1,8 @@
 package com.tradeix.concord.tests.unit.flows.fundingresponse
 
 import com.tradeix.concord.cordapp.funder.flows.FundingResponseIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseAcceptanceFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseRejectionFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
 import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
 import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
 import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage

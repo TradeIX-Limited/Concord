@@ -1,18 +1,17 @@
-package com.tradeix.concord.cordapp.supplier.flows
+package com.tradeix.concord.cordapp.supplier.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceAmendmentRequestMapper
+import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceCancellationRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
-import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
-import com.tradeix.concord.shared.mapper.InputAndOutput
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
+import com.tradeix.concord.shared.validators.CancellationTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
+import net.corda.core.contracts.StateAndRef
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.InitiatingFlow
@@ -23,8 +22,8 @@ import net.corda.core.transactions.TransactionBuilder
 
 @StartableByRPC
 @InitiatingFlow
-class InvoiceAmendmentInitiatorFlow(
-        private val message: InvoiceTransactionRequestMessage
+class InvoiceCancellationInitiatorFlow(
+        private val message: CancellationTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
     override val progressTracker = getProgressTrackerWithObservationStep()
@@ -32,27 +31,24 @@ class InvoiceAmendmentInitiatorFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = InvoiceTransactionRequestMessageValidator()
+        val validator = CancellationTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceAmendmentRequestMapper(serviceHub)
+        val mapper = InvoiceCancellationRequestMapper(serviceHub)
 
         validator.validate(message)
 
         // Step 1 - Generating Unsigned Transaction
         progressTracker.currentStep = GeneratingTransactionStep
-        val states: Iterable<InputAndOutput<InvoiceState>> = mapper.mapMany(message.assets)
-
-        val invoiceInputStates = states.map { it.input }
-        val invoiceOutputStates = states.map { it.output }
+        val inputStateAndRefs: Iterable<StateAndRef<InvoiceState>> = mapper.mapMany(message.assets)
+        val inputStates = inputStateAndRefs.map { it.state.data }
 
         val command = Command(
-                InvoiceContract.Amend(),
-                identityService.getParticipants(invoiceOutputStates).toOwningKeys()
+                InvoiceContract.Cancel(),
+                identityService.getParticipants(inputStates).toOwningKeys()
         )
 
         val transactionBuilder = TransactionBuilder(identityService.getNotary())
-                .addInputStates(invoiceInputStates)
-                .addOutputStates(invoiceOutputStates, INVOICE_CONTRACT_ID)
+                .addInputStates(inputStateAndRefs)
                 .addCommand(command)
 
         // Step 2 - Validate Unsigned Transaction
@@ -68,7 +64,7 @@ class InvoiceAmendmentInitiatorFlow(
         val fullySignedTransaction = subFlow(
                 CollectSignaturesInitiatorFlow(
                         partiallySignedTransaction,
-                        identityService.getWellKnownParticipantsExceptMe(invoiceOutputStates),
+                        identityService.getWellKnownParticipantsExceptMe(inputStates),
                         GatheringSignaturesStep.childProgressTracker()
                 )
         )

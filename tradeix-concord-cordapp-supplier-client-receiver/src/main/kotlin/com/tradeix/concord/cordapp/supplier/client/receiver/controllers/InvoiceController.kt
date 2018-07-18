@@ -1,9 +1,9 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceAmendmentInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceCancellationInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceResponseMapper

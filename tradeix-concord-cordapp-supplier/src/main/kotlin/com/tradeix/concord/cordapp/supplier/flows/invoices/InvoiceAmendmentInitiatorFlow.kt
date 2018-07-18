@@ -1,38 +1,40 @@
-package com.tradeix.concord.cordapp.supplier.flows
+package com.tradeix.concord.cordapp.supplier.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceOwnershipRequestMapper
+import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
+import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceAmendmentRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.InputAndOutput
-import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
+import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.OwnershipTransactionRequestMessageValidator
+import com.tradeix.concord.shared.validators.InvoiceTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 
 @StartableByRPC
 @InitiatingFlow
-class InvoiceOwnershipChangeInitiatorFlow(
-        private val message: OwnershipTransactionRequestMessage
+class InvoiceAmendmentInitiatorFlow(
+        private val message: InvoiceTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
-    override val progressTracker = getDefaultProgressTracker()
+    override val progressTracker = getProgressTrackerWithObservationStep()
 
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = OwnershipTransactionRequestMessageValidator()
+        val validator = InvoiceTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceOwnershipRequestMapper(serviceHub)
+        val mapper = InvoiceAmendmentRequestMapper(serviceHub)
 
         validator.validate(message)
 
@@ -44,7 +46,7 @@ class InvoiceOwnershipChangeInitiatorFlow(
         val invoiceOutputStates = states.map { it.output }
 
         val command = Command(
-                InvoiceContract.ChangeOwner(),
+                InvoiceContract.Amend(),
                 identityService.getParticipants(invoiceOutputStates).toOwningKeys()
         )
 
@@ -73,11 +75,22 @@ class InvoiceOwnershipChangeInitiatorFlow(
 
         // Step 5 - Finalize Transaction
         progressTracker.currentStep = FinalizingTransactionStep
-        return subFlow(
+        val finalizedTransaction = subFlow(
                 FinalityFlow(
                         fullySignedTransaction,
                         FinalizingTransactionStep.childProgressTracker()
                 )
         )
+
+        // Step 6 - Send Transaction To Observers
+        progressTracker.currentStep = SendTransactionToObserversStep
+        subFlow(
+                ObserveTransactionInitiatorFlow(
+                        finalizedTransaction,
+                        message.observers.map { identityService.getPartyFromLegalNameOrThrow(CordaX500Name.parse(it)) }
+                )
+        )
+
+        return finalizedTransaction
     }
 }
