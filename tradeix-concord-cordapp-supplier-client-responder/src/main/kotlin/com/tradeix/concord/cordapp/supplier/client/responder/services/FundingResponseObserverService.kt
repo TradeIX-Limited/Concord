@@ -35,7 +35,7 @@ class FundingResponseObserverService(
         vaultService.observe {
             try {
                 val json = serializer.toJson(mapper.map(it.state.data))
-                val url = erpConfiguration.url + "fundingresponses/whatever/this/is/meant/to/be/"
+                val url = erpConfiguration.url + "restlet.nl?script=customscript_funding_response&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json))
 
                 logger.info(response.body.toString())

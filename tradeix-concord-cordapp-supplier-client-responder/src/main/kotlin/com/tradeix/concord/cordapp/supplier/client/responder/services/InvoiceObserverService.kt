@@ -35,7 +35,7 @@ class InvoiceObserverService(
         vaultService.observe {
             try {
                 val json = serializer.toJson(mapper.map(it))
-                val url = erpConfiguration.url + "invoices/whatever/this/is/meant/to/be"
+                val url = erpConfiguration.url + "restlet.nl?script=customscript_confirmation_of_issuance&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json))
 
                 logger.info(response.body.toString())
