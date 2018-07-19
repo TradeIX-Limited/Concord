@@ -6,7 +6,7 @@ import com.tradeix.concord.shared.validation.ValidationBuilder
 import com.tradeix.concord.shared.validation.extensions.*
 import java.math.BigDecimal
 
-class FundingResponseIssuanceRequstMessageValidator
+class FundingResponseIssuanceRequestMessageValidator
     : ObjectValidator<FundingResponseIssuanceRequestMessage>() {
 
     override fun validate(validationBuilder: ValidationBuilder<FundingResponseIssuanceRequestMessage>) {

@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators.messages
 
-import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequstMessageValidator
+import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequestMessageValidator
 import com.tradeix.concord.shared.mockdata.MockFundingResponses
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ class FundingResponseIssuanceRequestMessageValidatorValidationTests {
 
     @Test
     fun `FundingResponseIssuanceRequstMessageValidator produces the expected validation messages`() {
-        val validator = FundingResponseIssuanceRequstMessageValidator()
+        val validator = FundingResponseIssuanceRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
                 "Property 'invoiceExternalIds' must not be null.",
@@ -43,7 +43,7 @@ class FundingResponseIssuanceRequestMessageValidatorValidationTests {
     @Test
     fun `FundingResponseIssuanceRequstMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE
-        val validator = FundingResponseIssuanceRequstMessageValidator()
+        val validator = FundingResponseIssuanceRequestMessageValidator()
         validator.validate(message)
     }
 }

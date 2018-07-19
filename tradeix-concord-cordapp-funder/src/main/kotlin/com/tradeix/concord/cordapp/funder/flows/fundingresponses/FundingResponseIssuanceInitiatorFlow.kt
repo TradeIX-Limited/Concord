@@ -3,7 +3,7 @@ package com.tradeix.concord.cordapp.funder.flows.fundingresponses
 import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.cordapp.funder.mappers.fundingresponses.FundingResponseIssuanceMapper
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
-import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequstMessageValidator
+import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
@@ -29,7 +29,7 @@ class FundingResponseIssuanceInitiatorFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = FundingResponseIssuanceRequstMessageValidator()
+        val validator = FundingResponseIssuanceRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
         val mapper = FundingResponseIssuanceMapper(serviceHub)
 
