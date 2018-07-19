@@ -2,7 +2,7 @@ package com.tradeix.concord.tests.unit.flows.fundingresponse
 
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesResponderFlow
 import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionResponderFlow
-import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockInvoices
 import com.tradeix.concord.shared.mockdata.ParticipantType
 import com.tradeix.concord.tests.unit.flows.FlowTest
@@ -47,7 +47,7 @@ class FundingResponseIssuanceFlowTests : FlowTest() {
         val transaction = FundingResponseFlows.issue(
                 network = network,
                 initiator = funder1.node,
-                message = FUNDING_RESPONSE_REQUEST_MESSAGE.copy(
+                message = FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE.copy(
                         invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")
                 )
         )
@@ -60,7 +60,7 @@ class FundingResponseIssuanceFlowTests : FlowTest() {
         val transaction = FundingResponseFlows.issue(
                 network = network,
                 initiator = funder1.node,
-                message = FUNDING_RESPONSE_REQUEST_MESSAGE.copy(
+                message = FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE.copy(
                         invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")
                 )
         )
@@ -73,7 +73,7 @@ class FundingResponseIssuanceFlowTests : FlowTest() {
         val transaction = FundingResponseFlows.issue(
                 network = network,
                 initiator = funder1.node,
-                message = FUNDING_RESPONSE_REQUEST_MESSAGE.copy(
+                message = FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE.copy(
                         invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")
                 )
         )
@@ -88,7 +88,7 @@ class FundingResponseIssuanceFlowTests : FlowTest() {
         val transaction = FundingResponseFlows.issue(
                 network = network,
                 initiator = funder1.node,
-                message = FUNDING_RESPONSE_REQUEST_MESSAGE.copy(
+                message = FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE.copy(
                         invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")
                 )
         )

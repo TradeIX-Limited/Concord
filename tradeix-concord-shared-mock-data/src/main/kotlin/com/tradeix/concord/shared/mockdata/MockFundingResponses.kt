@@ -1,15 +1,14 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 
 object MockFundingResponses {
 
-    val FUNDING_RESPONSE_REQUEST_MESSAGE = FundingResponseRequestMessage(
+    val FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE = FundingResponseIssuanceRequestMessage(
             externalId = "FUNDING_RESPONSE_1",
             fundingRequestExternalId = null, // TODO : Add test funding request
             invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3"),
@@ -22,11 +21,11 @@ object MockFundingResponses {
             baseRate = ONE_POUNDS.toDecimal()
     )
 
-    val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseAcceptanceRequestMessage(
+    val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(
             externalId = "FUNDING_RESPONSE_1"
     )
 
-    val FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE = FundingResponseRejectionRequestMessage(
+    val FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(
             externalId = "FUNDING_RESPONSE_1"
     )
 }

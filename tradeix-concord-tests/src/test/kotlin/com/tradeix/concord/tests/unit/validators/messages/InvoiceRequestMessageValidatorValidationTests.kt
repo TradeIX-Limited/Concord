@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.unit.validators.messages
 
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceRequestMessageValidator
 import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_REQUEST_MESSAGE
-import com.tradeix.concord.shared.validators.InvoiceRequestMessageValidator
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

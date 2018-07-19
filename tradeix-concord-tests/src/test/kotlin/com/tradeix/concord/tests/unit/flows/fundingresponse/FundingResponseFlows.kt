@@ -1,11 +1,10 @@
 package com.tradeix.concord.tests.unit.flows.fundingresponse
 
-import com.tradeix.concord.cordapp.funder.flows.FundingResponseIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseAcceptanceFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseRejectionFlow
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
+import com.tradeix.concord.cordapp.funder.flows.fundingresponses.FundingResponseIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.node.MockNetwork
@@ -15,7 +14,7 @@ object FundingResponseFlows {
     fun issue(
             network: MockNetwork,
             initiator: StartedMockNode,
-            message: FundingResponseRequestMessage): SignedTransaction {
+            message: FundingResponseIssuanceRequestMessage): SignedTransaction {
         val future = initiator.startFlow(FundingResponseIssuanceInitiatorFlow(message))
         network.runNetwork()
         return future.getOrThrow()
@@ -24,7 +23,7 @@ object FundingResponseFlows {
     fun accept(
             network: MockNetwork,
             initiator: StartedMockNode,
-            message: FundingResponseAcceptanceRequestMessage): SignedTransaction {
+            message: FundingResponseConfirmationRequestMessage): SignedTransaction {
         val future = initiator.startFlow(FundingResponseAcceptanceFlow(message))
         network.runNetwork()
         return future.getOrThrow()
@@ -33,7 +32,7 @@ object FundingResponseFlows {
     fun reject(
             network: MockNetwork,
             initiator: StartedMockNode,
-            message: FundingResponseRejectionRequestMessage): SignedTransaction {
+            message: FundingResponseConfirmationRequestMessage): SignedTransaction {
         val future = initiator.startFlow(FundingResponseRejectionFlow(message))
         network.runNetwork()
         return future.getOrThrow()

@@ -27,6 +27,8 @@ dependencies {
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
     cordaCompile project(":tradeix-concord-shared")
     cordaCompile project(":tradeix-concord-shared-domain")
+    cordaCompile project(":tradeix-concord-cordapp-supplier")
+    cordaCompile project(":tradeix-concord-cordapp-funder")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

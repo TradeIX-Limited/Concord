@@ -1,11 +1,11 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceAmendmentInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceCancellationInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow

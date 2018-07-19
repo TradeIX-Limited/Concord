@@ -1,19 +1,18 @@
 package com.tradeix.concord.cordapp.funder.client.responder
 
-import com.tradeix.concord.shared.client.components.OAuthAccessTokenProvider
-import com.tradeix.concord.shared.client.components.RPCConnectionProvider
-import com.tradeix.concord.shared.client.components.TixConfiguration
-import com.tradeix.concord.shared.client.observers.InvoiceObserver
+import com.tradeix.concord.cordapp.funder.client.responder.services.InvoiceObserverService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.ComponentScans
 
-@ComponentScan("com.tradeix.concord.shared.client.components")
+@ComponentScans(
+        ComponentScan("com.tradeix.concord.shared.client.components"),
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.responder.components"),
+        ComponentScan("com.tradeix.concord.cordapp.funder.client.responder.services")
+)
 @EnableAutoConfiguration
-class Application(
-        tixConfiguration: TixConfiguration,
-        rpc: RPCConnectionProvider,
-        tokenProvider: OAuthAccessTokenProvider) {
+class Application(invoiceObserverService: InvoiceObserverService) {
 
     companion object {
         @JvmStatic
@@ -22,9 +21,7 @@ class Application(
         }
     }
 
-    private val invoiceObserver = InvoiceObserver(tixConfiguration, rpc, tokenProvider)
-
     init {
-        invoiceObserver.observe()
+        invoiceObserverService.start()
     }
 }

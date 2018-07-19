@@ -1,13 +1,19 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageValidator
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransactionRequestMessageValidator
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
-import com.tradeix.concord.shared.messages.*
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-import com.tradeix.concord.shared.validators.*
+import com.tradeix.concord.shared.messages.CancellationRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
+import com.tradeix.concord.shared.validators.CancellationTransactionRequestMessageValidator
+import com.tradeix.concord.shared.validators.OwnershipTransactionRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -109,8 +115,9 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "messageStructure" to FundingResponseAcceptanceRequestMessage(),
-                                "messageValidation" to FundingResponseAcceptMessageValidator().getValidationMessages(),
+                                "messageStructure" to FundingResponseConfirmationRequestMessage(),
+                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                        .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Accept().getValidationMessages()
                         )
                 )
@@ -126,8 +133,9 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "messageStructure" to FundingResponseRejectionRequestMessage(),
-                                "messageValidation" to FundingResponseRejectMessageValidator().getValidationMessages(),
+                                "messageStructure" to FundingResponseConfirmationRequestMessage(),
+                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                        .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Reject().getValidationMessages()
                         )
                 )
