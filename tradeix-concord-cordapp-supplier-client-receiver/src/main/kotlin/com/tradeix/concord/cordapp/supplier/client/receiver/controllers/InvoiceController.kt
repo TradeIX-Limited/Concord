@@ -5,13 +5,13 @@ import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationIn
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.InvoiceResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
 import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
-import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -114,8 +114,8 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                val response = InvoiceTransactionResponseMessage(
+                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
 
@@ -138,8 +138,8 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::InvoiceAmendmentInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                val response = InvoiceTransactionResponseMessage(
+                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
 
@@ -162,8 +162,8 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::InvoiceOwnershipChangeInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId },
+                val response = InvoiceTransactionResponseMessage(
+                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
 
@@ -186,8 +186,8 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::InvoiceCancellationInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = emptyList(),
+                val response = InvoiceTransactionResponseMessage(
+                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
 
