@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "e0449f54-eedd-427c-a373-c6baff3a294b",
+    "_postman_id": "efac7d36-a0e8-4e45-96ed-3363a06ec5ce",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -67,6 +67,71 @@
               "path": [
                 "nodes",
                 "local"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "invoices"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/count",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/count endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "invoices",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/hash",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/hash endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "invoices",
+                "hash"
               ]
             }
           }
@@ -161,6 +226,71 @@
         },
         {
           "response": [],
+          "name": "help/fundingresponses",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "fundingresponses"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/count",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/count endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "fundingresponses",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/hash",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/hash endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "fundingresponses",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "help/fundingresponses/accept",
           "request": {
             "method": "GET",
@@ -199,6 +329,72 @@
                 "help",
                 "fundingresponses",
                 "reject"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/all",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/all endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "nodes",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/peers",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/peers endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "nodes",
+                "peers"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/local",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/local endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "nodes",
+                "local"
               ]
             }
           }
@@ -614,6 +810,71 @@
         },
         {
           "response": [],
+          "name": "help/fundingresponses",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "fundingresponses"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/count",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/count endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "fundingresponses",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/hash",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/hash endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "fundingresponses",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "help/fundingresponses/issue",
           "request": {
             "method": "GET",
@@ -630,6 +891,72 @@
                 "help",
                 "fundingresponses",
                 "issue"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/all",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/all endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "nodes",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/peers",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/peers endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "nodes",
+                "peers"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/nodes/local",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the nodes/local endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "nodes",
+                "local"
               ]
             }
           }

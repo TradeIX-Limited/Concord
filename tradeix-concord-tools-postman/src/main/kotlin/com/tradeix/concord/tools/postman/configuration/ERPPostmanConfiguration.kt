@@ -36,6 +36,45 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
 
     private fun configureSupplierNode(node: Node, group: EndpointGroup) {
 
+        group.item.add(Endpoint("help/invoices", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/count", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/count endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/count"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/hash", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/hash endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/hash"
+                )
+        )))
+
         group.item.add(Endpoint("help/invoices/issue", Request(
                 method = "GET",
                 description = "Gets the help documentation for the invoices/issue endpoint.",
@@ -88,6 +127,45 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
+        group.item.add(Endpoint("help/fundingresponses", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/count", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/count endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/count"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/hash", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/hash endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/hash"
+                )
+        )))
+
         group.item.add(Endpoint("help/fundingresponses/accept", Request(
                 method = "GET",
                 description = "Gets the help documentation for the fundingresponses/accept endpoint.",
@@ -111,6 +189,45 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/fundingresponses/reject"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/all", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/all endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/all"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/peers", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/peers endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/peers"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/local", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/local endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/local"
                 )
         )))
 
@@ -298,6 +415,45 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
     }
 
     private fun configureFunderNode(node: Node, group: EndpointGroup) {
+        group.item.add(Endpoint("help/fundingresponses", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/count", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/count endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/count"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/hash", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/hash endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/hash"
+                )
+        )))
+
         group.item.add(Endpoint("help/fundingresponses/issue", Request(
                 method = "GET",
                 description = "Gets the help documentation for the fundingresponses/issue endpoint.",
@@ -308,6 +464,45 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/fundingresponses/issue"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/all", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/all endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/all"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/peers", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/peers endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/peers"
+                )
+        )))
+
+        group.item.add(Endpoint("help/nodes/local", Request(
+                method = "GET",
+                description = "Gets the help documentation for the nodes/local endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/nodes/local"
                 )
         )))
 
