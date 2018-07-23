@@ -29,8 +29,35 @@ class HelpController {
                             mapOf(
                                     "endpoint" to "/fundingresponses",
                                     "help" to "/help/fundingresponses"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/fundingresponses/externalId",
+                                    "help" to "/help/fundingresponses/externalId"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/fundingresponses/count",
+                                    "help" to "/help/fundingresponses/count"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/fundingresponses/hash",
+                                    "help" to "/help/fundingresponses/hash"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/fundingresponses/issue",
+                                    "help" to "/help/fundingresponses/issue"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/nodes/all",
+                                    "help" to "/help/nodes/all"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/nodes/peers",
+                                    "help" to "/help/nodes/peers"
+                            ),
+                            mapOf(
+                                    "endpoint" to "/nodes/local",
+                                    "help" to "/help/nodes/local"
                             )
-                        // TODO : Readd missing end-points.
                     )
             )
         }
@@ -74,6 +101,33 @@ class HelpController {
         }
     }
 
+    @GetMapping(path = arrayOf("/fundingresponses/externalId"))
+    fun getUnconsumedFundingResponseStateByExternalIdHelp(): Callable<ResponseEntity<*>> {
+        return Callable {
+            try {
+                ResponseBuilder.ok(
+                        mapOf(
+                                "url_parameter" to mapOf("externalId" to "FUNDING_RESPONSE_1"),
+                                "produces" to FundingResponseResponseMessage(
+                                        "FUNDING_RESPONSE_1",
+                                        null,
+                                        listOf("INV_001", "INV_002"),
+                                        "Supplier X500 Name",
+                                        "Funder X500 Name",
+                                        BigDecimal.valueOf(123.45),
+                                        "GBP",
+                                        BigDecimal.valueOf(123.45),
+                                        BigDecimal.valueOf(123.45),
+                                        BigDecimal.valueOf(123)
+                                )
+
+                        )
+                )
+            } catch (ex: Exception) {
+                ResponseBuilder.internalServerError(ex.message)
+            }
+        }
+    }
 
     @GetMapping(path = arrayOf("/fundingresponses/count"))
     fun getUniqueFundingResponseCountHelp(): Callable<ResponseEntity<*>> {
@@ -96,7 +150,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("hash" to SecureHash.randomSHA256().bytes)
+                                "produces" to mapOf("hash" to SecureHash.parse("").toString())
                         )
                 )
             } catch (ex: Exception) {

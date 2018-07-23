@@ -103,20 +103,20 @@ class InvoiceContract : Contract {
         }
     }
 
-    class ChangeOwner : ValidatedCommand() {
+    class Transfer : ValidatedCommand() {
 
         companion object {
             const val CONTRACT_RULE_INPUTS =
-                    "On invoice ownership change, at least one input state must be consumed."
+                    "On invoice transfer, at least one input state must be consumed."
 
             const val CONTRACT_RULE_OUTPUTS =
-                    "On invoice ownership change, at least one output state must be created."
+                    "On invoice transfer, at least one output state must be created."
 
             const val CONTRACT_RULE_INPUTS_OUTPUTS =
-                    "On invoice ownership change, the number of inputs and outputs must be equal."
+                    "On invoice transfer, the number of inputs and outputs must be equal."
 
             const val CONTRACT_RULE_SIGNERS =
-                    "On invoice ownership change, all participants must sign the transaction."
+                    "On invoice transfer, all participants must sign the transaction."
         }
 
         override fun validate(validationBuilder: ContractValidationBuilder) {

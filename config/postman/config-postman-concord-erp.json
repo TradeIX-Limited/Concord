@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "698a13af-a1e9-4279-8053-545215891eac",
+    "_postman_id": "e90914b8-5328-487a-8da5-8a66b5be86ad",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -73,6 +73,26 @@
         },
         {
           "response": [],
+          "name": "help",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "help/invoices",
           "request": {
             "method": "GET",
@@ -88,6 +108,28 @@
               "path": [
                 "help",
                 "invoices"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/externalId",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/{externalId} endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "invoices",
+                "externalId"
               ]
             }
           }
@@ -182,10 +224,10 @@
         },
         {
           "response": [],
-          "name": "help/invoices/changeowner",
+          "name": "help/invoices/transfer",
           "request": {
             "method": "GET",
-            "description": "Gets the help documentation for the invoices/changeowner endpoint.",
+            "description": "Gets the help documentation for the invoices/transfer endpoint.",
             "header": [],
             "body": null,
             "url": {
@@ -197,7 +239,7 @@
               "path": [
                 "help",
                 "invoices",
-                "changeowner"
+                "transfer"
               ]
             }
           }
@@ -241,6 +283,28 @@
               "path": [
                 "help",
                 "fundingresponses"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/externalId",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/{externalId} endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "help",
+                "fundingresponses",
+                "externalId"
               ]
             }
           }
@@ -542,10 +606,10 @@
         },
         {
           "response": [],
-          "name": "invoices/changeowner",
+          "name": "invoices/transfer",
           "request": {
             "method": "PUT",
-            "description": "Changes ownership of a collection of invoice states on the network.",
+            "description": "Transfers a collection of invoice states on the network.",
             "header": [
               {
                 "key": "Content-Type",
@@ -564,7 +628,7 @@
               "port": "8000",
               "path": [
                 "invoices",
-                "changeowner"
+                "transfer"
               ]
             }
           }
@@ -574,7 +638,7 @@
           "name": "invoices/cancel",
           "request": {
             "method": "DELETE",
-            "description": "Changes ownership of a collection of invoice states on the network.",
+            "description": "Cancels a collection of invoice states on the network.",
             "header": [
               {
                 "key": "Content-Type",
@@ -810,6 +874,26 @@
         },
         {
           "response": [],
+          "name": "help",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "help/fundingresponses",
           "request": {
             "method": "GET",
@@ -825,6 +909,28 @@
               "path": [
                 "help",
                 "fundingresponses"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/fundingresponses/externalId",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the fundingresponses/{externalId} endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "fundingresponses",
+                "externalId"
               ]
             }
           }

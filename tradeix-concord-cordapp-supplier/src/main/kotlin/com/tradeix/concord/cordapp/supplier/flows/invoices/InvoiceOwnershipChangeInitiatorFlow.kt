@@ -44,7 +44,7 @@ class InvoiceOwnershipChangeInitiatorFlow(
         val invoiceOutputStates = states.map { it.output }
 
         val command = Command(
-                InvoiceContract.ChangeOwner(),
+                InvoiceContract.Transfer(),
                 identityService.getParticipants(invoiceOutputStates).toOwningKeys()
         )
 

@@ -12,7 +12,7 @@ class InvoiceCancellationTransactionRequestMessageValidator : ObjectValidator<In
     override fun validate(validationBuilder: ValidationBuilder<InvoiceCancellationTransactionRequestMessage>) {
 
         validationBuilder.collection(InvoiceCancellationTransactionRequestMessage::assets) {
-            it.validateWith(InvoiceTransactionRequestMessageValidator())
+            it.validateWith(InvoiceCancellationRequestMessageValidator())
         }
 
         validationBuilder.collection(InvoiceCancellationTransactionRequestMessage::attachments) {

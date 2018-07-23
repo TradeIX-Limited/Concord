@@ -16,7 +16,7 @@ class Application {
                     isDebug = true,
                     waitForAllNodesToFinish = true,
                     extraCordappPackagesToScan = listOf("com.tradeix.concord.shared.domain"),
-                    portAllocation = PortAllocation.Incremental(10034),
+                    portAllocation = PortAllocation.Incremental(10031),
                     debugPortAllocation = PortAllocation.Incremental(5035)
             )
 

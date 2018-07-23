@@ -40,7 +40,7 @@ object InvoiceFlows {
         return future.getOrThrow()
     }
 
-    fun changeOwner(
+    fun transfer(
             network: MockNetwork,
             initiator: StartedMockNode,
             message: InvoiceTransferTransactionRequestMessage): SignedTransaction {

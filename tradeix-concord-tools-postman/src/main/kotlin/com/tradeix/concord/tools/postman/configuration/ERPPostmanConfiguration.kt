@@ -3,11 +3,11 @@ package com.tradeix.concord.tools.postman.configuration
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE
-import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceAmendments
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceCancellations
-import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceOwnershipChanges
+import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceTransfers
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoices
 import com.tradeix.concord.tools.postman.model.*
 
@@ -36,6 +36,19 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
 
     private fun configureSupplierNode(node: Node, group: EndpointGroup) {
 
+        group.item.add(Endpoint("help", Request(
+                method = "GET",
+                description = "Gets the help documentation.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help"
+                )
+        )))
+
         group.item.add(Endpoint("help/invoices", Request(
                 method = "GET",
                 description = "Gets the help documentation for the invoices endpoint.",
@@ -46,6 +59,19 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/invoices"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/externalId", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/{externalId} endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/externalId"
                 )
         )))
 
@@ -101,16 +127,16 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
-        group.item.add(Endpoint("help/invoices/changeowner", Request(
+        group.item.add(Endpoint("help/invoices/transfer", Request(
                 method = "GET",
-                description = "Gets the help documentation for the invoices/changeowner endpoint.",
+                description = "Gets the help documentation for the invoices/transfer endpoint.",
                 header = RequestHeader.EMPTY,
                 body = RequestBody.EMPTY,
                 url = RequestUrl.from(
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "help/invoices/changeowner"
+                        path = "help/invoices/transfer"
                 )
         )))
 
@@ -137,6 +163,19 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/fundingresponses"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/externalId", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/{externalId} endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/externalId"
                 )
         )))
 
@@ -309,22 +348,22 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
-        group.item.add(Endpoint("invoices/changeowner", Request(
+        group.item.add(Endpoint("invoices/transfer", Request(
                 method = "PUT",
-                description = "Changes ownership of a collection of invoice states on the network.",
+                description = "Transfers a collection of invoice states on the network.",
                 header = RequestHeader.APPLICATION_JSON,
-                body = JsonRequestBody(createMockInvoiceOwnershipChanges(10, FUNDER_1_NAME)),
+                body = JsonRequestBody(createMockInvoiceTransfers(10, FUNDER_1_NAME)),
                 url = RequestUrl.from(
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "invoices/changeowner"
+                        path = "invoices/transfer"
                 )
         )))
 
         group.item.add(Endpoint("invoices/cancel", Request(
                 method = "DELETE",
-                description = "Changes ownership of a collection of invoice states on the network.",
+                description = "Cancels a collection of invoice states on the network.",
                 header = RequestHeader.APPLICATION_JSON,
                 body = JsonRequestBody(createMockInvoiceCancellations(10, listOf(FUNDER_1_NAME))),
                 url = RequestUrl.from(
@@ -415,6 +454,20 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
     }
 
     private fun configureFunderNode(node: Node, group: EndpointGroup) {
+
+        group.item.add(Endpoint("help", Request(
+                method = "GET",
+                description = "Gets the help documentation.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help"
+                )
+        )))
+
         group.item.add(Endpoint("help/fundingresponses", Request(
                 method = "GET",
                 description = "Gets the help documentation for the fundingresponses endpoint.",
@@ -425,6 +478,19 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/fundingresponses"
+                )
+        )))
+
+        group.item.add(Endpoint("help/fundingresponses/externalId", Request(
+                method = "GET",
+                description = "Gets the help documentation for the fundingresponses/{externalId} endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/fundingresponses/externalId"
                 )
         )))
 

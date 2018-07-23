@@ -57,7 +57,7 @@ object MockInvoices {
         )
     }
 
-    fun createMockInvoiceOwnershipChanges(count: Int, owner: CordaX500Name): InvoiceTransferTransactionRequestMessage {
+    fun createMockInvoiceTransfers(count: Int, owner: CordaX500Name): InvoiceTransferTransactionRequestMessage {
         return InvoiceTransferTransactionRequestMessage(
                 assets = (1..count).toList().map { InvoiceTransferRequestMessage("INVOICE_$it", owner.toString()) }
         )

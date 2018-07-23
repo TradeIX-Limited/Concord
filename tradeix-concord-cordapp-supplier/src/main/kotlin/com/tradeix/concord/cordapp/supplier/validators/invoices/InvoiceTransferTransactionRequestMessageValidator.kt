@@ -14,7 +14,7 @@ class InvoiceTransferTransactionRequestMessageValidator :ObjectValidator<Invoice
     override fun validate(validationBuilder: ValidationBuilder<InvoiceTransferTransactionRequestMessage>) {
 
         validationBuilder.collection(InvoiceTransferTransactionRequestMessage::assets) {
-            it.validateWith(InvoiceTransactionRequestMessageValidator())
+            it.validateWith(InvoiceTransferRequestMessageValidator())
         }
 
         validationBuilder.collection(InvoiceTransferTransactionRequestMessage::attachments) {
