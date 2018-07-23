@@ -21,7 +21,7 @@ import net.corda.core.transactions.TransactionBuilder
 
 @StartableByRPC
 @InitiatingFlow
-class InvoiceOwnershipChangeInitiatorFlow(
+class InvoiceTransferInitiatorFlow(
         private val message: InvoiceTransferTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 

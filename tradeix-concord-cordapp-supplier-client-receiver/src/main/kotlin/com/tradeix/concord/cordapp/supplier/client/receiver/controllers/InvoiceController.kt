@@ -3,7 +3,7 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceTransferInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
@@ -153,13 +153,13 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
         }
     }
 
-    @PutMapping(path = arrayOf("/changeowner"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun changeInvoiceOwner(
+    @PutMapping(path = arrayOf("/transfer"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun transferInvoice(
             @RequestBody message: InvoiceTransferTransactionRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {
-                val future = rpc.proxy.startTrackedFlow(::InvoiceOwnershipChangeInitiatorFlow, message)
+                val future = rpc.proxy.startTrackedFlow(::InvoiceTransferInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
                 val response = InvoiceTransactionResponseMessage(

@@ -1,15 +1,15 @@
 package com.tradeix.concord.tests.unit.validators.messages
 
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferRequestMessageValidator
-import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_TRANSFER_REQUEST_MESSAGE
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class OwnershipRequestMessageValidatorValidationTests {
+class InvoiceTransferRequestMessageValidatorTests {
 
     @Test
-    fun `OwnershipRequestMessageValidator produces the expected validation messages`() {
+    fun `InvoiceTransferRequestMessageValidator produces the expected validation messages`() {
         val validator = InvoiceTransferRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
@@ -27,8 +27,8 @@ class OwnershipRequestMessageValidatorValidationTests {
     }
 
     @Test
-    fun `OwnershipRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
-        val message = INVOICE_CHANGE_OWNER_REQUEST_MESSAGE
+    fun `InvoiceTransferRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
+        val message = INVOICE_TRANSFER_REQUEST_MESSAGE
         val validator = InvoiceTransferRequestMessageValidator()
         validator.validate(message)
     }

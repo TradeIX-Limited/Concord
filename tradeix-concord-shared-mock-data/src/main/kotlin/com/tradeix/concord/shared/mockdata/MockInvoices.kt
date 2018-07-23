@@ -85,7 +85,7 @@ object MockInvoices {
             tradeDate = LOCAL_DATE_TIME_FUTURE_1
     )
 
-    val INVOICE_CHANGE_OWNER_REQUEST_MESSAGE = InvoiceTransferRequestMessage(
+    val INVOICE_TRANSFER_REQUEST_MESSAGE = InvoiceTransferRequestMessage(
             externalId = "INVOICE_001",
             owner = FUNDER_1_NAME.toString()
     )

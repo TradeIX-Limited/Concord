@@ -9,10 +9,10 @@ import com.tradeix.concord.tests.unit.contracts.ContractTest
 import net.corda.testing.node.ledger
 import org.junit.Test
 
-class InvoiceOwnershipChangeContractTests : ContractTest() {
+class InvoiceTransferContractTests : ContractTest() {
 
     @Test
-    fun `On invoice ownership change the transaction must include the ChangeOwner command`() {
+    fun `On invoice transfer the transaction must include the Transfer command`() {
         services.ledger {
             transaction {
                 input(
@@ -34,7 +34,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice ownership change only one input state must be consumed`() {
+    fun `On invoice transfer only one input state must be consumed`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Transfer.CONTRACT_RULE_INPUTS) {
                 transaction {
@@ -53,7 +53,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice ownership change only one output state must be created`() {
+    fun `On invoice transfer only one output state must be created`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Transfer.CONTRACT_RULE_OUTPUTS) {
                 transaction {
@@ -72,7 +72,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice ownership change all participants must sign the transaction (buyer must sign)`() {
+    fun `On invoice transfer all participants must sign the transaction (buyer must sign)`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Transfer.CONTRACT_RULE_SIGNERS) {
                 transaction {
@@ -95,7 +95,7 @@ class InvoiceOwnershipChangeContractTests : ContractTest() {
     }
 
     @Test
-    fun `On invoice ownership change all participants must sign the transaction (supplier must sign)`() {
+    fun `On invoice transfer all participants must sign the transaction (supplier must sign)`() {
         services.ledger {
             assertValidationFails(InvoiceContract.Transfer.CONTRACT_RULE_SIGNERS) {
                 transaction {

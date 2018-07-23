@@ -3,7 +3,7 @@ package com.tradeix.concord.tests.unit.flows.invoices
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceTransferInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
@@ -44,7 +44,7 @@ object InvoiceFlows {
             network: MockNetwork,
             initiator: StartedMockNode,
             message: InvoiceTransferTransactionRequestMessage): SignedTransaction {
-        val future = initiator.startFlow(InvoiceOwnershipChangeInitiatorFlow(message))
+        val future = initiator.startFlow(InvoiceTransferInitiatorFlow(message))
         network.runNetwork()
         return future.getOrThrow()
     }

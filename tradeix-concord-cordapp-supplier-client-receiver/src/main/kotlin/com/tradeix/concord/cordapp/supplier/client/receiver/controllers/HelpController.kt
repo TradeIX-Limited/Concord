@@ -1,6 +1,7 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationResponseMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.*
 import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceCancellationTransactionRequestMessageValidator
@@ -106,15 +107,44 @@ class HelpController {
     }
 
     @GetMapping(path = arrayOf("/invoices"))
-    fun getInvoiceControllerHelp(): Callable<ResponseEntity<*>> {
+    fun getInvoicesHelp(): Callable<ResponseEntity<*>> {
         return Callable {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "externalId" to RequestParameterInfo(false),
-                                "status" to RequestParameterInfo(false, "unconsumed", listOf("unconsumed", "consumed", "all")),
-                                "pageNumber" to RequestParameterInfo(false, "1"),
-                                "pageSize" to RequestParameterInfo(false, "50")
+                                "parameters" to mapOf(
+                                        "externalId" to RequestParameterInfo(false),
+                                        "status" to RequestParameterInfo(
+                                                false,
+                                                "unconsumed",
+                                                listOf("unconsumed", "consumed", "all")
+                                        ),
+                                        "pageNumber" to RequestParameterInfo(false, "1"),
+                                        "pageSize" to RequestParameterInfo(false, "50")
+                                ),
+                                "produces" to listOf(
+                                        InvoiceResponseMessage(
+                                                externalId = "INVOICE_1",
+                                                buyer = "Buyer X500 Name",
+                                                buyerCompanyReference = "Albertsons",
+                                                supplier = "Supplier X500 Name",
+                                                supplierCompanyReference = "Nikrome Ltd",
+                                                invoiceNumber = "INV_001",
+                                                reference = "INVOICE_REFERENCE",
+                                                dueDate = LocalDateTime.now(),
+                                                amount = BigDecimal.valueOf(123.45),
+                                                totalOutstanding = BigDecimal.valueOf(123.45),
+                                                settlementDate = LocalDateTime.now(),
+                                                invoiceDate = LocalDateTime.now(),
+                                                invoicePayments = BigDecimal.valueOf(123.45),
+                                                invoiceDilutions = BigDecimal.valueOf(123.45),
+                                                originationNetwork = "NETWORK_1",
+                                                currency = "USD",
+                                                siteId = "S1",
+                                                tradeDate = null,
+                                                tradePaymentDate = null
+                                        )
+                                )
                         )
                 )
             } catch (ex: Exception) {
@@ -129,29 +159,28 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "url_parameter" to mapOf("externalId" to "INVOICE_1"),
+                                "url_parameter" to "externalId",
                                 "produces" to InvoiceResponseMessage(
-                                        "INVOICE_1",
-                                        "Buyer X500 Name",
-                                        "Buyer Company Ref",
-                                        "Supplier X500 Name",
-                                        "Supplier Company Ref",
-                                        "INV_001",
-                                        "Reference",
-                                        LocalDateTime.now(),
-                                        BigDecimal.valueOf(123.45),
-                                        BigDecimal.valueOf(123.45),
-                                        LocalDateTime.now(),
-                                        LocalDateTime.now(),
-                                        BigDecimal.valueOf(123.45),
-                                        BigDecimal.valueOf(123.45),
-                                        "NETWORK_001",
-                                        "GBP",
-                                        "SITE_001",
-                                        LocalDateTime.now(),
-                                        LocalDateTime.now()
+                                        externalId = "INVOICE_1",
+                                        buyer = "Buyer X500 Name",
+                                        buyerCompanyReference = "Albertsons",
+                                        supplier = "Supplier X500 Name",
+                                        supplierCompanyReference = "Nikrome Ltd",
+                                        invoiceNumber = "INV_001",
+                                        reference = "INVOICE_REFERENCE",
+                                        dueDate = LocalDateTime.now(),
+                                        amount = BigDecimal.valueOf(123.45),
+                                        totalOutstanding = BigDecimal.valueOf(123.45),
+                                        settlementDate = LocalDateTime.now(),
+                                        invoiceDate = LocalDateTime.now(),
+                                        invoicePayments = BigDecimal.valueOf(123.45),
+                                        invoiceDilutions = BigDecimal.valueOf(123.45),
+                                        originationNetwork = "NETWORK_1",
+                                        currency = "USD",
+                                        siteId = "S1",
+                                        tradeDate = null,
+                                        tradePaymentDate = null
                                 )
-
                         )
                 )
             } catch (ex: Exception) {
@@ -181,7 +210,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("hash" to SecureHash.parse("").toString())
+                                "produces" to mapOf("hash" to SecureHash.randomSHA256().toString())
                         )
                 )
             } catch (ex: Exception) {
@@ -199,7 +228,10 @@ class HelpController {
                                 "consumes" to InvoiceTransactionRequestMessage(
                                         assets = listOf(InvoiceRequestMessage())
                                 ),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to InvoiceTransactionResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        listOf("INVOICE_1", "INVOICE_2")
+                                ),
                                 "messageValidation" to InvoiceTransactionRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to InvoiceContract.Issue()
@@ -221,7 +253,10 @@ class HelpController {
                                 "consumes" to InvoiceTransactionRequestMessage(
                                         assets = listOf(InvoiceRequestMessage())
                                 ),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to InvoiceTransactionResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        listOf("INVOICE_1", "INVOICE_2")
+                                ),
                                 "messageValidation" to InvoiceTransactionRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to InvoiceContract.Amend()
@@ -243,7 +278,10 @@ class HelpController {
                                 "consumes" to InvoiceTransferTransactionRequestMessage(
                                         assets = listOf(InvoiceTransferRequestMessage())
                                 ),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to InvoiceTransactionResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        listOf("INVOICE_1", "INVOICE_2")
+                                ),
                                 "messageValidation" to InvoiceTransferTransactionRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to InvoiceContract.Transfer()
@@ -265,7 +303,10 @@ class HelpController {
                                 "consumes" to InvoiceCancellationTransactionRequestMessage(
                                         assets = listOf(InvoiceCancellationRequestMessage())
                                 ),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to InvoiceTransactionResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        listOf("INVOICE_1", "INVOICE_2")
+                                ),
                                 "messageValidation" to InvoiceCancellationTransactionRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to InvoiceContract.Cancel()
@@ -284,10 +325,30 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "externalId" to RequestParameterInfo(false),
-                                "status" to RequestParameterInfo(false, "unconsumed", listOf("unconsumed", "consumed", "all")),
-                                "pageNumber" to RequestParameterInfo(false, "1"),
-                                "pageSize" to RequestParameterInfo(false, "50")
+                                "parameters" to mapOf(
+                                        "externalId" to RequestParameterInfo(false),
+                                        "status" to RequestParameterInfo(
+                                                false,
+                                                "unconsumed",
+                                                listOf("unconsumed", "consumed", "all")
+                                        ),
+                                        "pageNumber" to RequestParameterInfo(false, "1"),
+                                        "pageSize" to RequestParameterInfo(false, "50")
+                                ),
+                                "produces" to listOf(
+                                        FundingResponseResponseMessage(
+                                                "FUNDING_RESPONSE_1",
+                                                null,
+                                                listOf("INV_001", "INV_002"),
+                                                "Supplier X500 Name",
+                                                "Funder X500 Name",
+                                                BigDecimal.valueOf(123.45),
+                                                "GBP",
+                                                BigDecimal.valueOf(123.45),
+                                                BigDecimal.valueOf(123.45),
+                                                BigDecimal.valueOf(123)
+                                        )
+                                )
                         )
                 )
             } catch (ex: Exception) {
@@ -345,7 +406,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("hash" to SecureHash.parse("").toString())
+                                "produces" to mapOf("hash" to SecureHash.randomSHA256().toString())
                         )
                 )
             } catch (ex: Exception) {
@@ -361,10 +422,14 @@ class HelpController {
                 ResponseBuilder.ok(
                         mapOf(
                                 "consumes" to FundingResponseConfirmationRequestMessage(),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to FundingResponseConfirmationResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        "FUNDING_RESPONSE_1"
+                                ),
                                 "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
                                         .getValidationMessages(),
-                                "contractValidation" to FundingResponseContract.Accept().getValidationMessages()
+                                "contractValidation" to FundingResponseContract.Accept()
+                                        .getValidationMessages()
                         )
                 )
             } catch (ex: Exception) {
@@ -380,10 +445,14 @@ class HelpController {
                 ResponseBuilder.ok(
                         mapOf(
                                 "consumes" to FundingResponseConfirmationRequestMessage(),
-                                "produces" to InvoiceTransactionResponseMessage(SecureHash.parse("").toString(), listOf("inv1")),
+                                "produces" to FundingResponseConfirmationResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        "FUNDING_RESPONSE_1"
+                                ),
                                 "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
                                         .getValidationMessages(),
-                                "contractValidation" to FundingResponseContract.Reject().getValidationMessages()
+                                "contractValidation" to FundingResponseContract.Reject()
+                                        .getValidationMessages()
                         )
                 )
             } catch (ex: Exception) {
@@ -398,7 +467,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
+                                "produces" to mapOf("nodes" to listOf("notary", "node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {
@@ -428,7 +497,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("node" to "Local node")
+                                "produces" to mapOf("node" to "local node")
                         )
                 )
             } catch (ex: Exception) {

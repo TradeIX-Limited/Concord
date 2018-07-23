@@ -6,10 +6,10 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class CancellationRequestMessageValidatorValidationTests {
+class InvoiceCancellationRequestMessageValidatorTests {
 
     @Test
-    fun `CancellationRequestMessageValidator produces the expected validation messages`() {
+    fun `InvoiceCancellationRequestMessageValidator produces the expected validation messages`() {
         val validator = InvoiceCancellationRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank."
@@ -25,7 +25,7 @@ class CancellationRequestMessageValidatorValidationTests {
     }
 
     @Test
-    fun `CancellationRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
+    fun `InvoiceCancellationRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = MockInvoices.INVOICE_CANCELLATION_REQUEST_MESSAGE
         val validator = InvoiceCancellationRequestMessageValidator()
         validator.validate(message)

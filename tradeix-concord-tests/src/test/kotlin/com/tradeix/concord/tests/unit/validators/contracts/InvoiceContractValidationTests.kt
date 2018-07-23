@@ -41,7 +41,7 @@ class InvoiceContractValidationTests {
     }
 
     @Test
-    fun `ChangeOwner command produces the expected validation responses`() {
+    fun `Transfer command produces the expected validation responses`() {
         val contractCommand = InvoiceContract.Transfer()
         val expectedValidationMessages = listOf(
                 InvoiceContract.Transfer.CONTRACT_RULE_INPUTS,

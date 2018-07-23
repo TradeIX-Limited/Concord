@@ -114,7 +114,6 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
                 val response = FundingResponseIssuanceResponseMessage(
-
                         externalId = result.tx.outputsOfType<FundingResponseState>().single().linearId.externalId!!,
                         transactionId = result.tx.id.toString()
                 )

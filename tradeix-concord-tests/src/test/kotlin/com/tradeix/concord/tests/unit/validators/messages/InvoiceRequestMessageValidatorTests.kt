@@ -6,10 +6,10 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class InvoiceRequestMessageValidatorValidationTests {
+class InvoiceRequestMessageValidatorTests {
 
     @Test
-    fun `InvoiceMessageValidator produces the expected validation messages`() {
+    fun `InvoiceRequestMessageValidator produces the expected validation messages`() {
         val validator = InvoiceRequestMessageValidator()
         val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
         val expectedValidationMessages = listOf(
@@ -44,7 +44,7 @@ class InvoiceRequestMessageValidatorValidationTests {
     }
 
     @Test
-    fun `InvoiceMessageValidator does not throw a ValidationException when the message state is valid`() {
+    fun `InvoiceRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = INVOICE_REQUEST_MESSAGE
         val validator = InvoiceRequestMessageValidator()
         validator.validate(message)

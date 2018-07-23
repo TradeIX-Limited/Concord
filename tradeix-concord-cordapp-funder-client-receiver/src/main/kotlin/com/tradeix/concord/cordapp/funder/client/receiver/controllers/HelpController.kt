@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.math.BigDecimal
 import java.util.concurrent.Callable
-import javax.xml.ws.Response
 
 @RestController
 @RequestMapping(path = arrayOf("/help"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
@@ -107,7 +106,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "url_parameter" to mapOf("externalId" to "FUNDING_RESPONSE_1"),
+                                "url_parameter" to "externalId",
                                 "produces" to FundingResponseResponseMessage(
                                         "FUNDING_RESPONSE_1",
                                         null,
@@ -150,7 +149,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("hash" to SecureHash.parse("").toString())
+                                "produces" to mapOf("hash" to SecureHash.randomSHA256().toString())
                         )
                 )
             } catch (ex: Exception) {
@@ -160,14 +159,17 @@ class HelpController {
     }
 
     @GetMapping(path = arrayOf("/fundingresponses/issue"))
-    fun getInvoiceValidationHelp(): Callable<ResponseEntity<*>> {
+    fun getFundingResponseIssuanceHelp(): Callable<ResponseEntity<*>> {
 
         return Callable {
             try {
                 ResponseBuilder.ok(
                         mapOf(
                                 "consumes" to FundingResponseIssuanceRequestMessage(),
-                                "produces" to FundingResponseIssuanceResponseMessage(SecureHash.parse("").toString(), ""),
+                                "produces" to FundingResponseIssuanceResponseMessage(
+                                        SecureHash.randomSHA256().toString(),
+                                        "FUNDING_RESPONSE_1"
+                                ),
                                 "messageValidation" to FundingResponseIssuanceRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Issue()
@@ -186,7 +188,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
+                                "produces" to mapOf("nodes" to listOf("notary", "node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {
@@ -216,7 +218,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("node" to "Local node")
+                                "produces" to mapOf("node" to "local node")
                         )
                 )
             } catch (ex: Exception) {
