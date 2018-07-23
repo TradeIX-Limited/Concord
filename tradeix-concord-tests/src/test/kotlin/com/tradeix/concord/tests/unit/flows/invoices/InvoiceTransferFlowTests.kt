@@ -2,7 +2,7 @@ package com.tradeix.concord.tests.unit.flows.invoices
 
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesResponderFlow
 import com.tradeix.concord.shared.mockdata.MockInvoices
-import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceOwnershipChanges
+import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceTransfers
 import com.tradeix.concord.shared.mockdata.ParticipantType
 import com.tradeix.concord.tests.unit.flows.FlowTest
 import net.corda.testing.node.StartedMockNode
@@ -10,7 +10,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class InvoiceOwnershipChangeFlowTests : FlowTest() {
+class InvoiceTransferFlowTests : FlowTest() {
 
     override fun configureNode(node: StartedMockNode, type: ParticipantType) {
         node.registerInitiatedFlow(CollectSignaturesResponderFlow::class.java)
@@ -30,11 +30,11 @@ class InvoiceOwnershipChangeFlowTests : FlowTest() {
     }
 
     @Test
-    fun `Invoice ownership change flow should be signed by the initiator`() {
-        val transaction = InvoiceFlows.changeOwner(
+    fun `Invoice transfer flow should be signed by the initiator`() {
+        val transaction = InvoiceFlows.transfer(
                 network = network,
                 initiator = supplier1.node,
-                message = createMockInvoiceOwnershipChanges(
+                message = createMockInvoiceTransfers(
                         count = 3,
                         owner = funder1.name
                 )
@@ -44,11 +44,11 @@ class InvoiceOwnershipChangeFlowTests : FlowTest() {
     }
 
     @Test
-    fun `Invoice ownership change flow should be signed by the acceptor`() {
-        val transaction = InvoiceFlows.changeOwner(
+    fun `Invoice transfer flow should be signed by the acceptor`() {
+        val transaction = InvoiceFlows.transfer(
                 network = network,
                 initiator = supplier1.node,
-                message = createMockInvoiceOwnershipChanges(
+                message = createMockInvoiceTransfers(
                         count = 3,
                         owner = funder1.name
                 )
@@ -58,11 +58,11 @@ class InvoiceOwnershipChangeFlowTests : FlowTest() {
     }
 
     @Test
-    fun `Invoice ownership change flow records a transaction in all counter-party vaults`() {
-        val transaction = InvoiceFlows.changeOwner(
+    fun `Invoice transfer flow records a transaction in all counter-party vaults`() {
+        val transaction = InvoiceFlows.transfer(
                 network = network,
                 initiator = supplier1.node,
-                message = createMockInvoiceOwnershipChanges(
+                message = createMockInvoiceTransfers(
                         count = 3,
                         owner = funder1.name
                 )
@@ -74,11 +74,11 @@ class InvoiceOwnershipChangeFlowTests : FlowTest() {
     }
 
     @Test
-    fun `Invoice ownership change flow has an equal number of inputs and outputs`() {
-        val transaction = InvoiceFlows.changeOwner(
+    fun `Invoice transfer flow has an equal number of inputs and outputs`() {
+        val transaction = InvoiceFlows.transfer(
                 network = network,
                 initiator = supplier1.node,
-                message = createMockInvoiceOwnershipChanges(
+                message = createMockInvoiceTransfers(
                         count = 3,
                         owner = funder1.name
                 )

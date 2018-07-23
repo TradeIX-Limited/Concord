@@ -3,11 +3,11 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
 import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.FundingResponseResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.states.FundingResponseState
-import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -110,8 +110,9 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
+                val response = InvoiceTransactionResponseMessage(
+                        //assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
+                        externalIds = result.tx.outputsOfType<FundingResponseState>().map {it.linearId.externalId!!}, // TODO : Check with Matt
                         transactionId = result.tx.id.toString()
                 )
 
@@ -134,8 +135,8 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = emptyList(),
+                val response = InvoiceTransactionResponseMessage(
+                        externalIds = emptyList(),
                         transactionId = result.tx.id.toString()
                 )
 

@@ -2,11 +2,11 @@ package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
 import com.tradeix.concord.cordapp.funder.flows.fundingresponses.FundingResponseIssuanceInitiatorFlow
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.FundingResponseResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.states.FundingResponseState
-import com.tradeix.concord.shared.messages.TransactionResponseMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -113,8 +113,8 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::FundingResponseIssuanceInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = TransactionResponseMessage(
-                        assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
+                val response = FundingResponseIssuanceResponseMessage(
+                        externalId = result.tx.outputsOfType<FundingResponseState>().single().linearId.externalId!!,
                         transactionId = result.tx.id.toString()
                 )
 

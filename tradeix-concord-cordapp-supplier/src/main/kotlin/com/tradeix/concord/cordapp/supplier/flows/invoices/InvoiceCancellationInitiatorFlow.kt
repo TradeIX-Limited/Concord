@@ -1,15 +1,15 @@
 package com.tradeix.concord.cordapp.supplier.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.cordapp.supplier.mappers.invoices.InvoiceCancellationMapper
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceCancellationTransactionRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.cordapp.flows.ObserveTransactionInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceCancellationRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
-import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.CancellationTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.flows.FinalityFlow
@@ -23,7 +23,7 @@ import net.corda.core.transactions.TransactionBuilder
 @StartableByRPC
 @InitiatingFlow
 class InvoiceCancellationInitiatorFlow(
-        private val message: CancellationTransactionRequestMessage
+        private val message: InvoiceCancellationTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
     override val progressTracker = getProgressTrackerWithObservationStep()
@@ -31,9 +31,9 @@ class InvoiceCancellationInitiatorFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = CancellationTransactionRequestMessageValidator()
+        val validator = InvoiceCancellationTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceCancellationRequestMapper(serviceHub)
+        val mapper = InvoiceCancellationMapper(serviceHub)
 
         validator.validate(message)
 

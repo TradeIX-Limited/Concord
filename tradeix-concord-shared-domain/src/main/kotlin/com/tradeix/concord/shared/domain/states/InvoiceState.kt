@@ -37,7 +37,7 @@ data class InvoiceState(
     override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer.party, supplier.party)
 
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
-        return CommandAndState(InvoiceContract.ChangeOwner(), this.copy(owner = newOwner))
+        return CommandAndState(InvoiceContract.Transfer(), this.copy(owner = newOwner))
     }
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {

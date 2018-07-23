@@ -41,13 +41,13 @@ class InvoiceContractValidationTests {
     }
 
     @Test
-    fun `ChangeOwner command produces the expected validation responses`() {
-        val contractCommand = InvoiceContract.ChangeOwner()
+    fun `Transfer command produces the expected validation responses`() {
+        val contractCommand = InvoiceContract.Transfer()
         val expectedValidationMessages = listOf(
-                InvoiceContract.ChangeOwner.CONTRACT_RULE_INPUTS,
-                InvoiceContract.ChangeOwner.CONTRACT_RULE_OUTPUTS,
-                InvoiceContract.ChangeOwner.CONTRACT_RULE_INPUTS_OUTPUTS,
-                InvoiceContract.ChangeOwner.CONTRACT_RULE_SIGNERS
+                InvoiceContract.Transfer.CONTRACT_RULE_INPUTS,
+                InvoiceContract.Transfer.CONTRACT_RULE_OUTPUTS,
+                InvoiceContract.Transfer.CONTRACT_RULE_INPUTS_OUTPUTS,
+                InvoiceContract.Transfer.CONTRACT_RULE_SIGNERS
         )
         val actualValidationMessages: Iterable<String> = contractCommand.getValidationMessages()
 

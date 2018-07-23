@@ -1,11 +1,6 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceRequestMessage
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
-import com.tradeix.concord.shared.messages.CancellationRequestMessage
-import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.OwnershipRequestMessage
-import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.*
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
@@ -55,16 +50,16 @@ object MockInvoices {
 
     fun createMockInvoiceCancellations(
             count: Int,
-            observers: Iterable<CordaX500Name>?): CancellationTransactionRequestMessage {
-        return CancellationTransactionRequestMessage(
-                assets = (1..count).toList().map { CancellationRequestMessage("INVOICE_$it") },
+            observers: Iterable<CordaX500Name>?): InvoiceCancellationTransactionRequestMessage {
+        return InvoiceCancellationTransactionRequestMessage(
+                assets = (1..count).toList().map { InvoiceCancellationRequestMessage("INVOICE_$it") },
                 observers = observers?.map { it.toString() } ?: emptyList()
         )
     }
 
-    fun createMockInvoiceOwnershipChanges(count: Int, owner: CordaX500Name): OwnershipTransactionRequestMessage {
-        return OwnershipTransactionRequestMessage(
-                assets = (1..count).toList().map { OwnershipRequestMessage("INVOICE_$it", owner.toString()) }
+    fun createMockInvoiceTransfers(count: Int, owner: CordaX500Name): InvoiceTransferTransactionRequestMessage {
+        return InvoiceTransferTransactionRequestMessage(
+                assets = (1..count).toList().map { InvoiceTransferRequestMessage("INVOICE_$it", owner.toString()) }
         )
     }
 
@@ -90,12 +85,12 @@ object MockInvoices {
             tradeDate = LOCAL_DATE_TIME_FUTURE_1
     )
 
-    val INVOICE_CHANGE_OWNER_REQUEST_MESSAGE = OwnershipRequestMessage(
+    val INVOICE_TRANSFER_REQUEST_MESSAGE = InvoiceTransferRequestMessage(
             externalId = "INVOICE_001",
             owner = FUNDER_1_NAME.toString()
     )
 
-    val INVOICE_CANCELLATION_REQUEST_MESSAGE = CancellationRequestMessage(
+    val INVOICE_CANCELLATION_REQUEST_MESSAGE = InvoiceCancellationRequestMessage(
             externalId = "INVOICE_001"
     )
 }

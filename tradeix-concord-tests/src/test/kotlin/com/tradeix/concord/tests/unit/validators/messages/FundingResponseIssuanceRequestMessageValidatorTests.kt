@@ -6,10 +6,10 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class FundingResponseIssuanceRequestMessageValidatorValidationTests {
+class FundingResponseIssuanceRequestMessageValidatorTests {
 
     @Test
-    fun `FundingResponseIssuanceRequstMessageValidator produces the expected validation messages`() {
+    fun `FundingResponseIssuanceRequestMessageValidator produces the expected validation messages`() {
         val validator = FundingResponseIssuanceRequestMessageValidator()
         val expectedValidationMessages = listOf(
                 "Property 'externalId' must not be null, empty or blank.",
@@ -41,7 +41,7 @@ class FundingResponseIssuanceRequestMessageValidatorValidationTests {
     }
 
     @Test
-    fun `FundingResponseIssuanceRequstMessageValidator does not throw a ValidationException when the message state is valid`() {
+    fun `FundingResponseIssuanceRequestMessageValidator does not throw a ValidationException when the message state is valid`() {
         val message = MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE
         val validator = FundingResponseIssuanceRequestMessageValidator()
         validator.validate(message)

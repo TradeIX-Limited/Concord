@@ -24,18 +24,18 @@ case "$ANSWER_START" in
   [yY]*)
   echo "Enter your choice"
   echo "1. Issuance"
-  echo "2. Change of Ownership"
-  echo "3. Concurrent Issuance and Change of Owneship"
+  echo "2. Transfer"
+  echo "3. Concurrent Issuance and Transfer"
   echo "4. Exit"
   read -p "Enter your choice : " ANSWER_TYPE
         case "$ANSWER_TYPE" in
           1) echo "Your choice is Issuance"
              JMX_FILE="IssuanceRequest.jmx"
             ;;
-          2) echo "Your choice is Change of Ownership"
+          2) echo "Your choice is Transfer"
           JMX_FILE="COO.jmx"
             ;;
-          3) echo "Your choice is Concurrent Issuance and Change of Ownership"
+          3) echo "Your choice is Concurrent Issuance and Transfer"
           JMX_FILE="IssuanceCOO.jmx"
             ;;
           4) echo "Your choice is to Exit"

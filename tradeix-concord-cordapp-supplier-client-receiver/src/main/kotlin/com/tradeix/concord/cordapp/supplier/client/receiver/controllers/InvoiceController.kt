@@ -3,15 +3,15 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceTransferInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.InvoiceResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -153,13 +153,13 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
         }
     }
 
-    @PutMapping(path = arrayOf("/changeowner"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun changeInvoiceOwner(
-            @RequestBody message: OwnershipTransactionRequestMessage
+    @PutMapping(path = arrayOf("/transfer"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun transferInvoice(
+            @RequestBody message: InvoiceTransferTransactionRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {
-                val future = rpc.proxy.startTrackedFlow(::InvoiceOwnershipChangeInitiatorFlow, message)
+                val future = rpc.proxy.startTrackedFlow(::InvoiceTransferInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
                 val response = InvoiceTransactionResponseMessage(
@@ -179,7 +179,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
 
     @DeleteMapping(path = arrayOf("/cancel"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun cancelInvoice(
-            @RequestBody message: CancellationTransactionRequestMessage
+            @RequestBody message: InvoiceCancellationTransactionRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {

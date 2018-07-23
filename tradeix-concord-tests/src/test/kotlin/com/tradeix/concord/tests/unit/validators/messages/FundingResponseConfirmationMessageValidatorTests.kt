@@ -6,7 +6,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class FundingResponseConfirmationMessageValidatorValidationTests {
+class FundingResponseConfirmationMessageValidatorTests {
 
     @Test
     fun `FundingResponseAcceptMessageValidator produces the expected validation messages`() {
