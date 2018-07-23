@@ -4,9 +4,9 @@ import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentIniti
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceOwnershipChangeInitiatorFlow
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
-import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
-import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.node.MockNetwork
@@ -34,7 +34,7 @@ object InvoiceFlows {
     fun cancel(
             network: MockNetwork,
             initiator: StartedMockNode,
-            message: CancellationTransactionRequestMessage): SignedTransaction {
+            message: InvoiceCancellationTransactionRequestMessage): SignedTransaction {
         val future = initiator.startFlow(InvoiceCancellationInitiatorFlow(message))
         network.runNetwork()
         return future.getOrThrow()
@@ -43,7 +43,7 @@ object InvoiceFlows {
     fun changeOwner(
             network: MockNetwork,
             initiator: StartedMockNode,
-            message: OwnershipTransactionRequestMessage): SignedTransaction {
+            message: InvoiceTransferTransactionRequestMessage): SignedTransaction {
         val future = initiator.startFlow(InvoiceOwnershipChangeInitiatorFlow(message))
         network.runNetwork()
         return future.getOrThrow()

@@ -1,16 +1,16 @@
 package com.tradeix.concord.cordapp.supplier.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
+import com.tradeix.concord.cordapp.supplier.mappers.invoices.InvoiceTransferMapper
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferTransactionRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
-import com.tradeix.concord.shared.cordapp.mapping.invoices.InvoiceOwnershipRequestMapper
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.*
 import com.tradeix.concord.shared.mapper.InputAndOutput
-import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
-import com.tradeix.concord.shared.validators.OwnershipTransactionRequestMessageValidator
 import net.corda.core.contracts.Command
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -22,7 +22,7 @@ import net.corda.core.transactions.TransactionBuilder
 @StartableByRPC
 @InitiatingFlow
 class InvoiceOwnershipChangeInitiatorFlow(
-        private val message: OwnershipTransactionRequestMessage
+        private val message: InvoiceTransferTransactionRequestMessage
 ) : FlowLogic<SignedTransaction>() {
 
     override val progressTracker = getDefaultProgressTracker()
@@ -30,9 +30,9 @@ class InvoiceOwnershipChangeInitiatorFlow(
     @Suspendable
     override fun call(): SignedTransaction {
 
-        val validator = OwnershipTransactionRequestMessageValidator()
+        val validator = InvoiceTransferTransactionRequestMessageValidator()
         val identityService = IdentityService(serviceHub)
-        val mapper = InvoiceOwnershipRequestMapper(serviceHub)
+        val mapper = InvoiceTransferMapper(serviceHub)
 
         validator.validate(message)
 

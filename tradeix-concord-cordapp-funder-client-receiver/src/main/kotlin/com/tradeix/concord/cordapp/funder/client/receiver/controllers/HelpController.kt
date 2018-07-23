@@ -1,13 +1,12 @@
 package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceResponseMessage
+import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequestMessageValidator
 import com.tradeix.concord.shared.client.webapi.RequestParameterInfo
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
-import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
-import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
-import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -37,42 +36,6 @@ class HelpController {
         }
     }
 
-    /* @GetMapping(path = arrayOf("fundingresponses/externalId")) // TODO : WAIT FOR MATT
-    fun getUnconsumedFundingResponseStateByExternalIdHelp(): Callable<ResponseEntity<*>> {
-        return Callable {
-            try {
-                ResponseBuilder.ok(
-                        mapOf(
-                                "produces" to InvoiceState(
-                                        linearId = UniqueIdentifier(
-                                                "INVOICE_EXTERNAL_ID",
-                                                UUID.fromString("00000000-0000-4000-0000-000000000002")
-                                        ),
-                                        owner = ,
-                                        buyer = Participant( ,""),
-                                        supplier = Participant( ,""),
-                                        invoiceNumber = "INVOICE NUMBER",
-                                        invoiceVersion = "1.0",
-                                        submitted = LocalDateTime.now(),
-                                        reference = "INVOICE REFERENCE",
-                                        dueDate = LocalDateTime.now(),
-                                        amount = Amount.fromDecimal(BigDecimal.ONE, Currency.getInstance("GBP")),
-                                        totalOutstanding = Amount.fromDecimal(BigDecimal.ONE, Currency.getInstance("GBP")),
-                                        settlementDate = LocalDateTime.now(),
-                                        invoiceDate = LocalDateTime.now(),
-                                        invoicePayments = Amount.fromDecimal(BigDecimal.ZERO, Currency.getInstance("GBP")),
-                                        invoiceDilutions = Amount.fromDecimal(BigDecimal.ZERO, Currency.getInstance("GBP")),
-                                        originationNetwork = "ORIGINATION NETWORK",
-                                        siteId = "SITE ID",
-                                        tradeDate = LocalDateTime.now(),
-                                        tradePaymentDate = LocalDateTime.now()
-                                ))
-                        )
-            } catch (ex: Exception) {
-                ResponseBuilder.internalServerError(ex.message)
-            }
-        }
-    }*/
 
     @GetMapping(path = arrayOf("/fundingresponses/count"))
     fun getUniqueFundingResponseCountHelp(): Callable<ResponseEntity<*>> {
@@ -112,7 +75,7 @@ class HelpController {
                 ResponseBuilder.ok(
                         mapOf(
                                 "consumes" to FundingResponseIssuanceRequestMessage(),
-                                "produces" to TransactionResponseMessage(" ", listOf(UniqueIdentifier())),
+                                "produces" to FundingResponseIssuanceResponseMessage(SecureHash.parse("").toString(), ""),
                                 "messageValidation" to FundingResponseIssuanceRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Issue()
@@ -131,7 +94,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1","node 2"))
+                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {
@@ -146,7 +109,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1","node 2"))
+                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {

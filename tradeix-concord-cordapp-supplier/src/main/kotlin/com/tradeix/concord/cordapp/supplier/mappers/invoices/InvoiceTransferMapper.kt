@@ -25,7 +25,7 @@ class InvoiceTransferMapper(private val serviceHub: ServiceHub)
                 .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
-        val count = vaultService.getCount(source.externalId!!)
+        val count = vaultService.getCount(source.externalId)
 
         if (inputState == null) {
             throw FlowException("InvoiceState with externalId '${source.externalId}' does not exist.")
