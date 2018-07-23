@@ -90,7 +90,7 @@ class VaultService<TState : QueryableState>(private val vaultAdapter: VaultAdapt
     }
 
     fun observe(func: (StateAndRef<TState>) -> Unit) {
-        vaultAdapter.trackBy().updates.toBlocking().subscribe {
+        vaultAdapter.trackBy().updates.subscribe {
             it.produced.forEach {
                 try {
                     func(it)

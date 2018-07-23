@@ -1,29 +1,30 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageValidator
+import com.tradeix.concord.shared.messages.TransactionRequestMessage
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.Callable
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import com.tradeix.concord.shared.client.webapi.RequestParameterInfo
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
-import com.tradeix.concord.shared.domain.states.InvoiceState
-import com.tradeix.concord.shared.messages.*
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
-import com.tradeix.concord.shared.models.Participant
-import com.tradeix.concord.shared.validators.*
-import net.corda.core.contracts.Amount
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
-import net.corda.core.identity.AbstractParty
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.math.BigDecimal
-import java.time.LocalDateTime
-import java.util.*
-import java.util.concurrent.Callable
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransactionRequestMessageValidator
+import com.tradeix.concord.shared.messages.CancellationRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
+import com.tradeix.concord.shared.validators.CancellationTransactionRequestMessageValidator
+import com.tradeix.concord.shared.validators.OwnershipTransactionRequestMessageValidator
+
 
 @RestController
 @RequestMapping(path = arrayOf("/help"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
@@ -293,9 +294,10 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "consumes" to FundingResponseAcceptanceRequestMessage(),
+                                "consumes" to FundingResponseConfirmationRequestMessage(),
                                 "produces" to TransactionRequestMessage(listOf(UniqueIdentifier()), listOf(" "), listOf(" ")),
-                                "messageValidation" to FundingResponseAcceptMessageValidator().getValidationMessages(),
+                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                        .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Accept().getValidationMessages()
                         )
                 )
@@ -311,9 +313,10 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "consumes" to FundingResponseRejectionRequestMessage(),
+                                "consumes" to FundingResponseConfirmationRequestMessage(),
                                 "produces" to TransactionRequestMessage(listOf(UniqueIdentifier()), listOf(" "), listOf(" ")),
-                                "messageValidation" to FundingResponseRejectMessageValidator().getValidationMessages(),
+                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                        .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Reject().getValidationMessages()
                         )
                 )
@@ -329,7 +332,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1","node 2"))
+                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {
@@ -344,7 +347,7 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "produces" to mapOf("nodes" to listOf("node 1","node 2"))
+                                "produces" to mapOf("nodes" to listOf("node 1", "node 2"))
                         )
                 )
             } catch (ex: Exception) {

@@ -4,10 +4,10 @@ import com.tradeix.concord.shared.client.webapi.RequestParameterInfo
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRequestMessage
-import com.tradeix.concord.shared.validators.FundingResponseRequestMessageValidator
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.crypto.SecureHash
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
+import com.tradeix.concord.cordapp.funder.validators.fundingresponses.FundingResponseIssuanceRequestMessageValidator
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -111,9 +111,9 @@ class HelpController {
             try {
                 ResponseBuilder.ok(
                         mapOf(
-                                "consumes" to FundingResponseRequestMessage(),
+                                "consumes" to FundingResponseIssuanceRequestMessage(),
                                 "produces" to TransactionResponseMessage(" ", listOf(UniqueIdentifier())),
-                                "messageValidation" to FundingResponseRequestMessageValidator()
+                                "messageValidation" to FundingResponseIssuanceRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Issue()
                                         .getValidationMessages()

@@ -4,7 +4,7 @@ import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE
-import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_REQUEST_MESSAGE
+import com.tradeix.concord.shared.mockdata.MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceAmendments
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceCancellations
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceOwnershipChanges
@@ -562,7 +562,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 method = "POST",
                 description = "Creates a new funding response.",
                 header = RequestHeader.APPLICATION_JSON,
-                body = JsonRequestBody(FUNDING_RESPONSE_REQUEST_MESSAGE),
+                body = JsonRequestBody(FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE),
                 url = RequestUrl.from(
                         protocol = "http",
                         host = host,

@@ -1,6 +1,6 @@
 package com.tradeix.concord.cordapp.supplier
 
-import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
+import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.PortAllocation
@@ -24,7 +24,7 @@ class Application {
 
                 // Start the test supplier node
                 startNode(
-                        providedName = SUPPLIER_1_NAME,
+                        providedName = CordaX500Name("Supplier 1", "London", "GB"),
                         rpcUsers = listOf(User("guest", "letmein", permissions = setOf("ALL")))
                 ).getOrThrow()
             }

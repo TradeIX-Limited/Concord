@@ -1,14 +1,13 @@
 package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseAcceptanceFlow
-import com.tradeix.concord.cordapp.supplier.flows.FundingResponseRejectionFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
+import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.client.mappers.FundingResponseResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
-import com.tradeix.concord.shared.cordapp.mapping.fundingresponse.FundingResponseRequestMapper
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.messages.TransactionResponseMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseAcceptanceRequestMessage
-import com.tradeix.concord.shared.messages.fundingresponse.FundingResponseRejectionRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
@@ -24,7 +23,7 @@ import java.util.concurrent.Callable
 class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpc.proxy)
-    private val fundingResonseRequestMapper = FundingResponseRequestMapper()
+    private val fundingResponseResponseMapper = FundingResponseResponseMapper()
 
     @GetMapping()
     fun getFundingResponseStates(
@@ -40,13 +39,13 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 if (externalId.isNullOrBlank()) {
                     val fundingResponseStates = vaultService
                             .getPagedItems(pageNumber, pageSize, stateStatus)
-                            .map { fundingResonseRequestMapper.map(it.state.data) }
+                            .map { fundingResponseResponseMapper.map(it.state.data) }
 
                     ResponseBuilder.ok(fundingResponseStates)
                 } else {
                     val fundingResponseStates = vaultService
                             .findByExternalId(externalId!!, pageNumber, pageSize, stateStatus)
-                            .map { fundingResonseRequestMapper.map(it.state.data) }
+                            .map { fundingResponseResponseMapper.map(it.state.data) }
 
                     ResponseBuilder.ok(fundingResponseStates)
                 }
@@ -67,7 +66,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
             try {
                 val invoice = vaultService
                         .findByExternalId(externalId, status = Vault.StateStatus.UNCONSUMED)
-                        .map { fundingResonseRequestMapper.map(it.state.data) }
+                        .map { fundingResponseResponseMapper.map(it.state.data) }
                         .single()
 
                 ResponseBuilder.ok(invoice)
@@ -104,7 +103,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     @PutMapping(path = arrayOf("/accept"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun acceptFundingResponse(
-            @RequestBody message: FundingResponseAcceptanceRequestMessage
+            @RequestBody message: FundingResponseConfirmationRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {
@@ -128,7 +127,7 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     @PutMapping(path = arrayOf("/reject"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun rejectFundingResponse(
-            @RequestBody message: FundingResponseRejectionRequestMessage
+            @RequestBody message: FundingResponseConfirmationRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {

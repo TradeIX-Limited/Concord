@@ -1,12 +1,10 @@
 package com.tradeix.concord.tools.postman
 
-import com.tradeix.concord.tools.postman.configuration.ConcordPOCPostmanConfiguration
 import com.tradeix.concord.tools.postman.configuration.ERPPostmanConfiguration
 
 class Application {
     companion object {
         private val configurations = mapOf(
-                "concord-poc" to ConcordPOCPostmanConfiguration(),
                 "erp" to ERPPostmanConfiguration()
         )
 

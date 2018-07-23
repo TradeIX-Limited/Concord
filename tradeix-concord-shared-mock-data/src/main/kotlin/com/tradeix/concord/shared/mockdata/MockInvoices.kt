@@ -1,7 +1,11 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.messages.*
-import com.tradeix.concord.shared.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
+import com.tradeix.concord.shared.messages.CancellationRequestMessage
+import com.tradeix.concord.shared.messages.CancellationTransactionRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipRequestMessage
+import com.tradeix.concord.shared.messages.OwnershipTransactionRequestMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
@@ -40,7 +44,7 @@ object MockInvoices {
             supplier: CordaX500Name?,
             observers: Iterable<CordaX500Name>?): InvoiceTransactionRequestMessage {
 
-        val message =  createMockInvoices(count, buyer, supplier, observers)
+        val message = createMockInvoices(count, buyer, supplier, observers)
 
         return InvoiceTransactionRequestMessage(
                 assets = message.assets.map { it.copy(reference = it.reference + "_AMENDED") },

@@ -45,7 +45,7 @@ class FundingResponseRejectionFlowTests : FlowTest() {
         FundingResponseFlows.issue(
                 network = network,
                 initiator = funder1.node,
-                message = MockFundingResponses.FUNDING_RESPONSE_REQUEST_MESSAGE.copy(
+                message = MockFundingResponses.FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE.copy(
                         invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")
                 )
         )
