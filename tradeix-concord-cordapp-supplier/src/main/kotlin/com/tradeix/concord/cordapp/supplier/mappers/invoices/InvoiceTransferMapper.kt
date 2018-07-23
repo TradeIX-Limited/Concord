@@ -1,10 +1,10 @@
-package com.tradeix.concord.shared.cordapp.mapping.invoices
+package com.tradeix.concord.cordapp.supplier.mappers.invoices
 
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferRequestMessage
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.InputAndOutput
 import com.tradeix.concord.shared.mapper.Mapper
-import com.tradeix.concord.shared.messages.OwnershipRequestMessage
 import com.tradeix.concord.shared.services.IdentityService
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.flows.FlowException
@@ -13,10 +13,10 @@ import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 import java.time.LocalDateTime
 
-class InvoiceOwnershipRequestMapper(private val serviceHub: ServiceHub)
-    : Mapper<OwnershipRequestMessage, InputAndOutput<InvoiceState>>() {
+class InvoiceTransferMapper(private val serviceHub: ServiceHub)
+    : Mapper<InvoiceTransferRequestMessage, InputAndOutput<InvoiceState>>() {
 
-    override fun map(source: OwnershipRequestMessage): InputAndOutput<InvoiceState> {
+    override fun map(source: InvoiceTransferRequestMessage): InputAndOutput<InvoiceState> {
 
         val vaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
         val identityService = IdentityService(serviceHub)

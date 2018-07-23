@@ -1,4 +1,0 @@
-package com.tradeix.concord.shared.messages
-
-typealias CancellationTransactionRequestMessage = TransactionRequestMessage<CancellationRequestMessage>
-typealias OwnershipTransactionRequestMessage = TransactionRequestMessage<OwnershipRequestMessage>

@@ -1,18 +1,18 @@
-package com.tradeix.concord.shared.cordapp.mapping.invoices
+package com.tradeix.concord.cordapp.supplier.mappers.invoices
 
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationRequestMessage
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.mapper.Mapper
-import com.tradeix.concord.shared.messages.CancellationRequestMessage
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 
-class InvoiceCancellationRequestMapper(private val serviceHub: ServiceHub)
-    : Mapper<CancellationRequestMessage, StateAndRef<InvoiceState>>() {
+class InvoiceCancellationMapper(private val serviceHub: ServiceHub)
+    : Mapper<InvoiceCancellationRequestMessage, StateAndRef<InvoiceState>>() {
 
-    override fun map(source: CancellationRequestMessage): StateAndRef<InvoiceState> {
+    override fun map(source: InvoiceCancellationRequestMessage): StateAndRef<InvoiceState> {
 
         val vaultService = VaultService.fromServiceHub<InvoiceState>(serviceHub)
 
