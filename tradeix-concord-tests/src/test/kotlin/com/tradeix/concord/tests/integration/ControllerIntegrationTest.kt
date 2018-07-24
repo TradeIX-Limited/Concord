@@ -1,31 +1,36 @@
 package com.tradeix.concord.tests.integration
 
-import com.tradeix.concord.shared.mockdata.MockCordaX500Names
+import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
+import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
+import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import com.tradeix.concord.shared.mockdata.ParticipantType
-import com.tradeix.concord.tests.unit.flows.MockIdentity
-import net.corda.testing.node.MockNetwork
+import net.corda.core.utilities.getOrThrow
+import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.NodeHandle
+import net.corda.testing.driver.driver
 import net.corda.testing.node.StartedMockNode
+import net.corda.testing.node.User
 import org.junit.After
 import org.junit.Before
 
 abstract class ControllerIntegrationTest {
 
-    protected lateinit var network: MockNetwork
+    protected lateinit var buyer: NodeHandle
+    protected lateinit var funder: NodeHandle
+    protected lateinit var supplier: NodeHandle
 
-    protected lateinit var buyer1: MockIdentity
-    protected lateinit var buyer2: MockIdentity
-    protected lateinit var buyer3: MockIdentity
-
-    protected lateinit var funder1: MockIdentity
-    protected lateinit var funder2: MockIdentity
-    protected lateinit var funder3: MockIdentity
-
-    protected lateinit var supplier1: MockIdentity
-    protected lateinit var supplier2: MockIdentity
-    protected lateinit var supplier3: MockIdentity
+    protected lateinit var rpc: RPCConnectionProvider
 
     @Before
     fun setup() {
+    }
+
+    @After
+    fun tearDown() {
+    }
+
+    fun withDriver(action: () -> Unit) {
         val cordapps = listOf(
                 "com.tradeix.concord.shared.domain",
                 "com.tradeix.concord.shared.cordapp",
@@ -33,42 +38,19 @@ abstract class ControllerIntegrationTest {
                 "com.tradeix.concord.cordapp.funder"
         )
 
-        network = MockNetwork(cordapps)
+        driver(DriverParameters(
+                startNodesInProcess = true,
+                extraCordappPackagesToScan = cordapps)) {
 
-        buyer1 = MockIdentity(network.createPartyNode(MockCordaX500Names.BUYER_1_NAME), ParticipantType.BUYER)
-        buyer2 = MockIdentity(network.createPartyNode(MockCordaX500Names.BUYER_2_NAME), ParticipantType.BUYER)
-        buyer3 = MockIdentity(network.createPartyNode(MockCordaX500Names.BUYER_3_NAME), ParticipantType.BUYER)
+            val user = User("user1", "test", permissions = setOf("ALL"))
 
-        funder1 = MockIdentity(network.createPartyNode(MockCordaX500Names.FUNDER_1_NAME), ParticipantType.FUNDER)
-        funder2 = MockIdentity(network.createPartyNode(MockCordaX500Names.FUNDER_2_NAME), ParticipantType.FUNDER)
-        funder3 = MockIdentity(network.createPartyNode(MockCordaX500Names.FUNDER_3_NAME), ParticipantType.FUNDER)
+            supplier = startNode(providedName = SUPPLIER_1_NAME, rpcUsers = listOf(user)).getOrThrow()
+            buyer = startNode(providedName = BUYER_1_NAME, rpcUsers = listOf(user)).getOrThrow()
+            funder = startNode(providedName = FUNDER_1_NAME, rpcUsers = listOf(user)).getOrThrow()
 
-        supplier1 = MockIdentity(network.createPartyNode(MockCordaX500Names.SUPPLIER_1_NAME), ParticipantType.SUPPLIER)
-        supplier2 = MockIdentity(network.createPartyNode(MockCordaX500Names.SUPPLIER_2_NAME), ParticipantType.SUPPLIER)
-        supplier3 = MockIdentity(network.createPartyNode(MockCordaX500Names.SUPPLIER_3_NAME), ParticipantType.SUPPLIER)
-
-        listOf(
-                buyer1,
-                buyer2,
-                buyer3,
-
-                funder1,
-                funder2,
-                funder3,
-
-                supplier1,
-                supplier2,
-                supplier3
-        ).forEach { configureNode(it.node, it.type) }
-
-        network.runNetwork()
-
-        initialize()
-    }
-
-    @After
-    fun tearDown() {
-        network.stopNodes()
+            initialize()
+            action()
+        }
     }
 
     protected abstract fun configureNode(node: StartedMockNode, type: ParticipantType)
