@@ -2,6 +2,7 @@ package com.tradeix.concord.tests.unit.contracts.fundingresponse
 
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
+import com.tradeix.concord.shared.mockdata.MockBankAccounts.BANK_ACCOUNT
 import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockStates.FUNDING_RESPONSE_STATE
@@ -82,7 +83,7 @@ class FundingResponseIssuanceContractTests : ContractTest() {
                 transaction {
                     output(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     command(
                             listOf(FUNDER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),

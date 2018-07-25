@@ -2,6 +2,7 @@ package com.tradeix.concord.tests.unit.contracts.fundingresponse
 
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract.Companion.FUNDING_RESPONSE_CONTRACT_ID
+import com.tradeix.concord.shared.mockdata.MockBankAccounts.BANK_ACCOUNT
 import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockStates.FUNDING_RESPONSE_STATE
@@ -21,7 +22,7 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
                 )
                 output(
                         FUNDING_RESPONSE_CONTRACT_ID,
-                        FUNDING_RESPONSE_STATE.accept()
+                        FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                 )
                 fails()
                 command(
@@ -48,7 +49,7 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
                     )
                     output(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     command(
                             listOf(FUNDER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
@@ -86,11 +87,11 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
                 transaction {
                     input(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     output(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     command(
                             listOf(FUNDER_1_IDENTITY.publicKey, SUPPLIER_1_IDENTITY.publicKey),
@@ -136,7 +137,7 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
                     )
                     output(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     command(
                             listOf(SUPPLIER_1_IDENTITY.publicKey),
@@ -159,7 +160,7 @@ class FundingResponseAcceptanceContractTests : ContractTest() {
                     )
                     output(
                             FUNDING_RESPONSE_CONTRACT_ID,
-                            FUNDING_RESPONSE_STATE.accept()
+                            FUNDING_RESPONSE_STATE.accept(BANK_ACCOUNT)
                     )
                     command(
                             listOf(FUNDER_1_IDENTITY.publicKey),

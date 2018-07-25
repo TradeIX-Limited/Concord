@@ -1,23 +1,17 @@
 package com.tradeix.concord.shared.mockdata
 
 import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
-import com.tradeix.concord.shared.domain.states.*
-import com.tradeix.concord.shared.mockdata.MockAddresses.BANK_OF_ENGLAND
+import com.tradeix.concord.shared.domain.states.FundingResponseState
+import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockAmounts.ZERO_POUNDS
-import com.tradeix.concord.shared.mockdata.MockIdentities.BUYER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.FUNDER_1_IDENTITY
-import com.tradeix.concord.shared.mockdata.MockIdentities.GUARANTOR_1_IDENTITY
-import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGEE_1_IDENTITY
-import com.tradeix.concord.shared.mockdata.MockIdentities.OBLIGOR_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockIdentities.SUPPLIER_1_IDENTITY
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_3
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_4
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_FUTURE_5
-import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_1
 import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_2
-import com.tradeix.concord.shared.mockdata.MockLocalDateTimes.LOCAL_DATE_TIME_PAST_3
 import com.tradeix.concord.shared.mockdata.MockParticipants.BUYER_1_PARTICIPANT
 import com.tradeix.concord.shared.mockdata.MockParticipants.SUPPLIER_1_PARTICIPANT
 import net.corda.core.contracts.UniqueIdentifier
@@ -67,6 +61,7 @@ object MockStates {
             status = FundingResponseStatus.PENDING,
             advanceInvoiceValue = ONE_POUNDS,
             discountValue = ONE_POUNDS,
-            baseRate = ONE_POUNDS.toDecimal()
+            baseRate = ONE_POUNDS.toDecimal(),
+            bankAccount = null
     )
 }

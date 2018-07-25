@@ -1,9 +1,9 @@
-package com.tradeix.concord.shared.models
+package com.tradeix.concord.shared.messages
 
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-data class Address(
+data class AddressRequestMessage(
         val residenceNameOrNumber: String? = null,
         val unitNameOrNumber: String? = null,
         val street: String? = null,

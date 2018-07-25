@@ -4,6 +4,8 @@ import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingRes
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.mapper.InputAndOutput
 import com.tradeix.concord.shared.mapper.Mapper
+import com.tradeix.concord.shared.models.Address
+import com.tradeix.concord.shared.models.BankAccount
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
@@ -22,7 +24,29 @@ class FundingResponseAcceptanceMapper(private val serviceHub: ServiceHub)
         if (inputState == null) {
             throw FlowException("A FundingResponseState with externalId '${source.externalId}' does not exist.")
         } else {
-            val outputState = inputState.state.data.accept()
+            val bankAddress = Address(
+                    residenceNameOrNumber = source.bankAccount!!.bankAddress?.residenceNameOrNumber,
+                    unitNameOrNumber = source.bankAccount.bankAddress?.unitNameOrNumber,
+                    street = source.bankAccount.bankAddress?.street,
+                    locality = source.bankAccount.bankAddress?.locality,
+                    municipality = source.bankAccount.bankAddress?.municipality,
+                    province = source.bankAccount.bankAddress?.province,
+                    country = source.bankAccount.bankAddress?.country,
+                    postalCode = source.bankAccount.bankAddress?.postalCode
+            )
+
+            val bankAccount = BankAccount(
+                    accountName = source.bankAccount.accountName!!,
+                    accountNumber = source.bankAccount.accountNumber,
+                    sortCode = source.bankAccount.sortCode,
+                    bankIdentifierCode = source.bankAccount.bankIdentifierCode,
+                    internationalBankAccountNumber = source.bankAccount.internationalBankAccountNumber,
+                    abaNumber = source.bankAccount.abaNumber,
+                    bankName = source.bankAccount.bankName,
+                    bankAddress = bankAddress
+            )
+
+            val outputState = inputState.state.data.accept(bankAccount)
             return InputAndOutput(inputState, outputState)
         }
     }

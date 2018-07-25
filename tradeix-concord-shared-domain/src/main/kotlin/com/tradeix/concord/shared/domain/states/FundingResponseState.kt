@@ -3,6 +3,7 @@ package com.tradeix.concord.shared.domain.states
 import com.tradeix.concord.shared.domain.enumerations.FundingResponseStatus
 import com.tradeix.concord.shared.domain.mapping.FundingResponseSchemaV1Mapper
 import com.tradeix.concord.shared.domain.schemas.FundingResponseSchemaV1
+import com.tradeix.concord.shared.models.BankAccount
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
@@ -23,7 +24,8 @@ data class FundingResponseState(
         val status: FundingResponseStatus,
         val advanceInvoiceValue: Amount<Currency>,
         val discountValue: Amount<Currency>,
-        val baseRate: BigDecimal
+        val baseRate: BigDecimal,
+        val bankAccount: BankAccount?
 ) : LinearState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOf(supplier, funder)
@@ -39,7 +41,7 @@ data class FundingResponseState(
         }
     }
 
-    fun accept() = copy(status = FundingResponseStatus.ACCEPTED)
+    fun accept(bankAccount: BankAccount) = copy(status = FundingResponseStatus.ACCEPTED, bankAccount = bankAccount)
 
     fun reject() = copy(status = FundingResponseStatus.REJECTED)
 }
