@@ -187,7 +187,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
                 val response = InvoiceTransactionResponseMessage(
-                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
+                        externalIds = message.assets.map { it.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
 

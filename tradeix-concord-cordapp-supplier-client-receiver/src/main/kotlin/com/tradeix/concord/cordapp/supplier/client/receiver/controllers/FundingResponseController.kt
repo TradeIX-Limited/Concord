@@ -3,6 +3,7 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseAcceptanceFlow
 import com.tradeix.concord.cordapp.supplier.flows.fundingresponses.FundingResponseRejectionFlow
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationResponseMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.FundingResponseResponseMapper
@@ -110,9 +111,8 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::FundingResponseAcceptanceFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = InvoiceTransactionResponseMessage(
-                        //assetIds = result.tx.outputsOfType<FundingResponseState>().map { it.linearId },
-                        externalIds = result.tx.outputsOfType<FundingResponseState>().map {it.linearId.externalId!!}, // TODO : Check with Matt
+                val response = FundingResponseConfirmationResponseMessage(
+                        externalId = result.tx.outputsOfType<FundingResponseState>().single().linearId.externalId!!,
                         transactionId = result.tx.id.toString()
                 )
 
@@ -135,8 +135,8 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                 val future = rpc.proxy.startTrackedFlow(::FundingResponseRejectionFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
-                val response = InvoiceTransactionResponseMessage(
-                        externalIds = emptyList(),
+                val response = FundingResponseConfirmationResponseMessage(
+                        externalId = result.tx.outputsOfType<FundingResponseState>().single().linearId.externalId!!,
                         transactionId = result.tx.id.toString()
                 )
 

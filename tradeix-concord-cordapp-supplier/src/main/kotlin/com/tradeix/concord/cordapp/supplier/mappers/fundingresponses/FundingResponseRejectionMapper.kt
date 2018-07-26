@@ -25,11 +25,10 @@ class FundingResponseRejectionMapper(private val serviceHub: ServiceHub)
                 .findByExternalId(source.externalId!!)
                 .singleOrNull()
 
-        logger.info("INPUT STATE"+inputState.toString())
-
         if (inputState == null) {
-            logger.info("ANYTHING")
-            throw FlowException("A FundingResponseState with externalId '${source.externalId}' does not exist.")
+            val message = "A FundingResponseState with externalId '${source.externalId}' does not exist."
+            logger.error(message)
+            throw FlowException(message)
         } else {
             val outputState = inputState.state.data.reject()
             return InputAndOutput(inputState, outputState)
