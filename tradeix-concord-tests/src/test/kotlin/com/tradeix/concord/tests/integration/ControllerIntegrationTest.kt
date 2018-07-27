@@ -5,7 +5,11 @@ import com.tradeix.concord.cordapp.supplier.client.receiver.controllers.InvoiceC
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationResponseMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
+import com.tradeix.concord.shared.client.messages.fundingresponses.FundingResponseResponseMessage
+import com.tradeix.concord.shared.client.messages.invoices.InvoiceResponseMessage
 import com.tradeix.concord.shared.messages.ErrorResponseMessage
+import com.tradeix.concord.shared.messages.nodes.NodeResponseMessage
+import com.tradeix.concord.shared.messages.nodes.NodesResponseMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
@@ -34,6 +38,13 @@ typealias SupplierFundingResponseController =
 typealias FunderFundingResponseController =
         com.tradeix.concord.cordapp.funder.client.receiver.controllers.FundingResponseController
 
+typealias FunderNodeController =
+        com.tradeix.concord.cordapp.funder.client.receiver.controllers.NodeController
+
+typealias SupplierNodeController =
+        com.tradeix.concord.cordapp.supplier.client.receiver.controllers.NodeController
+
+
 abstract class ControllerIntegrationTest {
 
     protected lateinit var buyer: NodeHandle
@@ -43,6 +54,8 @@ abstract class ControllerIntegrationTest {
     private lateinit var invoiceController: InvoiceController
     private lateinit var supplierFundingResponseController: SupplierFundingResponseController
     private lateinit var funderFundingResponseController: FunderFundingResponseController
+    private lateinit var funderNodeController: FunderNodeController
+    private lateinit var supplierNodeController: SupplierNodeController
 
     private lateinit var buyerRpc: RPCConnectionProvider
     private lateinit var funderRpc: RPCConnectionProvider
@@ -107,6 +120,8 @@ abstract class ControllerIntegrationTest {
         invoiceController = InvoiceController(supplierRpc)
         funderFundingResponseController = FunderFundingResponseController(funderRpc)
         supplierFundingResponseController = SupplierFundingResponseController(supplierRpc)
+        funderNodeController = FunderNodeController(funderRpc)
+        supplierNodeController = SupplierNodeController(supplierRpc)
     }
 
     protected fun issueInvoicesOrThrow(): ResponseEntity<InvoiceTransactionResponseMessage> {
@@ -213,6 +228,176 @@ abstract class ControllerIntegrationTest {
 
         return try {
             response as ResponseEntity<FundingResponseConfirmationResponseMessage>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getMostRecentInvoiceHashOrThrow(): Map<String, String> {
+        val response = invoiceController.getMostRecentInvoiceHash().call()
+
+        return try {
+            response.body as Map<String, String>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getUniqueInvoiceCountOrThrow(): Map<String, Int> {
+        val response = invoiceController.getUniqueInvoiceCount().call()
+
+        return try {
+            response.body as Map<String, Int>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getUnconsumedInvoiceStateByExternalIdOrThrow(): Map<String, InvoiceResponseMessage> {
+        val request = "INVOICE_1"
+        val response = invoiceController.getUnconsumedInvoiceStateByExternalId(request).call()
+
+        return try {
+            response.body as Map<String, InvoiceResponseMessage>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getInvoiceStatesOrThrow(): Map<String, List<InvoiceResponseMessage>> {
+        val response = invoiceController.getInvoiceStates("INVOICE_1", "unconsumed", 1, 50).call()
+
+        return try {
+            response.body as Map<String, List<InvoiceResponseMessage>>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getMostRecentFundingResponseHashOrThrow(): Map<String, String> {
+        val response = funderFundingResponseController.getMostRecentFundingResponseHash().call()
+
+        return try {
+            response.body as Map<String, String>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getUniqueFundingResponseCountOrThrow(): Map<String, Int> {
+        val response = funderFundingResponseController.getUniqueFundingResponseCount().call()
+
+        return try {
+            response.body as Map<String, Int>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getUnconsumedFundingResponseStateByExternalIdOrThrow(): FundingResponseResponseMessage {
+        val request = "FUNDING_RESPONSE_1"
+        val response = funderFundingResponseController.getUnconsumedFundingResponseStateByExternalId(request).call()
+
+        return try {
+            response.body as FundingResponseResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getFundingResponseStatesOrThrow(): List<FundingResponseResponseMessage> {
+        val response = funderFundingResponseController.getFundingResponseStates("FUNDING_RESPONSE_1", "unconsumed", 1, 50).call()
+
+        return try {
+            response.body as List<FundingResponseResponseMessage>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getAllNodesFunder(): NodesResponseMessage {
+        val response = funderNodeController.getAllNodes().call()
+
+        return try {
+            response.body as NodesResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getPeerNodesFunder(): NodesResponseMessage {
+        val response = funderNodeController.getPeerNodes().call()
+
+        return try {
+            response.body as NodesResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getLocalNodeFunder(): NodeResponseMessage {
+        val response = funderNodeController.getLocalNode().call()
+
+        return try {
+            response.body as NodeResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getAllNodesSupplier(): NodesResponseMessage {
+        val response = supplierNodeController.getAllNodes().call()
+
+        return try {
+            response.body as NodesResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getPeerNodesSupplier(): NodesResponseMessage {
+        val response = supplierNodeController.getPeerNodes().call()
+
+        return try {
+            response.body as NodesResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+            throw Exception("${ex.message}\n${errorResponse.body.error}")
+        }
+    }
+
+    protected fun getLocalNodeSupplier(): NodeResponseMessage {
+        val response = supplierNodeController.getLocalNode().call()
+
+        return try {
+            response.body as NodeResponseMessage
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
