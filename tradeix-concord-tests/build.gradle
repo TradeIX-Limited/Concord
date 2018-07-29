@@ -35,6 +35,8 @@ dependencies {
     testCompile project(":tradeix-concord-shared-mock-data")
     testCompile project(":tradeix-concord-cordapp-supplier")
     testCompile project(":tradeix-concord-cordapp-funder")
+    testCompile project(":tradeix-concord-cordapp-supplier-client-receiver")
+    testCompile project(":tradeix-concord-cordapp-funder-client-receiver")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

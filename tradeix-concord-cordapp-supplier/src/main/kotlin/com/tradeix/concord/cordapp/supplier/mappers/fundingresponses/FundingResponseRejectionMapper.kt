@@ -7,9 +7,15 @@ import com.tradeix.concord.shared.mapper.Mapper
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 
 class FundingResponseRejectionMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseConfirmationRequestMessage, InputAndOutput<FundingResponseState>>() {
+
+    companion object {
+        private val logger: Logger = loggerFor<FundingResponseRejectionMapper>()
+    }
 
     override fun map(source: FundingResponseConfirmationRequestMessage): InputAndOutput<FundingResponseState> {
 
@@ -20,7 +26,9 @@ class FundingResponseRejectionMapper(private val serviceHub: ServiceHub)
                 .singleOrNull()
 
         if (inputState == null) {
-            throw FlowException("A FundingResponseState with externalId '${source.externalId}' does not exist.")
+            val message = "A FundingResponseState with externalId '${source.externalId}' does not exist."
+            logger.error(message)
+            throw FlowException(message)
         } else {
             val outputState = inputState.state.data.reject()
             return InputAndOutput(inputState, outputState)
