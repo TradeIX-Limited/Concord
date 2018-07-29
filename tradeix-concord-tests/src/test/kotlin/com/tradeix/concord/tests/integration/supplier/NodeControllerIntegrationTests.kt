@@ -3,7 +3,7 @@ package com.tradeix.concord.tests.integration.supplier
 import com.tradeix.concord.tests.integration.ControllerIntegrationTest
 import org.junit.Test
 
-class SupplierNodeControllerIntegrationTests : ControllerIntegrationTest() {
+class NodeControllerIntegrationTests : ControllerIntegrationTest() {
 
     @Test
     fun `Can get all supplier nodes`() {

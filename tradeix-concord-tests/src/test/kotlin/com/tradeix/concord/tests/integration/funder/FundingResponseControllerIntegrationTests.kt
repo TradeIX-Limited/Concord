@@ -5,7 +5,7 @@ import com.tradeix.concord.tests.integration.ControllerIntegrationTest
 import net.corda.core.crypto.SecureHash
 import org.junit.Test
 
-class FunderFundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
+class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
 
     @Test
     fun `Can issue a funding response`() {

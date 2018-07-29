@@ -3,7 +3,7 @@ package com.tradeix.concord.tests.integration.funder
 import com.tradeix.concord.tests.integration.ControllerIntegrationTest
 import org.junit.Test
 
-class FunderNodeControllerIntegrationTests : ControllerIntegrationTest() {
+class NodeControllerIntegrationTests : ControllerIntegrationTest() {
 
     @Test
     fun `Can get all funder nodes`() {
