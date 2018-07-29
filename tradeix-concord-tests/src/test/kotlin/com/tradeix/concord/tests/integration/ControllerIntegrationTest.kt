@@ -21,7 +21,6 @@ import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceCancell
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoiceTransfers
 import com.tradeix.concord.shared.mockdata.MockInvoices.createMockInvoices
 import com.tradeix.concord.shared.mockdata.ParticipantType
-import junit.framework.Assert.fail
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.NodeHandle
@@ -31,6 +30,7 @@ import net.corda.testing.node.User
 import org.junit.After
 import org.junit.Before
 import org.springframework.http.ResponseEntity
+import kotlin.test.fail
 
 typealias SupplierFundingResponseController =
         com.tradeix.concord.cordapp.supplier.client.receiver.controllers.FundingResponseController
@@ -44,7 +44,7 @@ typealias FunderNodeController =
 typealias SupplierNodeController =
         com.tradeix.concord.cordapp.supplier.client.receiver.controllers.NodeController
 
-
+@Suppress("UNCHECKED_CAST")
 abstract class ControllerIntegrationTest {
 
     protected lateinit var buyer: NodeHandle
@@ -139,7 +139,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -158,7 +157,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -175,7 +173,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -192,7 +189,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -205,7 +201,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -218,7 +213,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -231,7 +225,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -243,7 +236,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -255,7 +247,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -268,7 +259,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -280,7 +270,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -292,7 +281,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -304,7 +292,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -317,7 +304,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -329,7 +315,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -341,7 +326,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -353,7 +337,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -365,7 +348,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -377,7 +359,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -389,7 +370,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -401,7 +381,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 }
