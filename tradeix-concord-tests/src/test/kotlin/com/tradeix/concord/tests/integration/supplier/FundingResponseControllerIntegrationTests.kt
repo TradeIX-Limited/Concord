@@ -6,7 +6,7 @@ import net.corda.core.crypto.SecureHash
 import org.junit.Test
 
 
-class SupplierFundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
+class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
 
     @Test
     fun `Can accept a funding response`() {
