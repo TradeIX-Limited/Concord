@@ -9,9 +9,15 @@ import com.tradeix.concord.shared.models.BankAccount
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 
 class FundingResponseAcceptanceMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseConfirmationRequestMessage, InputAndOutput<FundingResponseState>>() {
+
+    companion object {
+        private val logger: Logger = loggerFor<FundingResponseAcceptanceMapper>()
+    }
 
     override fun map(source: FundingResponseConfirmationRequestMessage): InputAndOutput<FundingResponseState> {
 
@@ -22,7 +28,9 @@ class FundingResponseAcceptanceMapper(private val serviceHub: ServiceHub)
                 .singleOrNull()
 
         if (inputState == null) {
-            throw FlowException("A FundingResponseState with externalId '${source.externalId}' does not exist.")
+            val message = "A FundingResponseState with externalId '${source.externalId}' does not exist."
+            logger.error(message)
+            throw FlowException(message)
         } else {
             val bankAddress = Address(
                     residenceNameOrNumber = source.bankAccount!!.bankAddress?.residenceNameOrNumber,

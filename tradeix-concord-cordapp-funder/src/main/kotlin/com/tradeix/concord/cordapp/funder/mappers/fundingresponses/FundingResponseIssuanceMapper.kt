@@ -15,9 +15,15 @@ import net.corda.core.flows.FlowException
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
+import net.corda.core.utilities.loggerFor
+import org.slf4j.Logger
 
 class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseIssuanceRequestMessage, FundingResponseState>() {
+
+    companion object {
+        private val logger: Logger = loggerFor<FundingResponseIssuanceMapper>()
+    }
 
     override fun map(source: FundingResponseIssuanceRequestMessage): FundingResponseState {
 
@@ -25,8 +31,10 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
         val fundingResponseVaultService = VaultService.fromServiceHub<FundingResponseState>(serviceHub)
         val identityService = IdentityService(serviceHub)
 
+        logger.info("Querying vault for FundingResponseState with externalId '${source.externalId!!}.")
+
         val state = fundingResponseVaultService
-                .findByExternalId(source.externalId!!, status = Vault.StateStatus.UNCONSUMED)
+                .findByExternalId(source.externalId, status = Vault.StateStatus.UNCONSUMED)
                 .singleOrNull()
 
         if (state != null) {
