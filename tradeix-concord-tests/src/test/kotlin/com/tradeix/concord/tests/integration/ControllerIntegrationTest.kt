@@ -320,13 +320,11 @@ abstract class ControllerIntegrationTest {
 
     protected fun getSuppliersMostRecentFundingResponseHashOrThrow(): Map<String, String> {
         val response = supplierFundingResponseController.getMostRecentFundingResponseHash().call()
-        println("RESPUESTA hash: "+response.body.toString())
         return try {
             response.body as Map<String, String>
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -338,20 +336,17 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
     protected fun getSuppliersUnconsumedFundingResponseStateByExternalIdOrThrow(): FundingResponseResponseMessage {
         val request = "FUNDING_RESPONSE_1"
         val response = supplierFundingResponseController.getUnconsumedFundingResponseStateByExternalId(request).call()
-        println("RESPUESTA externalid: "+response.body.toString())
         return try {
             response.body as FundingResponseResponseMessage
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
@@ -363,7 +358,6 @@ abstract class ControllerIntegrationTest {
         } catch (ex: Exception) {
             val errorResponse = response as ResponseEntity<ErrorResponseMessage>
             fail(errorResponse.body.error)
-            throw Exception("${ex.message}\n${errorResponse.body.error}")
         }
     }
 
