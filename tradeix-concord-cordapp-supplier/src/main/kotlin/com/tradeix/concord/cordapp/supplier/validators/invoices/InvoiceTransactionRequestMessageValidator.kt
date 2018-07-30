@@ -3,10 +3,7 @@ package com.tradeix.concord.cordapp.supplier.validators.invoices
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
-import com.tradeix.concord.shared.validation.extensions.isNotEmpty
-import com.tradeix.concord.shared.validation.extensions.isValidSecureHash
-import com.tradeix.concord.shared.validation.extensions.isValidX500Name
-import com.tradeix.concord.shared.validation.extensions.validateWith
+import com.tradeix.concord.shared.validation.extensions.*
 
 class InvoiceTransactionRequestMessageValidator : ObjectValidator<InvoiceTransactionRequestMessage>() {
 
@@ -14,6 +11,7 @@ class InvoiceTransactionRequestMessageValidator : ObjectValidator<InvoiceTransac
 
         validationBuilder.property(InvoiceTransactionRequestMessage::assets) {
             it.isNotEmpty()
+            it.distinct({invoice -> invoice.externalId}, "externalId")
         }
 
         validationBuilder.collection(InvoiceTransactionRequestMessage::assets) {
