@@ -218,7 +218,7 @@ abstract class ControllerIntegrationTest {
 
     protected fun rejectFundingResponseOrThrow(): ResponseEntity<FundingResponseConfirmationResponseMessage> {
         val request = FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE
-        val response = supplierFundingResponseController.acceptFundingResponse(request).call()
+        val response = supplierFundingResponseController.rejectFundingResponse(request).call()
 
         return try {
             response as ResponseEntity<FundingResponseConfirmationResponseMessage>
@@ -273,7 +273,7 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getMostRecentFundingResponseHashOrThrow(): Map<String, String> {
+    protected fun getFundersMostRecentFundingResponseHashOrThrow(): Map<String, String> {
         val response = funderFundingResponseController.getMostRecentFundingResponseHash().call()
 
         return try {
@@ -284,7 +284,7 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getUniqueFundingResponseCountOrThrow(): Map<String, Int> {
+    protected fun getFundersUniqueFundingResponseCountOrThrow(): Map<String, Int> {
         val response = funderFundingResponseController.getUniqueFundingResponseCount().call()
 
         return try {
@@ -295,7 +295,7 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getUnconsumedFundingResponseStateByExternalIdOrThrow(): FundingResponseResponseMessage {
+    protected fun getFundersUnconsumedFundingResponseStateByExternalIdOrThrow(): FundingResponseResponseMessage {
         val request = "FUNDING_RESPONSE_1"
         val response = funderFundingResponseController.getUnconsumedFundingResponseStateByExternalId(request).call()
 
@@ -307,8 +307,51 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getFundingResponseStatesOrThrow(): List<FundingResponseResponseMessage> {
+    protected fun getFundersFundingResponseStatesOrThrow(): List<FundingResponseResponseMessage> {
         val response = funderFundingResponseController.getFundingResponseStates("FUNDING_RESPONSE_1", "unconsumed", 1, 50).call()
+
+        return try {
+            response.body as List<FundingResponseResponseMessage>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getSuppliersMostRecentFundingResponseHashOrThrow(): Map<String, String> {
+        val response = supplierFundingResponseController.getMostRecentFundingResponseHash().call()
+        return try {
+            response.body as Map<String, String>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getSuppliersUniqueFundingResponseCountOrThrow(): Map<String, Int> {
+        val response = supplierFundingResponseController.getUniqueFundingResponseStateCount().call()
+
+        return try {
+            response.body as Map<String, Int>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getSuppliersUnconsumedFundingResponseStateByExternalIdOrThrow(): FundingResponseResponseMessage {
+        val request = "FUNDING_RESPONSE_1"
+        val response = supplierFundingResponseController.getUnconsumedFundingResponseStateByExternalId(request).call()
+        return try {
+            response.body as FundingResponseResponseMessage
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getSuppliersFundingResponseStatesOrThrow(): List<FundingResponseResponseMessage> {
+        val response = supplierFundingResponseController.getFundingResponseStates("FUNDING_RESPONSE_1", "unconsumed", 1, 50).call()
 
         return try {
             response.body as List<FundingResponseResponseMessage>
