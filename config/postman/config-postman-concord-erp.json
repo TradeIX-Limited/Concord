@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "e90914b8-5328-487a-8da5-8a66b5be86ad",
+    "_postman_id": "72220e3f-dc45-40d0-9a60-2e49f6ba333a",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -758,7 +758,7 @@
               }
             ],
             "body": {
-              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\"\n}",
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"bankAccount\": {\n    \"accountName\": \"Mr. A. N. Other\",\n    \"accountNumber\": \"12345678\",\n    \"sortCode\": \"10-20-30\",\n    \"bankIdentifierCode\": \"DABAAZ01\",\n    \"internationalBankAccountNumber\": \"AZ 01 DABA012345 12345678\",\n    \"abaNumber\": \"01010101\",\n    \"bankName\": \"Bank of Breakfast Tea\",\n    \"bankAddress\": {\n      \"residenceNameOrNumber\": \"Bank of England\",\n      \"unitNameOrNumber\": null,\n      \"street\": \"Threadneedle Street\",\n      \"locality\": null,\n      \"municipality\": \"London\",\n      \"province\": \"City of London\",\n      \"country\": \"United Kingdom\",\n      \"postalCode\": \"EC2R 8AH\"\n    }\n  }\n}",
               "mode": "raw"
             },
             "url": {
@@ -787,7 +787,7 @@
               }
             ],
             "body": {
-              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\"\n}",
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"bankAccount\": null\n}",
               "mode": "raw"
             },
             "url": {
@@ -1174,7 +1174,7 @@
               "port": "8050",
               "path": [
                 "fundingresponses",
-                "accept"
+                "issue"
               ]
             }
           }

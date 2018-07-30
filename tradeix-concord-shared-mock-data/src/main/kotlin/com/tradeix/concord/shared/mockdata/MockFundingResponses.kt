@@ -3,6 +3,7 @@ package com.tradeix.concord.shared.mockdata
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
+import com.tradeix.concord.shared.mockdata.MockBankAccounts.BANK_ACCOUNT_REQUEST_MESSAGE
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
 import java.math.BigDecimal
@@ -23,7 +24,8 @@ object MockFundingResponses {
     )
 
     val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(
-            externalId = "FUNDING_RESPONSE_1"
+            externalId = "FUNDING_RESPONSE_1",
+            bankAccount = BANK_ACCOUNT_REQUEST_MESSAGE
     )
 
     val FUNDING_RESPONSE_REJECTION_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(

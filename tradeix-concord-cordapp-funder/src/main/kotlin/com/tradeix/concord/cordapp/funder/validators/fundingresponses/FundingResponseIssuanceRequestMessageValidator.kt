@@ -45,17 +45,14 @@ class FundingResponseIssuanceRequestMessageValidator
 
         validationBuilder.property(FundingResponseIssuanceRequestMessage::advanceInvoiceValue) {
             it.isNotNull()
-            it.isGreaterThan(BigDecimal.ZERO)
         }
 
         validationBuilder.property(FundingResponseIssuanceRequestMessage::discountValue) {
             it.isNotNull()
-            it.isGreaterThan(BigDecimal.ZERO)
         }
 
-//        validationBuilder.property(FundingResponseIssuanceRequestMessage::baseRate) {
-//            it.isNotNull()
-//            it.isGreaterThan(BigDecimal.ZERO)
-//        }
+        validationBuilder.property(FundingResponseIssuanceRequestMessage::baseRate) {
+            it.isNotNull()
+        }
     }
 }

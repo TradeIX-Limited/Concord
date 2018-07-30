@@ -633,7 +633,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "fundingresponses/accept"
+                        path = "fundingresponses/issue"
                 )
         )))
     }

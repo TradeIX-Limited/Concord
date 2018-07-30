@@ -1,6 +1,6 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.shared.domain.models.Address
+import com.tradeix.concord.shared.models.Address
 
 object MockAddresses {
 

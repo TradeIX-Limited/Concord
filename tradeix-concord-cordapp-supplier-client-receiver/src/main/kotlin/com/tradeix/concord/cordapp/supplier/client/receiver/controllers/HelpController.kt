@@ -3,7 +3,8 @@ package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationResponseMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.*
-import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageValidator
+import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageAcceptanceValidator
+import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageRejectionValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceCancellationTransactionRequestMessageValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransactionRequestMessageValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferTransactionRequestMessageValidator
@@ -426,7 +427,7 @@ class HelpController {
                                         SecureHash.randomSHA256().toString(),
                                         "FUNDING_RESPONSE_1"
                                 ),
-                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                "messageValidation" to FundingResponseConfirmationRequestMessageAcceptanceValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Accept()
                                         .getValidationMessages()
@@ -449,7 +450,7 @@ class HelpController {
                                         SecureHash.randomSHA256().toString(),
                                         "FUNDING_RESPONSE_1"
                                 ),
-                                "messageValidation" to FundingResponseConfirmationRequestMessageValidator()
+                                "messageValidation" to FundingResponseConfirmationRequestMessageRejectionValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to FundingResponseContract.Reject()
                                         .getValidationMessages()

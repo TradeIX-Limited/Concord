@@ -24,9 +24,8 @@ class FundingResponseIssuanceRequestMessageValidatorTests {
                 "Property 'currency' must not be null.",
                 "Property 'currency' must be a valid currency code.",
                 "Property 'advanceInvoiceValue' must not be null.",
-                "Property 'advanceInvoiceValue' must be greater than the specified value.",
                 "Property 'discountValue' must not be null.",
-                "Property 'discountValue' must be greater than the specified value."
+                "Property 'baseRate' must not be null."
         )
         val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 

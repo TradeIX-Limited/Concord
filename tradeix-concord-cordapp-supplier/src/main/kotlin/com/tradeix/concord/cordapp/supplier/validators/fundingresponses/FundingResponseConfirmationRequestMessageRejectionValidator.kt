@@ -5,7 +5,7 @@ import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
 import com.tradeix.concord.shared.validation.extensions.isNotNullEmptyOrBlank
 
-class FundingResponseConfirmationRequestMessageValidator
+class FundingResponseConfirmationRequestMessageRejectionValidator
     : ObjectValidator<FundingResponseConfirmationRequestMessage>() {
 
     override fun validate(validationBuilder: ValidationBuilder<FundingResponseConfirmationRequestMessage>) {
