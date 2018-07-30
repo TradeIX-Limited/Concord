@@ -25,11 +25,7 @@ class FundingResponseIssuanceRequestMessageValidatorTests {
                 "Property 'currency' must be a valid currency code.",
                 "Property 'advanceInvoiceValue' must not be null.",
                 "Property 'discountValue' must not be null.",
-<<<<<<< HEAD
                 "Property 'baseRate' must not be null."
-=======
-                "Property 'discountValue' must be greater than the specified value."
->>>>>>> spike/series0ne/erp
         )
         val actualValidationMessages: Iterable<String> = validator.getValidationMessages()
 
