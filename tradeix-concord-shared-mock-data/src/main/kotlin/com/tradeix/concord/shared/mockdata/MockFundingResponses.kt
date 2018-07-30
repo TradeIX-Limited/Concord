@@ -5,6 +5,7 @@ import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingRes
 import com.tradeix.concord.shared.mockdata.MockAmounts.ONE_POUNDS
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME
+import java.math.BigDecimal
 
 object MockFundingResponses {
 
@@ -18,7 +19,7 @@ object MockFundingResponses {
             currency = ONE_POUNDS.token.currencyCode,
             advanceInvoiceValue = ONE_POUNDS.toDecimal(),
             discountValue = ONE_POUNDS.toDecimal(),
-            baseRate = ONE_POUNDS.toDecimal()
+            baseRate = BigDecimal.ONE
     )
 
     val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(
