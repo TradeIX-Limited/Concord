@@ -10,6 +10,8 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 import org.slf4j.Logger
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -38,6 +40,9 @@ class InvoiceObserverService(
                 val json = serializer.toJson(mapper.map(it))
                 val url = erpConfiguration.url + "restlet.nl?script=customscript_confirmation_of_issuance&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json, createClientHeaders()))
+
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUPPLIER INVOICE OBSERVER SERVICE >> Invoice external Id: " + it.state.data.linearId.externalId)
 
                 logger.info(response.body.toString())
             } catch (ex: Exception) {

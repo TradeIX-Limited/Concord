@@ -18,6 +18,8 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 
 @StartableByRPC
 @InitiatingFlow
@@ -52,6 +54,11 @@ class InvoiceTransferInitiatorFlow(
                 .addInputStates(invoiceInputStates)
                 .addOutputStates(invoiceOutputStates, INVOICE_CONTRACT_ID)
                 .addCommand(command)
+
+        Configurator.setLevel(logger.name, Level.DEBUG)
+        invoiceOutputStates.forEach {
+            logger.debug("*** INVOICE TRANSFER >> Invoice external Id: " + it.linearId.externalId)
+        }
 
         // Step 2 - Validate Unsigned Transaction
         progressTracker.currentStep = ValidatingTransactionStep

@@ -17,6 +17,8 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 
 @StartableByRPC
 @InitiatingFlow
@@ -47,6 +49,12 @@ class FundingResponseIssuanceInitiatorFlow(
         val transactionBuilder = TransactionBuilder(identityService.getNotary())
                 .addOutputState(fundingResponseState, FUNDING_RESPONSE_CONTRACT_ID)
                 .addCommand(command)
+
+        Configurator.setLevel(logger.name, Level.DEBUG)
+        logger.debug("*** FUNDING RESPONSE ISSUANCE >> Funding Response external Id: " + fundingResponseState.linearId.externalId)
+        fundingResponseState.invoiceLinearIds.forEach {
+            logger.debug("*** FUNDING RESPONSE ISSUANCE >> Invoice external Id: " + it.externalId)
+        }
 
         // Step 2 - Validating Unsigned Transaction
         progressTracker.currentStep = ValidatingTransactionStep

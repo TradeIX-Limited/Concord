@@ -14,6 +14,8 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 import org.slf4j.Logger
 import org.springframework.http.HttpEntity
 import org.springframework.stereotype.Component
@@ -44,6 +46,9 @@ class InvoiceObserverService(
             vaultObserverTimer?.cancel()
 
             invoices.add(mapper.map(it.state.data))
+
+            Configurator.setLevel(logger.name, Level.DEBUG)
+            logger.debug("*** FUNDER INVOICE OBSERVER SERVICE >> Invoice external Id: " + it.state.data.linearId.externalId)
 
             vaultObserverTimer = timer(period = tixConfiguration.vaultObserverTimeout, action = {
                 try {
