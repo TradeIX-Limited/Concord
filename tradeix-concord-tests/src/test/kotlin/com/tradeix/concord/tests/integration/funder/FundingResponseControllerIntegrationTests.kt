@@ -22,7 +22,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
-            val result = getMostRecentFundingResponseHashOrThrow()
+            val result = getFundersMostRecentFundingResponseHashOrThrow()
             assert(SecureHash.canParse(result.values.single()))
         }
     }
@@ -32,7 +32,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
-            val result = getUniqueFundingResponseCountOrThrow()
+            val result = getFundersUniqueFundingResponseCountOrThrow()
             assert(result.values.single() != 0)
         }
     }
@@ -42,7 +42,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
-            val result = getUnconsumedFundingResponseStateByExternalIdOrThrow()
+            val result = getFundersUnconsumedFundingResponseStateByExternalIdOrThrow()
             assert(result.externalId.equals("FUNDING_RESPONSE_1"))
         }
     }
@@ -52,7 +52,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
-            val result = getFundingResponseStatesOrThrow()
+            val result = getFundersFundingResponseStatesOrThrow()
 
             result.forEach {
                 assert(it.externalId.equals("FUNDING_RESPONSE_${it.externalId.last()}"))
