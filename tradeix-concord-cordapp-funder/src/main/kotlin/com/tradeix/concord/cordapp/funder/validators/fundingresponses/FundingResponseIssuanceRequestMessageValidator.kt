@@ -53,9 +53,9 @@ class FundingResponseIssuanceRequestMessageValidator
             it.isGreaterThan(BigDecimal.ZERO)
         }
 
-        validationBuilder.property(FundingResponseIssuanceRequestMessage::baseRate) {
-            it.isNotNull()
-            it.isGreaterThan(BigDecimal.ZERO)
-        }
+//        validationBuilder.property(FundingResponseIssuanceRequestMessage::baseRate) {
+//            it.isNotNull()
+//            it.isGreaterThan(BigDecimal.ZERO)
+//        }
     }
 }
