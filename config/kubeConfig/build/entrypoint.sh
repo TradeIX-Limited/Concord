@@ -13,5 +13,5 @@ elif [  -z "${2-}"]  && [ ! -z "${1}" ]  &&  [ "${1}" = "none" ]; then
 elif [  -z "${2-}"]  && [ ! -z "${1}" ] && [ "${1}" != "none" ]; then
    echo "Starting node after ${1}";
   # exec java -jar corda.jar -Dcapsule.jvm.args=-Xmx1G --config-file=${CONFIG_FILE} --no-local-shell --log-to-console
-	java -jar corda.jar --no-local-shell --log-to-console
+	java -Xmx2048m -jar corda.jar --no-local-shell --log-to-console
 fi
