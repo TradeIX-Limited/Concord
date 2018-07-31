@@ -50,3 +50,15 @@ fun <TValue> PropertyValidator<Iterable<TValue>?>.inverseContainsAll(
         )
     }
 }
+
+fun <TValue, TMappedValue> PropertyValidator<Iterable<TValue>?>.distinct(
+        map: (TValue) -> TMappedValue,
+        propertyName: String,
+        validationMessage: String? = null) {
+
+    if (context.emulating || value != null && value.map(map).distinct().count() == value.count()) {
+        context.validator.addValidationMessage(
+                validationMessage ?: format("must be distinct on property '$propertyName'")
+        )
+    }
+}

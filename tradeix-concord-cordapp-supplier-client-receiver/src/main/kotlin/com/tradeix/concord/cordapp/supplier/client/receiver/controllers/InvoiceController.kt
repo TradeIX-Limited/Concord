@@ -17,6 +17,10 @@ import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.node.services.Vault
 import net.corda.core.utilities.getOrThrow
+import net.corda.core.utilities.loggerFor
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
+import org.slf4j.Logger
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -28,6 +32,10 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<InvoiceState>(rpc.proxy)
     private val invoiceResponseMapper = InvoiceResponseMapper()
+
+    companion object {
+        private val logger : Logger = loggerFor<InvoiceController>()
+    }
 
     @GetMapping()
     fun getInvoiceStates(
@@ -119,6 +127,9 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                         transactionId = result.tx.id.toString()
                 )
 
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY ISSUE INVOICE>> Transaction Id: " + response.transactionId)
+
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {
                 when (ex) {
@@ -142,6 +153,9 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                         externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
+
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY AMEND INVOICE>> Transaction Id: " + response.transactionId)
 
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {
@@ -167,6 +181,9 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                         transactionId = result.tx.id.toString()
                 )
 
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY TRANSFER INVOICE>> Transaction Id: " + response.transactionId)
+
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {
                 when (ex) {
@@ -190,6 +207,9 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                         externalIds = message.assets.map { it.externalId!! },
                         transactionId = result.tx.id.toString()
                 )
+
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY CANCEL INVOICE>> Transaction Id: " + response.transactionId)
 
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {

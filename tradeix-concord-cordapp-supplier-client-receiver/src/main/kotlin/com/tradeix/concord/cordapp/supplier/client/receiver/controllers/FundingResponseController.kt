@@ -14,6 +14,10 @@ import com.tradeix.concord.shared.validation.ValidationException
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.node.services.Vault
 import net.corda.core.utilities.getOrThrow
+import net.corda.core.utilities.loggerFor
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
+import org.slf4j.Logger
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -25,6 +29,10 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
 
     private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpc.proxy)
     private val fundingResponseResponseMapper = FundingResponseResponseMapper()
+
+    companion object {
+        private val logger : Logger = loggerFor<FundingResponseController>()
+    }
 
     @GetMapping()
     fun getFundingResponseStates(
@@ -116,6 +124,9 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                         transactionId = result.tx.id.toString()
                 )
 
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY ACCEPT FUNDING RESPONSE>> Transaction Id: " + response.transactionId)
+
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {
                 when (ex) {
@@ -139,6 +150,9 @@ class FundingResponseController(private val rpc: RPCConnectionProvider) {
                         externalId = result.tx.outputsOfType<FundingResponseState>().single().linearId.externalId!!,
                         transactionId = result.tx.id.toString()
                 )
+
+                Configurator.setLevel(logger.name, Level.DEBUG)
+                logger.debug("*** SUCCESSFULLY REJECT FUNDING RESPONSE>> Transaction Id: " + response.transactionId)
 
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {

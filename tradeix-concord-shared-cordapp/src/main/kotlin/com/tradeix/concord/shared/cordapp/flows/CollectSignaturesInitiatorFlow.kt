@@ -8,6 +8,8 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.ProgressTracker
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 
 @InitiatingFlow
 class CollectSignaturesInitiatorFlow(
@@ -18,6 +20,8 @@ class CollectSignaturesInitiatorFlow(
 
     @Suspendable
     override fun call(): SignedTransaction {
+        Configurator.setLevel(logger.name, Level.DEBUG)
+        logger.debug("Initiating Signatures Collection")
         return subFlow(CollectSignaturesFlow(transaction, flowSessionsFor(counterparties), tracker))
     }
 }

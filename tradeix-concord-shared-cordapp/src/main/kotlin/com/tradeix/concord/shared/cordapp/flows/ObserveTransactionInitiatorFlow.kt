@@ -7,6 +7,8 @@ import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.SendTransactionFlow
 import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.Configurator
 
 @InitiatingFlow
 class ObserveTransactionInitiatorFlow(
@@ -16,6 +18,8 @@ class ObserveTransactionInitiatorFlow(
 
     @Suspendable
     override fun call() {
+        Configurator.setLevel(logger.name, Level.DEBUG)
+        logger.debug("Initiating Transaction Observation")
         val flowSessions = flowSessionsFor(counterparties)
         flowSessions.forEach { subFlow(SendTransactionFlow(it, transaction)) }
     }
