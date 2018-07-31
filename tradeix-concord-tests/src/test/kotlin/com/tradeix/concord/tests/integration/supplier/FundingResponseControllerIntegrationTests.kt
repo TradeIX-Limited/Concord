@@ -32,7 +32,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
     }
 
     @Ignore
-    fun `Can get the most recent funding response hash`() {
+    fun `Can get the most recent funding response hash`() { // TODO : INVESTIGATE
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
@@ -43,7 +43,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
     }
 
     @Ignore
-    fun `Can get the unique funding response count`() {
+    fun `Can get the unique funding response count`() { // TODO : INVESTIGATE
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
@@ -55,7 +55,7 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
     }
 
     @Ignore
-    fun `Can get unconsumed funding response state by externalId`() {
+    fun `Can get unconsumed funding response state by externalId`() { // TODO : INVESTIGATE
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
@@ -66,13 +66,25 @@ class FundingResponseControllerIntegrationTests : ControllerIntegrationTest() {
     }
 
     @Ignore
-    fun `Can get the funding response states`() {
+    fun `Can get the funding response states`() { // TODO : INVESTIGATE
         withDriver {
             issueInvoicesOrThrow()
             issueFundingResponseOrThrow()
             val result = getSuppliersFundingResponseStatesOrThrow()
 
             assert(result.map { it.externalId }.containsAll(listOf("FUNDING_RESPONSE_1")))
+        }
+    }
+
+    @Ignore
+    fun `The status is correctly changed`() { // TODO : INVESTIGATE
+        withDriver {
+            issueInvoicesOrThrow()
+            issueFundingResponseOrThrow()
+            acceptFundingResponseOrThrow()
+            val result = getSuppliersFundingResponseStatesOrThrow()
+
+            assert(result.map { it.status }.containsAll(listOf("ACCEPTED")))
         }
     }
 }

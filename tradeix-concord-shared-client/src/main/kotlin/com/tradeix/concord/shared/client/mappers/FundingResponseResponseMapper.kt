@@ -16,7 +16,8 @@ class FundingResponseResponseMapper : Mapper<FundingResponseState, FundingRespon
                 currency = source.purchaseValue.token.currencyCode,
                 advanceInvoiceValue = source.advanceInvoiceValue.toDecimal(),
                 discountValue = source.discountValue.toDecimal(),
-                baseRate = source.baseRate
+                baseRate = source.baseRate,
+                status = source.status.toString()
         )
     }
 }

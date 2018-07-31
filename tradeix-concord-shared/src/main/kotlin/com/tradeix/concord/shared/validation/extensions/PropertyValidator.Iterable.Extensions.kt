@@ -56,7 +56,7 @@ fun <TValue, TMappedValue> PropertyValidator<Iterable<TValue>?>.distinct(
         propertyName: String,
         validationMessage: String? = null) {
 
-    if (context.emulating || value != null && value.map(map).distinct().count() == value.count()) {
+    if (context.emulating || value != null && value.map(map).distinct().count() != value.count()) {
         context.validator.addValidationMessage(
                 validationMessage ?: format("must be distinct on property '$propertyName'")
         )
