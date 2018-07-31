@@ -89,7 +89,8 @@ class HelpController {
                                                 "GBP",
                                                 BigDecimal.valueOf(123.45),
                                                 BigDecimal.valueOf(123.45),
-                                                BigDecimal.valueOf(123)
+                                                BigDecimal.valueOf(123),
+                                                "PENDING"
                                         )
                                 )
                         )
@@ -117,7 +118,8 @@ class HelpController {
                                         "GBP",
                                         BigDecimal.valueOf(123.45),
                                         BigDecimal.valueOf(123.45),
-                                        BigDecimal.valueOf(123)
+                                        BigDecimal.valueOf(123),
+                                        "PENDING"
                                 )
 
                         )
