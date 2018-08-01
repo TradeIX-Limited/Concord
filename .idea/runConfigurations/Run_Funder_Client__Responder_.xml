@@ -1,13 +1,15 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Funder Client (Responder)" type="JetRunConfigurationType" factoryName="Kotlin" folderName="Funder">
-    <module name="tradeix-concord-cordapp-funder-client-responder" />
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.funder.client.responder.Application" />
     <option name="VM_PARAMETERS" value="-Dspring.config.location=config/spring/funder.responder.properties" />
     <option name="PROGRAM_PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.tradeix.concord.cordapp.funder.client.responder.Application" />
-    <option name="WORKING_DIRECTORY" value="" />
+    <module name="tradeix-concord-cordapp-funder-client-responder" />
+    <envs />
     <method />
   </configuration>
 </component>
