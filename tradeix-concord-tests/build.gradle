@@ -13,7 +13,7 @@ repositories {
 }
 
 sourceSets {
-    main.kotlin.srcDirs = []
+    main.kotlin.srcDirs = ['src/main/kotlin']
     main.java.srcDirs = []
     main.resources.srcDirs = []
     test.kotlin.srcDirs = ['src/test/kotlin']
@@ -21,7 +21,12 @@ sourceSets {
     test.resources.srcDirs = []
 }
 
+jar {
+    zip64 true
+}
+
 dependencies {
+
     testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"

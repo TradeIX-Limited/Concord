@@ -65,6 +65,15 @@ dependencies {
 
     cordapp project(":tradeix-concord-cordapp-supplier")
     cordapp project(":tradeix-concord-cordapp-funder")
+
+    cordapp project(":tradeix-concord-cordapp-supplier-client-receiver")
+    cordapp project(":tradeix-concord-cordapp-funder-client-receiver")
+    cordapp project(":tradeix-concord-cordapp-funder-client-responder")
+    cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
+    cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
+    cordapp project(":tradeix-concord-shared-client")
+    cordapp project(":tradeix-concord-shared-mock-data")
+    cordapp project(":tradeix-concord-tests")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
