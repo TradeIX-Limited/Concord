@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @CordaSerializable
-data class InvoiceImportMessage(
+data class InvoiceImportNotificationMessage(
         @JsonProperty("NetworkInvoiceUID") val networkInvoiceUId: String,
         @JsonProperty("InvoiceVersion") val invoiceVersion: String,
         @JsonProperty("InvoiceVersionDate") val invoiceVersionDate: LocalDateTime?,
