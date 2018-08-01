@@ -1,15 +1,15 @@
 package com.tradeix.concord.cordapp.funder.mappers.invoices
 
-import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportNotificationMessage
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.mapper.Mapper
 import net.corda.core.contracts.hash
 import java.time.LocalDateTime
 
-class InvoiceImportMapper : Mapper<InvoiceState, InvoiceImportMessage>() {
+class InvoiceImportNotificationMapper : Mapper<InvoiceState, InvoiceImportNotificationMessage>() {
 
-    override fun map(source: InvoiceState): InvoiceImportMessage {
-        return InvoiceImportMessage(
+    override fun map(source: InvoiceState): InvoiceImportNotificationMessage {
+        return InvoiceImportNotificationMessage(
                 networkInvoiceUId = source.linearId.externalId.toString(),
                 invoiceVersion = source.invoiceVersion,
                 invoiceVersionDate = LocalDateTime.now(), // TODO : REVIEW MAPPING
