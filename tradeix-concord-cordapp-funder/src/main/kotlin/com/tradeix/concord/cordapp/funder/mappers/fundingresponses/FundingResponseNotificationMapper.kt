@@ -1,13 +1,13 @@
 package com.tradeix.concord.cordapp.funder.mappers.fundingresponses
 
-import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseNotificationMessage
+import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseImportNotificationMessage
 import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.mapper.Mapper
 
-class FundingResponseNotificationMapper : Mapper<FundingResponseState, FundingResponseNotificationMessage>() {
+class FundingResponseNotificationMapper : Mapper<FundingResponseState, FundingResponseImportNotificationMessage>() {
 
-    override fun map(source: FundingResponseState): FundingResponseNotificationMessage {
-        return FundingResponseNotificationMessage(
+    override fun map(source: FundingResponseState): FundingResponseImportNotificationMessage {
+        return FundingResponseImportNotificationMessage(
                 externalId = source.linearId.externalId!!,
                 fundingRequestExternalId = source.fundingRequestLinearId?.externalId,
                 invoiceExternalIds = source.invoiceLinearIds.map { it.externalId!! },
