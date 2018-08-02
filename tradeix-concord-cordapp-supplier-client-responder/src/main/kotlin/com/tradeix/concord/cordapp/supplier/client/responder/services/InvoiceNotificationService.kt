@@ -2,11 +2,11 @@ package com.tradeix.concord.cordapp.supplier.client.responder.services
 
 import com.google.gson.GsonBuilder
 import com.tradeix.concord.cordapp.supplier.client.responder.components.ERPConfiguration
-import com.tradeix.concord.cordapp.supplier.mappers.fundingresponses.FundingResponseNotificationMapper
+import com.tradeix.concord.cordapp.supplier.mappers.invoices.InvoiceIssuanceConfirmationNotificationMapper
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.http.HttpClient
 import com.tradeix.concord.shared.client.services.ObserverService
-import com.tradeix.concord.shared.domain.states.FundingResponseState
+import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
@@ -18,31 +18,31 @@ import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 
 @Component
-class FundingResponseObserverService(
+class InvoiceNotificationService(
         private val rpcConnectionProvider: RPCConnectionProvider,
         private val erpConfiguration: ERPConfiguration
 ) : ObserverService {
 
     companion object {
-        private val logger: Logger = loggerFor<FundingResponseObserverService>()
+        private val logger: Logger = loggerFor<InvoiceNotificationService>()
     }
 
-    private val vaultService = VaultService.fromCordaRPCOps<FundingResponseState>(rpcConnectionProvider.proxy)
+    private val vaultService = VaultService.fromCordaRPCOps<InvoiceState>(rpcConnectionProvider.proxy)
     private val client = HttpClient()
     private val serializer = GsonBuilder().getConfiguredSerializer()
-    private val mapper = FundingResponseNotificationMapper()
+    private val mapper = InvoiceIssuanceConfirmationNotificationMapper()
 
     override fun start() {
-        logger.info("Starting funding response observer...")
+        logger.info("Starting invoice observer...")
 
         vaultService.observe {
             try {
-                val json = serializer.toJson(mapper.map(it.state.data))
-                val url = erpConfiguration.url + "restlet.nl?script=customscript_funding_response&deploy=1"
+                val json = serializer.toJson(mapper.map(it))
+                val url = erpConfiguration.url + "restlet.nl?script=customscript_confirmation_of_issuance&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json, createClientHeaders()))
 
                 Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUPPLIER FUNDING RESPONSE OBSERVER SERVICE >> Funding Response external Id: " + it.state.data.linearId.externalId)
+                logger.debug("*** SUPPLIER INVOICE OBSERVER SERVICE >> Invoice external Id: " + it.state.data.linearId.externalId)
 
                 logger.info(response.body.toString())
             } catch (ex: Exception) {

@@ -6,7 +6,7 @@ import com.tradeix.concord.shared.mapper.Mapper
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.hash
 
-class InvoiceIssuanceConfirmationMapper
+class InvoiceIssuanceConfirmationNotificationMapper
     : Mapper<StateAndRef<InvoiceState>, InvoiceResponseMessage>() {
 
     override fun map(source: StateAndRef<InvoiceState>): InvoiceResponseMessage {

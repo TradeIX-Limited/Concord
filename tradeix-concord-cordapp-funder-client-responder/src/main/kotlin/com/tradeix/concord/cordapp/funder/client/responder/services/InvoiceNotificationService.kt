@@ -3,10 +3,10 @@ package com.tradeix.concord.cordapp.funder.client.responder.services
 import com.google.gson.GsonBuilder
 import com.tradeix.concord.cordapp.funder.client.responder.components.TIXAuthenticatedHeaderProvider
 import com.tradeix.concord.cordapp.funder.client.responder.components.TIXConfiguration
-import com.tradeix.concord.cordapp.funder.mappers.invoices.InvoiceImportMapper
-import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportMessage
-import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportRequestMessage
-import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportResponseMessage
+import com.tradeix.concord.cordapp.funder.mappers.invoices.InvoiceImportNotificationMapper
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportNotificationMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportNotificationRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceImportNotificationResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.http.HttpClient
 import com.tradeix.concord.shared.client.services.ObserverService
@@ -23,21 +23,21 @@ import java.util.*
 import kotlin.concurrent.timer
 
 @Component
-class InvoiceObserverService(
+class InvoiceNotificationService(
         private val rpcConnectionProvider: RPCConnectionProvider,
         private val tixConfiguration: TIXConfiguration,
         private val tixAuthenticatedHeaderProvider: TIXAuthenticatedHeaderProvider
 ) : ObserverService {
 
     companion object {
-        private val logger: Logger = loggerFor<InvoiceObserverService>()
+        private val logger: Logger = loggerFor<InvoiceNotificationService>()
     }
 
     private val vaultService = VaultService.fromCordaRPCOps<InvoiceState>(rpcConnectionProvider.proxy)
     private val client = HttpClient()
     private val serializer = GsonBuilder().getConfiguredSerializer()
-    private val mapper = InvoiceImportMapper()
-    private val invoices = mutableListOf<InvoiceImportMessage>()
+    private val mapper = InvoiceImportNotificationMapper()
+    private val invoices = mutableListOf<InvoiceImportNotificationMessage>()
 
     private var vaultObserverTimer: Timer? = null
 
@@ -52,9 +52,9 @@ class InvoiceObserverService(
 
             vaultObserverTimer = timer(period = tixConfiguration.vaultObserverTimeout, action = {
                 try {
-                    val json = serializer.toJson(InvoiceImportRequestMessage(invoices))
+                    val json = serializer.toJson(InvoiceImportNotificationRequestMessage(invoices))
                     val url = tixConfiguration.webApiUrl + "v1/import/invoices"
-                    val response = client.post<InvoiceImportResponseMessage>(
+                    val response = client.post<InvoiceImportNotificationResponseMessage>(
                             url,
                             HttpEntity(json, tixAuthenticatedHeaderProvider.headers))
 

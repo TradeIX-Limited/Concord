@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Integration Tests" type="JUnit" factoryName="JUnit" folderName="Tests" show_console_on_std_err="true" show_console_on_std_out="true">
+  <configuration default="false" name="Run Integration Tests" type="JUnit" factoryName="JUnit" folderName="Tests" show_console_on_std_out="true" show_console_on_std_err="true">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <module name="tradeix-concord-tests" />
-    <shortenClasspath name="MANIFEST" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PACKAGE_NAME" value="com.tradeix.concord.tests.integration" />
@@ -11,10 +11,12 @@
     <option name="VM_PARAMETERS" value="-ea -javaagent:../lib/quasar.jar -Dco.paralleluniverse.fibers.verifyInstrumentation=true" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+    <option name="ENV_VARIABLES" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="singleModule" />
     </option>
+    <envs />
     <patterns />
     <method />
   </configuration>
