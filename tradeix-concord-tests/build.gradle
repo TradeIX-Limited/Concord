@@ -34,6 +34,9 @@ dependencies {
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
     testCompile "$corda_release_group:corda-core:$corda_release_version"
 
+    testCompile "org.apache.activemq:artemis-commons:$active_mq_version"
+    testCompile "org.apache.activemq:artemis-core-client:$active_mq_version"
+
     testCompile project(":tradeix-concord-shared")
     testCompile project(":tradeix-concord-shared-cordapp")
     testCompile project(":tradeix-concord-shared-domain")
