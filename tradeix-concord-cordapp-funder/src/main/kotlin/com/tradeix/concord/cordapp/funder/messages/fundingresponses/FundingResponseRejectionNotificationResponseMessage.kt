@@ -3,4 +3,4 @@ package com.tradeix.concord.cordapp.funder.messages.fundingresponses
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-data class FundingResponseImportNotificationResponseMessage(val batchUploadId: String)
+data class FundingResponseRejectionNotificationResponseMessage(val batchUploadId: String)

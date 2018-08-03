@@ -1,5 +1,7 @@
 package com.tradeix.concord.cordapp.funder.client.responder
 
+import com.tradeix.concord.cordapp.funder.client.responder.services.FundingResponseAcceptanceNotificationService
+import com.tradeix.concord.cordapp.funder.client.responder.services.FundingResponseRejectionNotificationService
 import com.tradeix.concord.cordapp.funder.client.responder.services.InvoiceNotificationService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -12,7 +14,9 @@ import org.springframework.context.annotation.ComponentScans
         ComponentScan("com.tradeix.concord.cordapp.funder.client.responder.services")
 )
 @EnableAutoConfiguration
-class Application(invoiceNotificationService: InvoiceNotificationService) {
+class Application(invoiceNotificationService: InvoiceNotificationService,
+                  fundingResponseRejectionNotificationService: FundingResponseRejectionNotificationService,
+                  fundingResponseAcceptanceNotificationService: FundingResponseAcceptanceNotificationService) {
 
     companion object {
         @JvmStatic
@@ -23,5 +27,7 @@ class Application(invoiceNotificationService: InvoiceNotificationService) {
 
     init {
         invoiceNotificationService.start()
+        fundingResponseRejectionNotificationService.start()
+        fundingResponseAcceptanceNotificationService.start()
     }
 }
