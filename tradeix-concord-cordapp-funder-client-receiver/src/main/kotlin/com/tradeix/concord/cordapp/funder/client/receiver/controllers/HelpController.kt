@@ -108,6 +108,7 @@ class HelpController {
                                 "produces" to listOf(
                                         InvoiceResponseMessage(
                                                 externalId = "INVOICE_1",
+                                                owner = "Owner X500 Name",
                                                 buyer = "Buyer X500 Name",
                                                 buyerCompanyReference = "Albertsons",
                                                 supplier = "Supplier X500 Name",
@@ -145,6 +146,7 @@ class HelpController {
                                 "url_parameter" to "externalId",
                                 "produces" to InvoiceResponseMessage(
                                         externalId = "INVOICE_1",
+                                        owner = "Owner X500 Name",
                                         buyer = "Buyer X500 Name",
                                         buyerCompanyReference = "Albertsons",
                                         supplier = "Supplier X500 Name",
