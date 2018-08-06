@@ -1,12 +1,12 @@
 package com.tradeix.concord.tests.unit.flows.invoices
 
+import com.tradeix.concord.cordapp.funder.flows.invoices.InvoiceTransferInitiatorFlow
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceTransferInitiatorFlow
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.node.MockNetwork

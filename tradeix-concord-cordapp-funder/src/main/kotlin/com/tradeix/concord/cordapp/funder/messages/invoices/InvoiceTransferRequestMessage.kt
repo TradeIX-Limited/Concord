@@ -1,4 +1,4 @@
-package com.tradeix.concord.cordapp.supplier.messages.invoices
+package com.tradeix.concord.cordapp.funder.messages.invoices
 
 import net.corda.core.serialization.CordaSerializable
 

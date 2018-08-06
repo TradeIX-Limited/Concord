@@ -1,6 +1,6 @@
-package com.tradeix.concord.cordapp.supplier.mappers.invoices
+package com.tradeix.concord.cordapp.funder.mappers.invoices
 
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferRequestMessage
 import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.tryParse
 import com.tradeix.concord.shared.mapper.InputAndOutput

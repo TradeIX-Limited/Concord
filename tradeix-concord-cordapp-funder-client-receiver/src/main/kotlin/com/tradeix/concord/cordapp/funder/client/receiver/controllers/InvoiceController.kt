@@ -1,11 +1,8 @@
-package com.tradeix.concord.cordapp.supplier.client.receiver.controllers
+package com.tradeix.concord.cordapp.funder.client.receiver.controllers
 
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceAmendmentInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceCancellationInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.flows.invoices.InvoiceIssuanceInitiatorFlow
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
+import com.tradeix.concord.cordapp.funder.flows.invoices.InvoiceTransferInitiatorFlow
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransactionResponseMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferTransactionRequestMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.mappers.InvoiceResponseMapper
 import com.tradeix.concord.shared.client.webapi.ResponseBuilder
@@ -27,12 +24,11 @@ import java.util.concurrent.Callable
 @RestController
 @RequestMapping(path = arrayOf("/invoices"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
 class InvoiceController(private val rpc: RPCConnectionProvider) {
-
     private val vaultService = VaultService.fromCordaRPCOps<InvoiceState>(rpc.proxy)
     private val invoiceResponseMapper = InvoiceResponseMapper()
 
     companion object {
-        private val logger : Logger = loggerFor<InvoiceController>()
+        private val logger: Logger = loggerFor<InvoiceController>()
     }
 
     @GetMapping()
@@ -111,13 +107,13 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
         }
     }
 
-    @PostMapping(path = arrayOf("/issue"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun issueInvoice(
-            @RequestBody message: InvoiceTransactionRequestMessage
+    @PutMapping(path = arrayOf("/transfer"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun transferInvoice(
+            @RequestBody message: InvoiceTransferTransactionRequestMessage
     ): Callable<ResponseEntity<*>> {
         return Callable {
             try {
-                val future = rpc.proxy.startTrackedFlow(::InvoiceIssuanceInitiatorFlow, message)
+                val future = rpc.proxy.startTrackedFlow(::InvoiceTransferInitiatorFlow, message)
                 future.progress.subscribe { println(it) }
                 val result = future.returnValue.getOrThrow()
                 val response = InvoiceTransactionResponseMessage(
@@ -126,61 +122,7 @@ class InvoiceController(private val rpc: RPCConnectionProvider) {
                 )
 
                 Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUCCESSFULLY ISSUE INVOICE>> Transaction Id: " + response.transactionId)
-
-                ResponseBuilder.ok(response)
-            } catch (ex: Exception) {
-                when (ex) {
-                    is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
-                    else -> ResponseBuilder.internalServerError(ex.message)
-                }
-            }
-        }
-    }
-
-    @PutMapping(path = arrayOf("/amend"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun amendInvoice(
-            @RequestBody message: InvoiceTransactionRequestMessage
-    ): Callable<ResponseEntity<*>> {
-        return Callable {
-            try {
-                val future = rpc.proxy.startTrackedFlow(::InvoiceAmendmentInitiatorFlow, message)
-                future.progress.subscribe { println(it) }
-                val result = future.returnValue.getOrThrow()
-                val response = InvoiceTransactionResponseMessage(
-                        externalIds = result.tx.outputsOfType<InvoiceState>().map { it.linearId.externalId!! },
-                        transactionId = result.tx.id.toString()
-                )
-
-                Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUCCESSFULLY AMEND INVOICE>> Transaction Id: " + response.transactionId)
-
-                ResponseBuilder.ok(response)
-            } catch (ex: Exception) {
-                when (ex) {
-                    is ValidationException -> ResponseBuilder.validationFailed(ex.validationMessages)
-                    else -> ResponseBuilder.internalServerError(ex.message)
-                }
-            }
-        }
-    }
-
-    @DeleteMapping(path = arrayOf("/cancel"), consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun cancelInvoice(
-            @RequestBody message: InvoiceCancellationTransactionRequestMessage
-    ): Callable<ResponseEntity<*>> {
-        return Callable {
-            try {
-                val future = rpc.proxy.startTrackedFlow(::InvoiceCancellationInitiatorFlow, message)
-                future.progress.subscribe { println(it) }
-                val result = future.returnValue.getOrThrow()
-                val response = InvoiceTransactionResponseMessage(
-                        externalIds = message.assets.map { it.externalId!! },
-                        transactionId = result.tx.id.toString()
-                )
-
-                Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUCCESSFULLY CANCEL INVOICE>> Transaction Id: " + response.transactionId)
+                logger.debug("*** SUCCESSFULLY TRANSFER INVOICE>> Transaction Id: " + response.transactionId)
 
                 ResponseBuilder.ok(response)
             } catch (ex: Exception) {

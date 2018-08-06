@@ -1,6 +1,11 @@
 package com.tradeix.concord.shared.mockdata
 
-import com.tradeix.concord.cordapp.supplier.messages.invoices.*
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceCancellationTransactionRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceRequestMessage
+import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionRequestMessage
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.BUYER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.FUNDER_1_NAME
 import com.tradeix.concord.shared.mockdata.MockCordaX500Names.SUPPLIER_1_NAME

@@ -1,6 +1,6 @@
 package com.tradeix.concord.tests.unit.validators.messages
 
-import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferRequestMessageValidator
+import com.tradeix.concord.cordapp.funder.validators.invoices.InvoiceTransferRequestMessageValidator
 import com.tradeix.concord.shared.mockdata.MockInvoices.INVOICE_TRANSFER_REQUEST_MESSAGE
 import org.junit.Test
 import kotlin.test.assertEquals
