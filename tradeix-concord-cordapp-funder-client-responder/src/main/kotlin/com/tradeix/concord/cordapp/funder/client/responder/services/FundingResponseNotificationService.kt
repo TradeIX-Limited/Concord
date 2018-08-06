@@ -6,7 +6,6 @@ import com.tradeix.concord.cordapp.funder.client.responder.components.TIXConfigu
 import com.tradeix.concord.cordapp.funder.mappers.fundingresponses.FundingResponseNotificationMapper
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseNotificationMessage
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseNotificationRequestMessage
-import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseNotificationResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
 import com.tradeix.concord.shared.client.http.HttpClient
 import com.tradeix.concord.shared.client.services.ObserverService
