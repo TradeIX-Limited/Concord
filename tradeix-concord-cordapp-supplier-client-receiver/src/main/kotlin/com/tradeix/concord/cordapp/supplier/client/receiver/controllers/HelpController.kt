@@ -7,7 +7,6 @@ import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingR
 import com.tradeix.concord.cordapp.supplier.validators.fundingresponses.FundingResponseConfirmationRequestMessageRejectionValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceCancellationTransactionRequestMessageValidator
 import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransactionRequestMessageValidator
-import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferTransactionRequestMessageValidator
 import com.tradeix.concord.shared.client.messages.fundingresponses.FundingResponseResponseMessage
 import com.tradeix.concord.shared.client.messages.invoices.InvoiceResponseMessage
 import com.tradeix.concord.shared.client.webapi.RequestParameterInfo
@@ -57,10 +56,6 @@ class HelpController {
                             mapOf(
                                     "endpoint" to "/invoices/amend",
                                     "help" to "/help/invoices/amend"
-                            ),
-                            mapOf(
-                                    "endpoint" to "/invoices/transfer",
-                                    "help" to "/help/invoices/transfer"
                             ),
                             mapOf(
                                     "endpoint" to "/invoices/cancel",
@@ -263,31 +258,6 @@ class HelpController {
                                 "messageValidation" to InvoiceTransactionRequestMessageValidator()
                                         .getValidationMessages(),
                                 "contractValidation" to InvoiceContract.Amend()
-                                        .getValidationMessages()
-                        )
-                )
-            } catch (ex: Exception) {
-                ResponseBuilder.internalServerError(ex.message)
-            }
-        }
-    }
-
-    @GetMapping(path = arrayOf("/invoices/transfer"))
-    fun getInvoiceTransferHelp(): Callable<ResponseEntity<*>> {
-        return Callable {
-            try {
-                ResponseBuilder.ok(
-                        mapOf(
-                                "consumes" to InvoiceTransferTransactionRequestMessage(
-                                        assets = listOf(InvoiceTransferRequestMessage())
-                                ),
-                                "produces" to InvoiceTransactionResponseMessage(
-                                        SecureHash.randomSHA256().toString(),
-                                        listOf("INVOICE_1", "INVOICE_2")
-                                ),
-                                "messageValidation" to InvoiceTransferTransactionRequestMessageValidator()
-                                        .getValidationMessages(),
-                                "contractValidation" to InvoiceContract.Transfer()
                                         .getValidationMessages()
                         )
                 )

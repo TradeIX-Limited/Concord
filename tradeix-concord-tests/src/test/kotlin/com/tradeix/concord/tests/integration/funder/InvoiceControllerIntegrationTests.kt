@@ -1,36 +1,17 @@
-package com.tradeix.concord.tests.integration.supplier
+package com.tradeix.concord.tests.integration.funder
 
 import com.tradeix.concord.shared.extensions.canParse
 import com.tradeix.concord.tests.integration.ControllerIntegrationTest
 import net.corda.core.crypto.SecureHash
 import org.junit.Test
 
-class InvoiceControllerIntegrationTests : ControllerIntegrationTest() {
+class InvoiceControllerIntegrationTests: ControllerIntegrationTest() {
 
     @Test
-    fun `Can issue an invoice`() {
-        withDriver {
-            val result = issueInvoicesOrThrow()
-
-            assert(result.body.externalIds.containsAll(listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")))
-        }
-    }
-
-    @Test
-    fun `Can amend an invoice`() {
+    fun `Can transfer an invoice`() {
         withDriver {
             issueInvoicesOrThrow()
-            val result = amendInvoicesOrThrow()
-
-            assert(result.body.externalIds.containsAll(listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")))
-        }
-    }
-
-    @Test
-    fun `Can cancel an invoice`() {
-        withDriver {
-            issueInvoicesOrThrow()
-            val result = cancelInvoicesOrThrow()
+            val result = transferInvoicesOrThrow()
 
             assert(result.body.externalIds.containsAll(listOf("INVOICE_1", "INVOICE_2", "INVOICE_3")))
         }
@@ -40,7 +21,7 @@ class InvoiceControllerIntegrationTests : ControllerIntegrationTest() {
     fun `Can get the most recent invoice hash`() {
         withDriver {
             issueInvoicesOrThrow()
-            val result = getSuppliersMostRecentInvoiceHashOrThrow()
+            val result = getFundersMostRecentInvoiceHashOrThrow()
             assert(SecureHash.canParse(result.values.single()))
         }
     }
@@ -49,7 +30,7 @@ class InvoiceControllerIntegrationTests : ControllerIntegrationTest() {
     fun `Can get the unique invoice count`() {
         withDriver {
             issueInvoicesOrThrow()
-            val result = getSuppliersUniqueInvoiceCountOrThrow()
+            val result = getFundersUniqueInvoiceCountOrThrow()
             assert(result.values.single() != 0)
         }
     }
@@ -58,7 +39,7 @@ class InvoiceControllerIntegrationTests : ControllerIntegrationTest() {
     fun `Can get unconsumed invoice state by externalId`() {
         withDriver {
             issueInvoicesOrThrow()
-            val result = getSuppliersUnconsumedInvoiceStateByExternalIdOrThrow()
+            val result = getFundersUnconsumedInvoiceStateByExternalIdOrThrow()
             assert(result.values.first().externalId.equals("INVOICE_1"))
         }
     }
@@ -67,7 +48,7 @@ class InvoiceControllerIntegrationTests : ControllerIntegrationTest() {
     fun `Can get the invoice states`() {
         withDriver {
             issueInvoicesOrThrow()
-            val result = getSuppliersInvoiceStatesOrThrow()
+            val result = getFundersInvoiceStatesOrThrow()
 
             result.values.forEach {
                 it.forEach {

@@ -32,6 +32,12 @@ import org.junit.Before
 import org.springframework.http.ResponseEntity
 import kotlin.test.fail
 
+typealias SupplierInvoiceController =
+        com.tradeix.concord.cordapp.supplier.client.receiver.controllers.InvoiceController
+
+typealias FunderInvoiceController =
+        com.tradeix.concord.cordapp.funder.client.receiver.controllers.InvoiceController
+
 typealias SupplierFundingResponseController =
         com.tradeix.concord.cordapp.supplier.client.receiver.controllers.FundingResponseController
 
@@ -51,7 +57,8 @@ abstract class ControllerIntegrationTest {
     protected lateinit var funder: NodeHandle
     protected lateinit var supplier: NodeHandle
 
-    private lateinit var invoiceController: InvoiceController
+    private lateinit var supplierInvoiceController: SupplierInvoiceController
+    private lateinit var funderInvoiceController: FunderInvoiceController
     private lateinit var supplierFundingResponseController: SupplierFundingResponseController
     private lateinit var funderFundingResponseController: FunderFundingResponseController
     private lateinit var funderNodeController: FunderNodeController
@@ -117,7 +124,8 @@ abstract class ControllerIntegrationTest {
                 port = funder.rpcAddress.port
         )
 
-        invoiceController = InvoiceController(supplierRpc)
+        supplierInvoiceController = SupplierInvoiceController(supplierRpc)
+        funderInvoiceController = FunderInvoiceController(funderRpc)
         funderFundingResponseController = FunderFundingResponseController(funderRpc)
         supplierFundingResponseController = SupplierFundingResponseController(supplierRpc)
         funderNodeController = FunderNodeController(funderRpc)
@@ -132,7 +140,7 @@ abstract class ControllerIntegrationTest {
                 observers = listOf(FUNDER_1_NAME)
         )
 
-        val response = invoiceController.issueInvoice(request).call()
+        val response = supplierInvoiceController.issueInvoice(request).call()
 
         return try {
             response as ResponseEntity<InvoiceTransactionResponseMessage>
@@ -150,7 +158,7 @@ abstract class ControllerIntegrationTest {
                 observers = listOf(FUNDER_1_NAME)
         )
 
-        val response = invoiceController.amendInvoice(request).call()
+        val response = supplierInvoiceController.amendInvoice(request).call()
 
         return try {
             response as ResponseEntity<InvoiceTransactionResponseMessage>
@@ -166,7 +174,7 @@ abstract class ControllerIntegrationTest {
                 owner = FUNDER_1_NAME
         )
 
-        val response = invoiceController.transferInvoice(request).call()
+        val response = funderInvoiceController.transferInvoice(request).call()
 
         return try {
             response as ResponseEntity<InvoiceTransactionResponseMessage>
@@ -182,7 +190,7 @@ abstract class ControllerIntegrationTest {
                 observers = listOf(FUNDER_1_NAME)
         )
 
-        val response = invoiceController.cancelInvoice(request).call()
+        val response = supplierInvoiceController.cancelInvoice(request).call()
 
         return try {
             response as ResponseEntity<InvoiceTransactionResponseMessage>
@@ -228,8 +236,8 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getMostRecentInvoiceHashOrThrow(): Map<String, String> {
-        val response = invoiceController.getMostRecentInvoiceHash().call()
+    protected fun getSuppliersMostRecentInvoiceHashOrThrow(): Map<String, String> {
+        val response = supplierInvoiceController.getMostRecentInvoiceHash().call()
 
         return try {
             response.body as Map<String, String>
@@ -239,8 +247,8 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getUniqueInvoiceCountOrThrow(): Map<String, Int> {
-        val response = invoiceController.getUniqueInvoiceCount().call()
+    protected fun getSuppliersUniqueInvoiceCountOrThrow(): Map<String, Int> {
+        val response = supplierInvoiceController.getUniqueInvoiceCount().call()
 
         return try {
             response.body as Map<String, Int>
@@ -250,9 +258,9 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getUnconsumedInvoiceStateByExternalIdOrThrow(): Map<String, InvoiceResponseMessage> {
+    protected fun getSuppliersUnconsumedInvoiceStateByExternalIdOrThrow(): Map<String, InvoiceResponseMessage> {
         val request = "INVOICE_1"
-        val response = invoiceController.getUnconsumedInvoiceStateByExternalId(request).call()
+        val response = supplierInvoiceController.getUnconsumedInvoiceStateByExternalId(request).call()
 
         return try {
             response.body as Map<String, InvoiceResponseMessage>
@@ -262,8 +270,53 @@ abstract class ControllerIntegrationTest {
         }
     }
 
-    protected fun getInvoiceStatesOrThrow(): Map<String, List<InvoiceResponseMessage>> {
-        val response = invoiceController.getInvoiceStates("INVOICE_1", "unconsumed", 1, 50).call()
+    protected fun getSuppliersInvoiceStatesOrThrow(): Map<String, List<InvoiceResponseMessage>> {
+        val response = supplierInvoiceController.getInvoiceStates("INVOICE_1", "unconsumed", 1, 50).call()
+
+        return try {
+            response.body as Map<String, List<InvoiceResponseMessage>>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getFundersMostRecentInvoiceHashOrThrow(): Map<String, String> {
+        val response = funderInvoiceController.getMostRecentInvoiceHash().call()
+
+        return try {
+            response.body as Map<String, String>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getFundersUniqueInvoiceCountOrThrow(): Map<String, Int> {
+        val response = funderInvoiceController.getUniqueInvoiceCount().call()
+
+        return try {
+            response.body as Map<String, Int>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getFundersUnconsumedInvoiceStateByExternalIdOrThrow(): Map<String, InvoiceResponseMessage> {
+        val request = "INVOICE_1"
+        val response = funderInvoiceController.getUnconsumedInvoiceStateByExternalId(request).call()
+
+        return try {
+            response.body as Map<String, InvoiceResponseMessage>
+        } catch (ex: Exception) {
+            val errorResponse = response as ResponseEntity<ErrorResponseMessage>
+            fail(errorResponse.body.error)
+        }
+    }
+
+    protected fun getFundersInvoiceStatesOrThrow(): Map<String, List<InvoiceResponseMessage>> {
+        val response = funderInvoiceController.getInvoiceStates("INVOICE_1", "unconsumed", 1, 50).call()
 
         return try {
             response.body as Map<String, List<InvoiceResponseMessage>>

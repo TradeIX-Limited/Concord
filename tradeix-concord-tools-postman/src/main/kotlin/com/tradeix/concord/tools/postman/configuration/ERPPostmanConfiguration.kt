@@ -127,19 +127,6 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
-        group.item.add(Endpoint("help/invoices/transfer", Request(
-                method = "GET",
-                description = "Gets the help documentation for the invoices/transfer endpoint.",
-                header = RequestHeader.EMPTY,
-                body = RequestBody.EMPTY,
-                url = RequestUrl.from(
-                        protocol = "http",
-                        host = host,
-                        port = node.port,
-                        path = "help/invoices/transfer"
-                )
-        )))
-
         group.item.add(Endpoint("help/invoices/cancel", Request(
                 method = "GET",
                 description = "Gets the help documentation for the invoices/cancel endpoint.",
@@ -465,6 +452,71 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/transfer", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/transfer endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/transfer"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/externalId", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/{externalId} endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/externalId"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/count", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/count endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/count"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/hash", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/hash endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/hash"
                 )
         )))
 

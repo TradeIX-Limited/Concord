@@ -1,6 +1,6 @@
-package com.tradeix.concord.cordapp.supplier.validators.invoices
+package com.tradeix.concord.cordapp.funder.validators.invoices
 
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferTransactionRequestMessage
 import com.tradeix.concord.shared.validation.ObjectValidator
 import com.tradeix.concord.shared.validation.ValidationBuilder
 import com.tradeix.concord.shared.validation.extensions.isValidSecureHash

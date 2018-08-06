@@ -1,9 +1,9 @@
-package com.tradeix.concord.cordapp.supplier.flows.invoices
+package com.tradeix.concord.cordapp.funder.flows.invoices
 
 import co.paralleluniverse.fibers.Suspendable
-import com.tradeix.concord.cordapp.supplier.mappers.invoices.InvoiceTransferMapper
-import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransferTransactionRequestMessage
-import com.tradeix.concord.cordapp.supplier.validators.invoices.InvoiceTransferTransactionRequestMessageValidator
+import com.tradeix.concord.cordapp.funder.mappers.invoices.InvoiceTransferMapper
+import com.tradeix.concord.cordapp.funder.messages.invoices.InvoiceTransferTransactionRequestMessage
+import com.tradeix.concord.cordapp.funder.validators.invoices.InvoiceTransferTransactionRequestMessageValidator
 import com.tradeix.concord.shared.cordapp.flows.CollectSignaturesInitiatorFlow
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
