@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 @CordaSerializable
 data class InvoiceResponseMessage(
         val externalId: String,
+        val owner: String,
         val buyer: String,
         val buyerCompanyReference: String,
         val supplier: String,
