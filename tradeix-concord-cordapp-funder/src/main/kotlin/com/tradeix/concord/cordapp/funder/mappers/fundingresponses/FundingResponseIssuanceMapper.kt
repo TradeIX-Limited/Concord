@@ -41,8 +41,6 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
             throw FlowException("A FundingResponseState with externalId '${source.externalId}' already exists.")
         }
 
-        // TODO : Add checks to find existing funding request.
-
         val invoiceLinearIds: MutableCollection<UniqueIdentifier> = mutableListOf()
 
         source.invoiceExternalIds!!.forEach {
@@ -58,7 +56,8 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
 
         return FundingResponseState(
                 linearId = UniqueIdentifier(source.externalId),
-                fundingRequestLinearId = null, // TODO : See above and use this when implemented
+                // TODO : This should be mapped to an existing funding request from the vault.
+                fundingRequestLinearId = UniqueIdentifier(externalId = source.fundingRequestExternalId),
                 invoiceLinearIds = invoiceLinearIds,
                 supplier = supplier,
                 funder = funder,
