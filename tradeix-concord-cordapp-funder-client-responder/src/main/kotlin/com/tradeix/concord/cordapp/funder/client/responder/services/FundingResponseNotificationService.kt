@@ -51,12 +51,12 @@ class FundingResponseNotificationService(
             vaultObserverTimer = timer(period = tixConfiguration.vaultObserverTimeout, action = {
                 try {
                     val json = serializer.toJson(FundingResponseNotificationRequestMessage(fundingResponses))
-                    val url = tixConfiguration.webApiUrl + "v1/fundingresponse"
-                    val response = client.post<FundingResponseNotificationResponseMessage>(
+                    val url = tixConfiguration.webApiUrl + "v1/fundingresponses"
+                    val response = client.post<Any>(
                             url,
                             HttpEntity(json, tixAuthenticatedHeaderProvider.headers))
 
-                    logger.info("upload ID: ${response.body.batchUploadId}.")
+                    logger.info("Status Code: ${response.statusCode}.")
 
                 } catch (ex: Exception) {
                     logger.error(ex.message)
