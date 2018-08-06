@@ -9,6 +9,7 @@ class InvoiceResponseMapper : Mapper<InvoiceState, InvoiceResponseMessage>() {
     override fun map(source: InvoiceState): InvoiceResponseMessage {
         return InvoiceResponseMessage(
                 externalId = source.linearId.externalId!!,
+                owner = source.owner.nameOrNull().toString(),
                 buyer = source.buyer.toString(),
                 buyerCompanyReference = source.buyer.companyReference.toString(),
                 supplier = source.supplier.toString(),
