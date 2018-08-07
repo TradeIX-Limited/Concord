@@ -1,11 +1,13 @@
 package com.tradeix.concord.apis
 
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.flows.invoice.InvoiceIssuance
+import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
+import com.tradeix.concord.flows.invoice.*
 import com.tradeix.concord.messages.webapi.FailedResponseMessage
 import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
+import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
 import com.tradeix.concord.messages.webapi.SingleIdentitySuccessResponseMessage
-import com.tradeix.concord.messages.webapi.invoice.InvoiceIssuanceRequestMessage
+import com.tradeix.concord.messages.webapi.invoice.*
 import com.tradeix.concord.states.InvoiceState
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
@@ -17,14 +19,6 @@ import net.corda.core.utilities.getOrThrow
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import com.tradeix.concord.extensions.CordaRPCOpsExtensions.vaultCountBy
-import com.tradeix.concord.flows.invoice.InvoiceAmendment
-import com.tradeix.concord.flows.invoice.InvoiceCancellation
-import com.tradeix.concord.flows.invoice.InvoiceOwnership
-import com.tradeix.concord.messages.webapi.MultiIdentitySuccessResponseMessage
-import com.tradeix.concord.messages.webapi.invoice.InvoiceAmendmentRequestMessage
-import com.tradeix.concord.messages.webapi.invoice.InvoiceCancellationRequestMessage
-import com.tradeix.concord.messages.webapi.invoice.InvoiceOwnershipRequestMessage
 
 @Path("invoices")
 class InvoiceApi(val services: CordaRPCOps) {
@@ -186,7 +180,7 @@ class InvoiceApi(val services: CordaRPCOps) {
     @Path("cancel")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    fun cancelPurchaseOrder(message: InvoiceCancellationRequestMessage): Response {
+    fun cancelInvoice(message: InvoiceCancellationRequestMessage): Response {
         try {
             val flowHandle = services.startTrackedFlow(InvoiceCancellation::InitiatorFlow, message.toModel())
             flowHandle.progress.subscribe { println(">> $it") }
@@ -196,6 +190,36 @@ class InvoiceApi(val services: CordaRPCOps) {
                     .entity(SingleIdentitySuccessResponseMessage(
                             externalId = message.externalId!!,
                             transactionId = result.id.toString()))
+                    .build()
+        } catch (ex: Throwable) {
+            return when (ex) {
+                is FlowValidationException -> Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(FailedValidationResponseMessage(ex.validationErrors))
+                        .build()
+                else -> Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(FailedResponseMessage(ex.message!!))
+                        .build()
+            }
+        }
+    }
+
+    @PUT
+    @Path("ipu")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun ipuInvoice(message: InvoiceIPURequestMessage): Response {
+        try {
+            val flowHandle = services.startTrackedFlow(InvoiceIPU::InitiatorFlow, message.toModel())
+            flowHandle.progress.subscribe { println(">> $it") }
+            val result = flowHandle.returnValue.getOrThrow()
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = message.externalId!!,
+                            transactionId = result.id.toString()
+                    ))
                     .build()
         } catch (ex: Throwable) {
             return when (ex) {

@@ -27,7 +27,6 @@ import com.tradeix.concord.TestValueHelper.SITE_ID
 import com.tradeix.concord.TestValueHelper.STATUS
 import com.tradeix.concord.TestValueHelper.TIX_INVOICE_VERSION
 import com.tradeix.concord.exceptions.FlowValidationException
-import com.tradeix.concord.exceptions.FlowVerificationException
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
@@ -143,6 +142,7 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,

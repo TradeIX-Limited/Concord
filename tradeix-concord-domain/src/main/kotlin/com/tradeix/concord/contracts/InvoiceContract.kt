@@ -1,13 +1,12 @@
 package com.tradeix.concord.contracts
 
 import com.tradeix.concord.states.InvoiceState
-import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
+import net.corda.core.contracts.Requirements.using
 import net.corda.core.contracts.requireSingleCommand
 import net.corda.core.transactions.LedgerTransaction
 import java.security.PublicKey
-import net.corda.core.contracts.Requirements.using
 
 class InvoiceContract : Contract {
 
@@ -87,6 +86,23 @@ class InvoiceContract : Contract {
                 // Transaction Rules
                 CONTRACT_RULE_INPUTS using (tx.inputs.size == 1)
                 CONTRACT_RULE_OUTPUTS using (tx.outputs.isEmpty())
+            }
+        }
+
+        class IPU : Commands {
+            companion object {
+                val CONTRACT_RULE_INPUTS = "Only one input should be consumed when setting an invoice to IPU."
+                val CONTRACT_RULE_OUTPUTS = "Zero outputs should be created when setting an invoice to IPU."
+                val CONTRACT_RULE_STATUS = "The invoice status must be set to IPU."
+            }
+
+            override fun verify(tx: LedgerTransaction, signers: List<PublicKey>) {
+                // Transaction Rules
+                CONTRACT_RULE_INPUTS using (tx.inputs.size == 1)
+                CONTRACT_RULE_OUTPUTS using (tx.outputs.size == 1)
+
+                // State Rules
+                CONTRACT_RULE_STATUS using (tx.outputsOfType<InvoiceState>().single().status == "IPU")
             }
         }
     }
