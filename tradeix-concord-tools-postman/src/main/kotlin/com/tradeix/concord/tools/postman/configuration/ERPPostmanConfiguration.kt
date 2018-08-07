@@ -335,19 +335,6 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
-        group.item.add(Endpoint("invoices/transfer", Request(
-                method = "PUT",
-                description = "Transfers a collection of invoice states on the network.",
-                header = RequestHeader.APPLICATION_JSON,
-                body = JsonRequestBody(createMockInvoiceTransfers(10, FUNDER_1_NAME)),
-                url = RequestUrl.from(
-                        protocol = "http",
-                        host = host,
-                        port = node.port,
-                        path = "invoices/transfer"
-                )
-        )))
-
         group.item.add(Endpoint("invoices/cancel", Request(
                 method = "DELETE",
                 description = "Cancels a collection of invoice states on the network.",
@@ -455,19 +442,6 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                 )
         )))
 
-        group.item.add(Endpoint("help/invoices/transfer", Request(
-                method = "GET",
-                description = "Gets the help documentation for the invoices/transfer endpoint.",
-                header = RequestHeader.EMPTY,
-                body = RequestBody.EMPTY,
-                url = RequestUrl.from(
-                        protocol = "http",
-                        host = host,
-                        port = node.port,
-                        path = "help/invoices/transfer"
-                )
-        )))
-
         group.item.add(Endpoint("help/invoices", Request(
                 method = "GET",
                 description = "Gets the help documentation for the invoices endpoint.",
@@ -517,6 +491,19 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/invoices/hash"
+                )
+        )))
+
+        group.item.add(Endpoint("help/invoices/transfer", Request(
+                method = "GET",
+                description = "Gets the help documentation for the invoices/transfer endpoint.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "help/invoices/transfer"
                 )
         )))
 
@@ -621,6 +608,71 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         host = host,
                         port = node.port,
                         path = "help/nodes/local"
+                )
+        )))
+
+        group.item.add(Endpoint("invoices", Request(
+                method = "GET",
+                description = "Performs a vault query for invoice states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                )
+        )))
+
+        group.item.add(Endpoint("invoices/{externalId}", Request(
+                method = "GET",
+                description = "Performs a vault query for the latest invoice state by externalId.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "invoices/INVOICE_1"
+                )
+        )))
+
+        group.item.add(Endpoint("invoices/count", Request(
+                method = "GET",
+                description = "Performs a vault query to count the total number of unconsumed invoice states.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "invoices/count"
+                )
+        )))
+
+        group.item.add(Endpoint("invoices/hash", Request(
+                method = "GET",
+                description = "Performs a vault query to get the last known invoice state hash.",
+                header = RequestHeader.EMPTY,
+                body = RequestBody.EMPTY,
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "invoices/hash"
+                )
+        )))
+
+        group.item.add(Endpoint("invoices/transfer", Request(
+                method = "PUT",
+                description = "Transfers a collection of invoice states on the network.",
+                header = RequestHeader.APPLICATION_JSON,
+                body = JsonRequestBody(createMockInvoiceTransfers(10, FUNDER_1_NAME)),
+                url = RequestUrl.from(
+                        protocol = "http",
+                        host = host,
+                        port = node.port,
+                        path = "invoices/transfer"
                 )
         )))
 

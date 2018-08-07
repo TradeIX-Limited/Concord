@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "72220e3f-dc45-40d0-9a60-2e49f6ba333a",
+    "_postman_id": "bd042e4f-857c-4a40-80c9-bee1cff146e4",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -218,28 +218,6 @@
                 "help",
                 "invoices",
                 "amend"
-              ]
-            }
-          }
-        },
-        {
-          "response": [],
-          "name": "help/invoices/transfer",
-          "request": {
-            "method": "GET",
-            "description": "Gets the help documentation for the invoices/transfer endpoint.",
-            "header": [],
-            "body": null,
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8000",
-              "path": [
-                "help",
-                "invoices",
-                "transfer"
               ]
             }
           }
@@ -606,35 +584,6 @@
         },
         {
           "response": [],
-          "name": "invoices/transfer",
-          "request": {
-            "method": "PUT",
-            "description": "Transfers a collection of invoice states on the network.",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\n  \"assets\": [\n    {\n      \"externalId\": \"INVOICE_1\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_2\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_3\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_4\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_5\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_6\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_7\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_8\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_9\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_10\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    }\n  ],\n  \"observers\": [],\n  \"attachments\": []\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8000",
-              "path": [
-                "invoices",
-                "transfer"
-              ]
-            }
-          }
-        },
-        {
-          "response": [],
           "name": "invoices/cancel",
           "request": {
             "method": "DELETE",
@@ -894,6 +843,115 @@
         },
         {
           "response": [],
+          "name": "help/invoices/transfer",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/transfer endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/externalId",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/{externalId} endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices",
+                "externalId"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/count",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/count endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/hash",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/hash endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "help/fundingresponses",
           "request": {
             "method": "GET",
@@ -1069,6 +1127,118 @@
         },
         {
           "response": [],
+          "name": "invoices",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for invoice states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "invoices/{externalId}",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query for the latest invoice state by externalId.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "invoices",
+                "INVOICE_1"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "invoices/count",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to count the total number of unconsumed invoice states.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "invoices",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "invoices/hash",
+          "request": {
+            "method": "GET",
+            "description": "Performs a vault query to get the last known invoice state hash.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "invoices",
+                "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "invoices/transfer",
+          "request": {
+            "method": "PUT",
+            "description": "Transfers a collection of invoice states on the network.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "raw": "{\n  \"assets\": [\n    {\n      \"externalId\": \"INVOICE_1\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_2\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_3\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_4\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_5\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_6\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_7\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_8\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_9\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    },\n    {\n      \"externalId\": \"INVOICE_10\",\n      \"owner\": \"O=Funder 1, L=Madrid, C=ES\"\n    }\n  ],\n  \"observers\": [],\n  \"attachments\": []\n}",
+              "mode": "raw"
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "invoices",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
           "name": "fundingresponses",
           "request": {
             "method": "GET",
@@ -1163,7 +1333,7 @@
               }
             ],
             "body": {
-              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": null,\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\",\n  \"advanceInvoiceValue\": 1.00,\n  \"discountValue\": 1.00,\n  \"baseRate\": 1.00\n}",
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": null,\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\",\n  \"advanceInvoiceValue\": 1.00,\n  \"discountValue\": 1.00,\n  \"baseRate\": 1\n}",
               "mode": "raw"
             },
             "url": {
