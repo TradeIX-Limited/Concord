@@ -12,7 +12,7 @@ class FundingResponseSchemaV1Mapper
                 linearId = source.linearId.id,
                 linearExternalId = source.linearId.externalId!!,
                 fundingRequestLinearID = source.fundingRequestLinearId?.id,
-                fundingRequestExternalID = null, // TODO : Must be mapped when FundingRequestState is implemented.
+                fundingRequestExternalID = source.fundingRequestLinearId!!.externalId, // TODO : Must be mapped when FundingRequestState is implemented.
                 invoiceLinearIds = source.invoiceLinearIds.map { it.externalId!! }, // TODO : Collection<UID>
                 supplier = source.supplier,
                 funder = source.funder,

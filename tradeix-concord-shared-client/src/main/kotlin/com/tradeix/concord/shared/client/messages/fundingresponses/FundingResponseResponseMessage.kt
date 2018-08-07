@@ -6,7 +6,7 @@ import java.math.BigDecimal
 @CordaSerializable
 data class FundingResponseResponseMessage(
         val externalId: String,
-        val fundingRequestExternalId: String? = null,
+        val fundingRequestExternalId: String,
         val invoiceExternalIds: Collection<String>,
         val supplier: String,
         val funder: String,
