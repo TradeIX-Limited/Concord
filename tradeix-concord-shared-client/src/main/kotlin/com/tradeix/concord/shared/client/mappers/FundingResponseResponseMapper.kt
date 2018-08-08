@@ -9,6 +9,7 @@ class FundingResponseResponseMapper : Mapper<FundingResponseState, FundingRespon
     override fun map(source: FundingResponseState): FundingResponseResponseMessage {
         return FundingResponseResponseMessage(
                 externalId = source.linearId.externalId!!,
+                fundingRequestExternalId = source.fundingRequestLinearId.externalId!!,
                 invoiceExternalIds = source.invoiceLinearIds.map { it.externalId!! },
                 supplier = source.supplier.toString(),
                 funder = source.funder.toString(),

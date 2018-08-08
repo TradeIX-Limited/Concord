@@ -311,7 +311,7 @@ class HelpController {
                                 "produces" to listOf(
                                         FundingResponseResponseMessage(
                                                 "FUNDING_RESPONSE_1",
-                                                null,
+                                                "FUNDING_REQUEST_1",
                                                 listOf("INV_001", "INV_002"),
                                                 "Supplier X500 Name",
                                                 "Funder X500 Name",
@@ -340,7 +340,7 @@ class HelpController {
                                 "url_parameter" to mapOf("externalId" to "FUNDING_RESPONSE_1"),
                                 "produces" to FundingResponseResponseMessage(
                                         "FUNDING_RESPONSE_1",
-                                        null,
+                                        "FUNDING_REQUEST_1",
                                         listOf("INV_001", "INV_002"),
                                         "Supplier X500 Name",
                                         "Funder X500 Name",

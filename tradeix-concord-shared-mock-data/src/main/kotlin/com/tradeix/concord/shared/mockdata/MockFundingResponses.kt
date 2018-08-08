@@ -12,7 +12,7 @@ object MockFundingResponses {
 
     val FUNDING_RESPONSE_ISSUANCE_REQUEST_MESSAGE = FundingResponseIssuanceRequestMessage(
             externalId = "FUNDING_RESPONSE_1",
-            fundingRequestExternalId = null, // TODO : Add test funding request
+            fundingRequestExternalId = "FUNDING_REQUEST_1", // TODO : Add test funding request
             invoiceExternalIds = listOf("INVOICE_1", "INVOICE_2", "INVOICE_3"),
             supplier = SUPPLIER_1_NAME.toString(),
             funder = FUNDER_1_NAME.toString(),

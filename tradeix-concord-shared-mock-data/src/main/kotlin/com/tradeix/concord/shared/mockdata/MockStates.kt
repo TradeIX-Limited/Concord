@@ -50,7 +50,10 @@ object MockStates {
                     "FUNDING_RESPONSE_EXTERNAL_ID",
                     UUID.fromString("00000000-0000-4000-0000-000000000005")
             ),
-            fundingRequestLinearId = null,
+            fundingRequestLinearId = UniqueIdentifier(
+                    "FUNDING_REQUEST_EXTERNAL_ID",
+                    UUID.fromString("00000000-0000-4000-0000-000000000008")
+            ),
             invoiceLinearIds = listOf(UniqueIdentifier(
                     "INVOICE_EXTERNAL_ID",
                     UUID.fromString("00000000-0000-4000-0000-000000000002")

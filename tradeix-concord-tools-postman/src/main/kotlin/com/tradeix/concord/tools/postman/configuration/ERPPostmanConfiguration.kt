@@ -266,7 +266,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                        path = "invoices?externalId=INVOICE_1&status=all&pageNumber=1&pageSize=50"
                 )
         )))
 
@@ -357,7 +357,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                        path = "fundingresponses?externalId=FUNDING_RESPONSE_1&status=all&pageNumber=1&pageSize=50"
                 )
         )))
 
@@ -620,7 +620,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                        path = "invoices?externalId=INVOICE_1&status=all&pageNumber=1&pageSize=50"
                 )
         )))
 
@@ -685,7 +685,7 @@ class ERPPostmanConfiguration : PostmanConfiguration("Concord-ERP", "TradeIX Con
                         protocol = "http",
                         host = host,
                         port = node.port,
-                        path = "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                        path = "fundingresponses?externalId=FUNDING_RESPONSE_1&status=all&pageNumber=1&pageSize=50"
                 )
         )))
 

@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "bd042e4f-857c-4a40-80c9-bee1cff146e4",
+    "_postman_id": "f31d343d-bf2c-43c1-adb5-496edd38e985",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -456,7 +456,7 @@
               ],
               "port": "8000",
               "path": [
-                "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                "invoices?externalId=INVOICE_1&status=all&pageNumber=1&pageSize=50"
               ]
             }
           }
@@ -626,7 +626,7 @@
               ],
               "port": "8000",
               "path": [
-                "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                "fundingresponses?externalId=FUNDING_RESPONSE_1&status=all&pageNumber=1&pageSize=50"
               ]
             }
           }
@@ -843,28 +843,6 @@
         },
         {
           "response": [],
-          "name": "help/invoices/transfer",
-          "request": {
-            "method": "GET",
-            "description": "Gets the help documentation for the invoices/transfer endpoint.",
-            "header": [],
-            "body": null,
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8050",
-              "path": [
-                "help",
-                "invoices",
-                "transfer"
-              ]
-            }
-          }
-        },
-        {
-          "response": [],
           "name": "help/invoices",
           "request": {
             "method": "GET",
@@ -946,6 +924,28 @@
                 "help",
                 "invoices",
                 "hash"
+              ]
+            }
+          }
+        },
+        {
+          "response": [],
+          "name": "help/invoices/transfer",
+          "request": {
+            "method": "GET",
+            "description": "Gets the help documentation for the invoices/transfer endpoint.",
+            "header": [],
+            "body": null,
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8050",
+              "path": [
+                "help",
+                "invoices",
+                "transfer"
               ]
             }
           }
@@ -1140,7 +1140,7 @@
               ],
               "port": "8050",
               "path": [
-                "invoices?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                "invoices?externalId=INVOICE_1&status=all&pageNumber=1&pageSize=50"
               ]
             }
           }
@@ -1252,7 +1252,7 @@
               ],
               "port": "8050",
               "path": [
-                "fundingresponses?externalId=INVOICE_001&status=all&pageNumber=1&pageSize=50"
+                "fundingresponses?externalId=FUNDING_RESPONSE_1&status=all&pageNumber=1&pageSize=50"
               ]
             }
           }
