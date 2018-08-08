@@ -10,7 +10,7 @@ class FundingResponseNotificationMapper
     override fun map(source: FundingResponseState): FundingResponseNotificationMessage {
         return FundingResponseNotificationMessage(
                 externalId = source.linearId.externalId!!,
-                fundingRequestExternalId = source.fundingRequestLinearId?.externalId,
+                fundingRequestExternalId = source.fundingRequestLinearId.externalId,
                 invoiceExternalIds = source.invoiceLinearIds.map { it.externalId!! },
                 supplier = source.supplier.toString(),
                 funder = source.funder.toString(),

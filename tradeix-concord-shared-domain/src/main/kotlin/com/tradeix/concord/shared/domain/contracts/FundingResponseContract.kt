@@ -46,34 +46,34 @@ class FundingResponseContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             //Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.isEmpty(CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.hasSize(1, CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_STATUS, {
+            validationBuilder.validateWith(CONTRACT_RULE_STATUS) {
                 val status = it
                         .outputsOfType<FundingResponseState>()
                         .single()
                         .status
 
                 status == FundingResponseStatus.PENDING
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_INVOICE_COUNT, {
+            validationBuilder.validateWith(CONTRACT_RULE_INVOICE_COUNT) {
                 val invoiceLinearIds = it
                         .outputsOfType<FundingResponseState>()
                         .single()
                         .invoiceLinearIds
 
                 invoiceLinearIds.isNotEmpty()
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .outputsOfType<FundingResponseState>()
                         .single()
@@ -82,7 +82,7 @@ class FundingResponseContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 
@@ -108,34 +108,34 @@ class FundingResponseContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             // Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.hasSize(1, CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.hasSize(1, CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS, {
+            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS) {
                 val status = it
                         .inputsOfType<FundingResponseState>()
                         .single()
                         .status
 
                 status == FundingResponseStatus.PENDING
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS, {
+            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS) {
                 val status = it
                         .outputsOfType<FundingResponseState>()
                         .single()
                         .status
 
                 status == FundingResponseStatus.ACCEPTED
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .outputsOfType<FundingResponseState>()
                         .single()
@@ -144,7 +144,7 @@ class FundingResponseContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 
@@ -170,34 +170,34 @@ class FundingResponseContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             // Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.hasSize(1, CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.hasSize(1, CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS, {
+            validationBuilder.validateWith(CONTRACT_RULE_INPUT_STATUS) {
                 val status = it
                         .inputsOfType<FundingResponseState>()
                         .single()
                         .status
 
                 status == FundingResponseStatus.PENDING
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS, {
+            validationBuilder.validateWith(CONTRACT_RULE_OUTPUT_STATUS) {
                 val status = it
                         .outputsOfType<FundingResponseState>()
                         .single()
                         .status
 
                 status == FundingResponseStatus.REJECTED
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .inputsOfType<FundingResponseState>()
                         .single()
@@ -206,7 +206,7 @@ class FundingResponseContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 }
