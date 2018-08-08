@@ -15,5 +15,6 @@ data class FundingResponseNotificationMessage(
         val advanceInvoiceValue: BigDecimal,
         val discountValue: BigDecimal,
         val baseRate: BigDecimal,
-        val status: String
+        val status: String,
+        val transactionFee: BigDecimal
 )

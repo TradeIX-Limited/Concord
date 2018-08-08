@@ -19,7 +19,8 @@ class FundingResponseNotificationMapper
                 advanceInvoiceValue = source.advanceInvoiceValue.toDecimal(),
                 discountValue = source.discountValue.toDecimal(),
                 baseRate = source.baseRate,
-                status = source.status.toString()
+                status = source.status.toString(),
+                transactionFee = source.transactionFee
         )
     }
 }

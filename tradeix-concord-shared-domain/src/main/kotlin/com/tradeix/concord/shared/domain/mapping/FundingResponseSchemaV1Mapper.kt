@@ -21,7 +21,8 @@ class FundingResponseSchemaV1Mapper
                 status = source.status,
                 advanceInvoiceValue = source.advanceInvoiceValue.toDecimal(),
                 discountValue = source.discountValue.toDecimal(),
-                baseRate = source.baseRate
+                baseRate = source.baseRate,
+                transactionFee = source.transactionFee
         )
     }
 }
