@@ -1,6 +1,7 @@
 {
   "info": {
-    "_postman_id": "c79a49bd-f2ff-4799-90e5-6ee652bff3ab",
+    //"_postman_id": "c79a49bd-f2ff-4799-90e5-6ee652bff3ab",
+    "_postman_id": "af747f26-536e-46b6-8f51-f70702d30af1",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "name": "Concord-ERP",
     "description": "TradeIX Concord ERP REST API"
@@ -1333,7 +1334,11 @@
               }
             ],
             "body": {
+<<<<<<< HEAD
               "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": \"FUNDING_REQUEST_1\",\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\",\n  \"advanceInvoiceValue\": 1.00,\n  \"discountValue\": 1.00,\n  \"baseRate\": 1,\n  \"transactionFee\": null\n}",
+=======
+              "raw": "{\n  \"externalId\": \"FUNDING_RESPONSE_1\",\n  \"fundingRequestExternalId\": \"FUNDING_REQUEST_1\",\n  \"invoiceExternalIds\": [\n    \"INVOICE_1\",\n    \"INVOICE_2\",\n    \"INVOICE_3\"\n  ],\n  \"supplier\": \"O=Supplier 1, L=London, C=GB\",\n  \"funder\": \"O=Funder 1, L=Madrid, C=ES\",\n  \"purchaseValue\": 1.00,\n  \"currency\": \"GBP\",\n  \"advanceInvoiceValue\": 1.00,\n  \"discountValue\": 1.00,\n  \"baseRate\": 1\n}",
+>>>>>>> spike/series0ne/erp
               "mode": "raw"
             },
             "url": {

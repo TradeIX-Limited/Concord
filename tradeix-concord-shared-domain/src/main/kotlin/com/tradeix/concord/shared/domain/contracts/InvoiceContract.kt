@@ -38,16 +38,16 @@ class InvoiceContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             //Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.isEmpty(CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .outputsOfType<InvoiceState>()
                         .flatMap { it.participants }
@@ -55,7 +55,7 @@ class InvoiceContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 
@@ -78,20 +78,20 @@ class InvoiceContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             // Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.isNotEmpty(CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
+            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS) {
                 it.inputs.size == it.outputs.size
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .outputsOfType<InvoiceState>()
                         .flatMap { it.participants }
@@ -99,7 +99,7 @@ class InvoiceContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 
@@ -122,20 +122,20 @@ class InvoiceContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             // Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.isNotEmpty(CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.isNotEmpty(CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
-            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS, {
+            validationBuilder.validateWith(CONTRACT_RULE_INPUTS_OUTPUTS) {
                 it.inputs.size == it.outputs.size
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .outputsOfType<InvoiceState>()
                         .flatMap { it.participants }
@@ -143,7 +143,7 @@ class InvoiceContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 
@@ -163,16 +163,16 @@ class InvoiceContract : Contract {
         override fun validate(validationBuilder: ContractValidationBuilder) {
 
             // Transaction Validation
-            validationBuilder.property(LedgerTransaction::inputs, {
+            validationBuilder.property(LedgerTransaction::inputs) {
                 it.isNotEmpty(CONTRACT_RULE_INPUTS)
-            })
+            }
 
-            validationBuilder.property(LedgerTransaction::outputs, {
+            validationBuilder.property(LedgerTransaction::outputs) {
                 it.isEmpty(CONTRACT_RULE_OUTPUTS)
-            })
+            }
 
             // State Validation
-            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS, {
+            validationBuilder.validateWith(CONTRACT_RULE_SIGNERS) {
                 val keys = it
                         .inputsOfType<InvoiceState>()
                         .flatMap { it.participants }
@@ -180,7 +180,7 @@ class InvoiceContract : Contract {
                         .distinct()
 
                 validationBuilder.signers.containsAll(keys)
-            })
+            }
         }
     }
 }

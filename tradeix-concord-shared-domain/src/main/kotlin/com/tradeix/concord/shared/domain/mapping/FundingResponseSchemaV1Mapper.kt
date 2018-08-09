@@ -11,8 +11,8 @@ class FundingResponseSchemaV1Mapper
         return FundingResponseSchemaV1.PersistentFundingResponseSchemaV1(
                 linearId = source.linearId.id,
                 linearExternalId = source.linearId.externalId!!,
-                fundingRequestLinearID = source.fundingRequestLinearId?.id,
-                fundingRequestExternalID = source.fundingRequestLinearId!!.externalId, // TODO : Must be mapped when FundingRequestState is implemented.
+                fundingRequestLinearID = source.fundingRequestLinearId.id,
+                fundingRequestExternalID = source.fundingRequestLinearId.externalId, // TODO : Must be mapped when FundingRequestState is implemented.
                 invoiceLinearIds = source.invoiceLinearIds.map { it.externalId!! }, // TODO : Collection<UID>
                 supplier = source.supplier,
                 funder = source.funder,
