@@ -57,6 +57,10 @@ object FundingResponseSchemaV1 : MappedSchema(
             val discountValue: BigDecimal,
 
             @Column(name = "base_rate")
-            val baseRate: BigDecimal
+            val baseRate: BigDecimal,
+
+            @Column(name = "transaction_fee")
+            val transactionFee: BigDecimal
+
     ) : PersistentState()
 }

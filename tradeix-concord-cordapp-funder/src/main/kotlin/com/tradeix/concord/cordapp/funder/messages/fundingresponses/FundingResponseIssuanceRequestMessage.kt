@@ -14,5 +14,6 @@ data class FundingResponseIssuanceRequestMessage(
         val currency: String? = null,
         val advanceInvoiceValue: BigDecimal? = null,
         val discountValue: BigDecimal? = null,
-        val baseRate: BigDecimal? = null
+        val baseRate: BigDecimal? = null,
+        val transactionFee: BigDecimal? = null
 )

@@ -54,5 +54,9 @@ class FundingResponseIssuanceRequestMessageValidator
         validationBuilder.property(FundingResponseIssuanceRequestMessage::baseRate) {
             it.isNotNull()
         }
+
+        validationBuilder.property(FundingResponseIssuanceRequestMessage::transactionFee) {
+            it.isNotNull()
+        }
     }
 }

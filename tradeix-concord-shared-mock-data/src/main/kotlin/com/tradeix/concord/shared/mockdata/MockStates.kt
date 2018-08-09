@@ -65,6 +65,7 @@ object MockStates {
             advanceInvoiceValue = ONE_POUNDS,
             discountValue = ONE_POUNDS,
             baseRate = ONE_POUNDS.toDecimal(),
-            bankAccount = null
+            bankAccount = null,
+            transactionFee = ONE_POUNDS.toDecimal()
     )
 }

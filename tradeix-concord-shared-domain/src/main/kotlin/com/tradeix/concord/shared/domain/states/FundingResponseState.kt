@@ -25,7 +25,8 @@ data class FundingResponseState(
         val advanceInvoiceValue: Amount<Currency>,
         val discountValue: Amount<Currency>,
         val baseRate: BigDecimal,
-        val bankAccount: BankAccount?
+        val bankAccount: BankAccount?,
+        val transactionFee: BigDecimal
 ) : LinearState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOf(supplier, funder)
