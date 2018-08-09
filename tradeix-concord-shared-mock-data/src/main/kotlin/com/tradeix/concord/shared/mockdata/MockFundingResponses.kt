@@ -20,7 +20,8 @@ object MockFundingResponses {
             currency = ONE_POUNDS.token.currencyCode,
             advanceInvoiceValue = ONE_POUNDS.toDecimal(),
             discountValue = ONE_POUNDS.toDecimal(),
-            baseRate = BigDecimal.ONE
+            baseRate = BigDecimal.ONE,
+            transactionFee = BigDecimal.ONE
     )
 
     val FUNDING_RESPONSE_ACCEPTANCE_REQUEST_MESSAGE = FundingResponseConfirmationRequestMessage(
