@@ -2,7 +2,7 @@ group 'com.tradeix.concord'
 version '1.0'
 
 apply plugin: 'kotlin'
-apply plugin: 'net.corda.plugins.cordapp'
+//apply plugin: 'net.corda.plugins.cordapp'
 
 repositories {
     mavenLocal()
@@ -27,24 +27,24 @@ jar {
 
 dependencies {
 
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
 
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
-    testCompile "$corda_release_group:corda-core:$corda_release_version"
+    compile "$corda_release_group:corda-core:$corda_release_version"
 
     testCompile "org.apache.activemq:artemis-commons:$active_mq_version"
     testCompile "org.apache.activemq:artemis-core-client:$active_mq_version"
 
-    testCompile project(":tradeix-concord-shared")
-    testCompile project(":tradeix-concord-shared-cordapp")
-    testCompile project(":tradeix-concord-shared-domain")
+    compile project(":tradeix-concord-shared")
+    compile project(":tradeix-concord-shared-cordapp")
+    compile project(":tradeix-concord-shared-domain")
     testCompile project(":tradeix-concord-shared-mock-data")
-    testCompile project(":tradeix-concord-cordapp-supplier")
-    testCompile project(":tradeix-concord-cordapp-funder")
-    testCompile project(":tradeix-concord-cordapp-supplier-client-receiver")
-    testCompile project(":tradeix-concord-cordapp-funder-client-receiver")
+    compile project(":tradeix-concord-cordapp-supplier")
+    compile project(":tradeix-concord-cordapp-funder")
+    compile project(":tradeix-concord-cordapp-supplier-client-receiver")
+    compile project(":tradeix-concord-cordapp-funder-client-receiver")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

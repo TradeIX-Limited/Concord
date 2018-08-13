@@ -1,7 +1,7 @@
 package com.tradeix.concord.tests.integration
 
 import com.tradeix.concord.cordapp.funder.messages.fundingresponses.FundingResponseIssuanceResponseMessage
-import com.tradeix.concord.cordapp.supplier.client.receiver.controllers.InvoiceController
+//import com.tradeix.concord.cordapp.supplier.client.receiver.controllers.InvoiceController
 import com.tradeix.concord.cordapp.supplier.messages.fundingresponses.FundingResponseConfirmationResponseMessage
 import com.tradeix.concord.cordapp.supplier.messages.invoices.InvoiceTransactionResponseMessage
 import com.tradeix.concord.shared.client.components.RPCConnectionProvider
