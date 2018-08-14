@@ -50,7 +50,7 @@ copyToConfigDestination() {
 }
 
 generateBootstrapFiles() {
- java -jar network-bootstrapper-corda-3.0.jar ${CONFIG_DEST}
+ java -jar network-bootstrapper-corda-3.1.jar ${CONFIG_DEST}
 }
 generateCustomFiles() {
   echo "Generating custom files"
