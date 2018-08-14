@@ -73,7 +73,7 @@ dependencies {
     cordapp project(":tradeix-concord-cordapp-supplier-client-responder")
     cordapp project(":tradeix-concord-shared-client")
     cordapp project(":tradeix-concord-shared-mock-data")
-    cordapp project(":tradeix-concord-tests")
+   // cordapp project(":tradeix-concord-tests")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -205,6 +205,7 @@ task createDemobenchProfile(type: Zip, dependsOn: ['deployNodes']) {
 task extractTar << {
     def module = arg
     def fileName = module.toString().concat("/build/distributions/").concat(module.toString()).concat("-1.0.zip")
+    println(fileName)
     def zipFile = file(fileName)
     def outputDir = file("${buildDir}")
     copy {
