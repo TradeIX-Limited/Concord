@@ -10,6 +10,6 @@ include 'tradeix-concord-shared-client'
 include 'tradeix-concord-shared-cordapp'
 include 'tradeix-concord-shared-domain'
 include 'tradeix-concord-shared-mock-data'
-include 'tradeix-concord-tests'
+//include 'tradeix-concord-tests'
 include 'tradeix-concord-tools-postman'
 

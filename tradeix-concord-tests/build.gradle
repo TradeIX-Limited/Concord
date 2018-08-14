@@ -38,6 +38,7 @@ dependencies {
     testCompile "org.apache.activemq:artemis-core-client:$active_mq_version"
 
     testCompile project(":tradeix-concord-shared")
+    testCompile project(":tradeix-concord-shared-client")
     testCompile project(":tradeix-concord-shared-cordapp")
     testCompile project(":tradeix-concord-shared-domain")
     testCompile project(":tradeix-concord-shared-mock-data")
