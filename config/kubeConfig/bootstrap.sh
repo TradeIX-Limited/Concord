@@ -9,9 +9,9 @@ CONFIG_DEST=$2
 CONFIG_CLIENTS=$3
 
 downloadBootstrapperjar() {
-  if [ ! -e network-bootstrapper-corda-3.0.jar ]
+  if [ ! -e network-bootstrapper-corda-3.1.jar ]
   then
-    curl http://downloads.corda.net/network-bootstrapper-corda-3.0.jar -o network-bootstrapper-corda-3.0.jar
+    curl http://downloads.corda.net/network-bootstrapper-corda-3.1.jar -o network-bootstrapper-corda-3.1.jar
   fi
 }
 
