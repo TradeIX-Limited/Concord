@@ -11,7 +11,7 @@ CONFIG_CLIENTS=$3
 downloadBootstrapperjar() {
   if [ ! -e network-bootstrapper-corda-3.1.jar ]
   then
-    curl http://downloads.corda.net/network-bootstrapper-corda-3.1.jar -o network-bootstrapper-corda-3.1.jar
+    curl https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases/net/corda/corda-network-bootstrapper/3.2-corda/corda-network-bootstrapper-3.2-corda-executable.jar -o network-bootstrapper-corda.jar
   fi
 }
 
@@ -50,7 +50,7 @@ copyToConfigDestination() {
 }
 
 generateBootstrapFiles() {
- java -jar network-bootstrapper-corda-3.1.jar ${CONFIG_DEST}
+ java -jar network-bootstrapper-corda.jar ${CONFIG_DEST}
 }
 generateCustomFiles() {
   echo "Generating custom files"
