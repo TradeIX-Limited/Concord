@@ -33,20 +33,17 @@ class FundingResponseNotificationService(
     private val mapper = FundingResponseNotificationMapper()
 
     override fun start() {
-        logger.info("Starting funding response observer...")
-
         vaultService.observe {
+            logger.info("Observed funding response with externalId '${it.state.data.linearId.externalId}'.")
+
             try {
                 val json = serializer.toJson(mapper.map(it.state.data))
                 val url = erpConfiguration.url + "restlet.nl?script=customscript_funding_response&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json, createClientHeaders()))
 
-                Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUPPLIER FUNDING RESPONSE OBSERVER SERVICE >> Funding Response external Id: " + it.state.data.linearId.externalId)
-
-                logger.info(response.body.toString())
+                logger.info("POST to '$url' returned status code '${response.statusCode}'.")
             } catch (ex: Exception) {
-                logger.error(ex.message) // TODO : What happens if there was an exception thrown?
+                logger.error("Failed to POST funding response.\n${ex.message}.")
             }
         }
     }

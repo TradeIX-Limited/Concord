@@ -11,11 +11,11 @@ import com.tradeix.concord.shared.domain.states.FundingResponseState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.Configurator
 import org.slf4j.Logger
 import org.springframework.http.HttpEntity
+import org.springframework.stereotype.Component
 
+@Component
 class FundingResponseNotificationService(
         private val rpcConnectionProvider: RPCConnectionProvider,
         private val tixConfiguration: TIXConfiguration,
@@ -33,20 +33,17 @@ class FundingResponseNotificationService(
 
     override fun start() {
         vaultService.observe {
-            Configurator.setLevel(logger.name, Level.DEBUG)
-            logger.debug("*** FUNDER FUNDING RESPONSE NOTIFICATION SERVICE >> Funding Response external Id: " + it.state.data.linearId.externalId)
+            logger.info("Observed funding response with externalId '${it.state.data.linearId.externalId}'.")
 
             try {
                 val json = serializer.toJson(mapper.map(it.state.data))
                 val url = tixConfiguration.webApiUrl + "v1/fundingresponses"
-                val response = client.post<Any>(
-                        url,
-                        HttpEntity(json, tixAuthenticatedHeaderProvider.headers))
+                val entity = HttpEntity(json, tixAuthenticatedHeaderProvider.headers)
+                val response = client.post<Any>(url, entity)
 
-                logger.info("Status Code: ${response.statusCode}.")
-
+                logger.info("POST to '$url' returned status code '${response.statusCode}'.")
             } catch (ex: Exception) {
-                logger.error(ex.message)
+                logger.error("Failed to POST funding response.\n${ex.message}.")
             }
         }
     }
