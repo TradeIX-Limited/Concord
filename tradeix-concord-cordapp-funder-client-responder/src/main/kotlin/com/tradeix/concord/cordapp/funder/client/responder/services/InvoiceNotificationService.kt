@@ -14,8 +14,6 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.Configurator
 import org.slf4j.Logger
 import org.springframework.http.HttpEntity
 import org.springframework.stereotype.Component
@@ -43,24 +41,22 @@ class InvoiceNotificationService(
 
     override fun start() {
         vaultService.observe {
+            logger.info("Observed invoice with externalId '${it.state.data.linearId.externalId}'. ")
+
             vaultObserverTimer?.cancel()
-
             invoices.add(mapper.map(it.state.data))
-
-            Configurator.setLevel(logger.name, Level.DEBUG)
-            logger.debug("*** FUNDER INVOICE OBSERVER SERVICE >> Invoice external Id: " + it.state.data.linearId.externalId)
 
             vaultObserverTimer = timer(period = tixConfiguration.vaultObserverTimeout, action = {
                 try {
                     val json = serializer.toJson(InvoiceImportNotificationRequestMessage(invoices))
                     val url = tixConfiguration.webApiUrl + "v1/import/invoices"
-                    val response = client.post<InvoiceImportNotificationResponseMessage>(
-                            url,
-                            HttpEntity(json, tixAuthenticatedHeaderProvider.headers))
+                    val entity = HttpEntity(json, tixAuthenticatedHeaderProvider.headers)
+                    val response = client.post<InvoiceImportNotificationResponseMessage>(url, entity)
 
-                    logger.info("Batch upload ID: ${response.body.batchUploadId}.")
+                    logger.info("POST to '$url' returned status code '${response.statusCode}'.")
+                    logger.info("Invoice import succeeded with batch upload ID '${response.body.batchUploadId}'.")
                 } catch (ex: Exception) {
-                    logger.error(ex.message)
+                    logger.error("Failed to POST invoice.\n${ex.message}.")
                 } finally {
                     invoices.clear() // TODO : What happens if there was an exception thrown?
                     vaultObserverTimer?.cancel()

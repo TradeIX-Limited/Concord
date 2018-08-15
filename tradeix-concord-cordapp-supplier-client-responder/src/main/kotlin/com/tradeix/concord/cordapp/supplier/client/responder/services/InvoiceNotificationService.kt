@@ -10,8 +10,6 @@ import com.tradeix.concord.shared.domain.states.InvoiceState
 import com.tradeix.concord.shared.extensions.getConfiguredSerializer
 import com.tradeix.concord.shared.services.VaultService
 import net.corda.core.utilities.loggerFor
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.Configurator
 import org.slf4j.Logger
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -33,20 +31,17 @@ class InvoiceNotificationService(
     private val mapper = InvoiceIssuanceConfirmationNotificationMapper()
 
     override fun start() {
-        logger.info("Starting invoice observer...")
-
         vaultService.observe {
+            logger.info("Observed invoice with externalId '${it.state.data.linearId.externalId}'. ")
+
             try {
                 val json = serializer.toJson(mapper.map(it))
                 val url = erpConfiguration.url + "restlet.nl?script=customscript_confirmation_of_issuance&deploy=1"
                 val response = client.post<Any>(url, HttpEntity(json, createClientHeaders()))
 
-                Configurator.setLevel(logger.name, Level.DEBUG)
-                logger.debug("*** SUPPLIER INVOICE OBSERVER SERVICE >> Invoice external Id: " + it.state.data.linearId.externalId)
-
-                logger.info(response.body.toString())
+                logger.info("POST to '$url' returned status code '${response.statusCode}'.")
             } catch (ex: Exception) {
-                logger.error(ex.message) // TODO : What happens if there was an exception thrown?
+                logger.error("Failed to POST invoice.\n${ex.message}.")
             }
         }
     }
