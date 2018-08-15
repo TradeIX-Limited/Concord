@@ -10,7 +10,7 @@ buildscript {
     ext.junit_version = '4.12'
     ext.gson_version = '2.8.0'
     ext.spring_boot_version = '1.5.4.RELEASE'
-    ext.active_mq_version = "2.5.0"
+    ext.active_mq_version = "2.2.0"
     ext.jackson_version = "2.9.2"
     ext.guava_version = "21.0"
 
@@ -44,6 +44,22 @@ apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
 
+subprojects {
+    configurations {
+        all {
+            resolutionStrategy {
+                eachDependency { details ->
+                    // Force our version of artemis
+                    if (details.requested.group == 'org.apache.activemq' && details.requested.name.startsWith('artemis-')) {
+                        details.useVersion active_mq_version
+                    }
+                }
+            }
+        }
+    }
+    // shortcut used to list dependency trees
+    task allDeps(type: DependencyReportTask) {}
+}
 
 sourceSets {
     main.kotlin.srcDirs = []

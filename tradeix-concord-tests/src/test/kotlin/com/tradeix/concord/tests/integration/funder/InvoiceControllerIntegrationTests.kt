@@ -3,11 +3,13 @@ package com.tradeix.concord.tests.integration.funder
 import com.tradeix.concord.shared.extensions.canParse
 import com.tradeix.concord.tests.integration.ControllerIntegrationTest
 import net.corda.core.crypto.SecureHash
+import org.junit.Ignore
 import org.junit.Test
 
 class InvoiceControllerIntegrationTests: ControllerIntegrationTest() {
 
     @Test
+    @Ignore
     fun `Can transfer an invoice`() {
         withDriver {
             issueInvoicesOrThrow()
@@ -18,6 +20,7 @@ class InvoiceControllerIntegrationTests: ControllerIntegrationTest() {
     }
 
     @Test
+    @Ignore
     fun `Can get the most recent invoice hash`() {
         withDriver {
             issueInvoicesOrThrow()
@@ -27,6 +30,7 @@ class InvoiceControllerIntegrationTests: ControllerIntegrationTest() {
     }
 
     @Test
+    @Ignore
     fun `Can get the unique invoice count`() {
         withDriver {
             issueInvoicesOrThrow()
@@ -36,6 +40,7 @@ class InvoiceControllerIntegrationTests: ControllerIntegrationTest() {
     }
 
     @Test
+    @Ignore
     fun `Can get unconsumed invoice state by externalId`() {
         withDriver {
             issueInvoicesOrThrow()

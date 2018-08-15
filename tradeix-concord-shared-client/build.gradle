@@ -15,8 +15,8 @@ buildscript {
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'net.corda.plugins.cordapp'
+//apply plugin: 'org.springframework.boot'
+//apply plugin: 'net.corda.plugins.cordapp'
 
 repositories {
     mavenLocal()
@@ -44,7 +44,7 @@ dependencies {
     compile project(":tradeix-concord-shared")
     compile project(":tradeix-concord-shared-domain")
     compile project(":tradeix-concord-shared-cordapp")
-    cordaCompile "net.corda:corda-rpc:$corda_release_version"
+    compile "net.corda:corda-rpc:$corda_release_version"
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
 }
 
@@ -57,4 +57,4 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-bootRepackage.enabled = false
+//bootRepackage.enabled = false

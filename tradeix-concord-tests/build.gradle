@@ -2,7 +2,7 @@ group 'com.tradeix.concord'
 version '1.0'
 
 apply plugin: 'kotlin'
-apply plugin: 'net.corda.plugins.cordapp'
+//apply plugin: 'net.corda.plugins.cordapp'
 
 repositories {
     mavenLocal()

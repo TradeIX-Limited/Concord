@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./gradlew clean build deployNodes
+./gradlew clean build -x test
