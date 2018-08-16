@@ -39,7 +39,6 @@ import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-//TODO: All of this tests fails because the conductor could not be mocked
 class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)

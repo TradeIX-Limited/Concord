@@ -1,11 +1,13 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.flowmodels.invoice.InvoiceIPUFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderAmendmentFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderCancellationFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderIssuanceFlowModel
 import com.tradeix.concord.flowmodels.purchaseorder.PurchaseOrderOwnershipFlowModel
+import com.tradeix.concord.flows.invoice.InvoiceIPU
 import com.tradeix.concord.flows.invoice.InvoiceIssuance
 import com.tradeix.concord.flows.invoice.InvoiceOwnership
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
@@ -91,6 +93,20 @@ object FlowTestHelper {
 
         val future = initiator
                 .startFlow(InvoiceOwnership.InitiatorFlow(model))
+
+        network.runNetwork()
+
+        return future.getOrThrow()
+    }
+
+    fun setInvoiceIPU(
+            network: MockNetwork,
+            initiator: StartedMockNode,
+            model: InvoiceIPUFlowModel): SignedTransaction {
+
+
+        val future = initiator
+                .startFlow(InvoiceIPU.InitiatorFlow(model))
 
         network.runNetwork()
 

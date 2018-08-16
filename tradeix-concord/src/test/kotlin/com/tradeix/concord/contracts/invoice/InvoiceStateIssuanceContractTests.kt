@@ -93,7 +93,7 @@ class InvoiceStateIssuanceContractTests {
                 )
                 fails()
                 command(
-                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, FUNDER_PUBKEY, CONDUCTOR_PUBKEY),
                         InvoiceContract.Commands.Issue()
                 )
                 verifies()
