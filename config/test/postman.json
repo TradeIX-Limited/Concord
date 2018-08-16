@@ -1,2558 +1,2931 @@
 {
-  "info": {
-    "name": "Concord",
-    "_postman_id": "dde0b85c-03fa-471d-8391-46dd31868bf6",
-    "description": "TradeIX Concord REST API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "TradeIX",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10007/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10007/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10007/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10007/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10007/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10007/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10007/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10007",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10007/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXFakeSupplier",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10010/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10010/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10010/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10010/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10010/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10010/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10010/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10010",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10010/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXTestSupplier",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10013/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10013/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10013/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10013/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10013/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10013/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10013/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10013",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10013/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXTestSupplier1",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10016/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10016/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10016/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10016/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10016/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10016/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10016/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10016",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10016/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXTestSupplier2",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10019/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10019/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10019/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10019/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10019/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10019/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10019/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10019",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10019/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXTestFunder",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10022/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10022/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10022/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10022/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10022/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10022/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10022/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10022",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10022/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "TradeIXTestBuyer",
-      "description": "",
-      "item": [
-        {
-          "name": "upload/attachment",
-          "request": {
-            "method": "POST",
-            "description": "Uploads an attachment to the local node's vault",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "formdata": [
-                {
-                  "key": "attachment",
-                  "value": "",
-                  "type": "file"
-                }
-              ],
-              "mode": "formdata"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "upload",
-                "attachment"
-              ],
-              "raw": "http://localhost:10025/upload/attachment"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all known X500 names from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "nodes",
-                "all"
-              ],
-              "raw": "http://localhost:10025/api/nodes/all"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/nodes/local",
-          "request": {
-            "method": "GET",
-            "description": "Gets the known X500 name for the local node from the Network Map Service",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "nodes",
-                "local"
-              ],
-              "raw": "http://localhost:10025/api/nodes/local"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all trade assets from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"status\": \"INVOICE\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets",
-                "issue"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets/changeowner"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/amend",
-          "request": {
-            "method": "PUT",
-            "description": "Amends a trade asset and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets",
-                "amend"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets/amend"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/tradeassets/cancel",
-          "request": {
-            "method": "PUT",
-            "description": "Cancels a trade asset and stores the exit state in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-DEMO-001\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "tradeassets",
-                "cancel"
-              ],
-              "raw": "http://localhost:10025/api/tradeassets/cancel"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "purchaseorders?externalId=EXTERNALID"
-              ],
-              "raw": "http://localhost:10025/api/purchaseorders?externalId=EXTERNALID"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/all",
-          "request": {
-            "method": "GET",
-            "description": "Gets all purchase orders from the local node's vault",
-            "header": [],
-            "body": {},
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "purchaseorders",
-                "all?page=1&count=50"
-              ],
-              "raw": "http://localhost:10025/api/purchaseorders/all?page=1&count=50"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/issue",
-          "request": {
-            "method": "POST",
-            "description": "Issues a new purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"C=GB,L=London,O=TradeIXTestBuyer\",\r\n  \"supplier\": \"C=GB,L=London,O=TradeIXTestSupplier\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2000-01-02T00:00:00+00:00\",\r\n  \"earliestShipment\": \"2000-02-02T00:00:00+00:00\",\r\n  \"latestShipment\": \"2000-03-02T00:00:00+00:00\",\r\n  \"portOfShipment\": \"Southampton\",\r\n  \"descriptionOfGoods\": \"Miscellaneous\",\r\n  \"deliveryTerms\": \"Fragile\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "purchaseorders",
-                "issue"
-              ],
-              "raw": "http://localhost:10025/api/purchaseorders/issue"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "api/purchaseorders/changeowner",
-          "request": {
-            "method": "PUT",
-            "description": "Changes ownership of a purchase order and stores it in the participants' vaults",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"C=GB,L=London,O=TradeIXTestFunder\"\r\n}",
-              "mode": "raw"
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "10025",
-              "path": [
-                "api",
-                "purchaseorders",
-                "changeowner"
-              ],
-              "raw": "http://localhost:10025/api/purchaseorders/changeowner"
-            }
-          },
-          "response": []
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "9d13aea3-1c50-4fa9-be04-8cc5c6a15134",
+		"name": "Concord",
+		"description": "TradeIX Concord REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TradeIX",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10007/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/ipu",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"externalId\": \"TIX-INV-DEMO-001\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10007/api/invoices/ipu",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10007",
+							"path": [
+								"api",
+								"invoices",
+								"ipu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Supplier 1",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10010/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10010/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Supplier 2",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10013/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10013/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10013",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Supplier 3",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10016/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10016/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10016",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Fake Supplier",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10019/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10019/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10019",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Buyer 1",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10022/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10022/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10022",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TradeIX Test Funder 1",
+			"item": [
+				{
+					"name": "upload/attachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachment",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:10025/upload/attachment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"upload",
+								"attachment"
+							]
+						},
+						"description": "Uploads an attachment to the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/nodes/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"nodes",
+								"all"
+							]
+						},
+						"description": "Gets all known X500 names from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/nodes/local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/nodes/local",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"nodes",
+								"local"
+							]
+						},
+						"description": "Gets the known X500 name for the local node from the Network Map Service"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all purchase orders from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001\",\r\n  \"value\": \"123.45\",\r\n  \"currency\": \"GBP\",\r\n  \"created\": \"2015-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2015-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2015-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders",
+								"issue"
+							]
+						},
+						"description": "Issues a new purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/amend",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"reference\": \"TIX-PURCHASE-ORDER-001-AMENDED\",\r\n  \"value\": \"999.99\",\r\n  \"currency\": \"USD\",\r\n  \"created\": \"2014-01-12T23:34:45Z\",\r\n  \"earliestShipment\": \"2016-02-12T23:34:45Z\",\r\n  \"latestShipment\": \"2016-03-12T23:34:45Z\",\r\n  \"portOfShipment\": \"Portsmouth\",\r\n  \"descriptionOfGoods\": \"100 units of stock\",\r\n  \"deliveryTerms\": \"Subject to contract\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders/amend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders",
+								"amend"
+							]
+						},
+						"description": "Amends an existing purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalIds\": [\r\n    \"TIX-PO-DEMO-001\"\r\n  ],\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of a purchase order and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/purchaseorders/cancel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-PO-DEMO-001\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/purchaseorders/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"purchaseorders",
+								"cancel"
+							]
+						},
+						"description": "Cancels a purchase order and removes it from the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/invoices?externalId=EXTERNALID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "externalId",
+									"value": "EXTERNALID"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/invoices/all?page=1&count=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"invoices",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Gets all invoices from the local node's vault"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"buyer\": \"O=TradeIX Test Buyer 1,L=Tokyo,C=JP\",\r\n  \"supplier\": \"O=TradeIX Test Supplier 1,L=New York,C=US\",\r\n  \"funder\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\",\r\n  \"invoiceVersion\": \"VERSION 001\",\r\n  \"invoiceVersionDate\": \"2010-01-01T00:00:00Z\",\r\n  \"tixInvoiceVersion\": 1,\r\n  \"invoiceNumber\": \"INV-NUM-001\",\r\n  \"invoiceType\": \"INVOICE\",\r\n  \"reference\": \"TIX-INVOICE-001\",\r\n  \"dueDate\": \"2018-10-10T12:34:56Z\",\r\n  \"offerId\": 123,\r\n  \"amount\": 123.45,\r\n  \"totalOutstanding\": 120.0,\r\n  \"created\": \"2009-01-01T00:00:00Z\",\r\n  \"updated\": \"2010-01-01T00:00:00Z\",\r\n  \"expectedSettlementDate\": \"2012-01-01T00:00:00Z\",\r\n  \"settlementDate\": \"2012-01-02T00:00:00Z\",\r\n  \"mandatoryReconciliationDate\": \"2012-04-02T00:00:00Z\",\r\n  \"invoiceDate\": \"2015-01-12T23:34:45Z\",\r\n  \"status\": \"ELIGIBLE\",\r\n  \"rejectionReason\": \"Not Rejected\",\r\n  \"eligibleValue\": 123.45,\r\n  \"invoicePurchaseValue\": 100.0,\r\n  \"tradeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"tradePaymentDate\": \"2015-01-12T23:34:45Z\",\r\n  \"invoicePayments\": 0.12,\r\n  \"invoiceDilutions\": 1.23,\r\n  \"cancelled\": false,\r\n  \"closeDate\": \"2015-01-12T23:34:45Z\",\r\n  \"originationNetwork\": \"TIX\",\r\n  \"hash\": \"787ec76dcafd20c1908eb0936a12f91edd105ab5cd7ecc2b1ae2032648345dff\",\r\n  \"currency\": \"USD\",\r\n  \"siteId\": \"TIX\",\r\n  \"purchaseOrderNumber\": \"PO-001\",\r\n  \"purchaseOrderId\": \"TIX-PO-DEMO-001\",\r\n  \"composerProgramId\": 12\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/invoices/issue",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"invoices",
+								"issue"
+							]
+						},
+						"description": "Issues a new invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				},
+				{
+					"name": "api/invoices/changeowner",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"externalId\": \"TIX-INV-DEMO-001\",\r\n  \"newOwner\": \"O=TradeIX Test Funder 1,L=Amsterdam,C=NL\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:10025/api/invoices/changeowner",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "10025",
+							"path": [
+								"api",
+								"invoices",
+								"changeowner"
+							]
+						},
+						"description": "Changes ownership of an invoice and stores it in the participants' vaults"
+					},
+					"response": []
+				}
+			]
+		}
+	]
 }
