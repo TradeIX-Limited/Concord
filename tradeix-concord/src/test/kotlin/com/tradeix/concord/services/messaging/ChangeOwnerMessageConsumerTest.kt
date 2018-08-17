@@ -24,7 +24,6 @@ import org.junit.Test
 import rx.Observable
 import java.time.Instant
 
-@Ignore
 class ChangeOwnerMessageConsumerTest {
 
     @Test

@@ -10,7 +10,6 @@ import com.tradeix.concord.TestValueHelper.DATE_INSTANT_05
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_06
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_07
 import com.tradeix.concord.TestValueHelper.EXTERNAL_ID
-import com.tradeix.concord.TestValueHelper.EXTERNAL_IDS
 import com.tradeix.concord.TestValueHelper.HASH
 import com.tradeix.concord.TestValueHelper.INVOICE_NUMBER
 import com.tradeix.concord.TestValueHelper.INVOICE_TYPE
@@ -26,117 +25,83 @@ import com.tradeix.concord.TestValueHelper.REJECTION_REASON
 import com.tradeix.concord.TestValueHelper.SITE_ID
 import com.tradeix.concord.TestValueHelper.STATUS
 import com.tradeix.concord.TestValueHelper.TIX_INVOICE_VERSION
-import com.tradeix.concord.exceptions.FlowValidationException
+import com.tradeix.concord.flowmodels.invoice.InvoiceIPUFlowModel
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
-import com.tradeix.concord.flowmodels.invoice.InvoiceOwnershipFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper
-import com.tradeix.concord.flows.FlowTestHelper.changeInvoiceOwner
+import com.tradeix.concord.flows.FlowTestHelper.setInvoiceIPU
+import com.tradeix.concord.states.InvoiceState
+import net.corda.core.transactions.SignedTransaction
 import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
-//TODO: The tests are failing because the conductor is final in the Model. Hence we could not inject the mock
-class InvoiceOwnershipFlowTests : AbstractFlowTest() {
+class InvoiceIPUFlowTests : AbstractFlowTest() {
+
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)
-        node.registerInitiatedFlow(InvoiceOwnership.AcceptorFlow::class.java)
+        node.registerInitiatedFlow(InvoiceIPU.AcceptorFlow::class.java)
     }
 
     @Test
-    fun `Invoice ownership flow fails if externalId is omitted`() {
+    fun `Invoice IPU flow initiated by the buyer is signed by the initiator`() {
         issueInvoice()
-        val exception = assertFailsWith<FlowValidationException> {
-            changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                    externalIds = null,
-                    newOwner = funder.name
-            ))
-        }
-
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'externalId' is required.", exception.validationErrors.single())
-    }
-
-
-    @Test
-    fun `Invoice ownership flow fails if newOwner is omitted`() {
-        issueInvoice()
-        val exception = assertFailsWith<FlowValidationException> {
-            changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                    externalIds = EXTERNAL_IDS,
-                    newOwner = null
-            ))
-        }
-
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'newOwner' is required.", exception.validationErrors.single())
+        val transaction = setInvoiceIPU(network, buyer.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
+        transaction.verifySignaturesExcept(supplier.publicKey, conductor.publicKey)
     }
 
     @Test
-    fun `Invoice ownership flow initiated by the conductor is signed by the initiator`() {
+    fun `Invoice IPU flow initiated by the buyer is signed by the acceptor`() {
         issueInvoice()
-        val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
+        val transaction = setInvoiceIPU(network, buyer.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
 
-        transaction.verifySignaturesExcept(supplier.publicKey, funder.publicKey)
+        transaction.verifySignaturesExcept(buyer.publicKey)
     }
 
     @Test
-    fun `Invoice ownership flow initiated by the conductor is signed by the acceptor`() {
+    fun `Invoice IPU flow initiated by the conductor is signed by the initiator`() {
         issueInvoice()
-        val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
+        val transaction = setInvoiceIPU(network, conductor.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
 
-        transaction.verifySignaturesExcept(conductor.publicKey)
+        transaction.verifySignaturesExcept(buyer.publicKey, supplier.publicKey)
     }
 
     @Test
-    fun `Invoice ownership flow initiated by the supplier is signed by the acceptor`() {
+    fun `Invoice IPU flow initiated by the conductor is signed by the acceptor`() {
         issueInvoice()
-        val transaction = changeInvoiceOwner(network, supplier.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
+        val transaction = setInvoiceIPU(network, conductor.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
 
-        transaction.verifySignaturesExcept()
+        transaction.verifySignaturesExcept(buyer.publicKey, supplier.publicKey)
     }
 
     @Test
-    fun `Invoice ownership flow records a transaction in all counter-party vaults`() {
+    fun `Invoice IPU flow records a transaction in all counter-party vaults`() {
         issueInvoice()
-        val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
+        val transaction = setInvoiceIPU(network, conductor.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
 
-        listOf(buyer.node, supplier.node, funder.node, conductor.node).forEach {
+        listOf(buyer.node, supplier.node, conductor.node).forEach {
             assertEquals(transaction, it.services.validatedTransactions.getTransaction(transaction.id))
         }
     }
 
     @Test
-    fun `Invoice ownership flow transaction has an equal number of inputs and outputs`() {
+    fun `Invoice IPU flow has a single input and a single output`() {
         issueInvoice()
-        val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
+        val transaction = setInvoiceIPU(network, conductor.node, InvoiceIPUFlowModel(externalId = EXTERNAL_ID))
 
-        listOf(buyer.node, supplier.node, funder.node, conductor.node).forEach {
+        transaction.verifySignaturesExcept(buyer.publicKey, supplier.publicKey)
+
+        listOf(buyer.node, supplier.node, conductor.node).forEach {
             val recordedTransaction = it.services.validatedTransactions.getTransaction(transaction.id) ?: fail()
-            assertEquals(recordedTransaction.inputs.size, recordedTransaction.tx.outputs.size)
-            assertEquals(recordedTransaction.tx.outputs.size, 3)
+            assertEquals(1, recordedTransaction.tx.inputs.size)
+            assertEquals(1, recordedTransaction.tx.outputs.size)
+            assertEquals(EXTERNAL_ID, recordedTransaction.tx.outputsOfType<InvoiceState>().single().linearId.externalId)
         }
     }
 
-    private fun issueInvoice() {
-        val model = InvoiceIssuanceFlowModel(
+    fun issueInvoice(): SignedTransaction {
+        return FlowTestHelper.issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
                 conductor = conductor.name,
@@ -176,10 +141,6 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
                 purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
                 purchaseOrderId = PURCHASE_ORDER_ID,
                 composerProgramId = COMPOSER_PROGRAM_ID
-        )
-
-        FlowTestHelper.issueInvoice(network, buyer.node, model.copy(externalId = EXTERNAL_IDS[0]))
-        FlowTestHelper.issueInvoice(network, buyer2.node, model.copy(buyer = buyer2.name, externalId = EXTERNAL_IDS[1]))
-        FlowTestHelper.issueInvoice(network, buyer3.node, model.copy(buyer = buyer3.name, externalId = EXTERNAL_IDS[2]))
+        ))
     }
 }

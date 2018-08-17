@@ -34,6 +34,9 @@ object InvoiceSchemaV1 : MappedSchema(
             @Column(name = "supplier", nullable = false)
             var supplier: AbstractParty,
 
+            @Column(name = "funder", nullable = false)
+            var funder: AbstractParty,
+
             @Column(name = "conductor", nullable = false)
             var conductor: AbstractParty,
 

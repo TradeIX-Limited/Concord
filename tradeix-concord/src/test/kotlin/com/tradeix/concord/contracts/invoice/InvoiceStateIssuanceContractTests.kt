@@ -15,6 +15,7 @@ import com.tradeix.concord.TestValueHelper.DATE_INSTANT_06
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_07
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_08
 import com.tradeix.concord.TestValueHelper.DATE_INSTANT_09
+import com.tradeix.concord.TestValueHelper.FUNDER
 import com.tradeix.concord.TestValueHelper.FUNDER_PUBKEY
 import com.tradeix.concord.TestValueHelper.GBP
 import com.tradeix.concord.TestValueHelper.HASH
@@ -54,6 +55,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -91,7 +93,7 @@ class InvoiceStateIssuanceContractTests {
                 )
                 fails()
                 command(
-                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, CONDUCTOR_PUBKEY),
+                        listOf(BUYER_PUBKEY, SUPPLIER_PUBKEY, FUNDER_PUBKEY, CONDUCTOR_PUBKEY),
                         InvoiceContract.Commands.Issue()
                 )
                 verifies()
@@ -108,6 +110,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -149,6 +152,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -203,6 +207,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -244,6 +249,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -298,6 +304,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -351,6 +358,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,
@@ -404,6 +412,7 @@ class InvoiceStateIssuanceContractTests {
                         SUPPLIER.party,
                         BUYER.party,
                         SUPPLIER.party,
+                        FUNDER.party,
                         CONDUCTOR.party,
                         INVOICE_VERSION,
                         DATE_INSTANT_01,

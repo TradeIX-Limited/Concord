@@ -27,7 +27,6 @@ import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
-@Ignore
 class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(PurchaseOrderIssuance.AcceptorFlow::class.java)

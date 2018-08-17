@@ -39,7 +39,6 @@ import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-//TODO: All of this tests fails because the conductor could not be mocked
 class InvoiceIssuanceFlowTests : AbstractFlowTest() {
     override fun configureNode(node: StartedMockNode) {
         node.registerInitiatedFlow(InvoiceIssuance.AcceptorFlow::class.java)
@@ -53,6 +52,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -99,6 +99,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -145,6 +146,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -191,6 +193,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -237,6 +240,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -284,6 +288,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
@@ -339,6 +344,7 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
                 conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
+                funder = funder.name,
                 invoiceVersion = INVOICE_VERSION,
                 invoiceVersionDate = DATE_INSTANT_01,
                 tixInvoiceVersion = TIX_INVOICE_VERSION,
