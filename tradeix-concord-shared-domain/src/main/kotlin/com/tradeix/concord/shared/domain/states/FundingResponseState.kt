@@ -44,7 +44,7 @@ data class FundingResponseState(
         }
     }
 
-    fun accept(bankAccount: BankAccount) = copy(status = FundingResponseStatus.ACCEPTED, bankAccount = bankAccount)
+    fun accept(bankAccount: BankAccount) = copy(status = FundingResponseStatus.ACCEPTED, bankAccount = bankAccount, submitted = LocalDateTime.now())
 
-    fun reject() = copy(status = FundingResponseStatus.REJECTED)
+    fun reject() = copy(status = FundingResponseStatus.REJECTED, submitted = LocalDateTime.now())
 }
