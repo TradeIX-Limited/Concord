@@ -14,6 +14,7 @@ import com.tradeix.concord.shared.client.webapi.ResponseBuilder
 import com.tradeix.concord.shared.domain.contracts.FundingResponseContract
 import com.tradeix.concord.shared.domain.contracts.InvoiceContract
 import net.corda.core.crypto.SecureHash
+import org.apache.tomcat.jni.Local
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -321,7 +322,8 @@ class HelpController {
                                                 BigDecimal.valueOf(123.45),
                                                 BigDecimal.valueOf(123),
                                                 "PENDING",
-                                                BigDecimal.valueOf(123)
+                                                BigDecimal.valueOf(123),
+                                                LocalDateTime.now()
                                         )
                                 )
                         )
@@ -351,7 +353,8 @@ class HelpController {
                                         BigDecimal.valueOf(123.45),
                                         BigDecimal.valueOf(123),
                                         "PENDING",
-                                        BigDecimal.valueOf(123)
+                                        BigDecimal.valueOf(123),
+                                        LocalDateTime.now()
                                 )
 
                         )

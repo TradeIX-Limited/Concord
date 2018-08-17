@@ -2,6 +2,7 @@ package com.tradeix.concord.cordapp.supplier.messages.fundingresponses
 
 import net.corda.core.serialization.CordaSerializable
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @CordaSerializable
 data class FundingResponseNotificationMessage(
@@ -16,5 +17,6 @@ data class FundingResponseNotificationMessage(
         val discountValue: BigDecimal,
         val baseRate: BigDecimal,
         val status: String,
-        val transactionFee: BigDecimal
+        val transactionFee: BigDecimal,
+        val submitted: LocalDateTime
 )

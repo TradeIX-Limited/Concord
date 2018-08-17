@@ -11,6 +11,7 @@ import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
+import java.time.LocalDateTime
 
 class FundingResponseAcceptanceMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseConfirmationRequestMessage, InputAndOutput<FundingResponseState>>() {
@@ -54,7 +55,7 @@ class FundingResponseAcceptanceMapper(private val serviceHub: ServiceHub)
                     bankAddress = bankAddress
             )
 
-            val outputState = inputState.state.data.accept(bankAccount)
+            val outputState = inputState.state.data.copy(submitted = LocalDateTime.now()).accept(bankAccount)
             return InputAndOutput(inputState, outputState)
         }
     }

@@ -19,7 +19,8 @@ class FundingResponseResponseMapper : Mapper<FundingResponseState, FundingRespon
                 discountValue = source.discountValue.toDecimal(),
                 baseRate = source.baseRate,
                 status = source.status.toString(),
-                transactionFee = source.transactionFee
+                transactionFee = source.transactionFee,
+                submitted = source.submitted
         )
     }
 }

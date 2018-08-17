@@ -9,6 +9,7 @@ import net.corda.core.flows.FlowException
 import net.corda.core.node.ServiceHub
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
+import java.time.LocalDateTime
 
 class FundingResponseRejectionMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseConfirmationRequestMessage, InputAndOutput<FundingResponseState>>() {
@@ -30,7 +31,7 @@ class FundingResponseRejectionMapper(private val serviceHub: ServiceHub)
             logger.error(message)
             throw FlowException(message)
         } else {
-            val outputState = inputState.state.data.reject()
+            val outputState = inputState.state.data.copy(submitted = LocalDateTime.now()).reject()
             return InputAndOutput(inputState, outputState)
         }
     }
