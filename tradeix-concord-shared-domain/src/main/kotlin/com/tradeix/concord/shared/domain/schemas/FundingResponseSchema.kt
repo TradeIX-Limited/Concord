@@ -5,6 +5,7 @@ import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -60,7 +61,10 @@ object FundingResponseSchemaV1 : MappedSchema(
             val baseRate: BigDecimal,
 
             @Column(name = "transaction_fee")
-            val transactionFee: BigDecimal
+            val transactionFee: BigDecimal,
+
+            @Column(name = "submitted")
+            val submitted: LocalDateTime
 
     ) : PersistentState()
 }

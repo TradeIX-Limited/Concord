@@ -12,6 +12,7 @@ import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
 import net.corda.core.schemas.QueryableState
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.util.*
 
 data class FundingResponseState(
@@ -26,7 +27,8 @@ data class FundingResponseState(
         val discountValue: Amount<Currency>,
         val baseRate: BigDecimal,
         val bankAccount: BankAccount?,
-        val transactionFee: BigDecimal
+        val transactionFee: BigDecimal,
+        val submitted: LocalDateTime
 ) : LinearState, QueryableState {
 
     override val participants: List<AbstractParty> get() = listOf(supplier, funder)
@@ -42,7 +44,7 @@ data class FundingResponseState(
         }
     }
 
-    fun accept(bankAccount: BankAccount) = copy(status = FundingResponseStatus.ACCEPTED, bankAccount = bankAccount)
+    fun accept(bankAccount: BankAccount) = copy(status = FundingResponseStatus.ACCEPTED, bankAccount = bankAccount, submitted = LocalDateTime.now())
 
-    fun reject() = copy(status = FundingResponseStatus.REJECTED)
+    fun reject() = copy(status = FundingResponseStatus.REJECTED, submitted = LocalDateTime.now())
 }

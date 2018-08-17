@@ -17,6 +17,7 @@ import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.Vault
 import net.corda.core.utilities.loggerFor
 import org.slf4j.Logger
+import java.time.LocalDateTime
 
 class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
     : Mapper<FundingResponseIssuanceRequestMessage, FundingResponseState>() {
@@ -67,7 +68,8 @@ class FundingResponseIssuanceMapper(private val serviceHub: ServiceHub)
                 discountValue = Amount.fromValueAndCurrency(source.discountValue!!, source.currency),
                 baseRate = source.baseRate!!,
                 bankAccount = null,
-                transactionFee = source.transactionFee!!
+                transactionFee = source.transactionFee!!,
+                submitted = LocalDateTime.now()
         )
     }
 }
