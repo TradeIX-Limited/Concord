@@ -15,7 +15,7 @@ class PurchaseOrderAmendmentRequestMessage(
         override val attachmentId: String? = null,
         val buyer: CordaX500Name? = null,
         val supplier: CordaX500Name? = null,
-        val conductor: CordaX500Name? = CordaX500Name("TradeIX", "London", "GB"),
+        val conductor: CordaX500Name? = null,
         val reference: String? = null,
         val value: BigDecimal? = null,
         val currency: String? = null,

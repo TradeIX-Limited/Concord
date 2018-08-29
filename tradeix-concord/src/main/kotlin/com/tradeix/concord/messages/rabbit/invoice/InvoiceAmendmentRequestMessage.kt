@@ -14,7 +14,7 @@ class InvoiceAmendmentRequestMessage(
         override var tryCount: Int = 0,
         override val externalId: String? = null,
         override val attachmentId: String? = null,
-        val conductor: CordaX500Name? = CordaX500Name("TradeIX", "London", "GB"),
+        val conductor: CordaX500Name? = null,
         val buyer: CordaX500Name? = null,
         val supplier: CordaX500Name? = null,
         val funder: CordaX500Name? = null,

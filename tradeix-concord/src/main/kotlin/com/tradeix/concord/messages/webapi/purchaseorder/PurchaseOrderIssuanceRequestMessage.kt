@@ -12,7 +12,7 @@ class PurchaseOrderIssuanceRequestMessage(
         override val attachmentId: String?,
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
-        val conductor: CordaX500Name? = CordaX500Name("TradeIX", "London", "GB"),
+        val conductor: CordaX500Name?,
         val reference: String?,
         val value: BigDecimal?,
         val currency: String?,
