@@ -34,6 +34,11 @@ genAzurePVCs() {
   done
   #echo $AZURE_PVCS
 }
+azDeletePVCFile() {
+  local SHARE_NAME=$1
+  local PATHFILE=$2
+  az storage file delete --path ${PATHFILE} --share-name ${SHARE_NAME} --account-name ${ACCOUNT_NAME} --account-key ${ACCOUNT_KEY}
+}
 azDeletePVC() {
   local SHARE_NAME=${1}
   echo "Deleting all content from PVC ${SHARE_NAME}"
