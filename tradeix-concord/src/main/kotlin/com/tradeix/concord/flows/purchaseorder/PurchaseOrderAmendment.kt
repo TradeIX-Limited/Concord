@@ -57,9 +57,9 @@ object PurchaseOrderAmendment {
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
-            val buyer = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.buyer)
+            val buyer = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.buyer)
             val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.supplier)
-            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
+            val conductor = FlowHelper.getPeerByLegalNameOrMe(serviceHub, null)
             if (model.attachmentId != null && !VaultHelper.isAttachmentInVault(serviceHub, model.attachmentId)) {
                 throw FlowValidationException(validationErrors = arrayListOf(EX_INVALID_HASH_FOR_ATTACHMENT))
             }

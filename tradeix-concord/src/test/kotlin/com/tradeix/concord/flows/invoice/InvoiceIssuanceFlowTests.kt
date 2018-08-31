@@ -31,12 +31,11 @@ import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper.issueInvoice
 import com.tradeix.concord.states.InvoiceState
 import net.corda.core.crypto.SecureHash
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.fail
 
 class InvoiceIssuanceFlowTests : AbstractFlowTest() {
@@ -46,96 +45,98 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
 
     @Test
     fun `Invoice issuance flow initiated by the buyer is signed by the initiator`() {
-        val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
-                externalId = EXTERNAL_ID,
-                attachmentId = null,
-                conductor = conductor.name,
-                buyer = buyer.name,
-                supplier = supplier.name,
-                funder = funder.name,
-                invoiceVersion = INVOICE_VERSION,
-                invoiceVersionDate = DATE_INSTANT_01,
-                tixInvoiceVersion = TIX_INVOICE_VERSION,
-                invoiceNumber = INVOICE_NUMBER,
-                invoiceType = INVOICE_TYPE,
-                reference = REFERENCE,
-                dueDate = DATE_INSTANT_02,
-                offerId = OFFER_ID,
-                amount = POSITIVE_ONE,
-                totalOutstanding = POSITIVE_ONE,
-                created = DATE_INSTANT_03,
-                updated = DATE_INSTANT_04,
-                expectedSettlementDate = DATE_INSTANT_04,
-                settlementDate = DATE_INSTANT_05,
-                mandatoryReconciliationDate = DATE_INSTANT_06,
-                invoiceDate = DATE_INSTANT_07,
-                status = STATUS,
-                rejectionReason = REJECTION_REASON,
-                eligibleValue = POSITIVE_ONE,
-                invoicePurchaseValue = POSITIVE_ONE,
-                tradeDate = DATE_INSTANT_06,
-                tradePaymentDate = DATE_INSTANT_06,
-                invoicePayments = POSITIVE_ONE,
-                invoiceDilutions = POSITIVE_ONE,
-                cancelled = CANCELLED,
-                closeDate = DATE_INSTANT_06,
-                originationNetwork = ORIGINATION_NETWORK,
-                hash = HASH,
-                currency = POUNDS,
-                siteId = SITE_ID,
-                purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
-                purchaseOrderId = PURCHASE_ORDER_ID,
-                composerProgramId = COMPOSER_PROGRAM_ID
-        ))
+        assertFails {
+            val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    funder = funder.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
 
-        transaction.verifySignaturesExcept(supplier.publicKey, conductor.publicKey)
+            transaction.verifySignaturesExcept(supplier.publicKey, conductor.publicKey)
+        }
     }
 
     @Test
     fun `Invoice issuance flow initiated by the buyer is signed by the acceptor`() {
-        val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
-                externalId = EXTERNAL_ID,
-                attachmentId = null,
-                conductor = conductor.name,
-                buyer = buyer.name,
-                supplier = supplier.name,
-                funder = funder.name,
-                invoiceVersion = INVOICE_VERSION,
-                invoiceVersionDate = DATE_INSTANT_01,
-                tixInvoiceVersion = TIX_INVOICE_VERSION,
-                invoiceNumber = INVOICE_NUMBER,
-                invoiceType = INVOICE_TYPE,
-                reference = REFERENCE,
-                dueDate = DATE_INSTANT_02,
-                offerId = OFFER_ID,
-                amount = POSITIVE_ONE,
-                totalOutstanding = POSITIVE_ONE,
-                created = DATE_INSTANT_03,
-                updated = DATE_INSTANT_04,
-                expectedSettlementDate = DATE_INSTANT_04,
-                settlementDate = DATE_INSTANT_05,
-                mandatoryReconciliationDate = DATE_INSTANT_06,
-                invoiceDate = DATE_INSTANT_07,
-                status = STATUS,
-                rejectionReason = REJECTION_REASON,
-                eligibleValue = POSITIVE_ONE,
-                invoicePurchaseValue = POSITIVE_ONE,
-                tradeDate = DATE_INSTANT_06,
-                tradePaymentDate = DATE_INSTANT_06,
-                invoicePayments = POSITIVE_ONE,
-                invoiceDilutions = POSITIVE_ONE,
-                cancelled = CANCELLED,
-                closeDate = DATE_INSTANT_06,
-                originationNetwork = ORIGINATION_NETWORK,
-                hash = HASH,
-                currency = POUNDS,
-                siteId = SITE_ID,
-                purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
-                purchaseOrderId = PURCHASE_ORDER_ID,
-                composerProgramId = COMPOSER_PROGRAM_ID
-        ))
+        assertFails {
+            val transaction = issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
+                    externalId = EXTERNAL_ID,
+                    attachmentId = null,
+                    buyer = buyer.name,
+                    supplier = supplier.name,
+                    funder = funder.name,
+                    invoiceVersion = INVOICE_VERSION,
+                    invoiceVersionDate = DATE_INSTANT_01,
+                    tixInvoiceVersion = TIX_INVOICE_VERSION,
+                    invoiceNumber = INVOICE_NUMBER,
+                    invoiceType = INVOICE_TYPE,
+                    reference = REFERENCE,
+                    dueDate = DATE_INSTANT_02,
+                    offerId = OFFER_ID,
+                    amount = POSITIVE_ONE,
+                    totalOutstanding = POSITIVE_ONE,
+                    created = DATE_INSTANT_03,
+                    updated = DATE_INSTANT_04,
+                    expectedSettlementDate = DATE_INSTANT_04,
+                    settlementDate = DATE_INSTANT_05,
+                    mandatoryReconciliationDate = DATE_INSTANT_06,
+                    invoiceDate = DATE_INSTANT_07,
+                    status = STATUS,
+                    rejectionReason = REJECTION_REASON,
+                    eligibleValue = POSITIVE_ONE,
+                    invoicePurchaseValue = POSITIVE_ONE,
+                    tradeDate = DATE_INSTANT_06,
+                    tradePaymentDate = DATE_INSTANT_06,
+                    invoicePayments = POSITIVE_ONE,
+                    invoiceDilutions = POSITIVE_ONE,
+                    cancelled = CANCELLED,
+                    closeDate = DATE_INSTANT_06,
+                    originationNetwork = ORIGINATION_NETWORK,
+                    hash = HASH,
+                    currency = POUNDS,
+                    siteId = SITE_ID,
+                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                    purchaseOrderId = PURCHASE_ORDER_ID,
+                    composerProgramId = COMPOSER_PROGRAM_ID
+            ))
 
-        transaction.verifySignaturesExcept(buyer.publicKey)
+            transaction.verifySignaturesExcept(buyer.publicKey)
+        }
     }
 
     @Test
@@ -143,7 +144,6 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
@@ -190,7 +190,6 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
@@ -237,7 +236,6 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
@@ -285,7 +283,6 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
@@ -341,7 +338,6 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
         val transaction = issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = validAttachment.toString(),
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,

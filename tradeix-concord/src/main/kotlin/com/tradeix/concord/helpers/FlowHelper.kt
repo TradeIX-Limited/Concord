@@ -1,6 +1,5 @@
 package com.tradeix.concord.helpers
 
-import net.corda.core.crypto.SecureHash
 import net.corda.core.flows.FlowException
 import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.CordaX500Name
@@ -15,6 +14,12 @@ object FlowHelper {
     fun getNotary(serviceHub: ServiceHub): Party = serviceHub
             .networkMapCache
             .notaryIdentities[0]
+
+    fun getPeerByLegalNameOrNull(serviceHub: ServiceHub, cordaX500Name: CordaX500Name?): Party? {
+        return if (cordaX500Name != null) {
+            serviceHub.networkMapCache.getPeerByLegalName(cordaX500Name)
+        } else null
+    }
 
     fun getPeerByLegalNameOrThrow(serviceHub: ServiceHub, cordaX500Name: CordaX500Name?): Party = serviceHub
             .networkMapCache

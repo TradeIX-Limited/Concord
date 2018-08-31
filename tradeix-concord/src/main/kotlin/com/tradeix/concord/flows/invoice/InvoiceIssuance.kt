@@ -4,7 +4,6 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.InvoiceContract
 import com.tradeix.concord.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
-import net.corda.core.transactions.SignedTransaction
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
@@ -16,6 +15,7 @@ import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
+import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 import java.util.*
@@ -58,10 +58,10 @@ object InvoiceIssuance {
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
-            val buyer = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.buyer)
-            val supplier = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.supplier)
-            val funder = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.funder)
-            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
+            val buyer = FlowHelper.getPeerByLegalNameOrNull(serviceHub, model.buyer)
+            val funder = FlowHelper.getPeerByLegalNameOrNull(serviceHub, model.funder)
+            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.supplier)
+            val conductor = FlowHelper.getPeerByLegalNameOrMe(serviceHub, null)
             val currency = Currency.getInstance(model.currency)
 
             if (model.attachmentId != null && !VaultHelper.isAttachmentInVault(serviceHub, model.attachmentId)) {
@@ -135,7 +135,7 @@ object InvoiceIssuance {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val requiredSignatureFlowSessions = listOf(
+            val requiredSignatureFlowSessions = listOfNotNull(
                     outputState.owner,
                     outputState.buyer,
                     outputState.supplier,

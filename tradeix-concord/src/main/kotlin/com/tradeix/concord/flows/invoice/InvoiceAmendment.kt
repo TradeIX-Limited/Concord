@@ -58,9 +58,10 @@ object InvoiceAmendment {
             }
 
             val notary = FlowHelper.getNotary(serviceHub)
-            val buyer = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.buyer)
-            val supplier = FlowHelper.getPeerByLegalNameOrMe(serviceHub, model.supplier)
-            val conductor = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.conductor)
+            val buyer = FlowHelper.getPeerByLegalNameOrNull(serviceHub, model.buyer)
+            val funder = FlowHelper.getPeerByLegalNameOrNull(serviceHub, model.funder)
+            val supplier = FlowHelper.getPeerByLegalNameOrThrow(serviceHub, model.supplier)
+            val conductor = FlowHelper.getPeerByLegalNameOrMe(serviceHub, null)
             val currency = Currency.getInstance(model.currency)
 
             val inputState = VaultHelper.getStateAndRefByLinearId(
@@ -74,6 +75,7 @@ object InvoiceAmendment {
                     .copy(
                             buyer = buyer,
                             supplier = supplier,
+                            funder = funder,
                             conductor = conductor,
                             invoiceVersion = model.invoiceVersion!!,
                             invoiceVersionDate = model.invoiceVersionDate!!,
@@ -141,7 +143,7 @@ object InvoiceAmendment {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val requiredSignatureFlowSessions = listOf(
+            val requiredSignatureFlowSessions = listOfNotNull(
                     outputState.owner,
                     outputState.buyer,
                     outputState.supplier,

@@ -40,7 +40,6 @@ class PurchaseOrderIssuanceMessageConsumerTest {
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
                 value = null,
                 currency = null,
                 attachmentId = null)
@@ -97,7 +96,6 @@ class PurchaseOrderIssuanceMessageConsumerTest {
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
                 value = null,
                 currency = null,
                 attachmentId = null)
@@ -137,7 +135,6 @@ class PurchaseOrderIssuanceMessageConsumerTest {
                 externalId = "ext1",
                 buyer = null,
                 supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
                 value = null,
                 currency = null,
                 attachmentId = null)

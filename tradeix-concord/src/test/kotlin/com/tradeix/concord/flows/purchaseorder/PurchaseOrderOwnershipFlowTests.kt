@@ -161,7 +161,6 @@ class PurchaseOrderOwnershipFlowTests : AbstractFlowTest() {
                     externalId = it,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,

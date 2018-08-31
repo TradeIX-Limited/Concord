@@ -78,7 +78,7 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
     fun `Invoice ownership flow initiated by the conductor is signed by the initiator`() {
         issueInvoice()
         val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
+                externalIds = listOf(EXTERNAL_ID),
                 newOwner = funder.name
         ))
 
@@ -89,7 +89,7 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
     fun `Invoice ownership flow initiated by the conductor is signed by the acceptor`() {
         issueInvoice()
         val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
+                externalIds = listOf(EXTERNAL_ID),
                 newOwner = funder.name
         ))
 
@@ -97,21 +97,10 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
     }
 
     @Test
-    fun `Invoice ownership flow initiated by the supplier is signed by the acceptor`() {
-        issueInvoice()
-        val transaction = changeInvoiceOwner(network, supplier.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
-                newOwner = funder.name
-        ))
-
-        transaction.verifySignaturesExcept()
-    }
-
-    @Test
     fun `Invoice ownership flow records a transaction in all counter-party vaults`() {
         issueInvoice()
         val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
+                externalIds = listOf(EXTERNAL_ID),
                 newOwner = funder.name
         ))
 
@@ -124,14 +113,14 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
     fun `Invoice ownership flow transaction has an equal number of inputs and outputs`() {
         issueInvoice()
         val transaction = changeInvoiceOwner(network, conductor.node, InvoiceOwnershipFlowModel(
-                externalIds = EXTERNAL_IDS,
+                externalIds = listOf(EXTERNAL_ID),
                 newOwner = funder.name
         ))
 
         listOf(buyer.node, supplier.node, funder.node, conductor.node).forEach {
             val recordedTransaction = it.services.validatedTransactions.getTransaction(transaction.id) ?: fail()
             assertEquals(recordedTransaction.inputs.size, recordedTransaction.tx.outputs.size)
-            assertEquals(recordedTransaction.tx.outputs.size, 3)
+            assertEquals(recordedTransaction.tx.outputs.size, 1)
         }
     }
 
@@ -139,7 +128,6 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
         val model = InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
@@ -178,8 +166,6 @@ class InvoiceOwnershipFlowTests : AbstractFlowTest() {
                 composerProgramId = COMPOSER_PROGRAM_ID
         )
 
-        FlowTestHelper.issueInvoice(network, buyer.node, model.copy(externalId = EXTERNAL_IDS[0]))
-        FlowTestHelper.issueInvoice(network, buyer2.node, model.copy(buyer = buyer2.name, externalId = EXTERNAL_IDS[1]))
-        FlowTestHelper.issueInvoice(network, buyer3.node, model.copy(buyer = buyer3.name, externalId = EXTERNAL_IDS[2]))
+        FlowTestHelper.issueInvoice(network, conductor.node, model)
     }
 }

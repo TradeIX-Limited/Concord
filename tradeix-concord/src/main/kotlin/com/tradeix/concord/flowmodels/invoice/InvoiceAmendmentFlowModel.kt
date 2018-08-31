@@ -8,7 +8,6 @@ import java.time.Instant
 data class InvoiceAmendmentFlowModel(
         override val externalId: String?,
         val attachmentId: String?,
-        val conductor: CordaX500Name?,
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
         val funder: CordaX500Name?,

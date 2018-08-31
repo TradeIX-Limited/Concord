@@ -22,7 +22,6 @@ import com.tradeix.concord.flows.FlowTestHelper.amendPurchaseOrder
 import com.tradeix.concord.states.PurchaseOrderState
 import net.corda.core.transactions.SignedTransaction
 import net.corda.testing.node.StartedMockNode
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -43,7 +42,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = null,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -68,7 +66,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = null,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -86,31 +83,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
     }
 
     @Test
-    fun `PurchaseOrder amendment flow will fail if conductor is omitted`() {
-        issuePurchaseOrder()
-        val exception = assertFailsWith<FlowValidationException> {
-            amendPurchaseOrder(network, conductor.node, PurchaseOrderAmendmentFlowModel(
-                    externalId = EXTERNAL_ID,
-                    buyer = buyer.name,
-                    supplier = supplier.name,
-                    conductor = null,
-                    reference = PURCHASE_ORDER_REFERENCE,
-                    value = POSITIVE_ONE,
-                    currency = POUNDS,
-                    created = DATE_INSTANT_01,
-                    earliestShipment = DATE_INSTANT_02,
-                    latestShipment = DATE_INSTANT_03,
-                    portOfShipment = PORT_OF_SHIPMENT,
-                    descriptionOfGoods = DESCRIPTION_OF_GOODS,
-                    deliveryTerms = DELIVERY_TERMS
-            ))
-        }
-
-        assertEquals(1, exception.validationErrors.size)
-        assertEquals("Field 'conductor' is required.", exception.validationErrors.single())
-    }
-
-    @Test
     fun `PurchaseOrder amendment flow will fail if reference is omitted`() {
         issuePurchaseOrder()
         val exception = assertFailsWith<FlowValidationException> {
@@ -118,7 +90,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = null,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -143,7 +114,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = null,
                     currency = POUNDS,
@@ -168,7 +138,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = NEGATIVE_ONE,
                     currency = POUNDS,
@@ -193,7 +162,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = null,
@@ -218,7 +186,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -243,7 +210,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -268,7 +234,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -293,7 +258,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -318,7 +282,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -343,7 +306,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     externalId = EXTERNAL_ID,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -369,7 +331,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                     attachmentId = NOT_A_VALID_HASH,
                     buyer = buyer.name,
                     supplier = supplier.name,
-                    conductor = conductor.name,
                     reference = PURCHASE_ORDER_REFERENCE,
                     value = POSITIVE_ONE,
                     currency = POUNDS,
@@ -392,7 +353,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
         val transaction = amendPurchaseOrder(network, buyer.node, PurchaseOrderAmendmentFlowModel(
                 externalId = EXTERNAL_ID,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
@@ -414,7 +374,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
         val transaction = amendPurchaseOrder(network, buyer.node, PurchaseOrderAmendmentFlowModel(
                 externalId = EXTERNAL_ID,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
@@ -437,7 +396,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,
@@ -459,7 +417,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,
@@ -481,7 +438,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,
@@ -505,7 +461,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,
@@ -537,7 +492,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 attachmentId = validAttachment.toString(),
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,
@@ -560,7 +514,6 @@ class PurchaseOrderAmendmentFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,

@@ -72,7 +72,6 @@ class PurchaseOrderIssuanceMessageConsumer(
                 externalId = null,
                 buyer = null,
                 supplier = null,
-                conductor = CordaX500Name("TradeIX", "London", "GB"),
                 value = null,
                 currency = null,
                 attachmentId = null)

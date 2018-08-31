@@ -101,10 +101,9 @@ class InvoiceIPUFlowTests : AbstractFlowTest() {
     }
 
     fun issueInvoice(): SignedTransaction {
-        return FlowTestHelper.issueInvoice(network, buyer.node, InvoiceIssuanceFlowModel(
+        return FlowTestHelper.issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
                 externalId = EXTERNAL_ID,
                 attachmentId = null,
-                conductor = conductor.name,
                 buyer = buyer.name,
                 supplier = supplier.name,
                 funder = funder.name,
