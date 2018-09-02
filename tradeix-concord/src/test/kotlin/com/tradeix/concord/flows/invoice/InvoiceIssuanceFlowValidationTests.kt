@@ -138,55 +138,6 @@ class InvoiceIssuanceFlowValidationTests : AbstractFlowTest() {
     }
 
     @Test
-    fun `Invoice issuance flow will fail if buyer is omitted`() {
-        val exception = assertFailsWith<FlowValidationException> {
-            issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
-                    externalId = EXTERNAL_ID,
-                    attachmentId = null,
-                    buyer = null, //buyer.name,
-                    supplier = supplier.name,
-                    funder = funder.name,
-                    invoiceVersion = INVOICE_VERSION,
-                    invoiceVersionDate = DATE_INSTANT_01,
-                    tixInvoiceVersion = TIX_INVOICE_VERSION,
-                    invoiceNumber = INVOICE_NUMBER,
-                    invoiceType = INVOICE_TYPE,
-                    reference = REFERENCE,
-                    dueDate = DATE_INSTANT_02,
-                    offerId = OFFER_ID,
-                    amount = POSITIVE_ONE,
-                    totalOutstanding = POSITIVE_ONE,
-                    created = DATE_INSTANT_03,
-                    updated = DATE_INSTANT_04,
-                    expectedSettlementDate = DATE_INSTANT_04,
-                    settlementDate = DATE_INSTANT_05,
-                    mandatoryReconciliationDate = DATE_INSTANT_06,
-                    invoiceDate = DATE_INSTANT_07,
-                    status = STATUS,
-                    rejectionReason = REJECTION_REASON,
-                    eligibleValue = POSITIVE_ONE,
-                    invoicePurchaseValue = POSITIVE_ONE,
-                    tradeDate = DATE_INSTANT_06,
-                    tradePaymentDate = DATE_INSTANT_06,
-                    invoicePayments = POSITIVE_ONE,
-                    invoiceDilutions = POSITIVE_ONE,
-                    cancelled = CANCELLED,
-                    closeDate = DATE_INSTANT_06,
-                    originationNetwork = ORIGINATION_NETWORK,
-                    hash = HASH,
-                    currency = POUNDS,
-                    siteId = SITE_ID,
-                    purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
-                    purchaseOrderId = PURCHASE_ORDER_ID,
-                    composerProgramId = COMPOSER_PROGRAM_ID
-            ))
-        }
-
-        assertTrue(exception.validationErrors.size > 0)
-        assertTrue(exception.validationErrors.contains("Field 'buyer' is required."))
-    }
-
-    @Test
     fun `Invoice issuance flow will fail if currency is omitted`() {
         val exception = assertFailsWith<FlowValidationException> {
             issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
