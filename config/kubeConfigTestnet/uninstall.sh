@@ -8,7 +8,7 @@ INSTALLATION_FOLDER="installations"
 onlyOneModuleAtATime
 genPVCNames
 genAzurePVCs ${PVC_NAMES}
-# kubectl delete -f services/${MODULES[0]}.yml
+kubectl delete -f services/${MODULES[0]}.yml
 kubectl delete -f deployments/${MODULES[0]}.yml
 sleep ${MEDIUM_DELAY}
 sleep ${MEDIUM_DELAY}
