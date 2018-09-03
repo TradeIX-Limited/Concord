@@ -15,9 +15,9 @@ import java.util.*
 data class InvoiceState(
         override val linearId: UniqueIdentifier,
         override val owner: AbstractParty,
-        val buyer: AbstractParty,
+        val buyer: AbstractParty?,
         val supplier: AbstractParty,
-        val funder: AbstractParty,
+        val funder: AbstractParty?,
         val conductor: AbstractParty,
         val invoiceVersion: String?,
         val invoiceVersionDate: Instant?,
@@ -53,7 +53,7 @@ data class InvoiceState(
         val purchaseOrderId: String?,
         val composerProgramId: Int
 ) : LinearState, OwnerState, QueryableState {
-    override val participants: List<AbstractParty> get() = listOf(owner, buyer, supplier, funder, conductor)
+    override val participants: List<AbstractParty> get() = listOfNotNull(owner, buyer, supplier, funder, conductor)
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         return when(schema) {

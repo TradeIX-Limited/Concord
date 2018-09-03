@@ -20,7 +20,6 @@ import com.tradeix.concord.flows.FlowTestHelper.cancelPurchaseOrder
 import com.tradeix.concord.flows.FlowTestHelper.issuePurchaseOrder
 import net.corda.core.transactions.SignedTransaction
 import net.corda.testing.node.StartedMockNode
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -109,7 +108,6 @@ class PurchaseOrderCancellationFlowTests : AbstractFlowTest() {
                 externalId = EXTERNAL_ID,
                 buyer = buyer.name,
                 supplier = supplier.name,
-                conductor = conductor.name,
                 reference = PURCHASE_ORDER_REFERENCE,
                 value = POSITIVE_ONE,
                 currency = POUNDS,

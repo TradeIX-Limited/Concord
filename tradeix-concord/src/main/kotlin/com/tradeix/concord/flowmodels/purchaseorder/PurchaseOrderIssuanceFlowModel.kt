@@ -12,7 +12,6 @@ data class PurchaseOrderIssuanceFlowModel(
         val attachmentId: String? = null,
         val buyer: CordaX500Name? = null,
         val supplier: CordaX500Name?,
-        val conductor: CordaX500Name?,
         val reference: String?,
         val value: BigDecimal?,
         val currency: String?,

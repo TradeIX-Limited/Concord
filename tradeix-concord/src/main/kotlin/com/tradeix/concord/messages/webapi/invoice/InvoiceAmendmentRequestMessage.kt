@@ -10,7 +10,6 @@ import java.time.Instant
 class InvoiceAmendmentRequestMessage(
         override val externalId: String?,
         override val attachmentId: String?,
-        val conductor: CordaX500Name?,
         val buyer: CordaX500Name?,
         val supplier: CordaX500Name?,
         val funder: CordaX500Name?,
@@ -51,7 +50,6 @@ class InvoiceAmendmentRequestMessage(
     fun toModel() = InvoiceAmendmentFlowModel(
             externalId,
             attachmentId,
-            conductor,
             buyer,
             supplier,
             funder,

@@ -86,7 +86,7 @@ object InvoiceCancellation {
 
             // Stage 4 - Gather counterparty signatures
             progressTracker.currentStep = GATHERING_SIGNATURES
-            val requiredSignatureFlowSessions = listOf(
+            val requiredSignatureFlowSessions = listOfNotNull(
                     inputState.owner,
                     inputState.buyer,
                     inputState.supplier,

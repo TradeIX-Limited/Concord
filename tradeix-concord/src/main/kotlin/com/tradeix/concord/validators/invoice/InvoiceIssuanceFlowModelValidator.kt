@@ -10,9 +10,7 @@ class InvoiceIssuanceFlowModelValidator(message: InvoiceIssuanceFlowModel)
     companion object {
         // rule messages
         private val EX_EXTERNAL_ID_REQUIRED = "Field 'externalId' is required."
-        private val EX_BUYER_REQUIRED = "Field 'buyer' is required."
         private val EX_SUPPLIER_REQUIRED = "Field 'supplier' is required."
-        private val EX_CONDUCTOR_REQUIRED = "Field 'conductor' is required."
         private val EX_INVOICENUMBER_REQUIRED = "Field 'invoiceNumber' is required."
         private val EX_INVOICETYPE_REQUIRED = "Field 'invoiceType' is required."
         private val EX_DUEDATE_REQUIRED = "Field 'dueDate' is required."
@@ -32,9 +30,7 @@ class InvoiceIssuanceFlowModelValidator(message: InvoiceIssuanceFlowModel)
     }
     override fun validate() {
         errors.addWhen(message.externalId.isNullOrBlank(), EX_EXTERNAL_ID_REQUIRED)
-        errors.addWhen(message.buyer == null, EX_BUYER_REQUIRED)
         errors.addWhen(message.supplier == null, EX_SUPPLIER_REQUIRED)
-        errors.addWhen(message.conductor == null, EX_CONDUCTOR_REQUIRED)
         errors.addWhen(message.invoiceNumber.isNullOrBlank(), EX_INVOICENUMBER_REQUIRED)
         errors.addWhen(message.invoiceType.isNullOrBlank(), EX_INVOICETYPE_REQUIRED)
         errors.addWhen(message.dueDate == null, EX_DUEDATE_REQUIRED)

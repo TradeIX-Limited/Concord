@@ -29,13 +29,13 @@ object InvoiceSchemaV1 : MappedSchema(
             var owner: AbstractParty,
 
             @Column(name = "buyer", nullable = false)
-            var buyer: AbstractParty,
+            var buyer: AbstractParty?,
 
             @Column(name = "supplier", nullable = false)
             var supplier: AbstractParty,
 
             @Column(name = "funder", nullable = false)
-            var funder: AbstractParty,
+            var funder: AbstractParty?,
 
             @Column(name = "conductor", nullable = false)
             var conductor: AbstractParty,
