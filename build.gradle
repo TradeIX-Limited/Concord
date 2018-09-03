@@ -33,6 +33,10 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url 'https://jitpack.io' }
+
+    /*flatDir {
+        dirs 'C:/Repo/Concord/lib'
+    }*/
 }
 
 apply plugin: 'kotlin'
@@ -91,6 +95,12 @@ dependencies {
     compile("org.graphstream:gs-ui:1.3") {
         exclude group: "bouncycastle"
     }
+
+    //compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile files('lib/membership-service-contracts-and-states-1.0-SNAPSHOT.jar')
+    compile files('lib/membership-service-1.0-SNAPSHOT.jar')
+    //compile name: 'membership-service-contracts-and-states-1.0-SNAPSHOT.jar'
+    //compile name: 'membership-service-1.0-SNAPSHOT.jar'
 
     // CorDapp dependencies
     // Specify your cordapp's dependencies below, including dependent cordapps

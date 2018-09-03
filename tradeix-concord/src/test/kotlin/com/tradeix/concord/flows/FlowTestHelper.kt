@@ -14,6 +14,11 @@ import com.tradeix.concord.flows.purchaseorder.PurchaseOrderAmendment
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderCancellation
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
+import net.corda.businessnetworks.membership.bno.ActivateMembershipFlow
+import net.corda.businessnetworks.membership.bno.service.DatabaseService
+import net.corda.businessnetworks.membership.member.RequestMembershipFlow
+import net.corda.businessnetworks.membership.states.MembershipMetadata
+import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.node.MockNetwork
@@ -111,5 +116,27 @@ object FlowTestHelper {
         network.runNetwork()
 
         return future.getOrThrow()
+    }
+
+    fun runRequestMembershipFlow(network: MockNetwork,
+                                 initiator: StartedMockNode,
+                                 membershipMetadata: MembershipMetadata = MembershipMetadata(role = "DEFAULT")): SignedTransaction {
+        val future = initiator.startFlow(RequestMembershipFlow())
+        network.runNetwork()
+        return future.getOrThrow()
+    }
+
+    fun runActivateMembershipFlow(network: MockNetwork,
+                                  initiator: StartedMockNode,
+                                  party: Party): SignedTransaction {
+        val membership = getMembership(initiator, party)
+        val future = initiator.startFlow(ActivateMembershipFlow(membership))
+        network.runNetwork()
+        return future.getOrThrow()
+    }
+
+    fun getMembership(node: StartedMockNode, party: Party) = node.transaction {
+        val dbService = node.services.cordaService(DatabaseService::class.java)
+        dbService.getMembership(party)!!
     }
 }

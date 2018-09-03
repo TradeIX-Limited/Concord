@@ -30,6 +30,9 @@ dependencies {
     cordaCompile "$corda_release_distribution:corda-webserver-impl:$corda_release_version"
     cordaRuntime "$corda_release_distribution:corda:$corda_release_version"
     cordaRuntime "$corda_release_distribution:corda-webserver:$corda_release_version"
+
+    compile files('../lib/membership-service-contracts-and-states-1.0-SNAPSHOT.jar')
+    compile files('../lib/membership-service-1.0-SNAPSHOT.jar')
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

@@ -4,18 +4,20 @@ import co.paralleluniverse.fibers.Suspendable
 import com.tradeix.concord.contracts.InvoiceContract
 import com.tradeix.concord.contracts.InvoiceContract.Companion.INVOICE_CONTRACT_ID
 import com.tradeix.concord.exceptions.FlowValidationException
-import net.corda.core.transactions.SignedTransaction
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.helpers.FlowHelper
 import com.tradeix.concord.helpers.VaultHelper
 import com.tradeix.concord.states.InvoiceState
 import com.tradeix.concord.validators.invoice.InvoiceIssuanceFlowModelValidator
+import net.corda.businessnetworks.membership.common.NotAMemberException
+import net.corda.businessnetworks.membership.member.GetMembershipsFlow
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.crypto.SecureHash.Companion.parse
 import net.corda.core.flows.*
+import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 import java.util.*
@@ -167,11 +169,13 @@ object InvoiceIssuance {
         override fun call(): SignedTransaction {
             val signTransactionFlow = object : SignTransactionFlow(otherPartyFlow) {
                 override fun checkTransaction(stx: SignedTransaction) = requireThat {
-                    val output = stx.tx.outputs.single().data
-                    "This must be an invoice transaction." using (output is InvoiceState)
+
+                    val memberships = subFlow(GetMembershipsFlow())
+                    if (memberships[otherPartyFlow.counterparty] == null) {
+                        throw NotAMemberException(otherPartyFlow.counterparty)
+                    }
                 }
             }
-
             return subFlow(signTransactionFlow)
         }
     }

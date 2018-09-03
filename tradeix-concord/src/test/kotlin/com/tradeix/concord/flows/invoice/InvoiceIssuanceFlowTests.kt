@@ -29,10 +29,11 @@ import com.tradeix.concord.TestValueHelper.TIX_INVOICE_VERSION
 import com.tradeix.concord.flowmodels.invoice.InvoiceIssuanceFlowModel
 import com.tradeix.concord.flows.AbstractFlowTest
 import com.tradeix.concord.flows.FlowTestHelper.issueInvoice
+import com.tradeix.concord.flows.FlowTestHelper.runActivateMembershipFlow
+import com.tradeix.concord.flows.FlowTestHelper.runRequestMembershipFlow
 import com.tradeix.concord.states.InvoiceState
+import net.corda.businessnetworks.membership.bno.RequestMembershipFlowResponder
 import net.corda.core.crypto.SecureHash
-import net.corda.node.internal.StartedNode
-import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.StartedMockNode
 import org.junit.Test
 import java.io.File
@@ -384,5 +385,64 @@ class InvoiceIssuanceFlowTests : AbstractFlowTest() {
             assertEquals(transaction, it.services.validatedTransactions.getTransaction(transaction.id))
             // TODO : Can we actually check that the attachment exists?
         }
+    }
+
+    @Test
+    fun `Invoice issuance flow initiated by the conductor must not fail if the conductor is a member of the BN`() {
+
+        println("Request Membership...")
+        runRequestMembershipFlow(network, supplier.node)
+        runRequestMembershipFlow(network, buyer.node)
+        runRequestMembershipFlow(network, funder.node)
+        runRequestMembershipFlow(network, conductor.node)
+
+        println("Activate Membership...")
+        runActivateMembershipFlow(network, bno, supplier.party)
+        runActivateMembershipFlow(network, bno, buyer.party)
+        runActivateMembershipFlow(network, bno, funder.party)
+        runActivateMembershipFlow(network, bno, conductor.party)
+
+        println("Conductor issues invoice")
+        issueInvoice(network, conductor.node, InvoiceIssuanceFlowModel(
+                externalId = EXTERNAL_ID,
+                attachmentId = null,
+                conductor = conductor.name,
+                buyer = buyer.name,
+                supplier = supplier.name,
+                funder = funder.name,
+                invoiceVersion = INVOICE_VERSION,
+                invoiceVersionDate = DATE_INSTANT_01,
+                tixInvoiceVersion = TIX_INVOICE_VERSION,
+                invoiceNumber = INVOICE_NUMBER,
+                invoiceType = INVOICE_TYPE,
+                reference = REFERENCE,
+                dueDate = DATE_INSTANT_02,
+                offerId = OFFER_ID,
+                amount = POSITIVE_ONE,
+                totalOutstanding = POSITIVE_ONE,
+                created = DATE_INSTANT_03,
+                updated = DATE_INSTANT_04,
+                expectedSettlementDate = DATE_INSTANT_04,
+                settlementDate = DATE_INSTANT_05,
+                mandatoryReconciliationDate = DATE_INSTANT_06,
+                invoiceDate = DATE_INSTANT_07,
+                status = STATUS,
+                rejectionReason = REJECTION_REASON,
+                eligibleValue = POSITIVE_ONE,
+                invoicePurchaseValue = POSITIVE_ONE,
+                tradeDate = DATE_INSTANT_06,
+                tradePaymentDate = DATE_INSTANT_06,
+                invoicePayments = POSITIVE_ONE,
+                invoiceDilutions = POSITIVE_ONE,
+                cancelled = CANCELLED,
+                closeDate = DATE_INSTANT_06,
+                originationNetwork = ORIGINATION_NETWORK,
+                hash = HASH,
+                currency = POUNDS,
+                siteId = SITE_ID,
+                purchaseOrderNumber = PURCHASE_ORDER_NUMBER,
+                purchaseOrderId = PURCHASE_ORDER_ID,
+                composerProgramId = COMPOSER_PROGRAM_ID
+        )).verifySignaturesExcept(conductor.publicKey)
     }
 }

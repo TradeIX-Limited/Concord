@@ -1,10 +1,14 @@
 package com.tradeix.concord.flows
 
+import net.corda.businessnetworks.membership.bno.GetMembershipListFlowResponder
+import net.corda.businessnetworks.membership.bno.RequestMembershipFlowResponder
+import net.corda.core.identity.CordaX500Name
 import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.MockNetworkNotarySpec
+import net.corda.testing.node.MockNodeParameters
 import net.corda.testing.node.StartedMockNode
 import org.junit.After
 import org.junit.Before
-import org.mockito.Mock
 
 abstract class AbstractFlowTest {
     protected lateinit var network: MockNetwork
@@ -15,10 +19,19 @@ abstract class AbstractFlowTest {
     protected lateinit var supplier: MockIdentity
     protected lateinit var funder: MockIdentity
     protected lateinit var conductor: MockIdentity
+    protected lateinit var bno: StartedMockNode
+
+    val bnoName = CordaX500Name.parse("O=BNO,L=New York,C=US")
+    val notaryName = CordaX500Name.parse("O=Notary,L=London,C=GB")
 
     @Before
     open fun setup() {
-        network = MockNetwork(listOf("com.tradeix.concord.contracts"))
+        network = MockNetwork(listOf("com.tradeix.concord.contracts",
+                "net.corda.businessnetworks.membership.bno.service",
+                "net.corda.businessnetworks.membership.member.service",
+                "net.corda.businessnetworks.membership.states",
+                "net.corda.businessnetworks.membership.member"),
+                notarySpecs = listOf(MockNetworkNotarySpec(notaryName)))
         val nodes = listOf(1, 2, 3, 4, 5, 6).map { network.createPartyNode() }
 
         nodes.forEach { configureNode(it) }
@@ -30,6 +43,13 @@ abstract class AbstractFlowTest {
         buyer2 = MockIdentity(nodes[4])
         buyer3 = MockIdentity(nodes[5])
 
+        val nodesIdentities = listOf(buyer,supplier,funder,conductor,buyer2,buyer3)
+
+        bno = createNode(bnoName, true)
+        bno.registerInitiatedFlow(GetMembershipListFlowResponder::class.java)
+        bno.registerInitiatedFlow(RequestMembershipFlowResponder::class.java)
+
+
         network.runNetwork()
     }
 
@@ -39,4 +59,7 @@ abstract class AbstractFlowTest {
     }
 
     abstract fun configureNode(node: StartedMockNode)
+
+    fun createNode(name: CordaX500Name, isBno: Boolean = false) =
+            network.createNode(MockNodeParameters(legalName = name))
 }
