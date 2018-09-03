@@ -16,7 +16,6 @@ INSTALLATION_FOLDER="installations"
 installDir=${INSTALLATION_FOLDER}/${ID}
 nodeZipLocation=${ID}.zip
 HOST_NAME="https://testnet.corda.network"
-HOST_NAME_FOR_GENERATING_ONETIMEKEY="https://testnet.corda.network/api/user/node/generate/one-time-key\\?sessionToken\\="
 CONDUCTOR="conductor"
 TIX_INTEGRATION="tix.integration.conf"
 

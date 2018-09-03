@@ -1,4 +1,6 @@
 ---
+#Replace the port in the following endpoint with the one where RabbitMQ is running
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -9,6 +11,7 @@ spec:
     port: 5672
     targetPort: 5672
 ---
+#Replace the ip address and port in the following endpoint with the one where RabbitMQ is running
 
 kind: Endpoints
 apiVersion: v1

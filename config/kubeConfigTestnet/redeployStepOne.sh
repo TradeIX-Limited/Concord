@@ -3,7 +3,7 @@
 source commonutil.sh
 source config.sh
 
-# Usage is ./redeployStep1.sh
+# Usage is ./redeployStepOne.sh
 INSTALLATION_FOLDER="installations"
 
 echo "Starting redeployment Step 1 of artefacts for ${MODULES[0]} in Kubernetes"
