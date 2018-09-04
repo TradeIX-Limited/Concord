@@ -15,7 +15,8 @@ class ConcordPlugin : WebServerPluginRegistry {
             Function(::PurchaseOrderApi),
             Function(::InvoiceApi),
             Function(::TixMessageSubscriptionStartup),
-            Function(::TiXNotifier)
+            Function(::TiXNotifier),
+            Function(::MembershipApi)
     )
 
 

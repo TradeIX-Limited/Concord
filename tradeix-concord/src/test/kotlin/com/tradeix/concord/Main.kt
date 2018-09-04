@@ -2,7 +2,9 @@ package com.tradeix.concord
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
-import net.corda.testing.driver.*
+import net.corda.testing.driver.DriverParameters
+import net.corda.testing.driver.NodeParameters
+import net.corda.testing.driver.driver
 import net.corda.testing.node.User
 
 class Main {
@@ -12,7 +14,8 @@ class Main {
         private val USER = User("user1", "test", permissions = setOf("ALL"))
 
         // Nodes
-        private val NOTARY = CordaX500Name("Controller", "London", "GB")
+        private val NOTARY = CordaX500Name("Notary", "London", "GB")
+        private val BNO = CordaX500Name("BNO", "New York", "US")
         private val TEST_NODE_0 = CordaX500Name("TradeIX", "London", "GB")
         private val TEST_NODE_1 = CordaX500Name("TradeIX Test Supplier 1", "New York", "US")
         private val TEST_NODE_4 = CordaX500Name("TradeIX Test Supplier 2", "Paris", "FR")
@@ -23,12 +26,21 @@ class Main {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            driver(DriverParameters(isDebug = true, waitForAllNodesToFinish = true)) {
+            driver(DriverParameters(
+                    isDebug = true,
+                    startNodesInProcess = true,
+                    waitForAllNodesToFinish = true,
+                    extraCordappPackagesToScan = listOf(
+                            "net.corda.businessnetworks.membership.bno.service",
+                            "net.corda.businessnetworks.membership.member.service",
+                            "net.corda.businessnetworks.membership.states",
+                            "net.corda.businessnetworks.membership.member"))) {
 
                 // Notary
                 startNode(NodeParameters(providedName = NOTARY))
 
                 val names = listOf(
+                        BNO,
                         TEST_NODE_0,
                         TEST_NODE_1,
                         TEST_NODE_2,

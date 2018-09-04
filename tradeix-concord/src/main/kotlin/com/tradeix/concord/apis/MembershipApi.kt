@@ -4,13 +4,12 @@ import com.tradeix.concord.exceptions.FlowValidationException
 import com.tradeix.concord.messages.webapi.FailedResponseMessage
 import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
 import com.tradeix.concord.messages.webapi.SingleIdentitySuccessResponseMessage
-import com.tradeix.concord.messages.webapi.membership.MembershipRequestRequestMessage
 import net.corda.businessnetworks.membership.member.RequestMembershipFlow
 import net.corda.businessnetworks.membership.states.Membership
+import net.corda.businessnetworks.membership.states.MembershipMetadata
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
-import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -26,7 +25,7 @@ class MembershipApi(val services: CordaRPCOps) {
     @Produces(MediaType.APPLICATION_JSON)
     fun RequestMembership(): Response {
         try {
-            val flowHandle = services.startTrackedFlow { RequestMembershipFlow() }
+            val flowHandle = services.startTrackedFlow(::RequestMembershipFlow, MembershipMetadata("DEFAULT"))
             flowHandle.progress.subscribe { println(">> $it") }
             val result = flowHandle.returnValue.getOrThrow()
             return Response
