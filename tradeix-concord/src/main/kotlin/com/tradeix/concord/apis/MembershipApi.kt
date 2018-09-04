@@ -31,7 +31,7 @@ class MembershipApi(val services: CordaRPCOps) {
             return Response
                     .status(Response.Status.CREATED)
                     .entity(SingleIdentitySuccessResponseMessage(
-                            externalId = result.tx.outputsOfType<Membership.State>().single().linearId.externalId!!,
+                            externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
                             transactionId = result.id.toString()))
                     .build()
         } catch (ex: Throwable) {
