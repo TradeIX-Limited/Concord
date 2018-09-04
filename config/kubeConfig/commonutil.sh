@@ -34,6 +34,16 @@ genAzurePVCs() {
   done
   #echo $AZURE_PVCS
 }
+azDeletePVCFile() {
+  local SHARE_NAME=$1
+  local PATHFILE=$2
+  az storage file delete --path ${PATHFILE} --share-name ${SHARE_NAME} --account-name ${ACCOUNT_NAME} --account-key ${ACCOUNT_KEY}
+}
+azDeletePVC() {
+  local SHARE_NAME=${1}
+  echo "Deleting all content from PVC ${SHARE_NAME}"
+  az storage file delete-batch -s ${SHARE_NAME} --account-key ${ACCOUNT_KEY} --account-name ${ACCOUNT_NAME}
+}
 azDeletePVCAll() {
   read -p "Are you sure to delete all the content from the PVC  ? (Y/N) " PROMPT
   echo "Answer is ${PROMPT} "
@@ -115,4 +125,12 @@ azUploadTixIntegration() {
 }
 azDeleteTixIntegration() {
   kubectl delete configmap tix
+}
+onlyOneModuleAtATime() {
+  local cnt=${#MODULES[@]}
+  local limit="1"
+  if [ "$cnt" -ne "${limit}" ]; then
+      echo "One and Only one module can be uploaded. This should be mentioned in config.sh"
+      exit 0
+  fi
 }

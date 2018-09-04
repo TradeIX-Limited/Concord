@@ -1,0 +1,78 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: __ID__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __ID__
+  template:
+    metadata:
+      labels:
+        app: __ID__
+    spec:
+      containers:
+      - name: node
+        image: tradeixdev.azurecr.io/concord:1.0.0.0
+        imagePullPolicy: Always
+        args: ["notary"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: __ID__-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+          #network-parameters file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
+      - name: web
+        image: tradeixdev.azurecr.io/concord:1.0.0.0
+        args: ["web", "__ID__"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: __ID__-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+          #persistence.mv.db file volume mounted using pvclaim from root
+        # - name: pvclaim
+        #   mountPath: /opt/corda/persistence.mv.db
+        #   subPath: persistence.mv.db
+      imagePullSecrets:
+      - name: acr-secret
+      volumes:
+      - name: __ID__-certificates
+        secret:
+          secretName: __ID__-certificates
+      - name: logs
+        emptyDir: {}
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-__ID__
+          readOnly: false

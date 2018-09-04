@@ -1,0 +1,25 @@
+---
+#Replace the port in the following endpoint with the one where RabbitMQ is running
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: tix-service
+spec:
+  ports:
+  - protocol: TCP
+    port: 5672
+    targetPort: 5672
+---
+#Replace the ip address and port in the following endpoint with the one where RabbitMQ is running
+
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: tix-service
+subsets:
+  - addresses:
+      - ip: 172.20.0.4
+    ports:
+      - port: 5672
+---

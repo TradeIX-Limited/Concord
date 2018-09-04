@@ -1,0 +1,85 @@
+apiVersion: "apps/v1beta1"
+kind: Deployment
+metadata:
+  name: conductor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conductor
+  template:
+    metadata:
+      labels:
+        app: conductor
+    spec:
+      containers:
+      - name: node
+        image: tradeixdev.azurecr.io/concord:1.0.0.0
+        imagePullPolicy: Always
+        args: ["notary"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 10002
+        volumeMounts:
+        - name: tixconfig
+          mountPath: /opt/corda/tix.integration.conf
+          subPath: tix.integration.conf
+          readOnly: true
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: conductor-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+          #network-parameters file volume mounted using pvclaim from root
+        - name: pvclaim
+          mountPath: /opt/corda/persistence.mv.db
+          subPath: persistence.mv.db
+      - name: web
+        image: tradeixdev.azurecr.io/concord:1.0.0.0
+        args: ["web", "conductor"]
+#        env:
+#        - name: "CONFIG_FILE"
+#          value: "node.conf"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: tixconfig
+          mountPath: /opt/corda/tix.integration.conf
+          subPath: tix.integration.conf
+          readOnly: true
+          #node.conf from configMap/corda config
+        - name: pvclaim
+          mountPath: /opt/corda/node.conf
+          subPath: node.conf
+          readOnly: true
+        - name: conductor-certificates
+          mountPath: "/opt/corda/certificates/"
+          readOnly: true
+          #This should be volume mounted using pvclaim - can be deferred
+        - name: pvclaim
+          mountPath: /opt/corda/logs
+          subPath: logs
+      imagePullSecrets:
+      - name: acr-secret
+      volumes:
+      - name: conductor-certificates
+        secret:
+          secretName: conductor-certificates
+      - name: tixconfig
+        configMap:
+          name: tix
+      - name: logs
+        emptyDir: {}
+      - name: pvclaim
+        persistentVolumeClaim:
+          claimName: pvclaim-conductor
+          readOnly: false
