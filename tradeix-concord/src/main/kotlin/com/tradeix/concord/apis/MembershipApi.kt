@@ -10,6 +10,7 @@ import net.corda.businessnetworks.membership.states.MembershipMetadata
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.utilities.getOrThrow
+import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -21,7 +22,7 @@ class MembershipApi(val services: CordaRPCOps) {
 
     @POST
     @Path("request")
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     fun RequestMembership(): Response {
         try {
