@@ -66,4 +66,6 @@ then
   azUploadTixIntegrationForTestnet
 fi
 azUploadSecretsForTestnet
+sleep ${MEDIUM_DELAY}
+sleep ${MEDIUM_DELAY}
 echo "Completed Upload of artefacts for ${MODULES[0]} in Azure Storage"
