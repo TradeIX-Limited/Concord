@@ -67,19 +67,15 @@ class MembershipApi(val services: CordaRPCOps) {
                 it.state.data
             }
             val member = services.vaultQueryBy<Membership.State>(criteria = criteria).states.single()
-            if (member.state.data.isPending()) {
-                val flowHandle = services.startTrackedFlow(::ActivateMembershipFlow, member)
-                flowHandle.progress.subscribe { println(">> $it") }
-                val result = flowHandle.returnValue.getOrThrow()
-                return Response
-                        .status(Response.Status.CREATED)
-                        .entity(SingleIdentitySuccessResponseMessage(
-                                externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
-                                transactionId = result.id.toString()))
-                        .build()
-            } else {
-                throw Throwable()
-            }
+            val flowHandle = services.startTrackedFlow(::ActivateMembershipFlow, member)
+            flowHandle.progress.subscribe { println(">> $it") }
+            val result = flowHandle.returnValue.getOrThrow()
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
+                            transactionId = result.id.toString()))
+                    .build()
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
@@ -104,19 +100,15 @@ class MembershipApi(val services: CordaRPCOps) {
                     linearId = listOf(UniqueIdentifier.fromString(message.linearId!!)),
                     status = Vault.StateStatus.UNCONSUMED)
             val member = services.vaultQueryBy<Membership.State>(criteria = criteria).states.single()
-            if (member.state.data.isPending()) {
-                val flowHandle = services.startTrackedFlow(::RevokeMembershipFlow, member)
-                flowHandle.progress.subscribe { println(">> $it") }
-                val result = flowHandle.returnValue.getOrThrow()
-                return Response
-                        .status(Response.Status.CREATED)
-                        .entity(SingleIdentitySuccessResponseMessage(
-                                externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
-                                transactionId = result.id.toString()))
-                        .build()
-            } else {
-                throw Throwable()
-            }
+            val flowHandle = services.startTrackedFlow(::RevokeMembershipFlow, member)
+            flowHandle.progress.subscribe { println(">> $it") }
+            val result = flowHandle.returnValue.getOrThrow()
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(SingleIdentitySuccessResponseMessage(
+                            externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
+                            transactionId = result.id.toString()))
+                    .build()
         } catch (ex: Throwable) {
             return when (ex) {
                 is FlowValidationException -> Response
@@ -137,18 +129,26 @@ class MembershipApi(val services: CordaRPCOps) {
     fun getAll(): Response {
         val members = services.vaultQueryBy<Membership.State>().states
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(
-                        mapOf("members" to members.forEach {
-                            val member = it.state.data
-                            MembershipsResponseMessage(
-                                    linearId = member.linearId.toString(),
-                                    member = member.member.toString(),
-                                    status = member.status.toString()
-                            )
-                        })
-                )
-                .build()
+        return try {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(
+                            mapOf("members" to members.forEach {
+                                val member = it.state.data
+                                MembershipsResponseMessage(
+                                        linearId = member.linearId.toString(),
+                                        member = member.member.toString(),
+                                        status = member.status.toString()
+                                )
+                            })
+                    )
+                    .build()
+        } catch (ex: Throwable) {
+            Response
+                    .status(Response.Status.OK)
+                    .entity(mapOf("members" to null))
+                    .build()
+        }
     }
 }
+
