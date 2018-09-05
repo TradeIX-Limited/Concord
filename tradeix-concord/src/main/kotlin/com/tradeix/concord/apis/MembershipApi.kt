@@ -5,21 +5,20 @@ import com.tradeix.concord.messages.webapi.FailedResponseMessage
 import com.tradeix.concord.messages.webapi.FailedValidationResponseMessage
 import com.tradeix.concord.messages.webapi.SingleIdentitySuccessResponseMessage
 import com.tradeix.concord.messages.webapi.membership.MembershipConfirmationRequestMessage
+import com.tradeix.concord.messages.webapi.membership.MembershipsResponseMessage
 import net.corda.businessnetworks.membership.bno.ActivateMembershipFlow
 import net.corda.businessnetworks.membership.bno.RevokeMembershipFlow
 import net.corda.businessnetworks.membership.member.RequestMembershipFlow
 import net.corda.businessnetworks.membership.states.Membership
 import net.corda.businessnetworks.membership.states.MembershipMetadata
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.messaging.CordaRPCOps
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.services.Vault
 import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.getOrThrow
-import javax.ws.rs.Consumes
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -62,7 +61,7 @@ class MembershipApi(val services: CordaRPCOps) {
     fun ActivateMembership(message: MembershipConfirmationRequestMessage): Response {
         try {
             val criteria = QueryCriteria.LinearStateQueryCriteria(
-                    externalId = listOf(message.externalId!!),
+                    linearId = listOf(UniqueIdentifier.fromString(message.linearId!!)),
                     status = Vault.StateStatus.UNCONSUMED)
             services.vaultQueryBy<Membership.State>(criteria = criteria).states.forEach {
                 it.state.data
@@ -75,7 +74,7 @@ class MembershipApi(val services: CordaRPCOps) {
                 return Response
                         .status(Response.Status.CREATED)
                         .entity(SingleIdentitySuccessResponseMessage(
-                                externalId = message.externalId,
+                                externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
                                 transactionId = result.id.toString()))
                         .build()
             } else {
@@ -102,7 +101,7 @@ class MembershipApi(val services: CordaRPCOps) {
     fun RevokeMembership(message: MembershipConfirmationRequestMessage): Response {
         try {
             val criteria = QueryCriteria.LinearStateQueryCriteria(
-                    externalId = listOf(message.externalId!!),
+                    linearId = listOf(UniqueIdentifier.fromString(message.linearId!!)),
                     status = Vault.StateStatus.UNCONSUMED)
             val member = services.vaultQueryBy<Membership.State>(criteria = criteria).states.single()
             if (member.state.data.isPending()) {
@@ -112,7 +111,7 @@ class MembershipApi(val services: CordaRPCOps) {
                 return Response
                         .status(Response.Status.CREATED)
                         .entity(SingleIdentitySuccessResponseMessage(
-                                externalId = message.externalId,
+                                externalId = result.tx.outputsOfType<Membership.State>().single().linearId.toString(),
                                 transactionId = result.id.toString()))
                         .build()
             } else {
@@ -130,5 +129,26 @@ class MembershipApi(val services: CordaRPCOps) {
                         .build()
             }
         }
+    }
+
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun getAll(): Response {
+        val members = services.vaultQueryBy<Membership.State>().states
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(
+                        mapOf("members" to members.forEach {
+                            val member = it.state.data
+                            MembershipsResponseMessage(
+                                    linearId = member.linearId.toString(),
+                                    member = member.member.toString(),
+                                    status = member.status.toString()
+                            )
+                        })
+                )
+                .build()
     }
 }
