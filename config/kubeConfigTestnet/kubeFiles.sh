@@ -52,7 +52,7 @@ generateKubeFile() {
   local newFile=${directory}/${newValue}.yml
   cp ${directory}/${TEMPLATE_FILE} ${directory}/${newValue}.yml
   sed -i -e s/${oldValue}/${newValue}/g ${newFile}
-  rm ${newFile}-e
+  rm -f ${newFile}-e
 }
 
 generateKubeFileYAML() {
@@ -62,7 +62,7 @@ generateKubeFileYAML() {
   local newFile=${directory}/${newValue}.yaml
   cp ${directory}/${TEMPLATE_FILE_YAML} ${directory}/${newValue}.yaml
   sed -i -e s/${oldValue}/${newValue}/g ${newFile}
-  rm ${newFile}-e
+  rm -f ${newFile}-e
 }
 
 validateDirectory ${DEPLOYMENT_SRC}

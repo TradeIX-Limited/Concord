@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 # ./uninstall.sh
 # If you are uninstalling Conductor, take a backup of the pre-configured deployment, service and storage files before you run this program.
 # After running the script, copy the backup to its original location. This would help you run the next round
@@ -9,7 +11,7 @@ source config.sh
 INSTALLATION_FOLDER="installations"
 ARCHIVE_FOLDER="archives"
 createArchiveIfNotFound() {
-  local directory1=${INSTALLATION_FOLDER}
+  local directory1=${ARCHIVE_FOLDER}
   if [ -d ${directory1} ]
   then
    echo "${directory1} is Found. The generated files will be placed here."
@@ -22,6 +24,7 @@ createArchiveIfNotFound() {
 timestamp=$(date +%s)
 
 onlyOneModuleAtATime
+createArchiveIfNotFound
 genPVCNames
 genAzurePVCs ${PVC_NAMES}
 kubectl delete -f services/${MODULES[0]}.yml
