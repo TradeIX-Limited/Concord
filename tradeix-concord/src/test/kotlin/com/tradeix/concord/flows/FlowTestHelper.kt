@@ -15,6 +15,7 @@ import com.tradeix.concord.flows.purchaseorder.PurchaseOrderCancellation
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderIssuance
 import com.tradeix.concord.flows.purchaseorder.PurchaseOrderOwnership
 import net.corda.businessnetworks.membership.bno.ActivateMembershipFlow
+import net.corda.businessnetworks.membership.bno.RevokeMembershipFlow
 import net.corda.businessnetworks.membership.bno.service.DatabaseService
 import net.corda.businessnetworks.membership.member.RequestMembershipFlow
 import net.corda.businessnetworks.membership.states.MembershipMetadata
@@ -131,6 +132,15 @@ object FlowTestHelper {
                                   party: Party): SignedTransaction {
         val membership = getMembership(initiator, party)
         val future = initiator.startFlow(ActivateMembershipFlow(membership))
+        network.runNetwork()
+        return future.getOrThrow()
+    }
+
+    fun runRevokeMembershipFlow(network: MockNetwork,
+                                  initiator: StartedMockNode,
+                                  party: Party): SignedTransaction {
+        val membership = getMembership(initiator, party)
+        val future = initiator.startFlow(RevokeMembershipFlow(membership))
         network.runNetwork()
         return future.getOrThrow()
     }

@@ -1,5 +1,7 @@
 package com.tradeix.concord.flows
 
+import com.tradeix.concord.flows.FlowTestHelper.runActivateMembershipFlow
+import com.tradeix.concord.flows.FlowTestHelper.runRequestMembershipFlow
 import net.corda.businessnetworks.membership.bno.GetMembershipListFlowResponder
 import net.corda.businessnetworks.membership.bno.RequestMembershipFlowResponder
 import net.corda.core.identity.CordaX500Name
@@ -43,14 +45,26 @@ abstract class AbstractFlowTest {
         buyer2 = MockIdentity(nodes[4])
         buyer3 = MockIdentity(nodes[5])
 
-        val nodesIdentities = listOf(buyer,supplier,funder,conductor,buyer2,buyer3)
-
         bno = createNode(bnoName, true)
         bno.registerInitiatedFlow(GetMembershipListFlowResponder::class.java)
         bno.registerInitiatedFlow(RequestMembershipFlowResponder::class.java)
 
-
         network.runNetwork()
+
+        runRequestMembershipFlow(network, supplier.node)
+        runRequestMembershipFlow(network, buyer.node)
+        runRequestMembershipFlow(network, buyer2.node)
+        runRequestMembershipFlow(network, buyer3.node)
+        runRequestMembershipFlow(network, funder.node)
+        runRequestMembershipFlow(network, conductor.node)
+
+        runActivateMembershipFlow(network, bno, supplier.party)
+        runActivateMembershipFlow(network, bno, buyer.party)
+        runActivateMembershipFlow(network, bno, buyer2.party)
+        runActivateMembershipFlow(network, bno, buyer3.party)
+        runActivateMembershipFlow(network, bno, funder.party)
+        runActivateMembershipFlow(network, bno, conductor.party)
+
     }
 
     @After
