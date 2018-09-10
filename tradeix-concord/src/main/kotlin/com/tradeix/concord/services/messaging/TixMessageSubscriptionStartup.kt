@@ -23,7 +23,7 @@ class TixMessageSubscriptionStartup(val services: CordaRPCOps) {
         val legalEntity = services.nodeInfo().legalIdentities.first()
         log.info("Reached TixMessageSub in ${legalEntity.name.organisation}")
 
-        if (legalEntity.name.organisation == "TradeIX") {
+        if (legalEntity.name.organisation == "C6acdb3a7-2fde-44d0-b400-ea69d79ae27b") {
             TixMessageSubscriptionStartup.initializeQueues(services)
         }
     }
