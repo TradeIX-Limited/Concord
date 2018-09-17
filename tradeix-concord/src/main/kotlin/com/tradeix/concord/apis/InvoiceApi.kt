@@ -118,6 +118,35 @@ class InvoiceApi(val services: CordaRPCOps) {
         }
     }
 
+  @POST
+  @Path("issuewithnotary")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  fun issueInvoiceWithNotary(message: InvoiceIssuanceRequestMessage): Response {
+    try {
+      val flowHandle = services.startTrackedFlow(InvoiceIssuance::InitiatorFlow, message.toModel())
+      flowHandle.progress.subscribe { println(">> $it") }
+      val result = flowHandle.returnValue.getOrThrow()
+      return Response
+        .status(Response.Status.CREATED)
+        .entity(SingleIdentitySuccessResponseMessage(
+          externalId = message.externalId!!,
+          transactionId = result.id.toString()))
+        .build()
+    } catch (ex: Throwable) {
+      return when (ex) {
+        is FlowValidationException -> Response
+          .status(Response.Status.BAD_REQUEST)
+          .entity(FailedValidationResponseMessage(ex.validationErrors))
+          .build()
+        else -> Response
+          .status(Response.Status.INTERNAL_SERVER_ERROR)
+          .entity(FailedResponseMessage(ex.message!!))
+          .build()
+      }
+    }
+  }
+
     @PUT
     @Path("changeowner")
     @Consumes(MediaType.APPLICATION_JSON)
