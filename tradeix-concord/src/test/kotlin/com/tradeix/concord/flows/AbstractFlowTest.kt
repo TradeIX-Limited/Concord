@@ -1,6 +1,9 @@
 package com.tradeix.concord.flows
 
+import net.corda.core.identity.CordaX500Name
+import net.corda.node.services.transactions.SimpleNotaryService
 import net.corda.testing.node.MockNetwork
+import net.corda.testing.node.MockNetworkNotarySpec
 import net.corda.testing.node.StartedMockNode
 import org.junit.After
 import org.junit.Before
@@ -16,9 +19,14 @@ abstract class AbstractFlowTest {
     protected lateinit var funder: MockIdentity
     protected lateinit var conductor: MockIdentity
 
+    private val bootstrapNotaryx500Name = CordaX500Name(commonName = SimpleNotaryService::class.java.name, organisation = "BootstrapNotary", locality = "Argleton", country = "GB")
+    private val meteringNotaryX500Name = CordaX500Name(commonName = SimpleNotaryService::class.java.name, organisation = "MeteringNotary", locality = "Argleton", country = "GB")
+
+
     @Before
     open fun setup() {
-        network = MockNetwork(listOf("com.tradeix.concord.contracts"))
+        network = MockNetwork(listOf("com.tradeix.concord.contracts"),
+                    notarySpecs= listOf(MockNetworkNotarySpec(bootstrapNotaryx500Name, true),MockNetworkNotarySpec(meteringNotaryX500Name, true)))
         val nodes = listOf(1, 2, 3, 4, 5, 6).map { network.createPartyNode() }
 
         nodes.forEach { configureNode(it) }
